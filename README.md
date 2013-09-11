@@ -86,16 +86,6 @@ Example JSON schema description
 }
 ```
 
-dataset_type
-------------
-
-`dataset_type` is the "package_type" stored in the dataset. It is returned
-from this from the plugin's `package_types()` method. This string should be
-unique to make sharing your schema easier.
-
-(language-text)
----------------
-
 In the example above `(language-text)` may be a plain string or an
 object containing different language versions:
 
@@ -107,6 +97,43 @@ object containing different language versions:
 ```
 
 When using a plain string translations will be looked up with gettext.
+
+
+dataset_type
+------------
+
+`dataset_type` is the "type" field stored in the dataset, which
+determines the schema used.
+This string should be unique to make sharing your schema easier,
+use of a domain name in reverse order at the beginning of this
+string is encouraged.
+
+about_url
+---------
+
+A Link to human-readable information about this schema may be
+provided in this field.
+
+dataset_fields
+--------------
+
+Fields are specified in this list in the order you would like them
+to appear in the dataset editing form.
+
+### field
+
+The `field` value is the name of an existing CKAN dataset field
+or a new new extra or keyword vocabulary field. Existing fields
+include:
+
+* `name` - the URI for the dataset
+* `title`
+* `notes` - the dataset description
+* `author`
+* `author_email`
+* `maintainer`
+* `maintainer_email`
+
 
 
 
