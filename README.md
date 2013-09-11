@@ -29,7 +29,7 @@ Example JSON schema description
   "dataset_fields": [
     {
       "field": "title",
-      "lable": (language-text),
+      "label": (language-text),
       "form_snippet": "large_text.html",
       "validators": "if_empty_same_as(name)"
     },
@@ -41,7 +41,7 @@ Example JSON schema description
     },
     {
       "field": "internal_flag",
-      "lable": (language-text),
+      "label": (language-text),
       "form_snippet": "choice_selectbox.html",
       "validators": "not_empty",
       "choices": [
@@ -57,7 +57,7 @@ Example JSON schema description
     },
     {
       "field": "internal_categories",
-      "lable": (language-text),
+      "label": (language-text),
       "form_snippet": "multiple_choice_checkboxes.html",
       "validators": "ignore_empty",
       "tag_vocabulary": "spatialx_categories",
@@ -78,7 +78,7 @@ Example JSON schema description
     },
     {
       "field": "spatial",
-      "lable": (language-text),
+      "label": (language-text),
       "form_snippet": "map_bbox_selection.html",
       "validators": "geojson_validator"
     }
