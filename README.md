@@ -24,7 +24,7 @@ Example JSON schema description
 
 ```json
 {
-  "dataset_type": "spatialx",
+  "dataset_type": "com.example.spatialx",
   "about_url": "http://example.com/the-spatialx-schema",
   "dataset_fields": [
     {
@@ -86,14 +86,17 @@ Example JSON schema description
 }
 ```
 
-`dataset_type` is the package_type stored in the Package model and
-returned from the plugin's `package_types()` method. This should be
-unique if you are sharing your schema.
+dataset_type
+------------
 
-language-text
--------------
+`dataset_type` is the "package_type" stored in the dataset. It is returned
+from this from the plugin's `package_types()` method. This string should be
+unique to make sharing your schema easier.
 
-`(language-text)` in the example above may be a plain string or an
+(language-text)
+---------------
+
+In the example above `(language-text)` may be a plain string or an
 object containing different language versions:
 
 ```json
@@ -104,5 +107,6 @@ object containing different language versions:
 ```
 
 When using a plain string translations will be looked up with gettext.
+
 
 
