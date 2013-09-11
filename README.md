@@ -86,10 +86,14 @@ Example JSON schema description
 }
 ```
 
+`dataset_type` is the package_type stored in the Package model and
+returned from the plugin's `package_types()` method. This should be
+unique if you are sharing your schema.
+
 language-text
 -------------
 
-`(language-text)` in the example above may be a string or an
+`(language-text)` in the example above may be a plain string or an
 object containing different language versions:
 
 ```json
