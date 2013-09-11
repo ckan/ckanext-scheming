@@ -96,31 +96,38 @@ object containing different language versions:
 }
 ```
 
-When using a plain string translations will be looked up with gettext.
+When using a plain string translations will be provided with gettext
+instead.
 
 
 dataset_type
 ------------
 
 `dataset_type` is the "type" field stored in the dataset, which
-determines the schema used.
-This string should be unique to make sharing your schema easier,
-use of a domain name in reverse order at the beginning of this
+CKAN uses to determines the schema.
+
+This string should be unique in order to make sharing your schema easier.
+Use of a domain name in reverse order at the beginning of this
 string is encouraged.
 
 
 about_url
 ---------
 
-A Link to human-readable information about this schema may be
-provided in this field.
+`about_url` is a Link to human-readable information about this schema.
+Its use is optional but highly recommended.
 
 
 dataset_fields
 --------------
 
-Fields are specified in this list in the order you would like them
-to appear in the dataset editing form.
+Fields are specified in the `dataset_fields` list in the order you
+would like them to appear in the dataset editing form.
+
+Fields you exclude will not be shown to the end user, and will not
+be accepted when editing or updating a dataset.
+
+FIXME: list special cases
 
 
 ### field_name
