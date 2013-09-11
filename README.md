@@ -28,19 +28,19 @@ Example JSON schema description
   "about_url": "http://example.com/the-spatialx-schema",
   "dataset_fields": [
     {
-      "field": "title",
+      "field_name": "title",
       "label": (language-text),
       "form_snippet": "large_text.html",
       "validators": "if_empty_same_as(name)"
     },
     {
-      "field": "name",
+      "field_name": "name",
       "label": (language-text),
       "form_snippet": "autofill_from_title.html",
       "validators": "not_empty name_validator package_name_validator"
     },
     {
-      "field": "internal_flag",
+      "field_name": "internal_flag",
       "label": (language-text),
       "form_snippet": "choice_selectbox.html",
       "validators": "not_empty",
@@ -56,7 +56,7 @@ Example JSON schema description
       ]
     },
     {
-      "field": "internal_categories",
+      "field_name": "internal_categories",
       "label": (language-text),
       "form_snippet": "multiple_choice_checkboxes.html",
       "validators": "ignore_empty",
@@ -77,7 +77,7 @@ Example JSON schema description
       ]
     },
     {
-      "field": "spatial",
+      "field_name": "spatial",
       "label": (language-text),
       "form_snippet": "map_bbox_selection.html",
       "validators": "geojson_validator"
@@ -108,11 +108,13 @@ This string should be unique to make sharing your schema easier,
 use of a domain name in reverse order at the beginning of this
 string is encouraged.
 
+
 about_url
 ---------
 
 A Link to human-readable information about this schema may be
 provided in this field.
+
 
 dataset_fields
 --------------
@@ -120,10 +122,11 @@ dataset_fields
 Fields are specified in this list in the order you would like them
 to appear in the dataset editing form.
 
-### field
 
-The `field` value is the name of an existing CKAN dataset field
-or a new new extra or keyword vocabulary field. Existing fields
+### field_name
+
+The `field_name` value is the name of an existing CKAN dataset field
+or a new new extra or keyword vocabulary field. Existing field names
 include:
 
 * `name` - the URI for the dataset
