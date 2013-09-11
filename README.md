@@ -153,10 +153,11 @@ languages, but only the correct version for the user's language
 will be passed to the form snippet as `field.label`.
 
 
-## form_snippet
+### form_snippet
 
-The name of the snippet template to use in the dataset editing
-form for this field. A number of snippets are provided with this
+The `form_snippet` value is the name of the snippet template to
+use for this field in the dataset editing form.
+A number of snippets are provided with this
 extension, but you may also provide your own by creating templates
 under `customschema/snippets/` in a template directory in your
 own extension.
@@ -172,6 +173,24 @@ This extension includes the following snippets:
 * large_text.html - a larger text field, typically used for the title
 * choice_selectbox.html - a drop-down list for single choice fields
 * ... FIXME: complete this
+
+
+### validators
+
+The `validators` value is a space-separated list of validator functions
+to call on this field when creating or updating data. When followed by
+parenthesis the function is called passing the comma-separated values
+within as string parameters, and the result is used as a validator.
+
+This is not arbitrary python code being executed, you may only use
+registered validator functions, optionally calling them with static
+string values provided.
+
+FIXME: provide a way to register new validator functions
+
+This extension automatically adds calls to `convert_to_extras` or
+`convert_to_tags` for new extra fields and new tag vocabulary fields,
+so you should not add those validators to this list.
 
 
 
