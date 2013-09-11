@@ -60,7 +60,7 @@ Example JSON schema description
       "label": (language-text),
       "form_snippet": "multiple_choice_checkboxes.html",
       "validators": "ignore_empty",
-      "tag_vocabulary": "spatialx_categories",
+      "tag_vocabulary": "com.example.spatialx_categories",
       "choices": [
         {
           "label": (language-text),
@@ -209,3 +209,7 @@ that only allows values from this list.
 
 The `tag_vocabulary` value is used for the name of the tag vocabulary
 that will store the valid choices for a multiple-choice field.
+
+Tag vocabularies are global to the CKAN instance so this name should
+be made uniqe by prefixing it with a domain name in reverse order
+and the name of the schema.
