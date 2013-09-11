@@ -137,6 +137,41 @@ include:
 * `maintainer`
 * `maintainer_email`
 
+New field names should follow the current lowercase_with_underscores
+ naming convention. Don't name your field `mySpecialField`, use
+ `my_special_field` instead.
+
+This value is available to the form snippet as `field.field_name`.
+
+
+### label
+
+The `label` value is a human-readable label for this field as
+it will appear in the dataset editing form.
+This label may be provided in multiple
+languages, but only the correct version for the user's language
+will be passed to the form snippet as `field.label`.
+
+
+## form_snippet
+
+The name of the snippet template to use in the dataset editing
+form for this field. A number of snippets are provided with this
+extension, but you may also provide your own by creating templates
+under `customschema/snippets/` in a template directory in your
+own extension.
+
+This snippet is passed the `field` dict containing all the keys and
+values in this `dataset_field` record, including any additional ones
+you added to your that aren't handled by this extension.
+
+
+This extension includes the following snippets:
+
+* text.html - a simple text field for free-form text or numbers
+* large_text.html - a larger text field, typically used for the title
+* choice_selectbox.html - a drop-down list for single choice fields
+* ... FIXME: complete this
 
 
 
