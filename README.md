@@ -171,26 +171,41 @@ This extension includes the following snippets:
 
 * text.html - a simple text field for free-form text or numbers
 * large_text.html - a larger text field, typically used for the title
-* choice_selectbox.html - a drop-down list for single choice fields
+* choice_selectbox.html - a drop-down list for single-choice fields
 * ... FIXME: complete this
 
 
 ### validators
 
-The `validators` value is a space-separated list of validator functions
-to call on this field when creating or updating data. When followed by
-parenthesis the function is called passing the comma-separated values
-within as string parameters, and the result is used as a validator.
+The `validators` value is a space-separated string of validator functions
+to use for this field when creating or updating data.
+When a validator name is followed by parenthesis the function is called
+passing the comma-separated values within as string parameters
+and the result is used as the validator.
 
-This is not arbitrary python code being executed, you may only use
-registered validator functions, optionally calling them with static
-string values provided.
+This string does not contain arbitrary python code to be executed,
+you may only use registered validator functions, optionally calling
+them with static string values provided.
 
-FIXME: provide a way to register new validator functions
+FIXME: provide a way to register new validator functions form extensions
 
 This extension automatically adds calls to `convert_to_extras` or
 `convert_to_tags` for new extra fields and new tag vocabulary fields,
 so you should not add those validators to this list.
 
 
+### choices
 
+The `choices` list must be provided for multiple-choice and
+single-choice fields.  The `label`s are human-readable text for
+the dataset editing form and the `value`s are stored in
+the dataset field or are used for tag names in tag vocabularies.
+
+A validator is automatically added for creating or updating datasets
+that only allows values from this list.
+
+
+### tag_vocabulary
+
+The `tag_vocabulary` value is used for the name of the tag vocabulary
+that will store the valid choices for a multiple-choice field.
