@@ -10,14 +10,17 @@ The schemas used are configured with a configuration option
 similar to `licenses_group_url`, e.g.:
 
 ```ini
-customschema.schema_urls = http://example.com/spatialx_schema.json
+#   URLs to shared schemas being used
+customschema.schemas = http://example.com/spatialx_schema.json
+
+#   module-path:file name may also be used, e.g:
+#
+# customschema.schemas = ckanext.spatialx:spatialx_schema.json
+#
+#   will try to load "spatialx_schema.json" from the directory
+#   containing the ckanext.spatialx module
 ```
 
-Paths relative to the configuration file may also be used:
-
-```ini
-customschema.schema_urls = ../ckanext/spatialx/customschema.json
-```
 
 Example JSON schema description
 -------------------------------
