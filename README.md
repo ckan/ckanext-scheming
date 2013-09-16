@@ -1,6 +1,9 @@
 ckanext-customschema
 ====================
 
+*This document describes a planned CKAN extension.
+The code here doesn't actually accomplish any of this yet.*
+
 This extension provides a way to configure and share
 CKAN schemas using a JSON schema description. Custom
 validators and template snippets for editing are also
