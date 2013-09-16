@@ -4,7 +4,7 @@ import sys, os
 version = '0.0.1'
 
 setup(
-    name='ckanext-customschema',
+    name='ckanext-scheming',
     version=version,
     description="Easy, sharable custom CKAN schemas",
     long_description="""
@@ -16,7 +16,7 @@ setup(
     url='',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-    namespace_packages=['ckanext', 'ckanext.customschema'],
+    namespace_packages=['ckanext', 'ckanext.scheming'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
@@ -25,9 +25,9 @@ setup(
     entry_points=\
     """
     [ckan.plugins]
-    customschema=ckanext.customschema.plugins:CustomSchemaPlugin
+    scheming=ckanext.scheming.plugins:CustomSchemaPlugin
 
     [paste.paster_command]
-    canada=ckanext.customschema.commands:CustomSchemaCommand
+    canada=ckanext.scheming.commands:CustomSchemaCommand
     """,
 )

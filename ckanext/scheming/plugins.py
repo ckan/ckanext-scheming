@@ -25,8 +25,8 @@ class CustomSchemaPlugin(p.SingletonPlugin, DefaultDatasetForm):
 
     def configure(self, config):
         self._is_fallback = p.toolkit.asbool(
-            config.get('customschema.is_fallback', False))
-        self._schema_urls = config.get('customschema.schema_urls', ""
+            config.get('scheming.is_fallback', False))
+        self._schema_urls = config.get('scheming.schema_urls', ""
             ).split()
         if not self._schema_urls
 

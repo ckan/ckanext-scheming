@@ -1,5 +1,5 @@
-ckanext-customschema
-====================
+ckanext-scheming
+================
 
 *This document describes a planned CKAN extension.
 The code here doesn't actually accomplish any of this yet.*
@@ -14,11 +14,11 @@ similar to `licenses_group_url`, e.g.:
 
 ```ini
 #   URLs to shared schemas being used
-customschema.schemas = http://example.com/spatialx_schema.json
+scheming.schemas = http://example.com/spatialx_schema.json
 
 #   module-path:file name may also be used, e.g:
 #
-# customschema.schemas = ckanext.spatialx:spatialx_schema.json
+# scheming.schemas = ckanext.spatialx:spatialx_schema.json
 #
 #   will try to load "spatialx_schema.json" from the directory
 #   containing the ckanext.spatialx module
@@ -172,7 +172,7 @@ The `form_snippet` value is the name of the snippet template to
 use for this field in the dataset editing form.
 A number of snippets are provided with this
 extension, but you may also provide your own by creating templates
-under `customschema/snippets/` in a template directory in your
+under `scheming/snippets/` in a template directory in your
 own extension.
 
 This snippet is passed the `field` dict containing all the keys and
