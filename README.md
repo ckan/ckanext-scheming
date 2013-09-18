@@ -30,7 +30,7 @@ Example JSON schema description
 
 ```json
 {
-  "dataset_type": "com.example.spatialx",
+  "dataset_type": "spatialx",
   "about_url": "http://example.com/the-spatialx-schema",
   "dataset_fields": [
     {
@@ -109,12 +109,12 @@ instead.
 dataset_type
 ------------
 
-`dataset_type` is the "type" field stored in the dataset, which
-CKAN uses to determines the schema.
+`dataset_type` is the "type" field stored in the dataset, and used
+to set the URL for this type of dataset.
 
-This string should be unique in order to make sharing your schema easier.
-Use of a domain name in reverse order at the beginning of this
-string is encouraged.
+Normal datasets would be available under `/dataset`, but datasets with
+the schema above would appear under `/spatialx` instead.
+
 
 
 about_url
