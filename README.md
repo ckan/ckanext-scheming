@@ -9,24 +9,24 @@ CKAN schemas using a JSON schema description. Custom
 validators and template snippets for editing are also
 supported.
 
-The schemas used are configured with a configuration option
-similar to `licenses_group_url`, e.g.:
+The schemas used are configured with configuration options:
 
 ```ini
-#   URLs to shared schemas being used
-scheming.schemas = http://example.com/spatialx_schema.json
-
-#   module-path:file name may also be used, e.g:
+#   module-path:file to schemas being used
+scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json ckanext.spatialx:spatialxy_schema.json
+scheming.group_schemas = ckanext.spatialx:org_schema.json
+#   will try to load "spatialx_schema.json" and "spatialxy_schema.json"
+#   as dataset schemas and "org_schema.json" as a group schema, all from
+#   the directory containing the ckanext.spatialx module code
 #
-# scheming.schemas = ckanext.spatialx:spatialx_schema.json
+#   URLs may also be used, e.g:
 #
-#   will try to load "spatialx_schema.json" from the directory
-#   containing the ckanext.spatialx module
+# scheming.dataset_schemas = http://example.com/spatialx_schema.json
 ```
 
 
-Example JSON schema description
--------------------------------
+Example dataset schema description
+----------------------------------
 
 ```json
 {
@@ -226,3 +226,33 @@ that will store the valid choices for a multiple-choice field.
 Tag vocabularies are global to the CKAN instance so this name should
 be made uniqe by prefixing it with a domain name in reverse order
 and the name of the schema.
+
+
+Example group schema description
+--------------------------------
+```json
+{
+  "group_type": "organization",
+  "about_url": "http://example.com/the-spatialx-schema",
+  "group_fields": [
+    {
+      "field_name": "title",
+      "label": (language-text),
+      "form_snippet": "large_text.html",
+      "validators": "if_empty_same_as(name)"
+    },
+    {
+      "field_name": "name",
+      "label": (language-text),
+      "form_snippet": "autofill_from_title.html",
+      "validators": "not_empty name_validator group_name_validator"
+    },
+    {
+      "field_name": "department_number",
+      "label": (language-text),
+      "form_snippet": "text.html",
+      "validators": "not_empty int"
+    }
+  ]
+}
+```
