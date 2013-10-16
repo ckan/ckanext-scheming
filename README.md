@@ -266,3 +266,8 @@ Example group schema description
 }
 ```
 
+group_type
+----------
+
+`group_type` is the "type" field stored in the group, where `organization`
+is the type used for CKAN organizations.
