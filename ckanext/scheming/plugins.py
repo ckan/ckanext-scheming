@@ -24,13 +24,12 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
     _schemas = None
 
     def update_config(self, config):
-        # add our templates
-        p.toolkit.add_template_directory(config, 'templates')
+        p.toolkit.add_template_directory(config, 'dataset_templates')
 
     def configure(self, config):
         self._is_fallback = p.toolkit.asbool(
-            config.get('scheming.is_fallback', False))
-        self._schema_urls = config.get('scheming.schema_urls', ""
+            config.get('scheming.dataset_fallback', False))
+        self._schema_urls = config.get('scheming.dataset_schemas', ""
             ).split()
         if not self._schema_urls
 
@@ -40,22 +39,63 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
 
         self._schemas = {}
         for n in self._schemas:
-            schema = _load_schema_module_path(n)
+            schema = _load_schema(n)
             schema = json.loads(schema)
             self._schemas[schema['dataset_type']] = schema
 
         return self._schemas
 
-def _load_schema_module_path(self, n):
+
+class SchemingGroupsPlugin(p.SingletonPlugin, DefaultDatasetForm):
+    p.implements(p.IConfigurer)
+    p.implements(p.IConfigurable)
+    p.implements(p.ITemplateHelpers)
+    p.implements(p.IGroupForm, inherit=True)
+
+    _schemas = None
+
+    def update_config(self, config):
+        p.toolkit.add_template_directory(config, 'group_templates')
+
+    def configure(self, config):
+        self._is_fallback = p.toolkit.asbool(
+            config.get('scheming.group_fallback', False))
+        self._schema_urls = config.get('scheming.group_schemas', ""
+            ).split()
+        if not self._schema_urls
+
+    def _load_schemas(self):
+        if self._schemas:
+            return self._schemas
+
+        self._schemas = {}
+        for n in self._schemas:
+            schema = _load_schema(n)
+            schema = json.loads(schema)
+            self._schemas[schema['group_type']] = schema
+
+        return self._schemas
+
+
+def _load_schema(url):
+    schema = _load_schema_module_path(url)
+    if not schema:
+        schema = _load_schema_url(url)
+    return json.load(schema)    
+
+def _load_schema_module_path(url):
     """
     Given a path like "ckanext.spatialx:spatialx_schema.json"
     find the second part relative to the import path of the first
     """
-    module, file_name = n.split(':', 1)
-    m = importlib.import_module(module)
-    p = m.__path__
+
+    module, file_name = url.split(':', 1)
+    try:
+        m = importlib.import_module(module)
+    except ImportError:
+        return
+    p = m.__path__[0]
     p = os.path.join(p, file_name)
-    assert os.path.exists(p)
-    data = open(p).read()
-    return data
+    if os.path.exists(p):
+        return open(p)
 
