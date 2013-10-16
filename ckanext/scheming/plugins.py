@@ -7,11 +7,11 @@ from paste.deploy.converters import asbool
 import importlib
 import os
 
-class CustomSchemaException(Exception):
+class SchemingException(Exception):
     pass
 
 
-class CustomSchemaPlugin(p.SingletonPlugin, DefaultDatasetForm):
+class SchemingPlugin(p.SingletonPlugin, DefaultDatasetForm):
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)

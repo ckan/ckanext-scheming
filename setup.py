@@ -25,9 +25,9 @@ setup(
     entry_points=\
     """
     [ckan.plugins]
-    scheming=ckanext.scheming.plugins:CustomSchemaPlugin
+    scheming=ckanext.scheming.plugins:SchemingPlugin
 
     [paste.paster_command]
-    canada=ckanext.scheming.commands:CustomSchemaCommand
+    canada=ckanext.scheming.commands:SchemingCommand
     """,
 )
