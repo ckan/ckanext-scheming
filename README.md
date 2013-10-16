@@ -271,3 +271,8 @@ group_type
 
 `group_type` is the "type" field stored in the group, where `organization`
 is the type used for CKAN organizations.
+
+group_fields
+------------
+
+Similar to `dataset_fields` above.
