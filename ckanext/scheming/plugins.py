@@ -37,13 +37,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
     def _load_schemas(self):
         if self._schemas:
             return self._schemas
-
-        self._schemas = {}
-        for n in self._schemas:
-            schema = _load_schema(n)
-            schema = json.loads(schema)
-            self._schemas[schema['dataset_type']] = schema
-
+        self._schemas = _load_schemas(self._schema_urls, 'dataset_type')
         return self._schemas
 
 
@@ -69,14 +63,16 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
     def _load_schemas(self):
         if self._schemas:
             return self._schemas
-
-        self._schemas = {}
-        for n in self._schemas:
-            schema = _load_schema(n)
-            schema = json.loads(schema)
-            self._schemas[schema['group_type']] = schema
-
+        self._schemas = _load_schemas(self._schema_urls, 'group_type')
         return self._schemas
+
+def _load_schemas(schemas, type_field):
+    out = {}
+    for n in self._schemas:
+        schema = _load_schema(n)
+        schema = json.loads(schema)
+        out[schema[type_field]] = schema
+    return out
 
 
 def _load_schema(url):
