@@ -12,6 +12,8 @@ supported.
 The schemas used are configured with configuration options:
 
 ```ini
+ckan.plugins = scheming_datasets scheming_groups
+
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
                            ckanext.spatialx:spatialxy_schema.json

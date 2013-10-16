@@ -25,7 +25,8 @@ setup(
     entry_points=\
     """
     [ckan.plugins]
-    scheming=ckanext.scheming.plugins:SchemingPlugin
+    scheming_datasets=ckanext.scheming.plugins:SchemingDatasetsPlugin
+    scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
 
     [paste.paster_command]
     canada=ckanext.scheming.commands:SchemingCommand

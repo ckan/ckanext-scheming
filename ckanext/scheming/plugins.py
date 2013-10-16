@@ -10,8 +10,12 @@ import os
 class SchemingException(Exception):
     pass
 
+class _IScheming(p.Interface):
+    "plugin interface used internally to locate scheming plugin instances"
+    pass
 
-class SchemingPlugin(p.SingletonPlugin, DefaultDatasetForm):
+
+class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
