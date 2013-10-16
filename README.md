@@ -31,6 +31,7 @@ Example dataset schema description
 
 ```json
 {
+  "scheming_version": 1,
   "dataset_type": "spatialx",
   "about_url": "http://example.com/the-spatialx-schema",
   "dataset_fields": [
@@ -106,6 +107,12 @@ object containing different language versions:
 When using a plain string translations will be provided with gettext
 instead.
 
+
+scheming_version
+----------------
+
+Set to 1. Future versions of ckanext-scheming may use a larger
+number to indicate a change to the description JSON format.
 
 dataset_type
 ------------
@@ -233,6 +240,7 @@ Example group schema description
 --------------------------------
 ```json
 {
+  "scheming_version": 1,
   "group_type": "organization",
   "about_url": "http://example.com/the-spatialx-schema",
   "group_fields": [
@@ -257,3 +265,4 @@ Example group schema description
   ]
 }
 ```
+
