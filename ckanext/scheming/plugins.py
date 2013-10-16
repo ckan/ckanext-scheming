@@ -1,6 +1,6 @@
 from pylons.i18n import _
 import ckan.plugins as p
-from ckan.lib.plugins import DefaultDatasetForm
+from ckan.lib.plugins import DefaultDatasetForm, DefaultGroupForm
 
 from paste.deploy.converters import asbool
 
@@ -20,6 +20,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
     p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
+    p.implements(_IScheming)
 
     _schemas = None
 
@@ -46,11 +47,12 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
         return self._schemas
 
 
-class SchemingGroupsPlugin(p.SingletonPlugin, DefaultDatasetForm):
+class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
+    p.implements(_IScheming)
 
     _schemas = None
 
