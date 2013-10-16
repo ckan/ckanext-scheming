@@ -13,7 +13,8 @@ The schemas used are configured with configuration options:
 
 ```ini
 #   module-path:file to schemas being used
-scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json ckanext.spatialx:spatialxy_schema.json
+scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
+                           ckanext.spatialx:spatialxy_schema.json
 scheming.group_schemas = ckanext.spatialx:org_schema.json
 #   will try to load "spatialx_schema.json" and "spatialxy_schema.json"
 #   as dataset schemas and "org_schema.json" as a group schema, all from
