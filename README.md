@@ -101,8 +101,8 @@ object containing different language versions:
 
 ```json
 {
-  "eng": "Title",
-  "fra": "Titre"
+  "en": "Title",
+  "fr": "Titre"
 }
 ```
 
