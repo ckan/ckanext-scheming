@@ -4,6 +4,8 @@ import paste.script
 
 from ckanext.scheming.plugins import _IScheming
 
+import json
+
 def _get_schemas():
     """
     Find the scheming plugins and return (dataset_schemas, group_schemas)
