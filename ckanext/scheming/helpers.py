@@ -1,6 +1,6 @@
 from ckan.lib.helpers import lang
 from pylons import config
-from pylons.i18n import _
+from pylons.i18n import gettext
 
 def language_text(text):
     """
@@ -15,7 +15,8 @@ def language_text(text):
         if not v:
             v = text.get(config.get('ckan.locale_default', 'en'))
             if not v:
+                # just give me something to display
                 l, v = sorted(text.items())[0]
         return v
     else:
-        return _(text)
+        return gettext(text)

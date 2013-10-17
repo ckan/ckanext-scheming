@@ -8,6 +8,7 @@ from ckanext.scheming import helpers
 
 import importlib
 import os
+import json
 
 class SchemingException(Exception):
     pass
@@ -57,7 +58,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
         self._schemas = _load_schemas(self._schema_urls, 'dataset_type')
 
     def package_types(self):
-        return [t['dataset_type'] for t in self._schemas]
+        return list(self._schemas)
 
     def get_helpers(self):
         return _SharedPluginInit.get_helpers()
@@ -79,7 +80,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
         self._schemas = _load_schemas(self._schema_urls, 'group_type')
 
     def group_types(self):
-        return [t['group_type'] for t in self._schemas]
+        return list(self._schemas)
 
     def get_helpers(self):
         return _SharedPluginInit.get_helpers()
@@ -89,7 +90,6 @@ def _load_schemas(schemas, type_field):
     out = {}
     for n in schemas:
         schema = _load_schema(n)
-        schema = json.loads(schema)
         out[schema[type_field]] = schema
     return out
 
@@ -98,7 +98,7 @@ def _load_schema(url):
     schema = _load_schema_module_path(url)
     if not schema:
         schema = _load_schema_url(url)
-    return json.load(schema)    
+    return json.load(schema)
 
 def _load_schema_module_path(url):
     """
