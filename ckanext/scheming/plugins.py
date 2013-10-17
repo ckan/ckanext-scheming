@@ -30,7 +30,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
             config.get('scheming.dataset_fallback', False))
         self._schema_urls = config.get('scheming.dataset_schemas', ""
             ).split()
-        if not self._schema_urls
 
     def package_types(self):
         return [t['dataset_type'] for t in self.schemas]
@@ -57,7 +56,6 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
             config.get('scheming.group_fallback', False))
         self._schema_urls = config.get('scheming.group_schemas', ""
             ).split()
-        if not self._schema_urls
 
     def group_types(self):
         return [t['group_type'] for t in self._schemas]

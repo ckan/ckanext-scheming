@@ -29,6 +29,6 @@ setup(
     scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
 
     [paste.paster_command]
-    canada=ckanext.scheming.commands:SchemingCommand
+    scheming=ckanext.scheming.commands:SchemingCommand
     """,
 )
