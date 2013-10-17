@@ -14,7 +14,7 @@ def _get_schemas():
     dataset_schemas = None
     group_schemas = None
     for plugin in p.PluginImplementations(_IScheming):
-        if hasattr(plugin, 'group_form'):
+        if hasattr(plugin, 'group_types'):
             group_schemas = plugin._schemas
         else:
             dataset_schemas = plugin._schemas
@@ -46,5 +46,5 @@ class SchemingCommand(CkanCommand):
             print self.__doc__
 
     def _show(self):
-        print _get_schemas()
+        print json.dumps(_get_schemas(), indent=2)
 

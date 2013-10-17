@@ -22,8 +22,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(_IScheming)
 
-    _schemas = None
-
     def update_config(self, config):
         p.toolkit.add_template_directory(config, 'dataset_templates')
 
@@ -33,6 +31,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
         self._schema_urls = config.get('scheming.dataset_schemas', ""
             ).split()
         if not self._schema_urls
+
+    def package_types(self):
+        return [t['dataset_type'] for t in self.schemas]
 
     def _load_schemas(self):
         if self._schemas:
@@ -48,8 +49,6 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
     p.implements(p.IGroupForm, inherit=True)
     p.implements(_IScheming)
 
-    _schemas = None
-
     def update_config(self, config):
         p.toolkit.add_template_directory(config, 'group_templates')
 
@@ -59,6 +58,9 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
         self._schema_urls = config.get('scheming.group_schemas', ""
             ).split()
         if not self._schema_urls
+
+    def group_types(self):
+        return [t['group_type'] for t in self._schemas]
 
     def _load_schemas(self):
         if self._schemas:
