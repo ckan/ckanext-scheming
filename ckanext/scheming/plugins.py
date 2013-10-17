@@ -4,6 +4,8 @@ from ckan.lib.plugins import DefaultDatasetForm, DefaultGroupForm
 
 from paste.deploy.converters import asbool
 
+from ckanext.scheming import helpers
+
 import importlib
 import os
 
@@ -14,14 +16,39 @@ class _IScheming(p.Interface):
     "plugin interface used internally to locate scheming plugin instances"
     pass
 
+class _SharedPluginInit(object):
+    """
+    Both plugins below need these, but we should only do them once
+    when either plugin is loaded.
+    """
+    _helpers_loaded = False
+    _template_dir_added = False
+
+    @classmethod
+    def get_helpers(cls):
+        if cls._helpers_loaded:
+            return {}
+        cls._helpers_loaded = True
+        return dict((h, getattr(helpers, h)) for h in [
+            'language_text',
+            ])
+
+    @classmethod
+    def add_template_directory(cls, config):
+        if cls._template_dir_added:
+            return
+        cls._template_dir_added = True
+        p.toolkit.add_template_directory(config, 'templates')
+
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
     p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(_IScheming)
 
     def update_config(self, config):
-        p.toolkit.add_template_directory(config, 'dataset_templates')
+        _SharedPluginInit.add_template_directory(config)
 
         self._is_fallback = p.toolkit.asbool(
             config.get('scheming.dataset_fallback', False))
@@ -32,15 +59,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
     def package_types(self):
         return [t['dataset_type'] for t in self._schemas]
 
+    def get_helpers(self):
+        return _SharedPluginInit.get_helpers()
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
     p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(_IScheming)
 
     def update_config(self, config):
-        p.toolkit.add_template_directory(config, 'group_templates')
+        _SharedPluginInit.add_template_directory(config)
 
         self._is_fallback = p.toolkit.asbool(
             config.get('scheming.group_fallback', False))
@@ -50,6 +80,9 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
 
     def group_types(self):
         return [t['group_type'] for t in self._schemas]
+
+    def get_helpers(self):
+        return _SharedPluginInit.get_helpers()
 
 
 def _load_schemas(schemas, type_field):
