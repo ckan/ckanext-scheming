@@ -85,6 +85,9 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
     def get_helpers(self):
         return _SharedPluginInit.get_helpers()
 
+    def about_template(self):
+        return 'scheming/group/about.html'
+
 
 def _load_schemas(schemas, type_field):
     out = {}
