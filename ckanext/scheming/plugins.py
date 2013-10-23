@@ -1,4 +1,5 @@
 from pylons.i18n import _
+from pylons import c
 import ckan.plugins as p
 from ckan.lib.plugins import DefaultDatasetForm, DefaultGroupForm
 
@@ -31,7 +32,7 @@ class _SharedPluginInit(object):
             return {}
         cls._helpers_loaded = True
         return dict((h, getattr(helpers, h)) for h in [
-            'language_text',
+            'scheming_language_text',
             ])
 
     @classmethod
@@ -87,6 +88,14 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
 
     def about_template(self):
         return 'scheming/group/about.html'
+
+    def setup_template_variables(self, context, data_dict):
+        try:
+            group_type = c.group_dict['type']
+            c.scheming_schema = self._schemas[group_type]
+            c.scheming_fields = c.scheming_schema['group_fields']
+        except KeyError:
+            raise # for development
 
 
 def _load_schemas(schemas, type_field):

@@ -2,14 +2,14 @@ from ckan.lib.helpers import lang
 from pylons import config
 from pylons.i18n import gettext
 
-def language_text(text):
+def scheming_language_text(text):
     """
     :param text: {lang: text} dict or text string
 
     Convert "language-text" to users' language by looking up
     languag in dict or using gettext if not a dict
     """
-    if hasattr(t, 'get'):
+    if hasattr(text, 'get'):
         l = lang()
         v = text.get(l)
         if not v:
