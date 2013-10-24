@@ -2,6 +2,9 @@ from pylons.i18n import _
 from pylons import c
 import ckan.plugins as p
 from ckan.lib.plugins import DefaultDatasetForm, DefaultGroupForm
+from ckan.logic.schema import group_form_schema
+from ckan.logic.converters import convert_from_extras
+from ckan.lib.navl.validators import ignore_missing
 
 from paste.deploy.converters import asbool
 
@@ -96,6 +99,16 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
             c.scheming_fields = c.scheming_schema['group_fields']
         except KeyError:
             raise # for development
+
+    def db_to_form_schema_options(self, options):
+        schema = group_form_schema()
+        group_type = options['context']['group'].type
+        scheming_schema = self._schemas[group_type]
+        scheming_fields = scheming_schema['group_fields']
+        for f in scheming_fields:
+            if f['field_name'] not in schema:
+                schema[f['field_name']] = [convert_from_extras, ignore_missing]
+        return schema
 
 
 def _load_schemas(schemas, type_field):
