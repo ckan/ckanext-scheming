@@ -17,10 +17,12 @@ ckan.plugins = scheming_datasets scheming_groups
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
                            ckanext.spatialx:spatialxy_schema.json
-scheming.group_schemas = ckanext.spatialx:org_schema.json
+scheming.group_schemas = ckanext.spatialx:group_schema.json
+scheming.organization_schemas = ckanext.spatialx:org_schema.json
 #   will try to load "spatialx_schema.json" and "spatialxy_schema.json"
-#   as dataset schemas and "org_schema.json" as a group schema, all from
-#   the directory containing the ckanext.spatialx module code
+#   as dataset schemas and "group_schema.json" as a group schema and
+#   "org_schema" as an organization schema, all from the directory
+#   containing the ckanext.spatialx module code
 #
 #   URLs may also be used, e.g:
 #
@@ -96,7 +98,40 @@ Example dataset schema description
 }
 ```
 
-In the example above `(language-text)` may be a plain string or an
+Example organization/group schema description
+---------------------------------------------
+```json
+{
+  "scheming_version": 1,
+  "type": "organization",
+  "about_url": "http://example.com/the-spatialx-schema",
+  "fields": [
+    {
+      "field_name": "title",
+      "label": (language-text),
+      "form_snippet": "large_text.html",
+      "validators": "if_empty_same_as(name)"
+    },
+    {
+      "field_name": "name",
+      "label": (language-text),
+      "form_snippet": "autofill_from_title.html",
+      "validators": "not_empty name_validator group_name_validator"
+    },
+    {
+      "field_name": "department_number",
+      "label": (language-text),
+      "form_snippet": "text.html",
+      "validators": "not_empty int"
+    }
+  ]
+}
+```
+
+language-text
+-------------
+
+In the examples above `(language-text)` may be a plain string or an
 object containing different language versions:
 
 ```json
@@ -116,15 +151,17 @@ scheming_version
 Set to 1. Future versions of ckanext-scheming may use a larger
 number to indicate a change to the description JSON format.
 
-dataset_type
-------------
+type
+----
 
-`dataset_type` is the "type" field stored in the dataset, and used
-to set the URL for this type of dataset.
+`type` is the "type" field stored in the dataset, group or organization.
+For datasets it is used to set the URL for this type of dataset.
 
 Normal datasets would be available under `/dataset`, but datasets with
 the schema above would appear under `/spatialx` instead.
 
+For organizations this field should be set to "organization" as some
+parts of CKAN depend on this value not changing.
 
 
 about_url
@@ -134,14 +171,16 @@ about_url
 Its use is optional but highly recommended.
 
 
-dataset_fields
---------------
+fields
+------
 
-Fields are specified in the `dataset_fields` list in the order you
-would like them to appear in the dataset editing form.
+Fields are specified in the `fields` list in the order you
+would like them to appear in the dataset, group or organization editing
+form.
 
 Fields you exclude will not be shown to the end user, and will not
-be accepted when editing or updating a dataset.
+be accepted when editing or updating this type of dataset, group or
+organization.
 
 FIXME: list special cases
 
@@ -149,7 +188,7 @@ FIXME: list special cases
 ### field_name
 
 The `field_name` value is the name of an existing CKAN dataset field
-or a new new extra or keyword vocabulary field. Existing field names
+or a new new extra or keyword vocabulary field. Existing dataset field names
 include:
 
 * `name` - the URI for the dataset
@@ -166,6 +205,7 @@ New field names should follow the current lowercase_with_underscores
 
 This value is available to the form snippet as `field.field_name`.
 
+FIXME: list group/organization fields
 
 ### label
 
@@ -238,43 +278,3 @@ be made uniqe by prefixing it with a domain name in reverse order
 and the name of the schema.
 
 
-Example group schema description
---------------------------------
-```json
-{
-  "scheming_version": 1,
-  "group_type": "organization",
-  "about_url": "http://example.com/the-spatialx-schema",
-  "group_fields": [
-    {
-      "field_name": "title",
-      "label": (language-text),
-      "form_snippet": "large_text.html",
-      "validators": "if_empty_same_as(name)"
-    },
-    {
-      "field_name": "name",
-      "label": (language-text),
-      "form_snippet": "autofill_from_title.html",
-      "validators": "not_empty name_validator group_name_validator"
-    },
-    {
-      "field_name": "department_number",
-      "label": (language-text),
-      "form_snippet": "text.html",
-      "validators": "not_empty int"
-    }
-  ]
-}
-```
-
-group_type
-----------
-
-`group_type` is the "type" field stored in the group, where `organization`
-is the type used for CKAN organizations.
-
-group_fields
-------------
-
-Similar to `dataset_fields` above.
