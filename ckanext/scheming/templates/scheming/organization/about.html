@@ -1,0 +1,10 @@
+{% extends "group/about.html" %}
+
+{% block primary_content_inner %}
+<dl>
+{% for f in c.scheming_fields %}
+<dt>{{ h.scheming_language_text(f.label) }}:</dt>
+<dd>{{ c.group_dict[f.field_name] or ("&nbsp;"|safe) }}</dd>
+{% endfor %}
+</dl>
+{% endblock %}
