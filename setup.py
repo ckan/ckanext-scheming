@@ -27,6 +27,7 @@ setup(
     [ckan.plugins]
     scheming_datasets=ckanext.scheming.plugins:SchemingDatasetsPlugin
     scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
+    scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
 
     [paste.paster_command]
     scheming=ckanext.scheming.commands:SchemingCommand
