@@ -32,6 +32,9 @@ class SchemingCommand(CkanCommand):
     Usage::
 
         paster scheming show
+                        load-datasets <type> <.jsonl file>
+                        load-groups <type> <.jsonl file>
+                        load-organizations <type> <.jsonl file>
     """
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -46,9 +49,24 @@ class SchemingCommand(CkanCommand):
 
         if cmd == 'show':
             self._show()
+        elif cmd in ('load-datasets', 'load-groups', 'load-organizations'
+                ) and len(self.args) == 3:
+            self._load_things(cmd, args[1], args[2])
         else:
             print self.__doc__
 
     def _show(self):
-        print json.dumps(_get_schemas(), indent=2)
+        for s, n in zip(_get_schemas(), ("Dataset", "Group", "Organization")):
+            print n, "schemas:"
+            if s is None:
+                print "    plugin not loaded"
+                continue
+            if not s:
+                print "    no schemas"
+            for typ in sorted(s):
+                print " * " + json.dumps(typ)
+                for field in s[typ]['fields']:
+                    print "   - " + json.dumps(field['field_name'])
 
+    def _load_things(self, cmd, typ, jsonl):
+        pass
