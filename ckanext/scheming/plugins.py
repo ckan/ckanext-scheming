@@ -17,17 +17,21 @@ import json
 class SchemingException(Exception):
     pass
 
-class _IScheming(p.Interface):
-    "plugin interface used internally to locate scheming plugin instances"
-    pass
+class _SchemingMixin(object):
+    """
+    Store single plugin instances in class variable 'instance'
 
-class _SharedPluginInit(object):
+    All plugins below need helpers and template directories, but we should
+    only do them once when either plugin is loaded.
     """
-    Both plugins below need these, but we should only do them once
-    when either plugin is loaded.
-    """
+    instance = None
     _helpers_loaded = False
     _template_dir_added = False
+
+    @classmethod
+    def _store_instance(cls, self):
+        assert cls.instance is None
+        cls.instance = self
 
     @classmethod
     def get_helpers(cls):
@@ -46,14 +50,15 @@ class _SharedPluginInit(object):
         p.toolkit.add_template_directory(config, 'templates')
 
 
-class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
+class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
+        _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
-    p.implements(_IScheming)
 
     def update_config(self, config):
-        _SharedPluginInit.add_template_directory(config)
+        self._store_instance(self)
+        _SchemingMixin.add_template_directory(config)
 
         self._is_fallback = p.toolkit.asbool(
             config.get('scheming.dataset_fallback', False))
@@ -65,17 +70,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm):
         return list(self._schemas)
 
     def get_helpers(self):
-        return _SharedPluginInit.get_helpers()
+        return _SchemingMixin.get_helpers()
 
 
-class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
+class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm,
+        _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
-    p.implements(_IScheming)
 
     def update_config(self, config):
-        _SharedPluginInit.add_template_directory(config)
+        self._store_instance(self)
+        _SchemingMixin.add_template_directory(config)
 
         self._is_fallback = p.toolkit.asbool(
             config.get('scheming.group_fallback', False))
@@ -87,7 +93,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
         return list(self._schemas)
 
     def get_helpers(self):
-        return _SharedPluginInit.get_helpers()
+        return _SchemingMixin.get_helpers()
 
     def about_template(self):
         return 'scheming/group/about.html'
@@ -113,14 +119,15 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm):
         return schema
 
 
-class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm):
+class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm,
+        _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
-    p.implements(_IScheming)
 
     def update_config(self, config):
-        _SharedPluginInit.add_template_directory(config)
+        self._store_instance(self)
+        _SchemingMixin.add_template_directory(config)
 
         self._is_fallback = p.toolkit.asbool(
             config.get('scheming.organization_fallback', False))
@@ -132,7 +139,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm):
         return list(self._schemas)
 
     def get_helpers(self):
-        return _SharedPluginInit.get_helpers()
+        return _SchemingMixin.get_helpers()
 
     def about_template(self):
         return 'scheming/organization/about.html'
