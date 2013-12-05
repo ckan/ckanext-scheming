@@ -150,12 +150,11 @@ def _load_schemas(schemas, type_field):
         out[schema[type_field]] = schema
     return out
 
-
 def _load_schema(url):
     schema = _load_schema_module_path(url)
     if not schema:
         schema = _load_schema_url(url)
-    return json.load(schema)
+    return schema
 
 def _load_schema_module_path(url):
     """
@@ -171,5 +170,14 @@ def _load_schema_module_path(url):
     p = m.__path__[0]
     p = os.path.join(p, file_name)
     if os.path.exists(p):
-        return open(p)
+        return json.load(open(p))
 
+def _load_schema_url(url):
+    import urllib2
+    try:
+        res = urllib2.urlopen(url)
+        tables = res.read()
+    except urllib2.URLError:
+        raise SchemingException("Could not load %s" % url)
+
+    return json.loads(tables)
