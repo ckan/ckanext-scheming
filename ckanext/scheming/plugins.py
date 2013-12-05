@@ -47,6 +47,16 @@ class _SchemingMixin(object):
         _SchemingMixin._template_dir_added = True
         p.toolkit.add_template_directory(config, 'templates')
 
+    def update_config(self, config):
+        self._store_instance(self)
+        self._add_template_directory(config)
+
+        self._is_fallback = p.toolkit.asbool(
+            config.get(self.FALLBACK_OPTION, False))
+        self._schema_urls = config.get(self.SCHEMA_OPTION, ""
+            ).split()
+        self._schemas = _load_schemas(self._schema_urls, 'type')
+
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         _SchemingMixin):
@@ -54,15 +64,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
 
-    def update_config(self, config):
-        self._store_instance(self)
-        self._add_template_directory(config)
-
-        self._is_fallback = p.toolkit.asbool(
-            config.get('scheming.dataset_fallback', False))
-        self._schema_urls = config.get('scheming.dataset_schemas', ""
-            ).split()
-        self._schemas = _load_schemas(self._schema_urls, 'type')
+    SCHEMA_OPTION = 'scheming.dataset_schemas'
+    FALLBACK_OPTION = 'scheming.dataset_fallback'
 
     def package_types(self):
         return list(self._schemas)
@@ -74,15 +77,8 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm,
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
 
-    def update_config(self, config):
-        self._store_instance(self)
-        self._add_template_directory(config)
-
-        self._is_fallback = p.toolkit.asbool(
-            config.get('scheming.group_fallback', False))
-        self._schema_urls = config.get('scheming.group_schemas', ""
-            ).split()
-        self._schemas = _load_schemas(self._schema_urls, 'type')
+    SCHEMA_OPTION = 'scheming.group_schemas'
+    FALLBACK_OPTION = 'scheming.group_fallback'
 
     def group_types(self):
         return list(self._schemas)
@@ -117,15 +113,8 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm,
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
 
-    def update_config(self, config):
-        self._store_instance(self)
-        self._add_template_directory(config)
-
-        self._is_fallback = p.toolkit.asbool(
-            config.get('scheming.organization_fallback', False))
-        self._schema_urls = config.get('scheming.organization_schemas', ""
-            ).split()
-        self._schemas = _load_schemas(self._schema_urls, 'type')
+    SCHEMA_OPTION = 'scheming.organization_schemas'
+    FALLBACK_OPTION = 'scheming.organization_fallback'
 
     def group_types(self):
         return list(self._schemas)
