@@ -32,9 +32,24 @@ class SchemingCommand(CkanCommand):
     Usage::
 
         paster scheming show
-                        load-datasets <type> <.jsonl file>
-                        load-groups <type> <.jsonl file>
-                        load-organizations <type> <.jsonl file>
+                        load-datasets <.jsonl file>
+                        load-groups <.jsonl file>
+                        load-organizations <.jsonl file>
+
+    Options::
+
+        -u/--ckan-user <username>   sets the owner of objects created,
+                                    default: ckan system user
+        -s/--start-record <n>       start loading from record, default: 1
+        -m/--max-records <m>        maximum records to load,
+                                    default: unlimited
+        --create-only               don't update existing records
+        -p/--processes <num>        sets the number of worker processes,
+                                    default: 1
+        -l/--log <filename>         write log of actions to filename
+        -z/--gzip                   read/write gzipped data
+
+
     """
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -42,6 +57,18 @@ class SchemingCommand(CkanCommand):
     parser = paste.script.command.Command.standard_parser(verbose=True)
     parser.add_option('-c', '--config', dest='config',
         default='development.ini', help='Config file to use.')
+    parser.add_option('-u', '--ckan-user', dest='ckan_user',
+        default=None)
+    parser.add_option('-s', '--start-record', dest='start_record',
+        default=1, type="int")
+    parser.add_option('-m', '--max-records', dest='max_records',
+        default=-1, type="int")
+    parser.add_option('-p', '--processes', dest='processes',
+        default=1, type="int")
+    parser.add_option('-l', '--log', dest='log', default=None)
+    parser.add_option('-z', '--gzip', dest='gzip', action='store_true')
+    parser.add_option('--create-only', dest'create_only', action='store_true')
+
 
     def command(self):
         cmd = self.args[0]
@@ -50,8 +77,13 @@ class SchemingCommand(CkanCommand):
         if cmd == 'show':
             self._show()
         elif cmd in ('load-datasets', 'load-groups', 'load-organizations'
-                ) and len(self.args) == 3:
-            self._load_things(cmd, args[1], args[2])
+                ) and len(self.args) == 2:
+            thing = cmd[5:-1] # 'dataset', 'group' or 'organization'
+            self._load_things(thing, self.args[1])
+        elif cmd in ('load-dataset-worker', 'load-group-worker',
+                'load-organization-worker'):
+            thing = cmd[5:-8] # 'dataset', 'group' or 'organization'
+            self._load_things_worker(thing)
         else:
             print self.__doc__
 
@@ -59,7 +91,7 @@ class SchemingCommand(CkanCommand):
         for s, n in zip(_get_schemas(), ("Dataset", "Group", "Organization")):
             print n, "schemas:"
             if s is None:
-                print "    plugin not loaded"
+                print "    plugin not loaded\n"
                 continue
             if not s:
                 print "    no schemas"
@@ -67,6 +99,111 @@ class SchemingCommand(CkanCommand):
                 print " * " + json.dumps(typ)
                 for field in s[typ]['fields']:
                     print "   - " + json.dumps(field['field_name'])
+            print
 
-    def _load_things(self, cmd, typ, jsonl):
-        pass
+    def _load_things(self, thing, jsonl):
+        thing_number = ['dataset', 'group', 'organization'].index(thing)
+        log = None
+        if self.options.log:
+            log = open(self.options.log, 'a')
+
+        def line_reader():
+            """
+            generate stripped records from jsonl
+            handles start_record, max_records and gzip options
+            """
+            start_record = self.options.start_record
+            max_records = self.options.max_records
+            if self.options.gzip:
+                source_file = GzipFile(jsonl)
+            else:
+                source_file = open(jsonl)
+            for num, line in enumerate(source_file, 1):
+                if num < start_record:
+                    continue
+                if max_records >= 0 and num >= start_record + max_records:
+                    break
+                yield num, line.strip()
+
+        cmd = [
+            sys.argv[0],
+            'scheming',
+            'load-%s-worker' % thing,
+            '-c', self.options.config,
+            ]
+        if self.options.ckan_user:
+            cmd += ['-u', self.options.ckan_user]
+        if self.options.create_only:
+            cmd += ['--create-only']
+
+        stats = completion_stats(self.options.processes)
+        pool = worker_pool(cmd, self.options.processes, line_reader())
+        with _quiet_int_pipe():
+            for job_ids, finished, result in pool:
+                timestamp, action, error, response = json.loads(result)
+                print job_ids, stats.next(), finished, action,
+                print json.dumps(response) if response else ''
+                if log:
+                    log.write(json.dumps([
+                        timestamp,
+                        finished,
+                        action,
+                        error,
+                        response,
+                        ]) + '\n')
+                    log.flush()
+
+    def _load_things_worker(self, thing):
+        """
+        a process that accepts lines of json on stdin which is parsed and
+        passed to the {thing}_create/update actions.  it produces lines of json
+        which are the responses from each action call.
+        """
+        thing_number = ['dataset', 'group', 'organization'].index(thing)
+
+        localckan = LocalCKAN(self.options.ckan_user, {'return_id_only':True})
+        a = localckan.action
+        thing_show, thing_create, thing_update = [
+            (a.package_show, a.package_create, a.package_update),
+            (a.group_show, a.group_create, a.group_update),
+            (a.organization_show, a.organization_create, a.organization_update),
+            ][thing_number]
+
+        def reply(action, error, response):
+            """
+            format messages to be sent back to parent process
+            """
+            sys.stdout.write(json.dumps([
+                datetime.now().isoformat(),
+                action,
+                error,
+                response]) + '\n')
+
+        for line in iter(sys.stdin.readline, ''):
+            try:
+                obj = json.loads(line.decode('utf-8'))
+            except UnicodeDecodeError, e:
+                obj = None
+                reply('read', 'UnicodeDecodeError', unicode(e))
+
+            name = obj.get('id', obj.get('name'))
+            if not name:
+                reply('read', 'NameAndIdMissing', obj)
+
+            if obj:
+                existing = None
+                if not self.options.create_only:
+                    try:
+                        existing = thing_show(id=name)
+                    except NotFound:
+                        pass
+                    # FIXME: compare and reply when 'unchanged'?
+
+                act = 'update' if existing else 'create'
+                try:
+                    r = (thing_update if existing else thing_create)(**obj)
+                except ValidationError, e:
+                    reply(act, 'ValidationError', e.error_dict)
+                except SearchIndexError, e:
+                    reply(act, 'SearchIndexError', unicode(e))
+                sys.stdout.flush()
