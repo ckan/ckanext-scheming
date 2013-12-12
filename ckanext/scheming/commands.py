@@ -148,7 +148,7 @@ class SchemingCommand(CkanCommand):
         with _quiet_int_pipe():
             for job_ids, finished, result in pool:
                 timestamp, action, error, response = json.loads(result)
-                print job_ids, stats.next(), finished, action,
+                print finished, job_ids, stats.next(), action,
                 print json.dumps(response) if response else ''
                 if log:
                     log.write(json.dumps([
