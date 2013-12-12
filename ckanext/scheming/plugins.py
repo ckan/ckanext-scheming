@@ -1,10 +1,10 @@
 from pylons.i18n import _
 from pylons import c
 import ckan.plugins as p
-from ckan.lib.plugins import DefaultDatasetForm, DefaultGroupForm, DefaultOrganizationForm
+from ckan.lib.plugins import (DefaultDatasetForm, DefaultGroupForm,
+    DefaultOrganizationForm)
+from ckan.plugins.toolkit import toolkit
 from ckan.logic.schema import group_form_schema, default_show_group_schema
-from ckan.logic.converters import convert_from_extras
-from ckan.lib.navl.validators import ignore_missing
 
 from paste.deploy.converters import asbool
 
@@ -13,6 +13,10 @@ from ckanext.scheming import helpers
 import importlib
 import os
 import json
+
+ignore_missing = toolkit.get_validator('ignore_missing')
+convert_to_extras = toolkit.get_converter('convert_to_extras')
+convert_from_extras = toolkit.get_converter('convert_from_extras')
 
 class SchemingException(Exception):
     pass
@@ -131,6 +135,17 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm,
             group_type = c.group_dict['type']
         c.scheming_schema = self._schemas[group_type]
         c.scheming_fields = c.scheming_schema['fields']
+
+    def form_to_db_schema_options(self, options):
+        schema = super(SchemingOrganizationsPlugin, self
+            ).form_to_db_schema_options(options)
+        group_type = options['context']['group'].type
+        scheming_schema = self._schemas[group_type]
+        scheming_fields = scheming_schema['fields']
+        for f in scheming_fields:
+            if f['field_name'] not in schema:
+                schema[f['field_name']] = [ignore_missing, convert_to_extras]
+        return schema
 
     def db_to_form_schema_options(self, options):
         schema = default_show_group_schema()
