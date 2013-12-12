@@ -61,73 +61,13 @@ class _SchemingMixin(object):
             ).split()
         self._schemas = _load_schemas(self._schema_urls, 'type')
 
-
-class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
-        _SchemingMixin):
-    p.implements(p.IConfigurer)
-    p.implements(p.ITemplateHelpers)
-    p.implements(p.IDatasetForm, inherit=True)
-
-    SCHEMA_OPTION = 'scheming.dataset_schemas'
-    FALLBACK_OPTION = 'scheming.dataset_fallback'
-
-    def package_types(self):
-        return list(self._schemas)
-
-
-class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm,
-        _SchemingMixin):
-    p.implements(p.IConfigurer)
-    p.implements(p.ITemplateHelpers)
-    p.implements(p.IGroupForm, inherit=True)
-
-    SCHEMA_OPTION = 'scheming.group_schemas'
-    FALLBACK_OPTION = 'scheming.group_fallback'
+class _GroupOrganizationMixin(object):
+    """
+    Common methods for SchemingGroupsPlugin and SchemingOrganizationsPlugin
+    """
 
     def group_types(self):
         return list(self._schemas)
-
-    def about_template(self):
-        return 'scheming/group/about.html'
-
-    def edit_template(self):
-        return 'scheming/group/edit.html'
-
-    def setup_template_variables(self, context, data_dict):
-        group_type = context.get('group_type')
-        if not group_type:
-            group_type = c.group_dict['type']
-        c.scheming_schema = self._schemas[group_type]
-        c.scheming_fields = c.scheming_schema['fields']
-
-    def db_to_form_schema_options(self, options):
-        schema = default_show_group_schema()
-        group_type = options['context']['group'].type
-        scheming_schema = self._schemas[group_type]
-        scheming_fields = scheming_schema['fields']
-        for f in scheming_fields:
-            if f['field_name'] not in schema:
-                schema[f['field_name']] = [convert_from_extras, ignore_missing]
-        return schema
-
-
-class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm,
-        _SchemingMixin):
-    p.implements(p.IConfigurer)
-    p.implements(p.ITemplateHelpers)
-    p.implements(p.IGroupForm, inherit=True)
-
-    SCHEMA_OPTION = 'scheming.organization_schemas'
-    FALLBACK_OPTION = 'scheming.organization_fallback'
-
-    def group_types(self):
-        return list(self._schemas)
-
-    def about_template(self):
-        return 'scheming/organization/about.html'
-
-    def edit_template(self):
-        return 'scheming/organization/edit.html'
 
     def setup_template_variables(self, context, data_dict):
         group_type = context.get('group_type')
@@ -156,6 +96,52 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm,
             if f['field_name'] not in schema:
                 schema[f['field_name']] = [convert_from_extras, ignore_missing]
         return schema
+
+
+class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
+        _SchemingMixin):
+    p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
+    p.implements(p.IDatasetForm, inherit=True)
+
+    SCHEMA_OPTION = 'scheming.dataset_schemas'
+    FALLBACK_OPTION = 'scheming.dataset_fallback'
+
+    def package_types(self):
+        return list(self._schemas)
+
+
+class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm,
+        _SchemingMixin, _GroupOrganizationMixin):
+    p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
+    p.implements(p.IGroupForm, inherit=True)
+
+    SCHEMA_OPTION = 'scheming.group_schemas'
+    FALLBACK_OPTION = 'scheming.group_fallback'
+
+    def about_template(self):
+        return 'scheming/group/about.html'
+
+    def edit_template(self):
+        return 'scheming/group/edit.html'
+
+
+
+class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm,
+        _SchemingMixin, _GroupOrganizationMixin):
+    p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
+    p.implements(p.IGroupForm, inherit=True)
+
+    SCHEMA_OPTION = 'scheming.organization_schemas'
+    FALLBACK_OPTION = 'scheming.organization_fallback'
+
+    def about_template(self):
+        return 'scheming/organization/about.html'
+
+    def edit_template(self):
+        return 'scheming/organization/edit.html'
 
 
 def _load_schemas(schemas, type_field):
