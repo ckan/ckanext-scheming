@@ -7,7 +7,12 @@ from ckanext.scheming.plugins import (SchemingDatasetsPlugin,
 from ckanext.scheming.workers import worker_pool
 from ckanext.scheming.stats import completion_stats
 
+from ckanapi import LocalCKAN, NotFound, ValidationError, SearchIndexError
+
+import sys
 import json
+from datetime import datetime
+from contextlib import contextmanager
 
 def _get_schemas():
     """
@@ -84,7 +89,7 @@ class SchemingCommand(CkanCommand):
             self._load_things(thing, self.args[1])
         elif cmd in ('load-dataset-worker', 'load-group-worker',
                 'load-organization-worker'):
-            thing = cmd[5:-8] # 'dataset', 'group' or 'organization'
+            thing = cmd[5:-7] # 'dataset', 'group' or 'organization'
             self._load_things_worker(thing)
         else:
             print self.__doc__
@@ -161,7 +166,9 @@ class SchemingCommand(CkanCommand):
         passed to the {thing}_create/update actions.  it produces lines of json
         which are the responses from each action call.
         """
-        thing_number = ['dataset', 'group', 'organization'].index(thing)
+        supported_things = ('dataset', 'group', 'organization')
+        assert thing in supported_things, thing
+        thing_number = supported_things.index(thing)
 
         localckan = LocalCKAN(self.options.ckan_user, {'return_id_only':True})
         a = localckan.action
@@ -188,17 +195,24 @@ class SchemingCommand(CkanCommand):
                 obj = None
                 reply('read', 'UnicodeDecodeError', unicode(e))
 
-            name = obj.get('id', obj.get('name'))
-            if not name:
-                reply('read', 'NameAndIdMissing', obj)
-
             if obj:
                 existing = None
                 if not self.options.create_only:
-                    try:
-                        existing = thing_show(id=name)
-                    except NotFound:
-                        pass
+                    # use either id or name to locate existing records
+                    name = obj.get('id')
+                    if name:
+                        try:
+                            existing = thing_show(id=name)
+                        except NotFound:
+                            pass
+                    name = obj.get('name')
+                    if not existing and name:
+                        try:
+                            existing = thing_show(id=name)
+                            # matching id required for *_update
+                            obj['id'] = existing['id']
+                        except NotFound:
+                            pass
                     # FIXME: compare and reply when 'unchanged'?
 
                 act = 'update' if existing else 'create'
@@ -208,4 +222,19 @@ class SchemingCommand(CkanCommand):
                     reply(act, 'ValidationError', e.error_dict)
                 except SearchIndexError, e:
                     reply(act, 'SearchIndexError', unicode(e))
-                sys.stdout.flush()
+                else:
+                    reply(act, None, r['name'])
+            sys.stdout.flush()
+
+@contextmanager
+def _quiet_int_pipe():
+    """
+    let pipe errors and KeyboardIterrupt exceptions cause silent exit
+    """
+    try:
+        yield
+    except KeyboardInterrupt:
+        pass
+    except IOError, e:
+        if e.errno != 32:
+            raise
