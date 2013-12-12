@@ -4,6 +4,8 @@ import paste.script
 
 from ckanext.scheming.plugins import (SchemingDatasetsPlugin,
     SchemingGroupsPlugin, SchemingOrganizationsPlugin)
+from ckanext.scheming.workers import worker_pool
+from ckanext.scheming.stats import completion_stats
 
 import json
 
@@ -67,7 +69,7 @@ class SchemingCommand(CkanCommand):
         default=1, type="int")
     parser.add_option('-l', '--log', dest='log', default=None)
     parser.add_option('-z', '--gzip', dest='gzip', action='store_true')
-    parser.add_option('--create-only', dest'create_only', action='store_true')
+    parser.add_option('--create-only', dest='create_only', action='store_true')
 
 
     def command(self):
