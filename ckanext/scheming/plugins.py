@@ -77,7 +77,7 @@ class _GroupOrganizationMixin(object):
         c.scheming_fields = c.scheming_schema['fields']
 
     def form_to_db_schema_options(self, options):
-        schema = super(SchemingOrganizationsPlugin, self
+        schema = super(_GroupOrganizationMixin, self
             ).form_to_db_schema_options(options)
         group_type = options['context']['group'].type
         scheming_schema = self._schemas[group_type]
@@ -111,8 +111,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         return list(self._schemas)
 
 
-class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm,
-        _SchemingMixin, _GroupOrganizationMixin):
+class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
+        DefaultGroupForm, _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
@@ -128,8 +128,8 @@ class SchemingGroupsPlugin(p.SingletonPlugin, DefaultGroupForm,
 
 
 
-class SchemingOrganizationsPlugin(p.SingletonPlugin, DefaultOrganizationForm,
-        _SchemingMixin, _GroupOrganizationMixin):
+class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
+        DefaultOrganizationForm, _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
