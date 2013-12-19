@@ -41,9 +41,9 @@ class _SchemingMixin(object):
         if _SchemingMixin._helpers_loaded:
             return {}
         _SchemingMixin._helpers_loaded = True
-        return dict((h, getattr(helpers, h)) for h in [
-            'scheming_language_text',
-            ])
+        return {
+            'scheming_language_text': helpers.scheming_language_text,
+            }
 
     def _add_template_directory(self, config):
         if _SchemingMixin._template_dir_added:
@@ -61,6 +61,24 @@ class _SchemingMixin(object):
             ).split()
         self._schemas = _load_schemas(self._schema_urls, 'type')
 
+    def validate(self, context, data_dict, schema, action):
+        thing, action_type = action.split('_')
+        t = data_dict.get('type')
+        if not t or t not in self._schemas:
+            return data_dict, {'type': "Unsupported {thing} type".format(
+                thing=thing)}
+        scheming_schema = self._schemas[t]
+        scheming_fields = scheming_schema['fields']
+        for f in scheming_fields:
+            if f['field_name'] in schema:
+                continue
+            if action_type == 'show':
+                schema[f['field_name']] = [convert_from_extras, ignore_missing]
+            else:
+                schema[f['field_name']] = [ignore_missing, convert_to_extras]
+        return p.toolkit.navl_validate(data_dict, schema, context)
+
+
 class _GroupOrganizationMixin(object):
     """
     Common methods for SchemingGroupsPlugin and SchemingOrganizationsPlugin
@@ -76,26 +94,9 @@ class _GroupOrganizationMixin(object):
         c.scheming_schema = self._schemas[group_type]
         c.scheming_fields = c.scheming_schema['fields']
 
-    def form_to_db_schema_options(self, options):
-        schema = super(_GroupOrganizationMixin, self
-            ).form_to_db_schema_options(options)
-        group_type = options['context']['group'].type
-        scheming_schema = self._schemas[group_type]
-        scheming_fields = scheming_schema['fields']
-        for f in scheming_fields:
-            if f['field_name'] not in schema:
-                schema[f['field_name']] = [ignore_missing, convert_to_extras]
-        return schema
-
     def db_to_form_schema_options(self, options):
-        schema = default_show_group_schema()
-        group_type = options['context']['group'].type
-        scheming_schema = self._schemas[group_type]
-        scheming_fields = scheming_schema['fields']
-        for f in scheming_fields:
-            if f['field_name'] not in schema:
-                schema[f['field_name']] = [convert_from_extras, ignore_missing]
-        return schema
+        # FIXME: investigate why this is necessary
+        return default_show_group_schema()
 
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
@@ -125,7 +126,6 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
     def edit_template(self):
         return 'scheming/group/edit.html'
-
 
 
 class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
