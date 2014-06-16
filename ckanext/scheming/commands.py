@@ -2,34 +2,16 @@ from ckan.lib.cli import CkanCommand
 import ckan.plugins as p
 import paste.script
 
-from ckanext.scheming.plugins import (SchemingDatasetsPlugin,
-    SchemingGroupsPlugin, SchemingOrganizationsPlugin)
-from ckanext.scheming.workers import worker_pool
-from ckanext.scheming.stats import completion_stats
-
-from ckanapi import LocalCKAN, NotFound, ValidationError, SearchIndexError
+from ckanext.scheming.helpers import (
+    scheming_dataset_schemas,
+    scheming_group_schemas,
+    scheming_organization_schemas,
+    )
 
 import sys
 import json
 from datetime import datetime
 from contextlib import contextmanager
-
-def _get_schemas():
-    """
-    Find the scheming plugins and return (dataset_schemas, group_schemas,
-        organization_schemas)
-
-    If any plugin is not loaded, return None instead of schema dicts
-    for that value.
-    """
-    schema_types = []
-    for s in (SchemingDatasetsPlugin, SchemingGroupsPlugin,
-            SchemingOrganizationsPlugin):
-        if s.instance is None:
-            schema_types.append(None)
-            continue
-        schema_types.append(s.instance._schemas)
-    return schema_types
 
 
 class SchemingCommand(CkanCommand):
@@ -59,7 +41,11 @@ class SchemingCommand(CkanCommand):
             print self.__doc__
 
     def _show(self):
-        for s, n in zip(_get_schemas(), ("Dataset", "Group", "Organization")):
+        for n, s in (
+                ("Dataset", scheming_dataset_schemas()),
+                ("Group", scheming_group_schemas()),
+                ("Organization", scheming_organization_schemas()),
+                ):
             print n, "schemas:"
             if s is None:
                 print "    plugin not loaded\n"
