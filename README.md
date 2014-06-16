@@ -9,6 +9,17 @@ CKAN schemas using a JSON schema description. Custom
 validators and template snippets for editing are also
 supported.
 
+
+Installation
+============
+
+This plugin relies on the two-stage dataset creation branch
+of ckan, see: https://github.com/ckan/ckan/pull/1659
+
+
+Configuration
+=============
+
 The schemas used are configured with configuration options:
 
 ```ini
