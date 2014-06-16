@@ -42,6 +42,14 @@ class _SchemingMixin(object):
         _SchemingMixin._helpers_loaded = True
         return {
             'scheming_language_text': helpers.scheming_language_text,
+            'scheming_dataset_schemas': helpers.scheming_dataset_schemas,
+            'scheming_get_dataset_schema': helpers.scheming_get_dataset_schema,
+            'scheming_group_schemas': helpers.scheming_group_schemas,
+            'scheming_get_group_schema': helpers.scheming_get_group_schema,
+            'scheming_organization_schemas':
+                helpers.scheming_organization_schemas,
+            'scheming_get_organization_schema':
+                helpers.scheming_get_organization_schema,
             }
 
     def _add_template_directory(self, config):
