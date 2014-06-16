@@ -10,7 +10,6 @@ from paste.deploy.converters import asbool
 
 from ckanext.scheming import helpers
 
-import importlib
 import os
 import json
 
@@ -165,7 +164,7 @@ def _load_schema_module_path(url):
 
     module, file_name = url.split(':', 1)
     try:
-        m = importlib.import_module(module)
+        m = __import__(module)
     except ImportError:
         return
     p = m.__path__[0]
