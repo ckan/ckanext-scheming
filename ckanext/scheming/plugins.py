@@ -12,6 +12,7 @@ from ckanext.scheming import helpers
 
 import os
 import json
+import inspect
 
 ignore_missing = toolkit.get_validator('ignore_missing')
 convert_to_extras = toolkit.get_converter('convert_to_extras')
@@ -42,6 +43,7 @@ class _SchemingMixin(object):
         _SchemingMixin._helpers_loaded = True
         return {
             'scheming_language_text': helpers.scheming_language_text,
+            'scheming_field_required': helpers.scheming_field_required,
             'scheming_dataset_schemas': helpers.scheming_dataset_schemas,
             'scheming_get_dataset_schema': helpers.scheming_get_dataset_schema,
             'scheming_group_schemas': helpers.scheming_group_schemas,
@@ -66,24 +68,7 @@ class _SchemingMixin(object):
             config.get(self.FALLBACK_OPTION, False))
         self._schema_urls = config.get(self.SCHEMA_OPTION, ""
             ).split()
-        self._schemas = _load_schemas(self._schema_urls, 'type')
-
-    def validate(self, context, data_dict, schema, action):
-        thing, action_type = action.split('_')
-        t = data_dict.get('type')
-        if not t or t not in self._schemas:
-            return data_dict, {'type': "Unsupported {thing} type".format(
-                thing=thing)}
-        scheming_schema = self._schemas[t]
-        scheming_fields = scheming_schema['fields']
-        for f in scheming_fields:
-            if f['field_name'] in schema:
-                continue
-            if action_type == 'show':
-                schema[f['field_name']] = [convert_from_extras, ignore_missing]
-            else:
-                schema[f['field_name']] = [ignore_missing, convert_to_extras]
-        return p.toolkit.navl_validate(data_dict, schema, context)
+        self._schemas = _load_schemas(self._schema_urls, self.SCHEMA_TYPE_FIELD)
 
 
 class _GroupOrganizationMixin(object):
@@ -105,6 +90,23 @@ class _GroupOrganizationMixin(object):
         # FIXME: investigate why this is necessary
         return default_show_group_schema()
 
+    def validate(self, context, data_dict, schema, action, group_type):
+        thing, action_type = action.split('_')
+        t = group_type
+        if not t or t not in self._schemas:
+            return data_dict, {'type': "Unsupported {thing} type: {t}".format(
+                thing=thing, t=t)}
+        scheming_schema = self._schemas[t]
+        scheming_fields = scheming_schema['fields']
+        for f in scheming_fields:
+            if f['field_name'] in schema:
+                continue
+            if action_type == 'show':
+                schema[f['field_name']] = [convert_from_extras, ignore_missing]
+            else:
+                schema[f['field_name']] = [ignore_missing, convert_to_extras]
+        return p.toolkit.navl_validate(data_dict, schema, context)
+
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         _SchemingMixin):
@@ -114,10 +116,30 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
+    SCHEMA_TYPE_FIELD = 'dataset_type'
+
+    def package_form(self):
+        return 'scheming/package/snippets/package_form.html'
 
     def package_types(self):
         return list(self._schemas)
 
+    def validate(self, context, data_dict, schema, action, package_type):
+        thing, action_type = action.split('_')
+        t = package_type
+        if not t or t not in self._schemas:
+            return data_dict, {'type': [
+                "Unsupported dataset type: {t}".format(t=t)]}
+        scheming_schema = self._schemas[t]
+        scheming_fields = scheming_schema['dataset_fields']
+        for f in scheming_fields:
+            if f['field_name'] in schema:
+                continue
+            if action_type == 'show':
+                schema[f['field_name']] = [convert_from_extras, ignore_missing]
+            else:
+                schema[f['field_name']] = [ignore_missing, convert_to_extras]
+        return p.toolkit.navl_validate(data_dict, schema, context)
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
         DefaultGroupForm, _SchemingMixin):
@@ -127,6 +149,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
     SCHEMA_OPTION = 'scheming.group_schemas'
     FALLBACK_OPTION = 'scheming.group_fallback'
+    SCHEMA_TYPE_FIELD = 'group_type'
 
     def about_template(self):
         return 'scheming/group/about.html'
@@ -143,6 +166,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
     SCHEMA_OPTION = 'scheming.organization_schemas'
     FALLBACK_OPTION = 'scheming.organization_fallback'
+    SCHEMA_TYPE_FIELD = 'organization_type'
 
     def about_template(self):
         return 'scheming/organization/about.html'
@@ -172,11 +196,11 @@ def _load_schema_module_path(url):
 
     module, file_name = url.split(':', 1)
     try:
-        m = __import__(module)
+        # __import__ has an odd signature
+        m = __import__(module, fromlist=[''])
     except ImportError:
         return
-    p = m.__path__[0]
-    p = os.path.join(p, file_name)
+    p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(p):
         return json.load(open(p))
 

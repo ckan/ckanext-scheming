@@ -1,0 +1,21 @@
+{
+  "scheming_version": 1,
+  "dataset_type": "dataset",
+  "about_url": "http://example.com/the-spatialx-schema",
+  "dataset_fields": [
+    {
+      "field_name": "title",
+      "label": "Title",
+      "validators": "if_empty_same_as(name)",
+      "form_snippet": "large_text.html",
+      "form_attrs": {"data-module": "slug-preview-target"}
+    },
+    {
+      "field_name": "name",
+      "label": "URL",
+      "validators": "not_empty name_validator package_name_validator",
+      "form_snippet": "dataset_slug.html",
+      "form_placeholder": "eg. my-dataset"
+    }
+  ]
+}

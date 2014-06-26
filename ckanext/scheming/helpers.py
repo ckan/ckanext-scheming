@@ -23,6 +23,15 @@ def scheming_language_text(text):
         return gettext(text)
 
 
+def scheming_field_required(field):
+    """
+    Return field['required'] or guess based on validators if not present.
+    """
+    if 'required' in field:
+        return field['required']
+    return 'not_empty' in field.get('validators', '').split()
+
+
 def scheming_dataset_schemas():
     """
     Return the dict of dataset schemas. Or if scheming_datasets
