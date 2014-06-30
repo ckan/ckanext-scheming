@@ -6,8 +6,8 @@
     label=h.scheming_language_text(field.label),
     placeholder=h.scheming_language_text(field.form_placeholder),
     value=data[field.field_name],
-    errors=errors[field.field_name],
-    classes=['control-full'],
-    attrs=field.form_attrs,
+    error=errors[field.field_name],
+    classes=['control-medium'],
+    attrs=field.form_attrs if 'form_attrs' in field else {},
     is_required=h.scheming_field_required(field)
     ) }}

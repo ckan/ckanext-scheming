@@ -1,0 +1,23 @@
+<div class="control-group">
+  {% set error = errors[field.field_name] %}
+  <label class="control-label" for="field-license">{{
+     h.scheming_language_text(field.label) }}</label>
+  <div class="controls">
+    <select id="field-{{ field.field_name }}" name="{{ field.field_name }}"
+      data-module="autocomplete">
+      {% for license_desc, license_id in licenses|sort if license_desc  %}
+        <option value="{{ license_id }}" {% if data.get(field.field_name,
+          'notspecified') == license_id %}selected="selected"{%
+          endif %}>{{ license_desc }}</option>
+      {% endfor %}
+    </select>
+    {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
+    <span class="info-block info-inline">
+      <i class="icon-info-sign"></i>
+      {% trans %}
+        License definitions and additional information can be found
+        at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
+      {% endtrans %}
+    </span>
+  </div>
+</div>

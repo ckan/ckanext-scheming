@@ -6,16 +6,83 @@
     {
       "field_name": "title",
       "label": "Title",
-      "validators": "if_empty_same_as(name)",
+      "validators": "if_empty_same_as(name) unicode",
       "form_snippet": "large_text.html",
-      "form_attrs": {"data-module": "slug-preview-target"}
+      "form_attrs": {"data-module": "slug-preview-target"},
+      "form_placeholder": "eg. A descriptive title"
     },
     {
       "field_name": "name",
       "label": "URL",
-      "validators": "not_empty name_validator package_name_validator",
+      "validators": "not_empty unicode name_validator package_name_validator",
       "form_snippet": "dataset_slug.html",
       "form_placeholder": "eg. my-dataset"
+    },
+    {
+      "field_name": "notes",
+      "label": "Description",
+      "form_snippet": "markdown.html",
+      "form_placeholder": "eg. Some useful notes about the data"
+    },
+    {
+      "field_name": "tag_string",
+      "label": "Tags",
+      "validators": "ignore_missing tag_string_convert",
+      "form_snippet": "text.html",
+      "form_placeholder": "eg. economy, mental health, government",
+      "form_attrs": {
+        "data-module": "autocomplete",
+        "data-module-tags": "",
+        "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?"
+      }
+    },
+    {
+      "field_name": "license_id",
+      "label": "License",
+      "form_snippet": "license.html"
+    },
+    {
+      "field_name": "owner_org",
+      "label": "Organization",
+      "validators": "owner_org_validator unicode",
+      "form_snippet": "organization.html"
+    },
+    {
+      "field_name": "url",
+      "label": "Source",
+      "form_snippet": "text.html",
+      "form_placeholder": "http://example.com/dataset.json"
+    },
+    {
+      "field_name": "version",
+      "label": "Version",
+      "validators": "ignore_missing unicode package_version_validator",
+      "form_snippet": "text.html",
+      "form_placeholder": "1.0"
+    },
+    {
+      "field_name": "author",
+      "label": "Author",
+      "form_snippet": "text.html",
+      "form_placeholder": "Joe Bloggs"
+    },
+    {
+      "field_name": "author_email",
+      "label": "Author Email",
+      "form_snippet": "text.html",
+      "form_placeholder": "joe@example.com"
+    },
+    {
+      "field_name": "maintainer",
+      "label": "Maintainer",
+      "form_snippet": "text.html",
+      "form_placeholder": "Joe Bloggs"
+    },
+    {
+      "field_name": "maintainer_email",
+      "label": "Maintainer Email",
+      "form_snippet": "text.html",
+      "form_placeholder": "joe@example.com"
     }
   ]
 }
