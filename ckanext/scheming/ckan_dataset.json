@@ -28,7 +28,6 @@
       "field_name": "tag_string",
       "label": "Tags",
       "validators": "ignore_missing tag_string_convert",
-      "form_snippet": "text.html",
       "form_placeholder": "eg. economy, mental health, government",
       "form_attrs": {
         "data-module": "autocomplete",
@@ -50,39 +49,67 @@
     {
       "field_name": "url",
       "label": "Source",
-      "form_snippet": "text.html",
       "form_placeholder": "http://example.com/dataset.json"
     },
     {
       "field_name": "version",
       "label": "Version",
       "validators": "ignore_missing unicode package_version_validator",
-      "form_snippet": "text.html",
       "form_placeholder": "1.0"
     },
     {
       "field_name": "author",
       "label": "Author",
-      "form_snippet": "text.html",
       "form_placeholder": "Joe Bloggs"
     },
     {
       "field_name": "author_email",
       "label": "Author Email",
-      "form_snippet": "text.html",
       "form_placeholder": "joe@example.com"
     },
     {
       "field_name": "maintainer",
       "label": "Maintainer",
-      "form_snippet": "text.html",
       "form_placeholder": "Joe Bloggs"
     },
     {
       "field_name": "maintainer_email",
       "label": "Maintainer Email",
-      "form_snippet": "text.html",
       "form_placeholder": "joe@example.com"
     }
+  ],
+  "resource_fields": [
+    {
+      "field_name": "url",
+      "label": "URL",
+      "validators": "not_empty unicode remove_whitespace",
+      "form_snippet": "upload.html",
+      "form_placeholder": "http://example.com/my-data.csv",
+      "upload_field": "upload",
+      "upload_clear": "clear_upload",
+      "upload_label": "File"
+    },
+    {
+      "field_name": "name",
+      "label": "Name",
+      "form_placeholder": "eg. January 2011 Gold Prices"
+    },
+    {
+      "field_name": "description",
+      "label": "Description",
+      "form_snippet": "markdown.html",
+      "form_placeholder": "Some useful notes about the data"
+    },
+    {
+      "field_name": "format",
+      "label": "Format",
+      "validators": "if_empty_guess_format ignore_missing clean_format unicode",
+      "form_placeholder": "eg. CSV, XML or JSON",
+      "form_attrs": {
+        "data-module": "autocomplete",
+        "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
+      }
+    }
+
   ]
 }

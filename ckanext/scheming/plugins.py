@@ -121,6 +121,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_form(self):
         return 'scheming/package/snippets/package_form.html'
 
+    def resource_form(self):
+        return 'scheming/package/snippets/resource_form.html'
+
     def package_types(self):
         return list(self._schemas)
 
@@ -140,6 +143,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             else:
                 schema[f['field_name']] = [ignore_missing, convert_to_extras]
         return p.toolkit.navl_validate(data_dict, schema, context)
+
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
         DefaultGroupForm, _SchemingMixin):
