@@ -125,6 +125,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
 
+    def read_template(self):
+        return 'scheming/package/read.html'
+
     def package_form(self):
         return 'scheming/package/snippets/package_form.html'
 

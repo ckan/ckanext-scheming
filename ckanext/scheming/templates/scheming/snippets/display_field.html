@@ -1,0 +1,14 @@
+{#- master snippet for all scheming display fields -#}
+{#- render the field the user requested, or use a default field -#}
+
+{%- set display_snippet = field.display_snippet -%}
+
+{%- if not display_snippet -%}
+  {%- set display_snippet = 'text.html' -%}
+{%- endif -%}
+
+{%- if '/' not in display_snippet -%}
+  {%- set display_snippet = 'scheming/display_snippets/' + display_snippet -%}
+{%- endif -%}
+
+{%- snippet display_snippet, field=field, data=data, errors=errors -%}

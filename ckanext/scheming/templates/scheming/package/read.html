@@ -1,0 +1,22 @@
+{% extends "package/read.html" %}
+
+{%- set schema = h.scheming_get_dataset_schema(package_type) -%}
+
+{% block package_notes %}
+  {%- if not package_type -%}
+    <p>
+    package_type not passed to template. your version of CKAN
+    might not be compatible with ckanext-scheming
+    </p>
+  {%- endif -%}
+  {% if 'notes' in schema.dataset_fields and c.pkg_notes_formatted %}
+    <div class="notes embedded-content">
+      {{ c.pkg_notes_formatted }}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block package_additional_info %}
+  {% snippet "scheming/package/snippets/additional_info.html",
+    pkg_dict=pkg, package_type=package_type, schema=schema %}
+{% endblock %}
