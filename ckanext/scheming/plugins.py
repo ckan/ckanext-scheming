@@ -9,6 +9,8 @@ from ckan.logic.schema import group_form_schema, default_show_group_schema
 from paste.deploy.converters import asbool
 
 from ckanext.scheming import helpers
+from ckanext.scheming.errors import SchemingException
+from ckanext.scheming.validation import validators_from_string
 
 import os
 import json
@@ -17,9 +19,6 @@ import inspect
 ignore_missing = toolkit.get_validator('ignore_missing')
 convert_to_extras = toolkit.get_converter('convert_to_extras')
 convert_from_extras = toolkit.get_converter('convert_from_extras')
-
-class SchemingException(Exception):
-    pass
 
 class _SchemingMixin(object):
     """
@@ -99,12 +98,20 @@ class _GroupOrganizationMixin(object):
         scheming_schema = self._schemas[t]
         scheming_fields = scheming_schema['fields']
         for f in scheming_fields:
-            if f['field_name'] in schema:
-                continue
             if action_type == 'show':
-                schema[f['field_name']] = [convert_from_extras, ignore_missing]
+                if f['field_name'] not in schema:
+                    validators = [convert_from_extras, ignore_missing]
+                else:
+                    validators = [ignore_missing]
             else:
-                schema[f['field_name']] = [ignore_missing, convert_to_extras]
+                if 'validators' in f:
+                    validators = validators_from_string(f['validators'])
+                else:
+                    validators = [ignore_missing, unicode]
+                if f['field_name'] not in schema:
+                    validators = validators + [convert_to_extras]
+            schema[f['field_name']] = validators
+
         return p.toolkit.navl_validate(data_dict, schema, context)
 
 
@@ -136,12 +143,19 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         scheming_schema = self._schemas[t]
         scheming_fields = scheming_schema['dataset_fields']
         for f in scheming_fields:
-            if f['field_name'] in schema:
-                continue
             if action_type == 'show':
-                schema[f['field_name']] = [convert_from_extras, ignore_missing]
+                if f['field_name'] not in schema:
+                    validators = [convert_from_extras, ignore_missing]
+                else:
+                    validators = [ignore_missing]
             else:
-                schema[f['field_name']] = [ignore_missing, convert_to_extras]
+                if 'validators' in f:
+                    validators = validators_from_string(f['validators'])
+                else:
+                    validators = [ignore_missing, unicode]
+                if f['field_name'] not in schema:
+                    validators = validators + [convert_to_extras]
+            schema[f['field_name']] = validators
         return p.toolkit.navl_validate(data_dict, schema, context)
 
 
