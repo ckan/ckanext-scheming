@@ -91,14 +91,15 @@ scheming_version
 Set to 1. Future versions of ckanext-scheming may use a larger
 number to indicate a change to the description JSON format.
 
-type
-----
 
-`type` is the "type" field stored in the dataset, group or organization.
-For datasets it is used to set the URL for this type of dataset.
+dataset_type, group_type or organization_type
+---------------------------------------------
+
+These are the "type" fields stored in the dataset, group or organization.
+For datasets it is used to set the URL for searching this type of dataset.
 
 Normal datasets would be available under `/dataset`, but datasets with
-the schema above would appear under `/spatialx` instead.
+the schema above would appear under `/camel-photos` instead.
 
 For organizations this field should be set to "organization" as some
 parts of CKAN depend on this value not changing.
@@ -111,25 +112,24 @@ about_url
 Its use is optional but highly recommended.
 
 
-fields
-------
+dataset_fields and resource_fields or fields
+--------------------------------------------
 
-Fields are specified in the `fields` list in the order you
+Fields are specified in the order you
 would like them to appear in the dataset, group or organization editing
-form.
+forms. Datasets have separate lists of dataset and resource fields.
+Organizations and groups have a single fields list.
 
 Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset, group or
 organization.
 
-FIXME: list special cases
-
 
 ### field_name
 
-The `field_name` value is the name of an existing CKAN dataset field
-or a new new extra or keyword vocabulary field. Existing dataset field names
-include:
+The `field_name` value is the name of an existing CKAN dataset, resource,
+group or organization field or a new new extra field. Existing dataset
+field names include:
 
 * `name` - the URI for the dataset
 * `title`
@@ -171,7 +171,7 @@ The `form_snippet` value is the name of the snippet template to
 use for this field in the dataset editing form.
 A number of snippets are provided with this
 extension, but you may also provide your own by creating templates
-under `scheming/snippets/` in a template directory in your
+under `scheming/form_snippets/` in a template directory in your
 own extension.
 
 This snippet is passed the `field` dict containing all the keys and
@@ -181,10 +181,13 @@ you added to your that aren't handled by this extension.
 
 This extension includes the following snippets:
 
-* text.html - a simple text field for free-form text or numbers
+* text.html - a simple text field for free-form text or numbers (default)
 * large_text.html - a larger text field, typically used for the title
-* choice_selectbox.html - a drop-down list for single-choice fields
-* ... FIXME: complete this
+* dataset_slug.html - the default dataset name (URL) field
+* license.html - a dataset license selection field
+* markdown.html - a markdown field, often used for descriptions
+* organization.html - an organization selection field
+* upload.html - an upload field for resource files
 
 
 ### validators
@@ -202,11 +205,13 @@ them with static string values provided.
 FIXME: provide a way to register new validator functions form extensions
 
 This extension automatically adds calls to `convert_to_extras` or
-`convert_to_tags` for new extra fields and new tag vocabulary fields,
+`convert_to_tags` for new extra fields,
 so you should not add those validators to this list.
 
 
 ### choices
+
+(not yet implemented)
 
 The `choices` list must be provided for multiple-choice and
 single-choice fields.  The `label`s are human-readable text for
@@ -219,11 +224,13 @@ that only allows values from this list.
 
 ### tag_vocabulary
 
+(not yet implemented)
+
 The `tag_vocabulary` value is used for the name of the tag vocabulary
 that will store the valid choices for a multiple-choice field.
 
 Tag vocabularies are global to the CKAN instance so this name should
-be made uniqe by prefixing it with a domain name in reverse order
+be made uniqe, e.g. by prefixing it with a domain name in reverse order
 and the name of the schema.
 
 
