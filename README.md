@@ -1,9 +1,6 @@
 ckanext-scheming
 ================
 
-*This document describes a planned CKAN extension.
-The code here doesn't actually accomplish any of this yet.*
-
 This extension provides a way to configure and share
 CKAN schemas using a JSON schema description. Custom
 validators and template snippets for editing are also
@@ -13,8 +10,8 @@ supported.
 Installation
 ============
 
-This plugin relies on the two-stage dataset creation branch
-of ckan, see: https://github.com/ckan/ckan/pull/1659
+This plugin relies on the scheming-support branch
+of ckan, see: https://github.com/ckan/ckan/pull/1795
 
 
 Configuration
@@ -47,113 +44,44 @@ Example dataset schema description
 ```json
 {
   "scheming_version": 1,
-  "dataset_type": "spatialx",
-  "about_url": "http://example.com/the-spatialx-schema",
+  "dataset_type": "camel",
+  "about_url": "http://example.com/the-camel-schema",
   "dataset_fields": [
     {
       "field_name": "title",
-      "label": (language-text),
+      "label": "Title",
       "form_snippet": "large_text.html",
-      "validators": "if_empty_same_as(name)"
+      "validators": "if_empty_same_as(name) unicode"
+      "form_placeholder": "eg. Larry, Peter, Susan"
     },
     {
       "field_name": "name",
-      "label": (language-text),
-      "form_snippet": "autofill_from_title.html",
-      "validators": "not_empty name_validator package_name_validator"
+      "label": "URL",
+      "form_snippet": "dataset_slug.html",
+      "validators": "not_empty unicode name_validator package_name_validator"
+      "form_placeholder": "eg. camel-no-5"
     },
     {
-      "field_name": "internal_flag",
-      "label": (language-text),
-      "form_snippet": "choice_selectbox.html",
-      "validators": "not_empty",
-      "choices": [
-        {
-          "label": (language-text),
-          "value": "X",
-        },
-        {
-          "label": (language-text),
-          "value": "Y",
-        }
-      ]
-    },
+      "field_name": "humps",
+      "label": "Humps",
+      "validators": "ignore_missing int_validator"
+      "form_placeholder": "eg. 2"
+    }
+  ],
+  "resource_fields": [
     {
-      "field_name": "internal_categories",
-      "label": (language-text),
-      "form_snippet": "multiple_choice_checkboxes.html",
-      "validators": "ignore_empty",
-      "tag_vocabulary": "com.example.spatialx_categories",
-      "choices": [
-        {
-          "label": (language-text),
-          "value": "P",
-        },
-        {
-          "label": (language-text),
-          "value": "Q",
-        },
-        {
-          "label": (language-text),
-          "value": "R",
-        }
-      ]
-    },
-    {
-      "field_name": "spatial",
-      "label": (language-text),
-      "form_snippet": "map_bbox_selection.html",
-      "validators": "geojson_validator"
+      "field_name": "url",
+      "label": "Photo",
+      "validators": "not_empty unicode remove_whitespace",
+      "form_snippet": "upload.html",
+      "form_placeholder": "http://example.com/my-camel-photo.jpg",
+      "upload_field": "upload",
+      "upload_clear": "clear_upload",
+      "upload_label": "Photo"
     }
   ]
 }
 ```
-
-Example organization/group schema description
----------------------------------------------
-```json
-{
-  "scheming_version": 1,
-  "type": "organization",
-  "about_url": "http://example.com/the-spatialx-schema",
-  "fields": [
-    {
-      "field_name": "title",
-      "label": (language-text),
-      "form_snippet": "large_text.html",
-      "validators": "if_empty_same_as(name)"
-    },
-    {
-      "field_name": "name",
-      "label": (language-text),
-      "form_snippet": "autofill_from_title.html",
-      "validators": "not_empty name_validator group_name_validator"
-    },
-    {
-      "field_name": "department_number",
-      "label": (language-text),
-      "form_snippet": "text.html",
-      "validators": "not_empty int"
-    }
-  ]
-}
-```
-
-language-text
--------------
-
-In the examples above `(language-text)` may be a plain string or an
-object containing different language versions:
-
-```json
-{
-  "en": "Title",
-  "fr": "Titre"
-}
-```
-
-When using a plain string translations will be provided with gettext
-instead.
 
 
 scheming_version
@@ -218,13 +146,22 @@ This value is available to the form snippet as `field.field_name`.
 
 FIXME: list group/organization fields
 
+
 ### label
 
 The `label` value is a human-readable label for this field as
 it will appear in the dataset editing form.
-This label may be provided in multiple
-languages, but only the correct version for the user's language
-will be passed to the form snippet as `field.label`.
+This label may be a string or an object providing in multiple
+languages:
+
+```json
+{
+  "en": "Title",
+  "fr": "Titre"
+}
+```
+
+When using a plain string translations will be provided with gettext.
 
 
 ### form_snippet
