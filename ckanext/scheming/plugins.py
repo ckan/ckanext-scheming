@@ -138,14 +138,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         return list(self._schemas)
 
     def validate(self, context, data_dict, schema, action, package_type):
+        """
+        Validate and convert for package_create, package_update and
+        package_show actions.
+        """
         thing, action_type = action.split('_')
         t = package_type
         if not t or t not in self._schemas:
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}
         scheming_schema = self._schemas[t]
-        scheming_fields = scheming_schema['dataset_fields']
-        for f in scheming_fields:
+
+        for f in scheming_schema['dataset_fields']:
             if action_type == 'show':
                 if f['field_name'] not in schema:
                     validators = [convert_from_extras, ignore_missing]
@@ -159,6 +163,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 if f['field_name'] not in schema:
                     validators = validators + [convert_to_extras]
             schema[f['field_name']] = validators
+
+        resource_schema = schema['resources']
+        for f in scheming_schema['resource_fields']:
+            if action_type == 'show':
+                validators = [ignore_missing]
+            else:
+                if 'validators' in f:
+                    validators = validators_from_string(f['validators'])
+                else:
+                    validators = [ignore_missing, unicode]
+            resource_schema[f['field_name']] = validators
+
         return p.toolkit.navl_validate(data_dict, schema, context)
 
 

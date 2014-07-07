@@ -32,11 +32,11 @@ def get_validator_or_converter(name):
     try:
         v = toolkit.get_validator(name)
         return v
-    except KeyError:
+    except toolkit.UnknownValidator:
         pass
     try:
         v = toolkit.get_converter(name)
         return v
-    except KeyError:
+    except toolkit.UnknownConverter:
         pass
     raise SchemingException('validator/converter not found: %r' % name)
