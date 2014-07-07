@@ -1,7 +1,7 @@
 {
   "scheming_version": 1,
   "dataset_type": "dataset",
-  "about_url": "http://example.com/the-spatialx-schema",
+  "about_url": "http://github.com/open-data/ckanext-scheming",
   "dataset_fields": [
     {
       "field_name": "title",
@@ -120,6 +120,5 @@
         "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
       }
     }
-
   ]
 }
