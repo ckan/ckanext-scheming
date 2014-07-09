@@ -137,13 +137,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
-    def validate(self, context, data_dict, schema, action, package_type):
+    def validate(self, context, data_dict, schema, action, dataset_type):
         """
         Validate and convert for package_create, package_update and
         package_show actions.
         """
         thing, action_type = action.split('_')
-        t = package_type
+        t = dataset_type
         if not t or t not in self._schemas:
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}

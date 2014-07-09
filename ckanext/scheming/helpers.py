@@ -42,14 +42,14 @@ def scheming_dataset_schemas():
         return p.instance._schemas
 
 
-def scheming_get_dataset_schema(package_type):
+def scheming_get_dataset_schema(dataset_type):
     """
-    Return the schema for the package_type passed or None if
-    no schema is defined for that package_type
+    Return the schema for the dataset_type passed or None if
+    no schema is defined for that dataset_type
     """
     schemas = scheming_dataset_schemas()
     if schemas:
-        return schemas.get(package_type)
+        return schemas.get(dataset_type)
 
 
 def scheming_group_schemas():

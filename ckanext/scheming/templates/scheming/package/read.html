@@ -1,11 +1,11 @@
 {% extends "package/read.html" %}
 
-{%- set schema = h.scheming_get_dataset_schema(package_type) -%}
+{%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
 
 {% block package_notes %}
-  {%- if not package_type -%}
+  {%- if not dataset_type -%}
     <p>
-    package_type not passed to template. your version of CKAN
+    dataset_type not passed to template. your version of CKAN
     might not be compatible with ckanext-scheming
     </p>
   {%- endif -%}
@@ -18,5 +18,5 @@
 
 {% block package_additional_info %}
   {% snippet "scheming/package/snippets/additional_info.html",
-    pkg_dict=pkg, package_type=package_type, schema=schema %}
+    pkg_dict=pkg, dataset_type=dataset_type, schema=schema %}
 {% endblock %}
