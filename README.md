@@ -87,15 +87,13 @@ Example dataset schema description
 ```
 
 
-`scheming_version`
-------------------
+### `scheming_version`
 
 Set to 1. Future versions of ckanext-scheming may use a larger
 number to indicate a change to the description JSON format.
 
 
-dataset_type, group_type or organization_type
----------------------------------------------
+### `dataset_type`, `group_type` or `organization_type`
 
 These are the "type" fields stored in the dataset, group or organization.
 For datasets it is used to set the URL for searching this type of dataset.
@@ -107,15 +105,13 @@ For organizations this field should be set to "organization" as some
 parts of CKAN depend on this value not changing.
 
 
-about_url
----------
+### `about_url`
 
 `about_url` is a Link to human-readable information about this schema.
 Its use is optional but highly recommended.
 
 
-dataset_fields and resource_fields or fields
---------------------------------------------
+### `dataset_fields` and `resource_fields` or `fields`
 
 Fields are specified in the order you
 would like them to appear in the dataset, group or organization editing
@@ -127,7 +123,7 @@ be accepted when editing or updating this type of dataset, group or
 organization.
 
 
-### field_name
+### `field_name`
 
 The `field_name` value is the name of an existing CKAN dataset, resource,
 group or organization field or a new new extra field. Existing dataset
@@ -150,7 +146,7 @@ This value is available to the form snippet as `field.field_name`.
 FIXME: list group/organization fields
 
 
-### label
+### `label`
 
 The `label` value is a human-readable label for this field as
 it will appear in the dataset editing form.
@@ -167,7 +163,7 @@ languages:
 When using a plain string translations will be provided with gettext.
 
 
-### form_snippet
+### `form_snippet`
 
 The `form_snippet` value is the name of the snippet template to
 use for this field in the dataset editing form.
@@ -192,26 +188,27 @@ This extension includes the following snippets:
 * upload.html - an upload field for resource files
 
 
-### validators
+### `validators`
 
-The `validators` value is a space-separated string of validator functions
-to use for this field when creating or updating data.
+The `validators` value is a space-separated string of validator and
+converter functions to use for this field when creating or updating data.
 When a validator name is followed by parenthesis the function is called
 passing the comma-separated values within as string parameters
-and the result is used as the validator.
+and the result is used as the validator/converter.
 
 This string does not contain arbitrary python code to be executed,
 you may only use registered validator functions, optionally calling
 them with static string values provided.
 
-FIXME: provide a way to register new validator functions form extensions
+New validators and converters may be added using the IValidators and
+IConverters plugin interfaces. See: https://github.com/ckan/ckan/pull/1841
 
 This extension automatically adds calls to `convert_to_extras` or
 `convert_to_tags` for new extra fields,
-so you should not add those validators to this list.
+so you should not add those converters to this list.
 
 
-### choices
+### `choices`
 
 (not yet implemented)
 
@@ -224,7 +221,7 @@ A validator is automatically added for creating or updating datasets
 that only allows values from this list.
 
 
-### tag_vocabulary
+### `tag_vocabulary`
 
 (not yet implemented)
 
@@ -232,7 +229,7 @@ The `tag_vocabulary` value is used for the name of the tag vocabulary
 that will store the valid choices for a multiple-choice field.
 
 Tag vocabularies are global to the CKAN instance so this name should
-be made uniqe, e.g. by prefixing it with a domain name in reverse order
+be made unique, e.g. by prefixing it with a domain name in reverse order
 and the name of the schema.
 
 
