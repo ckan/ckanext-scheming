@@ -3,8 +3,7 @@ ckanext-scheming
 
 This extension provides a way to configure and share
 CKAN schemas using a JSON schema description. Custom
-validators and template snippets for editing are also
-supported.
+template snippets for editing are also supported.
 
 
 Installation
@@ -13,11 +12,14 @@ Installation
 This plugin relies on the scheming-support branch
 of ckan, see: https://github.com/ckan/ckan/pull/1795
 
+Installing custom validators and converters requires the changes
+in https://github.com/ckan/ckan/pull/1841 (hopefully to be merged soon)
+
 
 Configuration
 =============
 
-The schemas used are configured with configuration options:
+Set the schemas you want to use with configuration options:
 
 ```ini
 ckan.plugins = scheming_datasets scheming_groups
@@ -85,8 +87,8 @@ Example dataset schema description
 ```
 
 
-scheming_version
-----------------
+`scheming_version`
+------------------
 
 Set to 1. Future versions of ckanext-scheming may use a larger
 number to indicate a change to the description JSON format.
