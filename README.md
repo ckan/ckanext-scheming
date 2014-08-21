@@ -12,9 +12,6 @@ Installation
 This plugin relies on the scheming-support branch
 of ckan, see: https://github.com/ckan/ckan/pull/1795
 
-Installing custom validators and converters requires the changes
-in https://github.com/ckan/ckan/pull/1841 (hopefully to be merged soon)
-
 
 Configuration
 =============
@@ -201,7 +198,7 @@ you may only use registered validator functions, optionally calling
 them with static string values provided.
 
 New validators and converters may be added using the IValidators and
-IConverters plugin interfaces. See: https://github.com/ckan/ckan/pull/1841
+IConverters plugin interfaces.
 
 This extension automatically adds calls to `convert_to_extras` or
 `convert_to_tags` for new extra fields,
