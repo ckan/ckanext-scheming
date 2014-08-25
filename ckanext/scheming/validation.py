@@ -1,4 +1,5 @@
-from ckan.plugins.toolkit import toolkit
+from ckan.plugins.toolkit import (get_validator, UnknownValidator,
+    get_converter, UnknownConverter)
 
 from ckanext.scheming.errors import SchemingException
 
@@ -30,13 +31,13 @@ def get_validator_or_converter(name):
     if name == 'unicode':
         return unicode
     try:
-        v = toolkit.get_validator(name)
+        v = get_validator(name)
         return v
-    except toolkit.UnknownValidator:
+    except UnknownValidator:
         pass
     try:
-        v = toolkit.get_converter(name)
+        v = get_converter(name)
         return v
-    except toolkit.UnknownConverter:
+    except UnknownConverter:
         pass
     raise SchemingException('validator/converter not found: %r' % name)

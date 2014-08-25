@@ -3,7 +3,8 @@ from pylons import c
 import ckan.plugins as p
 from ckan.lib.plugins import (DefaultDatasetForm, DefaultGroupForm,
     DefaultOrganizationForm)
-from ckan.plugins.toolkit import toolkit
+from ckan.plugins.toolkit import (get_validator, get_converter,
+    navl_validate, add_template_directory, asbool)
 from ckan.logic.schema import group_form_schema, default_show_group_schema
 
 from paste.deploy.converters import asbool
@@ -16,9 +17,9 @@ import os
 import json
 import inspect
 
-ignore_missing = toolkit.get_validator('ignore_missing')
-convert_to_extras = toolkit.get_converter('convert_to_extras')
-convert_from_extras = toolkit.get_converter('convert_from_extras')
+ignore_missing = get_validator('ignore_missing')
+convert_to_extras = get_converter('convert_to_extras')
+convert_from_extras = get_converter('convert_from_extras')
 
 class _SchemingMixin(object):
     """
@@ -57,16 +58,14 @@ class _SchemingMixin(object):
         if _SchemingMixin._template_dir_added:
             return
         _SchemingMixin._template_dir_added = True
-        p.toolkit.add_template_directory(config, 'templates')
+        add_template_directory(config, 'templates')
 
     def update_config(self, config):
         self._store_instance(self)
         self._add_template_directory(config)
 
-        self._is_fallback = p.toolkit.asbool(
-            config.get(self.FALLBACK_OPTION, False))
-        self._schema_urls = config.get(self.SCHEMA_OPTION, ""
-            ).split()
+        self._is_fallback = asbool(config.get(self.FALLBACK_OPTION, False))
+        self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
         self._schemas = _load_schemas(self._schema_urls, self.SCHEMA_TYPE_FIELD)
 
 
@@ -112,7 +111,7 @@ class _GroupOrganizationMixin(object):
                     validators = validators + [convert_to_extras]
             schema[f['field_name']] = validators
 
-        return p.toolkit.navl_validate(data_dict, schema, context)
+        return navl_validate(data_dict, schema, context)
 
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
@@ -175,7 +174,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     validators = [ignore_missing, unicode]
             resource_schema[f['field_name']] = validators
 
-        return p.toolkit.navl_validate(data_dict, schema, context)
+        return navl_validate(data_dict, schema, context)
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
