@@ -102,6 +102,8 @@ class _GroupOrganizationMixin(object):
                     validators = [convert_from_extras, ignore_missing]
                 else:
                     validators = [ignore_missing]
+                if 'output_validators' in f:
+                    validators += validators_from_string(f['output_validators'])
             else:
                 if 'validators' in f:
                     validators = validators_from_string(f['validators'])
@@ -154,6 +156,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     validators = [convert_from_extras, ignore_missing]
                 else:
                     validators = [ignore_missing]
+                if 'output_validators' in f:
+                    validators += validators_from_string(f['output_validators'])
             else:
                 if 'validators' in f:
                     validators = validators_from_string(f['validators'])
@@ -167,6 +171,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         for f in scheming_schema['resource_fields']:
             if action_type == 'show':
                 validators = [ignore_missing]
+                if 'output_validators' in f:
+                    validators += validators_from_string(f['output_validators'])
             else:
                 if 'validators' in f:
                     validators = validators_from_string(f['validators'])
