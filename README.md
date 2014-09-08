@@ -54,7 +54,7 @@ Fields
 
 ### `scheming_version`
 
-Set to 1. Future versions of ckanext-scheming may use a larger
+Set to `1`. Future versions of ckanext-scheming may use a larger
 number to indicate a change to the description JSON format.
 
 
@@ -64,9 +64,9 @@ These are the "type" fields stored in the dataset, group or organization.
 For datasets it is used to set the URL for searching this type of dataset.
 
 Normal datasets would be available under `/dataset`, but datasets with
-the schema above would appear under `/camel-photos` instead.
+the `camel_photos.json` schema above would appear under `/camel-photos` instead.
 
-For organizations this field should be set to "organization" as some
+For organizations this field should be set to `"organization"` as some
 parts of CKAN depend on this value not changing.
 
 
@@ -80,7 +80,7 @@ Its use is optional but highly recommended.
 
 Fields are specified in the order you
 would like them to appear in the dataset, group or organization editing
-forms. Datasets have separate lists of dataset and resource fields.
+pages. Datasets have separate lists of dataset and resource fields.
 Organizations and groups have a single fields list.
 
 Fields you exclude will not be shown to the end user, and will not
@@ -131,26 +131,55 @@ When using a plain string translations will be provided with gettext.
 ### `form_snippet`
 
 The `form_snippet` value is the name of the snippet template to
-use for this field in the dataset editing form.
+use for this field in the dataset, group or organization editing form.
 A number of snippets are provided with this
 extension, but you may also provide your own by creating templates
 under `scheming/form_snippets/` in a template directory in your
 own extension.
 
 This snippet is passed the `field` dict containing all the keys and
-values in this `dataset_field` record, including any additional ones
+values in this field record, including any additional ones
 you added to your that aren't handled by this extension.
 
+This extension includes the following form snippets:
 
-This extension includes the following snippets:
+* [text.html](ckanext/scheming/templates/scheming/form_snippets/text.html) -
+  a simple text field for free-form text or numbers (default)
+* [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
+  a larger text field, typically used for the title
+* [dataset_slug.html](ckanext/scheming/templates/scheming/form_snippets/dataset_slug.html) -
+  the default dataset name (URL) field
+* [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
+  a dataset license selection field
+* [markdown.html](ckanext/scheming/templates/scheming/form_snippets/markdown.html) -
+  a markdown field, often used for descriptions
+* [organization.html](ckanext/scheming/templates/scheming/form_snippets/organization.html) -
+  an organization selection field for datasets
+* [upload.html](ckanext/scheming/templates/scheming/form_snippets/upload.html) -
+  an upload field for resource files
 
-* text.html - a simple text field for free-form text or numbers (default)
-* large_text.html - a larger text field, typically used for the title
-* dataset_slug.html - the default dataset name (URL) field
-* license.html - a dataset license selection field
-* markdown.html - a markdown field, often used for descriptions
-* organization.html - an organization selection field
-* upload.html - an upload field for resource files
+
+### `display_snippet`
+
+The `display_snippet` value is the name of the snippet template to
+use for this field in the dataset, group or organization view page.
+A number of snippets are provided with this
+extension, but you may also provide your own by creating templates
+under `scheming/display_snippets/` in a template directory in your
+own extension.
+
+This snippet is passed the `field` dict containing all the keys and
+values in this field record, including any additional ones
+you added to your that aren't handled by this extension.
+
+This extension includes the following display snippets:
+
+* [text.html](ckanext/scheming/templates/scheming/display_snippets/text.html) -
+  render as a normal text value (default)
+* [link.html](ckanext/scheming/templates/scheming/display_snippets/link.html) -
+  render as an external link to open in a new window
+* [email.html](ckanext/scheming/templates/scheming/display_snippets/email.html) -
+  render as a "mailto:" link
 
 
 ### `validators`
