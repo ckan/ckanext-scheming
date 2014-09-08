@@ -190,16 +190,32 @@ When a validator name is followed by parenthesis the function is called
 passing the comma-separated values within as string parameters
 and the result is used as the validator/converter.
 
+e.g. `"if_empty_same_as(name) unicode"` is the same as in a plugin specifying:
+
+```python
+[get_validator('if_empty_same_as')("name"), unicode]
+```
+
 This string does not contain arbitrary python code to be executed,
 you may only use registered validator functions, optionally calling
 them with static string values provided.
 
-New validators and converters may be added using the IValidators and
-IConverters plugin interfaces.
+New validators and converters may be added using the IValidators
+plugin interface.
 
-This extension automatically adds calls to `convert_to_extras` or
-`convert_to_tags` for new extra fields,
-so you should not add those converters to this list.
+This extension automatically adds calls to `convert_to_extras`
+for new extra fields,
+so you should not add that to this list.
+
+### `output_validators`
+
+The `output_validators` value is like `validators` but used when
+retrieving values from the database instead of when saving them.
+These validators may be used to transform the data before it is
+sent to the user.
+
+This extension automatically adds calls to `convert_from_extras`
+for extra fields so you should not add that to this list.
 
 
 ### `choices`
