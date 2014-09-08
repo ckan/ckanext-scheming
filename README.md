@@ -37,51 +37,19 @@ scheming.organization_schemas = ckanext.spatialx:org_schema.json
 ```
 
 
-Example dataset schema description
-----------------------------------
+Example dataset schemas
+-----------------------
 
-```json
-{
-  "scheming_version": 1,
-  "dataset_type": "camel-photos",
-  "about_url": "http://example.com/the-camel-photos-schema",
-  "dataset_fields": [
-    {
-      "field_name": "title",
-      "label": "Title",
-      "form_snippet": "large_text.html",
-      "validators": "if_empty_same_as(name) unicode",
-      "form_attrs": {"data-module": "slug-preview-target"},
-      "form_placeholder": "eg. Larry, Peter, Susan"
-    },
-    {
-      "field_name": "name",
-      "label": "URL",
-      "form_snippet": "dataset_slug.html",
-      "validators": "not_empty unicode name_validator package_name_validator",
-      "form_placeholder": "eg. camel-no-5"
-    },
-    {
-      "field_name": "humps",
-      "label": "Humps",
-      "validators": "ignore_missing int_validator",
-      "form_placeholder": "eg. 2"
-    }
-  ],
-  "resource_fields": [
-    {
-      "field_name": "url",
-      "label": "Photo",
-      "validators": "not_empty unicode remove_whitespace",
-      "form_snippet": "upload.html",
-      "form_placeholder": "http://example.com/my-camel-photo.jpg",
-      "upload_field": "upload",
-      "upload_clear": "clear_upload",
-      "upload_label": "Photo"
-    }
-  ]
-}
-```
+* [default dataset schema](ckanext/scheming/ckan_dataset.json)
+* [camel photos schema](ckanext/scheming/camel_photos.json)
+
+These schemas are included in ckanext-scheming and may be enabled
+with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.json`
+
+
+
+Fields
+------
 
 
 ### `scheming_version`
