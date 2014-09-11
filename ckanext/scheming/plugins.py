@@ -129,6 +129,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def read_template(self):
         return 'scheming/package/read.html'
 
+    def resource_template(self):
+        return 'scheming/package/resource_read.html'
+
     def package_form(self):
         return 'scheming/package/snippets/package_form.html'
 
