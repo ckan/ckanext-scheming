@@ -36,10 +36,7 @@ sudo service jetty restart
 SCHEMING_DIR="`pwd`"
 CKAN_DIR="`python -c'import ckan; print ckan.__file__.rsplit("/",2)[0]'`"
 cd "$CKAN_DIR"
-ln -s "$CKAN_DIR"/test-core.ini "$SCHEMING_DIR"/links/test-core.ini
-ln -s "$CKAN_DIR"/who.ini "$SCHEMING_DIR"/links/who.ini
 
-cat test-core.ini
 echo setting up databases
 paster db init -c test-core.ini
 
