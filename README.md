@@ -3,10 +3,10 @@ ckanext-scheming
 
 This extension provides a way to configure and share
 CKAN schemas using a JSON schema description. Custom
-template snippets for editing are also supported.
+template snippets for editing and display are also supported.
 
 
-Installation
+Requirements
 ============
 
 This plugin relies on the scheming-support branch

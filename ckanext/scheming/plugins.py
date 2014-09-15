@@ -12,7 +12,7 @@ from paste.deploy.converters import asbool
 from ckanext.scheming import helpers
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import validators_from_string
-from ckanext.logic import (
+from ckanext.scheming.logic import (
     scheming_dataset_schema_list, scheming_dataset_schema_show,
     scheming_group_schema_list, scheming_group_schema_show,
     scheming_organization_schema_list, scheming_organization_schema_show,

@@ -7,14 +7,14 @@ from ckanext.scheming.helpers import (
     )
 
 @side_effect_free
-def scheming_dataset_schema_list(self, context, data_dict):
+def scheming_dataset_schema_list(context, data_dict):
     '''
     Return a list of dataset types customized with the scheming extension
     '''
     return list(scheming_dataset_schemas())
 
 @side_effect_free
-def scheming_dataset_schema_show(self, context, data_dict):
+def scheming_dataset_schema_show(context, data_dict):
     '''
     Return the scheming schema for a given dataset type
 
@@ -25,14 +25,14 @@ def scheming_dataset_schema_show(self, context, data_dict):
 
 
 @side_effect_free
-def scheming_group_schema_list(self, context, data_dict):
+def scheming_group_schema_list(context, data_dict):
     '''
     Return a list of group types customized with the scheming extension
     '''
     return list(scheming_group_schemas())
 
 @side_effect_free
-def scheming_group_schema_show(self, context, data_dict):
+def scheming_group_schema_show(context, data_dict):
     '''
     Return the scheming schema for a given group type
 
@@ -43,14 +43,14 @@ def scheming_group_schema_show(self, context, data_dict):
 
 
 @side_effect_free
-def scheming_organization_schema_list(self, context, data_dict):
+def scheming_organization_schema_list(context, data_dict):
     '''
     Return a list of organization types customized with the scheming extension
     '''
     return list(scheming_organization_schemas())
 
 @side_effect_free
-def scheming_organization_schema_show(self, context, data_dict):
+def scheming_organization_schema_show(context, data_dict):
     '''
     Return the scheming schema for a given organization type
 
