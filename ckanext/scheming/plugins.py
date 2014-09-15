@@ -12,6 +12,11 @@ from paste.deploy.converters import asbool
 from ckanext.scheming import helpers
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import validators_from_string
+from ckanext.logic import (
+    scheming_dataset_schema_list, scheming_dataset_schema_show,
+    scheming_group_schema_list, scheming_group_schema_show,
+    scheming_organization_schema_list, scheming_organization_schema_show,
+    )
 
 import os
 import json
@@ -121,6 +126,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
+    p.implements(p.IActions)
 
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
@@ -185,12 +191,22 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         return navl_validate(data_dict, schema, context)
 
+    def get_actions(self):
+        """
+        publish dataset schemas
+        """
+        return {
+            'scheming_dataset_schema_list': scheming_dataset_schema_list,
+            'scheming_dataset_schema_show': scheming_dataset_schema_show,
+        }
+
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
         DefaultGroupForm, _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
+    p.implements(p.IActions)
 
     SCHEMA_OPTION = 'scheming.group_schemas'
     FALLBACK_OPTION = 'scheming.group_fallback'
@@ -202,12 +218,19 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def edit_template(self):
         return 'scheming/group/edit.html'
 
+    def get_actions(self):
+        return {
+            'scheming_group_schema_list': scheming_group_schema_list,
+            'scheming_group_schema_show': scheming_group_schema_show,
+        }
+
 
 class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
         DefaultOrganizationForm, _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
+    p.implements(p.IActions)
 
     SCHEMA_OPTION = 'scheming.organization_schemas'
     FALLBACK_OPTION = 'scheming.organization_fallback'
@@ -218,6 +241,12 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
     def edit_template(self):
         return 'scheming/organization/edit.html'
+
+    def get_actions(self):
+        return {
+            'scheming_organization_schema_list': scheming_organization_schema_list,
+            'scheming_organization_schema_show': scheming_organization_schema_show,
+        }
 
 
 def _load_schemas(schemas, type_field):
