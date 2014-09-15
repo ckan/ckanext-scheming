@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -e
+
+# Install postgres and solr
+sudo apt-get update -qq
+sudo apt-get install solr-jetty postgresql-$PGVERSION libgeos-c1
+
+# Setup postgres' users and databases
+sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
+sudo -u postgres psql -c "CREATE USER datastore_default WITH PASSWORD 'pass';"
+sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
+sudo -u postgres psql -c 'CREATE DATABASE datastore_test WITH OWNER ckan_default;'
+
+mkdir dl
+cd dl
+git clone https://github.com/wardi/ckan
+cd -
+cd dl/ckan
+git checkout 1795-scheming-support
+cd -
+
+mkdir links
+ln -s ../dl/ckan links/ckan
+pip install -r links/ckan/requirements.txt --allow-all-external
+pip install -r requirements.txt
+
+python setup.py develop
+
+# Configure Solr
+echo "NO_START=0\nJETTY_HOST=127.0.0.1\nJETTY_PORT=8983\nJAVA_HOME=$JAVA_HOME" | sudo tee /etc/default/jetty
+# FIXME the solr schema cannot be hardcoded as it is dependent on the ckan version
+sudo cp links/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
+sudo service jetty restart
+
+SCHEMING_DIR="`pwd`"
+CKAN_DIR="`python -c'import ckan; print ckan.__file__.rsplit("/",2)[0]'`"
+cd "$CKAN_DIR"
+ln -s "$CKAN_DIR"/test-core.ini "$SCHEMING_DIR"/links/test-core.ini
+ln -s "$CKAN_DIR"/who.ini "$SCHEMING_DIR"/links/who.ini
+
+cat test-core.ini
+echo setting up databases
+paster db init -c test-core.ini
+
+cd -
