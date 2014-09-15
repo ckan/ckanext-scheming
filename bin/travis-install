@@ -18,6 +18,7 @@ git clone https://github.com/wardi/ckan
 cd -
 cd dl/ckan
 git checkout 1795-scheming-support
+python setup.py develop
 cd -
 
 mkdir links
