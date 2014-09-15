@@ -8,9 +8,7 @@ sudo apt-get install solr-jetty postgresql-$PGVERSION libgeos-c1
 
 # Setup postgres' users and databases
 sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
-sudo -u postgres psql -c "CREATE USER datastore_default WITH PASSWORD 'pass';"
 sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
-sudo -u postgres psql -c 'CREATE DATABASE datastore_test WITH OWNER ckan_default;'
 
 mkdir dl
 cd dl
