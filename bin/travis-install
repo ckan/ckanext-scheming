@@ -17,6 +17,8 @@ cd -
 cd dl/ckan
 git checkout 1795-scheming-support
 python setup.py develop
+# not interested in building CSS, just use production one
+cp ./ckan/public/base/css/main.css ./ckan/public/base/css/main.debug.css
 cd -
 
 mkdir links
