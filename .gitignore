@@ -1,0 +1,3 @@
+*.pyc
+ckanext_scheming.egg-info/*
+links/*
