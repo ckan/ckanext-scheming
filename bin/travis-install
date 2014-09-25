@@ -22,6 +22,7 @@ cd -
 mkdir links
 ln -s ../dl/ckan links/ckan
 pip install -r links/ckan/requirements.txt --allow-all-external
+pip install -r links/ckan/dev-requirements.txt --allow-all-external
 pip install -r requirements.txt --allow-all-external
 
 python setup.py develop
