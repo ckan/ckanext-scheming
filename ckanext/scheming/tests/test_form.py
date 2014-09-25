@@ -18,5 +18,5 @@ class TestDatasetFormNew(FunctionalTestBase):
         app = self._get_test_app()
         env, response = _get_package_new_page_as_sysadmin(app)
         form = response.forms['dataset-edit']
-        print list(form.fields)
+        assert_true('humps' in form.fields)
 
