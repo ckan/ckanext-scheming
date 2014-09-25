@@ -1,7 +1,7 @@
 from nose.tools import assert_true
 
 from ckan.new_tests.factories import Sysadmin
-from ckan.new_tests.helpers import FunctionalTestBase
+from ckan.new_tests.helpers import FunctionalTestBase, submit_and_follow
 
 def _get_package_new_page_as_sysadmin(app):
     user = Sysadmin()
@@ -14,9 +14,18 @@ def _get_package_new_page_as_sysadmin(app):
 
 
 class TestDatasetFormNew(FunctionalTestBase):
-    def test_form_includes_custom_dataset_fields(self):
+    def test_dataset_form_includes_custom_fields(self):
         app = self._get_test_app()
         env, response = _get_package_new_page_as_sysadmin(app)
         form = response.forms['dataset-edit']
         assert_true('humps' in form.fields)
 
+    def test_resource_form_includes_custom_fields(self):
+        app = self._get_test_app()
+        env, response = _get_package_new_page_as_sysadmin(app)
+        form = response.forms['dataset-edit']
+        form['name'] = 'resource-includes-custom'
+
+        response = submit_and_follow(app, form, env, 'save')
+        form = response.forms['resource-edit']
+        assert_true('camels_in_photo' in form.fields)
