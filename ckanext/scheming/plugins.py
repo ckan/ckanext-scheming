@@ -39,7 +39,6 @@ class _SchemingMixin(object):
 
     @classmethod
     def _store_instance(cls, self):
-        assert cls.instance is None
         cls.instance = self
 
     def get_helpers(self):
