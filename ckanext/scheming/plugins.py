@@ -67,9 +67,7 @@ class _SchemingMixin(object):
     def update_config(self, config):
         if self.instance:
             # reloading plugins, probably in WebTest
-            _SchemingMixin._template_dir_added = False
             _SchemingMixin._helpers_loaded = False
-            return
         self._store_instance(self)
         self._add_template_directory(config)
 
