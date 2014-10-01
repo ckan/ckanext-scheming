@@ -6,3 +6,5 @@ env:
  - PGVERSION=9.1
 install: ./bin/travis-install
 script: ./bin/travis-script
+after_success:
+ - coveralls
