@@ -1,3 +1,2 @@
 [run]
-omit = */tests/*
-source = ckanext
+omit = */tests/*, */site-packages/*, */python?.?/*, */ckan/*
