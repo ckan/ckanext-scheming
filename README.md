@@ -5,7 +5,8 @@ This extension provides a way to configure and share
 CKAN schemas using a JSON schema description. Custom
 template snippets for editing and display are also supported.
 
-[![Build Status](https://travis-ci.org/open-data/ckanext-scheming.png?branch=master)](https://travis-ci.org/open-data/ckanext-scheming)
+[![Build Status](https://travis-ci.org/open-data/ckanext-scheming.svg?branch=master)](https://travis-ci.org/open-data/ckanext-scheming)
+[![Coverage](https://img.shields.io/coveralls/open-data/ckanext-scheming.svg?branch=master)](https://coveralls.io/r/open-data/ckanext-scheming)
 
 
 Requirements
