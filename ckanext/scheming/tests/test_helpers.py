@@ -5,7 +5,7 @@ from ckanext.scheming.helpers import (scheming_language_text,
 
 class TestLanguageText(object):
     def test_pass_through_gettext(self):
-        assert_equals('hello', schemign_language_text('hello'))
+        assert_equals('hello', scheming_language_text('hello'))
 
     def test_only_one_language(self):
         assert_equals('hello', scheming_language_text({'zh': 'hello'}))
@@ -20,15 +20,15 @@ class TestLanguageText(object):
 
 class TestFieldRequired(object):
     def test_explicit_required_true(self):
-        assert_equals(True, scheming_field_required({'required': True})
+        assert_equals(True, scheming_field_required({'required': True}))
 
     def test_explicit_required_false(self):
-        assert_equals(False, scheming_field_required({'required': False})
+        assert_equals(False, scheming_field_required({'required': False}))
 
     def test_not_empty_in_validators(self):
         assert_equals(True, scheming_field_required({
-            'validators': 'not_missing unicode'})
+            'validators': 'not_empty unicode'}))
 
     def test_not_empty_not_in_validators(self):
-        assert_equals(False, schemign_field_required({
-            'validators': 'maybe_not_missing'})
+        assert_equals(False, scheming_field_required({
+            'validators': 'maybe_not_empty'}))
