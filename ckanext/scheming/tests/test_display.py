@@ -13,7 +13,7 @@ class TestDatasetFormNew(FunctionalTestBase):
             name='set-one',
             humps=3,
             resources=[{
-                'url':"http://example.com/camel.jpg",
+                'url':"http://example.com/camel.txt",
                 'camels_in_photo': 2}])
 
         app = self._get_test_app()
@@ -28,7 +28,7 @@ class TestDatasetFormNew(FunctionalTestBase):
             name='set-two',
             humps=3,
             resources=[{
-                'url':"http://example.com/camel.jpg",
+                'url':"http://example.com/camel.txt",
                 'camels_in_photo': 2}])
 
         app = self._get_test_app()
