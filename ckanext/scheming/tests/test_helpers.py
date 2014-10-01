@@ -5,18 +5,23 @@ from ckanext.scheming.helpers import (scheming_language_text,
 
 class TestLanguageText(object):
     def test_pass_through_gettext(self):
-        assert_equals('hello', scheming_language_text('hello'))
+        assert_equals('hello1', scheming_language_text(
+            'hello', _gettext = lambda x: x + '1'))
 
     def test_only_one_language(self):
-        assert_equals('hello', scheming_language_text({'zh': 'hello'}))
+        assert_equals('hello', scheming_language_text(
+            {'zh': 'hello'},
+            _lang='en'))
 
     def test_matching_language(self):
-        assert_equals('hello', scheming_language_text({
-            'en': 'hello', 'aa': 'aaaa'}))
+        assert_equals('hello', scheming_language_text(
+            {'en': 'hello', 'aa': 'aaaa'},
+            _lang='en'))
 
-    def test_first_when_no_matching_languahe(self):
-        assert_equals('hello', scheming_language_text({
-            }))
+    def test_first_when_no_matching_language(self):
+        assert_equals('hello', scheming_language_text(
+            {'aa': 'hello', 'bb': 'no'},
+            _lang='en'))
 
 class TestFieldRequired(object):
     def test_explicit_required_true(self):

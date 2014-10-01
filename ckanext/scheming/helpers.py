@@ -3,7 +3,7 @@ from pylons import config
 from pylons.i18n import gettext
 
 
-def scheming_language_text(text):
+def scheming_language_text(text, _gettext=None, _lang=None):
     """
     :param text: {lang: text} dict or text string
 
@@ -11,8 +11,9 @@ def scheming_language_text(text):
     languag in dict or using gettext if not a dict
     """
     if hasattr(text, 'get'):
-        l = lang()
-        v = text.get(l)
+        if _lang is None:
+            _lang = lang()
+        v = text.get(_lang)
         if not v:
             v = text.get(config.get('ckan.locale_default', 'en'))
             if not v:
@@ -20,7 +21,9 @@ def scheming_language_text(text):
                 l, v = sorted(text.items())[0]
         return v
     else:
-        return gettext(text)
+        if _gettext is None:
+            _gettext = gettext
+        return _gettext(text)
 
 
 def scheming_field_required(field):
