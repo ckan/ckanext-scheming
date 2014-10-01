@@ -1,4 +1,4 @@
-from nose.tools import assert_raises
+from nose.tools import assert_raises, assert_equals
 from ckanapi import LocalCKAN, NotFound
 
 class TestSchemaLists(object):
@@ -16,9 +16,26 @@ class TestSchemaLists(object):
         lc = LocalCKAN('visitor')
         assert_raises(NotFound,
             lc.action.scheming_dataset_schema_show,
-            type='furries')
+            type='ernie')
 
     def test_group_schema_list(self):
         lc = LocalCKAN('visitor')
         group_schemas = lc.action.scheming_group_schema_list()
-        assert group_schemas == []
+        assert_equals(group_schemas, [])
+
+    def test_group_schema_not_found(self):
+        lc = LocalCKAN('visitor')
+        assert_raises(NotFound,
+            lc.action.scheming_group_schema_show,
+            type='bert')
+
+    def test_organization_schema_list(self):
+        lc = LocalCKAN('visitor')
+        org_schemas = lc.action.scheming_organization_schema_list()
+        assert_equals(org_schemas, [])
+
+    def test_organization_schema_not_found(self):
+        lc = LocalCKAN('visitor')
+        assert_raises(NotFound,
+            lc.action.scheming_organization_schema_show,
+            type='elmo')
