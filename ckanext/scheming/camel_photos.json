@@ -23,6 +23,10 @@
       "label": "Humps",
       "validators": "ignore_missing int_validator",
       "form_placeholder": "eg. 2"
+    },
+    {
+      "field_name": "other",
+      "label": "Other information"
     }
   ],
   "resource_fields": [
@@ -41,6 +45,10 @@
       "label": "Camels in Photo",
       "validators": "ignore_missing int_validator",
       "form_placeholder": "eg. 2"
+    },
+    {
+      "field_name": "others_in_photo",
+      "label": "Other Thing in Photo"
     }
   ]
 }
