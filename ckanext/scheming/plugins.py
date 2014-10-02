@@ -159,7 +159,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         """
         thing, action_type = action.split('_')
         t = dataset_type
-        if not t or t not in self._schemas:
+        if not t or t not in self._schemas:  # pragma: no cover
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}
         scheming_schema = self._schemas[t]
@@ -220,8 +220,9 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def about_template(self):
         return 'scheming/group/about.html'
 
-    def edit_template(self):
-        return 'scheming/group/edit.html'
+# FIXME: implement this template
+#    def edit_template(self):
+#        return 'scheming/group/edit.html'
 
     def get_actions(self):
         return {
