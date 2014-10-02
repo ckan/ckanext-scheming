@@ -1,10 +1,10 @@
 from nose.tools import assert_true
 
-from ckan.new_tests.factories import Sysadmin, Dataset
+from ckan.new_tests.factories import Sysadmin, Dataset, Organization
 from ckan.new_tests.helpers import FunctionalTestBase, submit_and_follow
 
 
-class TestDatasetFormNew(FunctionalTestBase):
+class TestDatasetDisplay(FunctionalTestBase):
     def test_dataset_displays_custom_fields(self):
         user = Sysadmin()
         Dataset(
@@ -35,4 +35,18 @@ class TestDatasetFormNew(FunctionalTestBase):
         response = app.get(url='/dataset/set-two/resource/' +
             d['resources'][0]['id'])
         assert_true('Camels in Photo' in response.body)
+
+
+class TestOrganizationDisplay(FunctionalTestBase):
+    def test_organization_displays_custom_fields(self):
+        user = Sysadmin()
+        Organization(
+            user=user,
+            name='org-one',
+            department_id='3008',
+            )
+
+        app = self._get_test_app()
+        response = app.get(url='/organization/about/org-one')
+        assert_true('Department ID' in response.body)
 
