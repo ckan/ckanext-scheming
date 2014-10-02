@@ -26,7 +26,8 @@
     },
     {
       "field_name": "other",
-      "label": "Other information"
+      "label": "Other information",
+      "output_validators": "ignore_missing"
     }
   ],
   "resource_fields": [
@@ -48,7 +49,8 @@
     },
     {
       "field_name": "others_in_photo",
-      "label": "Other Thing in Photo"
+      "label": "Other Thing in Photo",
+      "output_validators": "ignore_missing"
     }
   ]
 }
