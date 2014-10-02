@@ -20,6 +20,14 @@ class TestDatasetFormNew(FunctionalTestBase):
         form = response.forms['dataset-edit']
         assert_true('humps' in form.fields)
 
+    def test_dataset_form_slug_says_dataset(self):
+        """The default prefix shouldn't be /packages?id="""
+        app = self._get_test_app()
+        env, response = _get_package_new_page_as_sysadmin(app)
+        form = response.forms['dataset-edit']
+        assert_true('packages?id=' not in response.body)
+        assert_true('/dataset/' in response.body)
+
     def test_resource_form_includes_custom_fields(self):
         app = self._get_test_app()
         env, response = _get_package_new_page_as_sysadmin(app)

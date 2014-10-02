@@ -16,7 +16,6 @@
       "label": "URL",
       "validators": "not_empty unicode name_validator package_name_validator",
       "form_snippet": "slug.html",
-      "form_controller": "dataset",
       "form_placeholder": "eg. my-dataset"
     },
     {
