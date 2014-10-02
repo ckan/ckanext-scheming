@@ -87,7 +87,10 @@ class _GroupOrganizationMixin(object):
     def setup_template_variables(self, context, data_dict):
         group_type = context.get('group_type')
         if not group_type:
-            group_type = c.group_dict['type']
+            if c.group_dict: 
+                group_type = c.group_dict['type']
+            else:
+                group_type = self.UNSPECIFIED_GROUP_TYPE
         c.scheming_schema = self._schemas[group_type]
         c.scheming_fields = c.scheming_schema['fields']
 
@@ -237,12 +240,14 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     SCHEMA_OPTION = 'scheming.organization_schemas'
     FALLBACK_OPTION = 'scheming.organization_fallback'
     SCHEMA_TYPE_FIELD = 'organization_type'
+    UNSPECIFIED_GROUP_TYPE = 'organization'
 
     def about_template(self):
         return 'scheming/organization/about.html'
 
-    def edit_template(self):
-        return 'scheming/organization/edit.html'
+# FIXME: implement this template
+#    def edit_template(self):
+#        return 'scheming/organization/edit.html'
 
     def get_actions(self):
         return {

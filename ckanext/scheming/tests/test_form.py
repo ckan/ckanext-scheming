@@ -12,6 +12,14 @@ def _get_package_new_page_as_sysadmin(app):
     )
     return env, response
 
+def _get_organization_new_page_as_sysadmin(app):
+    user = Sysadmin()
+    env = {'REMOTE_USER': user['name'].encode('ascii')}
+    response = app.get(
+        url='/organization/new',
+        extra_environ=env,
+    )
+    return env, response
 
 class TestDatasetFormNew(FunctionalTestBase):
     def test_dataset_form_includes_custom_fields(self):
@@ -37,3 +45,10 @@ class TestDatasetFormNew(FunctionalTestBase):
         response = submit_and_follow(app, form, env, 'save')
         form = response.forms['resource-edit']
         assert_true('camels_in_photo' in form.fields)
+
+class TestOrganizationFormNew(FunctionalTestBase):
+    def test_organization_form_includes_custom_field(self):
+        app = self._get_test_app()
+        env, response = _get_organization_new_page_as_sysadmin(app)
+        form = response.forms[1] # FIXME: add an id to this form
+        assert_true('department_id' in form.fields)

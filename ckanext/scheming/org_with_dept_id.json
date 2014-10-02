@@ -28,6 +28,11 @@
       "field_name": "url",
       "label": "Image URL",
       "form_placeholder": "http://example.com/my-image.jpg"
+    },
+    {
+      "field_name": "department_id",
+      "label": "Department ID",
+      "form_placeholder": "e.g. 1042"
     }
   ]
 }
