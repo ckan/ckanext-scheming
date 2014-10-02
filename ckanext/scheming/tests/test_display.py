@@ -1,6 +1,6 @@
 from nose.tools import assert_true
 
-from ckan.new_tests.factories import Sysadmin, Dataset, Organization
+from ckan.new_tests.factories import Sysadmin, Dataset, Organization, Group
 from ckan.new_tests.helpers import FunctionalTestBase, submit_and_follow
 
 
@@ -49,4 +49,18 @@ class TestOrganizationDisplay(FunctionalTestBase):
         app = self._get_test_app()
         response = app.get(url='/organization/about/org-one')
         assert_true('Department ID' in response.body)
+
+
+class TestGroupDisplay(FunctionalTestBase):
+    def test_group_displays_custom_fields(self):
+        user = Sysadmin()
+        Group(
+            user=user,
+            name='group-one',
+            bookface='theoneandonly',
+            )
+
+        app = self._get_test_app()
+        response = app.get(url='/group/about/group-one')
+        assert_true('Bookface' in response.body)
 

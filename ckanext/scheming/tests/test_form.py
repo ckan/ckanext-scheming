@@ -22,6 +22,15 @@ def _get_organization_new_page_as_sysadmin(app):
     )
     return env, response
 
+def _get_group_new_page_as_sysadmin(app):
+    user = Sysadmin()
+    env = {'REMOTE_USER': user['name'].encode('ascii')}
+    response = app.get(
+        url='/group/new',
+        extra_environ=env,
+    )
+    return env, response
+
 class TestDatasetFormNew(FunctionalTestBase):
     def test_dataset_form_includes_custom_fields(self):
         app = self._get_test_app()
@@ -55,4 +64,14 @@ class TestOrganizationFormNew(FunctionalTestBase):
 
         # FIXME: generate the form for orgs (this is currently missing)
         assert_true('department_id' not in form.fields)
+        raise SkipTest
+
+class TestGroupFormNew(FunctionalTestBase):
+    def test_group_form_includes_custom_field(self):
+        app = self._get_test_app()
+        env, response = _get_group_new_page_as_sysadmin(app)
+        form = response.forms[1] # FIXME: add an id to this form
+
+        # FIXME: generate the form for orgs (this is currently missing)
+        assert_true('bookface' not in form.fields)
         raise SkipTest
