@@ -32,7 +32,13 @@ class TestSchemaLists(object):
     def test_organization_schema_list(self):
         lc = LocalCKAN('visitor')
         org_schemas = lc.action.scheming_organization_schema_list()
-        assert_equals(org_schemas, [])
+        assert_equals(org_schemas, ['organization'])
+
+    def test_organization_schema_show(self):
+        lc = LocalCKAN('visitor')
+        schema = lc.action.scheming_organization_schema_show(
+            type='organization')
+        assert schema['fields'][3]['label'] == 'Image URL'
 
     def test_organization_schema_not_found(self):
         lc = LocalCKAN('visitor')
