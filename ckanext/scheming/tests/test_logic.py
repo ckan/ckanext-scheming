@@ -21,7 +21,13 @@ class TestSchemaLists(object):
     def test_group_schema_list(self):
         lc = LocalCKAN('visitor')
         group_schemas = lc.action.scheming_group_schema_list()
-        assert_equals(group_schemas, [])
+        assert_equals(group_schemas, ['group'])
+
+    def test_group_schema_show(self):
+        lc = LocalCKAN('visitor')
+        schema = lc.action.scheming_group_schema_show(
+            type='group')
+        assert_equals(schema['fields'][4]['label'], 'Bookface')
 
     def test_group_schema_not_found(self):
         lc = LocalCKAN('visitor')
@@ -38,7 +44,7 @@ class TestSchemaLists(object):
         lc = LocalCKAN('visitor')
         schema = lc.action.scheming_organization_schema_show(
             type='organization')
-        assert schema['fields'][3]['label'] == 'Image URL'
+        assert_equals(schema['fields'][4]['label'], 'Department ID')
 
     def test_organization_schema_not_found(self):
         lc = LocalCKAN('visitor')
