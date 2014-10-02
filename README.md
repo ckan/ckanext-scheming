@@ -150,8 +150,8 @@ This extension includes the following form snippets:
   a simple text field for free-form text or numbers (default)
 * [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
   a larger text field, typically used for the title
-* [dataset_slug.html](ckanext/scheming/templates/scheming/form_snippets/dataset_slug.html) -
-  the default dataset name (URL) field
+* [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
+  the default name (URL) field
 * [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
   a dataset license selection field
 * [markdown.html](ckanext/scheming/templates/scheming/form_snippets/markdown.html) -

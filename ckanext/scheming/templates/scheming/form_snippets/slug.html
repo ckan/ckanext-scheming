@@ -1,13 +1,14 @@
 {% import 'macros/form.html' as form %}
 
-{%- set prefix = h.url_for(controller='package', action='read', id='') -%}
-{%- set domain = h.url_for(controller='package', action='read', id='',
-    qualified=true) -%}
+{%- set prefix = h.url_for(controller=field.form_controller, action='read',
+    id='') -%}
+{%- set domain = h.url_for(controller=field.form_controller, action='read',
+    id='', qualified=true) -%}
 {%- set domain = domain|replace("http://", "")|replace("https://", "") -%}
 {%- set attrs = {
     'data-module': 'slug-preview-slug',
     'data-module-prefix': domain,
-    'data-module-placeholder': '<dataset>'} -%}
+    'data-module-placeholder': '<%s>' % field.form_controller } -%}
 
 {{ form.prepend(
     field.field_name,
