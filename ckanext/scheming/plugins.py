@@ -101,7 +101,7 @@ class _GroupOrganizationMixin(object):
     def validate(self, context, data_dict, schema, action, group_type):
         thing, action_type = action.split('_')
         t = group_type
-        if not t or t not in self._schemas:
+        if not t or t not in self._schemas: # pragma: no cover
             return data_dict, {'type': "Unsupported {thing} type: {t}".format(
                 thing=thing, t=t)}
         scheming_schema = self._schemas[t]

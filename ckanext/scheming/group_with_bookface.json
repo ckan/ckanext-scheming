@@ -32,7 +32,8 @@
     {
       "field_name": "bookface",
       "label": "Bookface",
-      "form_placeholder": "http://bookface.example.com/ourgroup"
+      "form_placeholder": "http://bookface.example.com/ourgroup",
+      "output_validators": "ignore_missing"
     }
   ]
 }
