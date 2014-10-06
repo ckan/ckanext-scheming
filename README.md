@@ -131,6 +131,15 @@ languages:
 When using a plain string translations will be provided with gettext.
 
 
+### `required`
+
+Set to `true` for fields that must be included. Set to `false` or
+don't include this key for fields that are optional.
+
+Setting to `true` will mark the field as required in the editing form
+and include `not_empty` in the default validators that will be applied
+when `validators` is not specified.
+
 ### `form_snippet`
 
 The `form_snippet` value is the name of the snippet template to
@@ -225,8 +234,6 @@ for extra fields so you should not add that to this list.
 
 
 ### `choices`
-
-(not yet implemented)
 
 The `choices` list must be provided for multiple-choice and
 single-choice fields.  The `label`s are human-readable text for
