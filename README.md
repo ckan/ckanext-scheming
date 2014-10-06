@@ -147,7 +147,8 @@ you added to your that aren't handled by this extension.
 This extension includes the following form snippets:
 
 * [text.html](ckanext/scheming/templates/scheming/form_snippets/text.html) -
-  a simple text field for free-form text or numbers (default)
+  a simple text field for free-form text or numbers (default when no
+  choices list is given)
 * [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
   a larger text field, typically used for the title
 * [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
@@ -160,6 +161,8 @@ This extension includes the following form snippets:
   an organization selection field for datasets
 * [upload.html](ckanext/scheming/templates/scheming/form_snippets/upload.html) -
   an upload field for resource files
+* [select.html](ckanext/scheming/templates/scheming/form_snippets/select.html) -
+  a select box (default when choices list is given)
 
 
 ### `display_snippet`

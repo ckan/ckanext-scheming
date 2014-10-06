@@ -4,7 +4,11 @@
 {%- set form_snippet = field.form_snippet -%}
 
 {%- if not form_snippet -%}
-  {%- set form_snippet = 'text.html' -%}
+  {%- if 'choices' in field -%}
+    {%- set form_snippet = 'select.html' -%}
+  {%- else -%}
+    {%- set form_snippet = 'text.html' -%}
+  {%- endif -%}
 {%- endif -%}
 
 {%- if '/' not in form_snippet -%}
