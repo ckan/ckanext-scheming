@@ -1,10 +1,13 @@
 {% import 'macros/form.html' as form %}
 
 {%- set options=[] -%}
+{%- if not h.scheming_field_required(field) -%}
+    {%- do options.append({'value': ''}) -%}
+{%- endif -%}
 {%- for c in field.choices -%}
-    {% do options.append({
+    {%- do options.append({
         'value': c.value,
-        'text': h.scheming_language_text(c.label)}) %}
+        'text': h.scheming_language_text(c.label)}) -%}
 {%- endfor -%}
 
 {{ form.select(
