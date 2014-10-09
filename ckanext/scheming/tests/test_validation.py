@@ -23,3 +23,12 @@ class TestChoices(object):
             'name':'fred',
             'class': 'rocker',
             })
+
+    def test_choice_field_accepts_valid_choice(self):
+        lc = LocalCKAN()
+        d = lc.action.package_create(**{
+            'type':'camel-photos',
+            'name':'fred',
+            'class': 'f2hybrid',
+            })
+        assert_equals(d['class'], 'f2hybrid')
