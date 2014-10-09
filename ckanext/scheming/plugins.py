@@ -23,8 +23,10 @@ import json
 import inspect
 
 ignore_missing = get_validator('ignore_missing')
+not_missing = get_validator('not_missing')
 convert_to_extras = get_converter('convert_to_extras')
 convert_from_extras = get_converter('convert_from_extras')
+OneOf = get_validator('OneOf')
 
 class _SchemingMixin(object):
     """
@@ -106,22 +108,13 @@ class _GroupOrganizationMixin(object):
                 thing=thing, t=t)}
         scheming_schema = self._schemas[t]
         scheming_fields = scheming_schema['fields']
+
+        get_validators = (_field_output_validators
+            if action_type == 'show' else _field_validators)
+
         for f in scheming_fields:
-            if action_type == 'show':
-                if f['field_name'] not in schema:
-                    validators = [convert_from_extras, ignore_missing]
-                else:
-                    validators = [ignore_missing]
-                if 'output_validators' in f:
-                    validators += validators_from_string(f['output_validators'])
-            else:
-                if 'validators' in f:
-                    validators = validators_from_string(f['validators'])
-                else:
-                    validators = [ignore_missing, unicode]
-                if f['field_name'] not in schema:
-                    validators = validators + [convert_to_extras]
-            schema[f['field_name']] = validators
+            schema[f['field_name']] = get_validators(f,
+                f['field_name'] not in schema)
 
         return navl_validate(data_dict, schema, context)
 
@@ -164,35 +157,16 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 "Unsupported dataset type: {t}".format(t=t)]}
         scheming_schema = self._schemas[t]
 
+        get_validators = (_field_output_validators
+            if action_type == 'show' else _field_validators)
+
         for f in scheming_schema['dataset_fields']:
-            if action_type == 'show':
-                if f['field_name'] not in schema:
-                    validators = [convert_from_extras, ignore_missing]
-                else:
-                    validators = [ignore_missing]
-                if 'output_validators' in f:
-                    validators += validators_from_string(f['output_validators'])
-            else:
-                if 'validators' in f:
-                    validators = validators_from_string(f['validators'])
-                else:
-                    validators = [ignore_missing, unicode]
-                if f['field_name'] not in schema:
-                    validators = validators + [convert_to_extras]
-            schema[f['field_name']] = validators
+            schema[f['field_name']] = get_validators(f,
+                f['field_name'] not in schema)
 
         resource_schema = schema['resources']
         for f in scheming_schema['resource_fields']:
-            if action_type == 'show':
-                validators = [ignore_missing]
-                if 'output_validators' in f:
-                    validators += validators_from_string(f['output_validators'])
-            else:
-                if 'validators' in f:
-                    validators = validators_from_string(f['validators'])
-                else:
-                    validators = [ignore_missing, unicode]
-            resource_schema[f['field_name']] = validators
+            resource_schema[f['field_name']] = get_validators(f, False)
 
         return navl_validate(data_dict, schema, context)
 
@@ -295,3 +269,35 @@ def _load_schema_url(url):
         raise SchemingException("Could not load %s" % url)
 
     return json.loads(tables)
+
+
+def _field_output_validators(f, convert_extras):
+    """
+    Return the output validators for a scheming field f
+    """
+    if convert_extras:
+        validators = [convert_from_extras, ignore_missing]
+    else:
+        validators = [ignore_missing]
+    if 'output_validators' in f:
+        validators += validators_from_string(f['output_validators'])
+    return validators
+
+def _field_validators(f, convert_extras):
+    """
+    Return the validators for a scheming field f
+    """
+    if 'validators' in f:
+        validators = validators_from_string(f['validators'])
+    elif helpers.scheming_field_required(f):
+        validators = [not_missing, unicode]
+    else:
+        validators = [ignore_missing, unicode]
+
+    if 'choices' in f:
+        validators.append(OneOf([c['value'] for c in f['choices']]))
+
+    if convert_extras:
+        validators = validators + [convert_to_extras]
+    return validators
+
