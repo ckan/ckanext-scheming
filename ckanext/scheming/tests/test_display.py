@@ -44,7 +44,7 @@ class TestDatasetDisplay(FunctionalTestBase):
             name='with-choice',
             **{'class': 'hybrid'})
         app = self._get_test_app()
-        response = app.get(url='/dataset/with-choice/')
+        response = app.get(url='/dataset/with-choice')
         assert_true('Hybrid Camel' in response.body)
 
 

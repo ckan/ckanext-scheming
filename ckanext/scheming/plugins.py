@@ -49,6 +49,7 @@ class _SchemingMixin(object):
         _SchemingMixin._helpers_loaded = True
         return {
             'scheming_language_text': helpers.scheming_language_text,
+            'scheming_choices_label': helpers.scheming_choices_label,
             'scheming_field_required': helpers.scheming_field_required,
             'scheming_dataset_schemas': helpers.scheming_dataset_schemas,
             'scheming_get_dataset_schema': helpers.scheming_get_dataset_schema,

@@ -26,6 +26,21 @@ def scheming_language_text(text, _gettext=None, _lang=None):
         return _gettext(text)
 
 
+def scheming_choices_label(choices, value):
+    """
+    :param choices: choices list of {"label": .., "value": ..} dicts
+    :param value: value selected
+
+    Return the label from choices with a matching value, or
+    the value passed when not found. Result is passed through
+    scheming_language_text before being returned.
+    """
+    for c in choices:
+        if c['value'] == value:
+            return scheming_language_text(c['label'])
+    return scheming_language_text(value)
+
+
 def scheming_field_required(field):
     """
     Return field['required'] or guess based on validators if not present.
