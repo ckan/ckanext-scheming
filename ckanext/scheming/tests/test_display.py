@@ -36,6 +36,17 @@ class TestDatasetDisplay(FunctionalTestBase):
             d['resources'][0]['id'])
         assert_true('Camels in Photo' in response.body)
 
+    def test_choice_field_shows_labels(self):
+        user = Sysadmin()
+        d = Dataset(
+            user=user,
+            type='camel-photos',
+            name='with-choice',
+            **{'class': 'hybrid'})
+        app = self._get_test_app()
+        response = app.get(url='/dataset/with-choice/')
+        assert_true('Hybrid Camel' in response.body)
+
 
 class TestOrganizationDisplay(FunctionalTestBase):
     def test_organization_displays_custom_fields(self):
