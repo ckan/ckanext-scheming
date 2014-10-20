@@ -1,21 +1,19 @@
 {
   "scheming_version": 1,
   "dataset_type": "dataset",
+  "about": "A reimplementation of the default CKAN dataset schema",
   "about_url": "http://github.com/open-data/ckanext-scheming",
   "dataset_fields": [
     {
       "field_name": "title",
       "label": "Title",
-      "validators": "if_empty_same_as(name) unicode",
-      "form_snippet": "large_text.html",
-      "form_attrs": {"data-module": "slug-preview-target"},
+      "preset": "title",
       "form_placeholder": "eg. A descriptive title"
     },
     {
       "field_name": "name",
       "label": "URL",
-      "validators": "not_empty unicode name_validator package_name_validator",
-      "form_snippet": "slug.html",
+      "preset": "dataset_slug",
       "form_placeholder": "eg. my-dataset"
     },
     {
@@ -27,13 +25,8 @@
     {
       "field_name": "tag_string",
       "label": "Tags",
-      "validators": "ignore_missing tag_string_convert",
+      "preset": "tag_string_autocomplete",
       "form_placeholder": "eg. economy, mental health, government",
-      "form_attrs": {
-        "data-module": "autocomplete",
-        "data-module-tags": "",
-        "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?"
-      }
     },
     {
       "field_name": "license_id",
@@ -43,8 +36,7 @@
     {
       "field_name": "owner_org",
       "label": "Organization",
-      "validators": "owner_org_validator unicode",
-      "form_snippet": "organization.html"
+      "preset": "dataset_organization"
     },
     {
       "field_name": "url",
@@ -92,12 +84,7 @@
     {
       "field_name": "url",
       "label": "URL",
-      "validators": "not_empty unicode remove_whitespace",
-      "form_snippet": "upload.html",
-      "form_placeholder": "http://example.com/my-data.csv",
-      "upload_field": "upload",
-      "upload_clear": "clear_upload",
-      "upload_label": "File"
+      "preset": "resource_url_upload",
     },
     {
       "field_name": "name",
@@ -113,12 +100,7 @@
     {
       "field_name": "format",
       "label": "Format",
-      "validators": "if_empty_guess_format ignore_missing clean_format unicode",
-      "form_placeholder": "eg. CSV, XML or JSON",
-      "form_attrs": {
-        "data-module": "autocomplete",
-        "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
-      }
+      "preset": "resource_format_autocomplete"
     }
   ]
 }
