@@ -26,7 +26,7 @@
       "field_name": "tag_string",
       "label": "Tags",
       "preset": "tag_string_autocomplete",
-      "form_placeholder": "eg. economy, mental health, government",
+      "form_placeholder": "eg. economy, mental health, government"
     },
     {
       "field_name": "license_id",
@@ -84,7 +84,7 @@
     {
       "field_name": "url",
       "label": "URL",
-      "preset": "resource_url_upload",
+      "preset": "resource_url_upload"
     },
     {
       "field_name": "name",

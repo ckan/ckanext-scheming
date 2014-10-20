@@ -17,7 +17,7 @@
       "preset_name": "dataset_slug",
       "values": {
         "validators": "not_empty unicode name_validator package_name_validator",
-        "form_snippet": "slug.html",
+        "form_snippet": "slug.html"
       }
     },
     {
@@ -52,13 +52,13 @@
     {
       "preset_name": "resource_format_autocomplete",
       "values": {
-        "validators": "if_empty_guess_format ignore_missing clean_format unicode"
+        "validators": "if_empty_guess_format ignore_missing clean_format unicode",
         "form_placeholder": "eg. CSV, XML or JSON",
         "form_attrs": {
           "data-module": "autocomplete",
-          "data-module-source": "/api/2/util/resource/format_autocomplete?incompl
+          "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
         }
       }
     }
-  }
+  ]
 }

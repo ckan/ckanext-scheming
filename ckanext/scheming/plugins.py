@@ -28,6 +28,9 @@ convert_to_extras = get_converter('convert_to_extras')
 convert_from_extras = get_converter('convert_from_extras')
 OneOf = get_validator('OneOf')
 
+DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
+
+
 class _SchemingMixin(object):
     """
     Store single plugin instances in class variable 'instance'
@@ -37,6 +40,7 @@ class _SchemingMixin(object):
     """
     instance = None
     _helpers_loaded = False
+    _presets = None
     _template_dir_added = False
 
     @classmethod
@@ -67,12 +71,22 @@ class _SchemingMixin(object):
         _SchemingMixin._template_dir_added = True
         add_template_directory(config, 'templates')
 
+    def _load_presets(self, config):
+        if _SchemingMixin._presets is not None:
+            return
+        presets = config.get('scheming.presets', DEFAULT_PRESETS).split()
+        _SchemingMixin._presets = {}
+        for f in reversed(presets):
+            for p in _load_schema(f)['presets']:
+                _SchemingMixin._presets[p['preset_name']] = p['values']
+
     def update_config(self, config):
         if self.instance:
             # reloading plugins, probably in WebTest
             _SchemingMixin._helpers_loaded = False
         self._store_instance(self)
         self._add_template_directory(config)
+        self._load_presets(config)
 
         self._is_fallback = asbool(config.get(self.FALLBACK_OPTION, False))
         self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
@@ -114,6 +128,7 @@ class _GroupOrganizationMixin(object):
             if action_type == 'show' else _field_validators)
 
         for f in scheming_fields:
+            f = _expand_preset(f)
             schema[f['field_name']] = get_validators(f,
                 f['field_name'] not in schema)
 
@@ -162,11 +177,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             if action_type == 'show' else _field_validators)
 
         for f in scheming_schema['dataset_fields']:
+            f = _expand_preset(f)
             schema[f['field_name']] = get_validators(f,
                 f['field_name'] not in schema)
 
         resource_schema = schema['resources']
         for f in scheming_schema['resource_fields']:
+            f = _expand_preset(f)
             resource_schema[f['field_name']] = get_validators(f, False)
 
         return navl_validate(data_dict, schema, context)
@@ -301,4 +318,19 @@ def _field_validators(f, convert_extras):
     if convert_extras:
         validators = validators + [convert_to_extras]
     return validators
+
+def _expand_preset(f):
+    """
+    If scheming field f includes a preset value return a new field
+    based on the preset with values from f overriding any values in the
+    preset.
+
+    raises SchemingException if the preset given is not found.
+    """
+    if 'preset' not in f:
+        return f
+    if f['preset'] not in _SchemingMixing._presets:
+        raise SchemingException("preset '%s' not defined" % f['preset'])
+    return dict(_SchemingMixing._presets[f['preset']], **f)
+
 
