@@ -1,5 +1,4 @@
-from ckan.plugins.toolkit import (get_validator, UnknownValidator,
-    get_converter, UnknownConverter)
+from ckan.plugins.toolkit import get_validator, UnknownValidator
 
 from ckanext.scheming.errors import SchemingException
 
@@ -34,10 +33,5 @@ def get_validator_or_converter(name):
         v = get_validator(name)
         return v
     except UnknownValidator:
-        pass
-    try:
-        v = get_converter(name)
-        return v
-    except UnknownConverter:
         pass
     raise SchemingException('validator/converter not found: %r' % name)

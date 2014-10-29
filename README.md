@@ -12,8 +12,9 @@ template snippets for editing and display are also supported.
 Requirements
 ============
 
-This plugin relies on the scheming-support branch
-of ckan, see: https://github.com/ckan/ckan/pull/1795
+This plugin relies on the latest master branch
+of ckan (including at least commit e909360) or
+the upcoming 2.3 release of ckan
 
 
 Configuration

@@ -115,9 +115,9 @@ class _GroupOrganizationMixin(object):
         # FIXME: investigate why this is necessary
         return default_show_group_schema()
 
-    def validate(self, context, data_dict, schema, action, group_type):
+    def validate(self, context, data_dict, schema, action):
         thing, action_type = action.split('_')
-        t = group_type
+        t = data_dict.get('type')
         if not t or t not in self._schemas: # pragma: no cover
             return data_dict, {'type': "Unsupported {thing} type: {t}".format(
                 thing=thing, t=t)}
@@ -161,13 +161,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
-    def validate(self, context, data_dict, schema, action, dataset_type):
+    def validate(self, context, data_dict, schema, action):
         """
         Validate and convert for package_create, package_update and
         package_show actions.
         """
         thing, action_type = action.split('_')
-        t = dataset_type
+        t = data_dict.get('type')
         if not t or t not in self._schemas:  # pragma: no cover
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}
