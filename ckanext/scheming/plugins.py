@@ -329,8 +329,8 @@ def _expand_preset(f):
     """
     if 'preset' not in f:
         return f
-    if f['preset'] not in _SchemingMixing._presets:
+    if f['preset'] not in _SchemingMixin._presets:
         raise SchemingException("preset '%s' not defined" % f['preset'])
-    return dict(_SchemingMixing._presets[f['preset']], **f)
+    return dict(_SchemingMixin._presets[f['preset']], **f)
 
 
