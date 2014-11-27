@@ -3,6 +3,8 @@ from ckanapi import LocalCKAN, ValidationError
 
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import get_validator_or_converter
+from ckanext.scheming.plugins import (
+    SchemingDatasetsPlugin, SchemingGroupsPlugin)
 
 class TestGetValidatorOrConverter(object):
     def test_missing(self):
@@ -33,3 +35,15 @@ class TestChoices(object):
             category='f2hybrid',
             )
         assert_equals(d['category'], 'f2hybrid')
+
+
+class TestInvalidType(object):
+    def test_invalid_dataset_type(self):
+        p = SchemingDatasetsPlugin.instance
+        data, errors = p.validate({}, {'type': 'banana'}, {}, 'dataset_show')
+        assert_equals(list(errors), ['type'])
+
+    def test_invalid_group_type(self):
+        p = SchemingGroupsPlugin.instance
+        data, errors = p.validate({}, {'type': 'banana'}, {}, 'dataset_show')
+        assert_equals(list(errors), ['type'])
