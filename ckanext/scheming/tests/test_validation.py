@@ -18,17 +18,17 @@ class TestGetValidatorOrConverter(object):
 class TestChoices(object):
     def test_choice_field_only_accepts_given_choices(self):
         lc = LocalCKAN()
-        assert_raises(ValidationError, lc.action.package_create, **{
-            'type':'camel-photos',
-            'name':'fred',
-            'class': 'rocker',
-            })
+        assert_raises(ValidationError, lc.action.package_create,
+            type='camel-photos',
+            name='fred',
+            category='rocker',
+            )
 
     def test_choice_field_accepts_valid_choice(self):
         lc = LocalCKAN()
-        d = lc.action.package_create(**{
-            'type':'camel-photos',
-            'name':'fred',
-            'class': 'f2hybrid',
-            })
-        assert_equals(d['class'], 'f2hybrid')
+        d = lc.action.package_create(
+            type='camel-photos',
+            name='fred',
+            category='f2hybrid',
+            )
+        assert_equals(d['category'], 'f2hybrid')

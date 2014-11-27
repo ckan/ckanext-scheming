@@ -59,6 +59,13 @@
           "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
         }
       }
+    },
+    {
+      "preset_name": "select",
+      "values": {
+        "form_snippet": "select.html",
+        "display_snippet": "select.html"
+      }
     }
   ]
 }

@@ -157,8 +157,7 @@ you added to your that aren't handled by this extension.
 This extension includes the following form snippets:
 
 * [text.html](ckanext/scheming/templates/scheming/form_snippets/text.html) -
-  a simple text field for free-form text or numbers (default when no
-  choices list is given)
+  a simple text field for free-form text or numbers (default)
 * [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
   a larger text field, typically used for the title
 * [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
@@ -172,7 +171,7 @@ This extension includes the following form snippets:
 * [upload.html](ckanext/scheming/templates/scheming/form_snippets/upload.html) -
   an upload field for resource files
 * [select.html](ckanext/scheming/templates/scheming/form_snippets/select.html) -
-  a select box (default when choices list is given)
+  a select box
 
 
 ### `display_snippet`
@@ -240,9 +239,6 @@ The `choices` list must be provided for multiple-choice and
 single-choice fields.  The `label`s are human-readable text for
 the dataset editing form and the `value`s are stored in
 the dataset field or are used for tag names in tag vocabularies.
-
-A validator is automatically added for creating or updating datasets
-that only allows values from this list.
 
 
 ### `tag_vocabulary`
