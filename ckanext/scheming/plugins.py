@@ -11,7 +11,8 @@ from paste.deploy.converters import asbool
 
 from ckanext.scheming import helpers
 from ckanext.scheming.errors import SchemingException
-from ckanext.scheming.validation import validators_from_string
+from ckanext.scheming.validation import (
+    validators_from_string, scheming_choices)
 from ckanext.scheming.logic import (
     scheming_dataset_schema_list, scheming_dataset_schema_show,
     scheming_group_schema_list, scheming_group_schema_show,
@@ -26,7 +27,6 @@ ignore_missing = get_validator('ignore_missing')
 not_missing = get_validator('not_missing')
 convert_to_extras = get_converter('convert_to_extras')
 convert_from_extras = get_converter('convert_from_extras')
-OneOf = get_validator('OneOf')
 
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
@@ -42,6 +42,7 @@ class _SchemingMixin(object):
     _helpers_loaded = False
     _presets = None
     _template_dir_added = False
+    _validators_loaded = False
 
     @classmethod
     def _store_instance(cls, self):
@@ -65,6 +66,14 @@ class _SchemingMixin(object):
                 helpers.scheming_get_organization_schema,
             }
 
+    def get_validators(self):
+        if _SchemingMixin._validators_loaded:
+            return {}
+        _SchemingMixin._validators_loaded = True
+        return {
+            'scheming_choices': scheming_choices,
+            }
+
     def _add_template_directory(self, config):
         if _SchemingMixin._template_dir_added:
             return
@@ -84,6 +93,7 @@ class _SchemingMixin(object):
         if self.instance:
             # reloading plugins, probably in WebTest
             _SchemingMixin._helpers_loaded = False
+            _SchemingMixin._validators_loaded = False
         self._store_instance(self)
         self._add_template_directory(config)
         self._load_presets(config)
@@ -106,7 +116,7 @@ class _GroupOrganizationMixin(object):
     def setup_template_variables(self, context, data_dict):
         group_type = context.get('group_type')
         if not group_type:
-            if c.group_dict: 
+            if c.group_dict:
                 group_type = c.group_dict['type']
             else:
                 group_type = self.UNSPECIFIED_GROUP_TYPE
@@ -120,7 +130,7 @@ class _GroupOrganizationMixin(object):
     def validate(self, context, data_dict, schema, action):
         thing, action_type = action.split('_')
         t = data_dict.get('type')
-        if not t or t not in self._schemas: # pragma: no cover
+        if not t or t not in self._schemas:
             return data_dict, {'type': "Unsupported {thing} type: {t}".format(
                 thing=thing, t=t)}
         scheming_schema = self._expanded_schemas[t]
@@ -130,7 +140,6 @@ class _GroupOrganizationMixin(object):
             if action_type == 'show' else _field_validators)
 
         for f in scheming_fields:
-            f = _expand_preset(f)
             schema[f['field_name']] = get_validators(f,
                 f['field_name'] not in schema)
 
@@ -143,6 +152,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
+    p.implements(p.IValidators)
 
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
@@ -170,7 +180,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         """
         thing, action_type = action.split('_')
         t = data_dict.get('type')
-        if not t or t not in self._schemas:  # pragma: no cover
+        if not t or t not in self._schemas:
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}
         scheming_schema = self._expanded_schemas[t]
@@ -204,6 +214,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
+    p.implements(p.IValidators)
 
     SCHEMA_OPTION = 'scheming.group_schemas'
     FALLBACK_OPTION = 'scheming.group_fallback'
@@ -229,6 +240,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
+    p.implements(p.IValidators)
 
     SCHEMA_OPTION = 'scheming.organization_schemas'
     FALLBACK_OPTION = 'scheming.organization_fallback'
@@ -244,8 +256,10 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
     def get_actions(self):
         return {
-            'scheming_organization_schema_list': scheming_organization_schema_list,
-            'scheming_organization_schema_show': scheming_organization_schema_show,
+            'scheming_organization_schema_list':
+                scheming_organization_schema_list,
+            'scheming_organization_schema_show':
+                scheming_organization_schema_show,
         }
 
 
@@ -298,7 +312,7 @@ def _field_output_validators(f, convert_extras):
     else:
         validators = [ignore_missing]
     if 'output_validators' in f:
-        validators += validators_from_string(f['output_validators'])
+        validators += validators_from_string(f['output_validators'], f)
     return validators
 
 def _field_validators(f, convert_extras):
@@ -306,14 +320,11 @@ def _field_validators(f, convert_extras):
     Return the validators for a scheming field f
     """
     if 'validators' in f:
-        validators = validators_from_string(f['validators'])
+        validators = validators_from_string(f['validators'], f)
     elif helpers.scheming_field_required(f):
         validators = [not_missing, unicode]
     else:
         validators = [ignore_missing, unicode]
-
-    if 'choices' in f:
-        validators.append(OneOf([c['value'] for c in f['choices']]))
 
     if convert_extras:
         validators = validators + [convert_to_extras]

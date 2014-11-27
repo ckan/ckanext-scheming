@@ -64,7 +64,8 @@
       "preset_name": "select",
       "values": {
         "form_snippet": "select.html",
-        "display_snippet": "select.html"
+        "display_snippet": "select.html",
+        "validators": "scheming_choices"
       }
     }
   ]
