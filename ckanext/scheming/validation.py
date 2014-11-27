@@ -3,6 +3,8 @@ from ckan.plugins.toolkit import get_validator, UnknownValidator
 from ckanext.scheming.errors import SchemingException
 
 OneOf = get_validator('OneOf')
+ignore_missing = get_validator('ignore_missing')
+not_missing = get_validator('not_missing')
 
 def scheming_validator(fn):
     """
@@ -21,6 +23,16 @@ def scheming_choices(field):
     Require that one of the field choices values is passed.
     """
     return OneOf([c['value'] for c in field['choices']])
+
+
+@scheming_validator
+def scheming_required(field):
+    """
+    not_missing if field['required'] else ignore_missing
+    """
+    if field.get('required'):
+        return not_missing
+    return ignore_missing
 
 
 def validators_from_string(s, field):

@@ -12,7 +12,7 @@ from paste.deploy.converters import asbool
 from ckanext.scheming import helpers
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import (
-    validators_from_string, scheming_choices)
+    validators_from_string, scheming_choices, scheming_required)
 from ckanext.scheming.logic import (
     scheming_dataset_schema_list, scheming_dataset_schema_show,
     scheming_group_schema_list, scheming_group_schema_show,
@@ -72,6 +72,7 @@ class _SchemingMixin(object):
         _SchemingMixin._validators_loaded = True
         return {
             'scheming_choices': scheming_choices,
+            'scheming_required': scheming_required,
             }
 
     def _add_template_directory(self, config):
@@ -319,6 +320,7 @@ def _field_validators(f, convert_extras):
     """
     Return the validators for a scheming field f
     """
+    validators = []
     if 'validators' in f:
         validators = validators_from_string(f['validators'], f)
     elif helpers.scheming_field_required(f):
