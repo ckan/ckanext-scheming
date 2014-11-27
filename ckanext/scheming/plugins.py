@@ -89,8 +89,10 @@ class _SchemingMixin(object):
         self._load_presets(config)
 
         self._is_fallback = asbool(config.get(self.FALLBACK_OPTION, False))
+
         self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
         self._schemas = _load_schemas(self._schema_urls, self.SCHEMA_TYPE_FIELD)
+        self._expanded_schemas = _expand_schemas(self._schemas)
 
 
 class _GroupOrganizationMixin(object):
@@ -121,7 +123,7 @@ class _GroupOrganizationMixin(object):
         if not t or t not in self._schemas: # pragma: no cover
             return data_dict, {'type': "Unsupported {thing} type: {t}".format(
                 thing=thing, t=t)}
-        scheming_schema = self._schemas[t]
+        scheming_schema = self._expanded_schemas[t]
         scheming_fields = scheming_schema['fields']
 
         get_validators = (_field_output_validators
@@ -171,19 +173,17 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         if not t or t not in self._schemas:  # pragma: no cover
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}
-        scheming_schema = self._schemas[t]
+        scheming_schema = self._expanded_schemas[t]
 
         get_validators = (_field_output_validators
             if action_type == 'show' else _field_validators)
 
         for f in scheming_schema['dataset_fields']:
-            f = _expand_preset(f)
             schema[f['field_name']] = get_validators(f,
                 f['field_name'] not in schema)
 
         resource_schema = schema['resources']
         for f in scheming_schema['resource_fields']:
-            f = _expand_preset(f)
             resource_schema[f['field_name']] = get_validators(f, False)
 
         return navl_validate(data_dict, schema, context)
@@ -333,4 +333,16 @@ def _expand_preset(f):
         raise SchemingException("preset '%s' not defined" % f['preset'])
     return dict(_SchemingMixin._presets[f['preset']], **f)
 
-
+def _expand_schemas(schemas):
+    """
+    Return a new dict of schemas with all field presets expanded.
+    """
+    out = {}
+    for name, original in schemas.iteritems():
+        s = dict(original)
+        for fname in ('fields', 'dataset_fields', 'resource_fields'):
+            if fname not in s:
+                continue
+            s[fname] = [_expand_preset(f) for f in s[fname]]
+        out[name] = s
+    return out

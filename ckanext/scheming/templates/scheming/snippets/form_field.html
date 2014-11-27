@@ -1,11 +1,9 @@
 {#- master snippet for all scheming form fields -#}
 {#- render the field the user requested, or use a default field -#}
 
-{%- set form_snippet = field.form_snippet -%}
+{%- set form_snippet = field.form_snippet or 'text.html' -%}
 
-{%- if not form_snippet -%}
-  {%- set form_snippet = 'text.html' -%}
-{%- endif -%}
+-- {{ field }}
 
 {%- if '/' not in form_snippet -%}
   {%- set form_snippet = 'scheming/form_snippets/' + form_snippet -%}

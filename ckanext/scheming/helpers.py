@@ -50,62 +50,68 @@ def scheming_field_required(field):
     return 'not_empty' in field.get('validators', '').split()
 
 
-def scheming_dataset_schemas():
+def scheming_dataset_schemas(expanded=True):
     """
     Return the dict of dataset schemas. Or if scheming_datasets
     plugin is not loaded return None.
     """
     from ckanext.scheming.plugins import SchemingDatasetsPlugin as p
     if p.instance:
+        if expanded:
+            return p.instance._expanded_schemas
         return p.instance._schemas
 
 
-def scheming_get_dataset_schema(dataset_type):
+def scheming_get_dataset_schema(dataset_type, expanded=True):
     """
     Return the schema for the dataset_type passed or None if
     no schema is defined for that dataset_type
     """
-    schemas = scheming_dataset_schemas()
+    schemas = scheming_dataset_schemas(expanded)
     if schemas:
         return schemas.get(dataset_type)
 
 
-def scheming_group_schemas():
+def scheming_group_schemas(expanded=True):
     """
     Return the dict of group schemas. Or if scheming_groups
     plugin is not loaded return None.
     """
     from ckanext.scheming.plugins import SchemingGroupsPlugin as p
     if p.instance:
+        if expanded:
+            return p.instance._expanded_schemas
         return p.instance._schemas
 
 
-def scheming_get_group_schema(group_type):
+def scheming_get_group_schema(group_type, expanded=True):
     """
     Return the schema for the group_type passed or None if
     no schema is defined for that group_type
     """
-    schemas = scheming_group_schemas()
+    schemas = scheming_group_schemas(expanded)
     if schemas:
         return schemas.get(group_type)
 
 
-def scheming_organization_schemas():
+def scheming_organization_schemas(expanded=True):
     """
     Return the dict of organization schemas. Or if scheming_organizations
     plugin is not loaded return None.
     """
     from ckanext.scheming.plugins import SchemingOrganizationsPlugin as p
     if p.instance:
+        if expanded:
+            return p.instance._expanded_schemas
         return p.instance._schemas
 
 
-def scheming_get_organization_schema(organization_type):
+def scheming_get_organization_schema(organization_type, expanded=True):
     """
     Return the schema for the organization_type passed or None if
     no schema is defined for that organization_type
     """
-    schemas = scheming_organization_schemas()
+    schemas = scheming_organization_schemas(expanded)
     if schemas:
         return schemas.get(organization_type)
 

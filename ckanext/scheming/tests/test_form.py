@@ -44,6 +44,7 @@ class TestDatasetFormNew(FunctionalTestBase):
         env, response = _get_package_new_page_as_sysadmin(app)
         form = response.forms['dataset-edit']
         assert_true('packages?id=' not in response.body)
+        open('dump.html', 'wb').write(response.body)
         assert_true('/dataset/' in response.body)
 
     def test_resource_form_includes_custom_fields(self):
