@@ -1,7 +1,7 @@
 {
   "scheming_version": 1,
   "dataset_type": "dataset",
-  "about_url": "http://github.com/open-data/ckanext-scheming",
+  "about_url": "http://github.com/florianm/ckanext-scheming",
   "dataset_fields": [
     {
       "field_name": "title",
@@ -86,6 +86,30 @@
       "display_property": "dc:contributor",
       "display_snippet": "email.html",
       "display_email_name_field": "maintainer"
+    },
+    {
+      "field_name": "data_start_on",
+      "label": "Data start on",
+      "form_placeholder": "dd/mm/yyyy",
+      "display_property": "gmd:EX_TemporalExtent"
+    },
+    {
+      "field_name": "data_end_on",
+      "label": "Data end on",
+      "form_placeholder": "dd/mm/yyyy",
+      "display_property": "gmd:EX_TemporalExtent"
+    },
+    {
+      "field_name": "data_last_updated",
+      "label": "Data last updated on",
+      "form_placeholder": "dd/mm/yyyy",
+      "display_property": "dc:date"
+    },
+    {
+      "field_name": "data_update_frequency",
+      "label": "Data update frequency",
+      "form_placeholder": "Static, infrequent, frequent",
+      "display_property": "dc:any"
     }
   ],
   "resource_fields": [
