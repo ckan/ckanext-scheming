@@ -93,13 +93,11 @@
       "form_placeholder": "dd-mm-yyyy",
       "display_property": "dc:date"
     }
-    },
     {
       "field_name": "data_temporal_extent_begin",
       "label": "Data temporal extent from",
       "form_placeholder": "dd-mm-yyyy",
       "display_property": "dc:date"
-    }
     },
     {
       "field_name": "data_temporal_extent_end",
