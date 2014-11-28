@@ -4,7 +4,7 @@ set -e
 cd ckanext/scheming/tests
 
 nosetests --with-pylons=test_subclass.ini --nologcapture \
-	ckanext.scheming.tests.test_display \
+	ckanext.scheming.tests.test_dataset_display \
 	ckanext.scheming.tests.test_form \
 	ckanext.scheming.tests.test_dataset_logic
 nosetests --with-pylons=test.ini --nologcapture \
