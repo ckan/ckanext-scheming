@@ -15,7 +15,7 @@ cd dl
 git clone https://github.com/ckan/ckan
 cd -
 cd dl/ckan
-python setup.py develop
+python setup.py install
 # not interested in building CSS, just use production one
 cp ./ckan/public/base/css/main.css ./ckan/public/base/css/main.debug.css
 cd -
@@ -26,7 +26,7 @@ pip install -r links/ckan/requirements.txt --allow-all-external
 pip install -r links/ckan/dev-requirements.txt --allow-all-external
 pip install -r requirements.txt --allow-all-external
 
-python setup.py develop
+python setup.py install
 
 # Configure Solr
 echo "NO_START=0\nJETTY_HOST=127.0.0.1\nJETTY_PORT=8983\nJAVA_HOME=$JAVA_HOME" | sudo tee /etc/default/jetty
