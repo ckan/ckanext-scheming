@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd ckanext/scheming/tests
-nosetests --with-pylons=test.ini --nologcapture --with-coverage ckanext/scheming/tests
+nosetests --with-pylons=test.ini --nologcapture --with-coverage ckanext.scheming.tests
