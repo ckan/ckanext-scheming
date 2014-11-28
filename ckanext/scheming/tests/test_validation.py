@@ -12,4 +12,4 @@ class TestGetValidatorOrConverter(object):
         assert get_validator_or_converter('not_empty')
 
     def test_converter_name(self):
-        assert get_validator_or_converter('date_to_db')
+        assert get_validator_or_converter('remove_whitespace')

@@ -1,0 +1,2 @@
+recursive-include ckanext/scheming/templates *
+recursive-include ckanext/scheming *.json
