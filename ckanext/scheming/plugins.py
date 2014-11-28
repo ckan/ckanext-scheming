@@ -73,6 +73,9 @@ class _SchemingMixin(object):
         self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
         self._schemas = _load_schemas(self._schema_urls, self.SCHEMA_TYPE_FIELD)
 
+    def is_fallback(self):
+        return self._is_fallback
+
 
 class _GroupOrganizationMixin(object):
     """
