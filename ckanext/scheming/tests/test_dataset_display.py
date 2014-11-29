@@ -1,6 +1,6 @@
 from nose.tools import assert_true
 
-from ckan.new_tests.factories import Sysadmin, Dataset, Organization, Group
+from ckan.new_tests.factories import Sysadmin, Dataset
 from ckan.new_tests.helpers import FunctionalTestBase, submit_and_follow
 
 
@@ -47,32 +47,3 @@ class TestDatasetDisplay(FunctionalTestBase):
         app = self._get_test_app()
         response = app.get(url='/dataset/with-choice')
         assert_true('Hybrid Camel' in response.body)
-
-
-class TestOrganizationDisplay(FunctionalTestBase):
-    def test_organization_displays_custom_fields(self):
-        user = Sysadmin()
-        Organization(
-            user=user,
-            name='org-one',
-            department_id='3008',
-            )
-
-        app = self._get_test_app()
-        response = app.get(url='/organization/about/org-one')
-        assert_true('Department ID' in response.body)
-
-
-class TestGroupDisplay(FunctionalTestBase):
-    def test_group_displays_custom_fields(self):
-        user = Sysadmin()
-        Group(
-            user=user,
-            name='group-one',
-            bookface='theoneandonly',
-            )
-
-        app = self._get_test_app()
-        response = app.get(url='/group/about/group-one')
-        assert_true('Bookface' in response.body)
-

@@ -44,10 +44,6 @@ class _SchemingMixin(object):
     _template_dir_added = False
     _validators_loaded = False
 
-    @classmethod
-    def _store_instance(cls, self):
-        cls.instance = self
-
     def get_helpers(self):
         if _SchemingMixin._helpers_loaded:
             return {}
@@ -95,6 +91,8 @@ class _SchemingMixin(object):
             # reloading plugins, probably in WebTest
             _SchemingMixin._helpers_loaded = False
             _SchemingMixin._validators_loaded = False
+        # record our plugin instance in a place where our helpers
+        # can find it:
         self._store_instance(self)
         self._add_template_directory(config)
         self._load_presets(config)
@@ -104,6 +102,9 @@ class _SchemingMixin(object):
         self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
         self._schemas = _load_schemas(self._schema_urls, self.SCHEMA_TYPE_FIELD)
         self._expanded_schemas = _expand_schemas(self._schemas)
+
+    def is_fallback(self):
+        return self._is_fallback
 
 
 class _GroupOrganizationMixin(object):
@@ -158,6 +159,10 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
+
+    @classmethod
+    def _store_instance(cls, self):
+        SchemingDatasetsPlugin.instance = self
 
     def read_template(self):
         return 'scheming/package/read.html'
@@ -221,6 +226,10 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     FALLBACK_OPTION = 'scheming.group_fallback'
     SCHEMA_TYPE_FIELD = 'group_type'
 
+    @classmethod
+    def _store_instance(cls, self):
+        SchemingGroupsPlugin.instance = self
+
     def about_template(self):
         return 'scheming/group/about.html'
 
@@ -247,6 +256,10 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     FALLBACK_OPTION = 'scheming.organization_fallback'
     SCHEMA_TYPE_FIELD = 'organization_type'
     UNSPECIFIED_GROUP_TYPE = 'organization'
+
+    @classmethod
+    def _store_instance(cls, self):
+        SchemingOrganizationsPlugin.instance = self
 
     def about_template(self):
         return 'scheming/organization/about.html'

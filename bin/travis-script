@@ -1,3 +1,12 @@
 #!/bin/sh
 
-nosetests --with-pylons=ckanext/scheming/tests/test.ini --nologcapture --with-coverage ckanext/scheming/tests
+set -e
+cd ckanext/scheming/tests
+
+nosetests --with-pylons=test_subclass.ini --nologcapture \
+	ckanext.scheming.tests.test_dataset_display \
+	ckanext.scheming.tests.test_form \
+	ckanext.scheming.tests.test_dataset_logic
+nosetests --with-pylons=test.ini --nologcapture \
+	--with-coverage --cover-package=ckanext.scheming \
+	ckanext.scheming.tests
