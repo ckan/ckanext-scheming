@@ -97,8 +97,8 @@ Field Keys
 
 ### `field_name`
 
-The `field_name` value is the name of an existing CKAN dataset, resource,
-group or organization field or a new new extra field. Existing dataset
+The `field_name` value is the name of an existing CKAN dataset or resource
+field or a new new extra field. Existing dataset
 field names include:
 
 * `name` - the URI for the dataset
@@ -120,17 +120,27 @@ This value is available to the form snippet as `field.field_name`.
 
 The `label` value is a human-readable label for this field as
 it will appear in the dataset editing form.
-This label may be a string or an object providing in multiple
-languages:
+This label may be a string or an object providing multiple
+language versions:
 
 ```json
 {
-  "en": "Title",
-  "fr": "Titre"
+  "label": {
+    "en": "Title",
+    "fr": "Titre"
+  },
+  "...": "..."
 }
 ```
 
-When using a plain string translations will be provided with gettext.
+When using a plain string translations will be provided with gettext:
+
+```json
+{
+  "label": "Title",
+  "...": "..."
+}
+```
 
 
 ### `required`
@@ -151,8 +161,22 @@ validator.
 ### `choices`
 
 The `choices` list must be provided for
-choice fields.  List elements include `label`s for human-readable text for
-each element and `value`s that will be stored in the dataset or resource.
+select fields.  List elements include `label`s for human-readable text for
+each element and `value`s that will be stored in the dataset or resource:
+
+```json
+{
+  "preset": "select",
+  "choices": [
+    {
+      "value": "bactrian",
+      "label": "Bactrian Camel"
+    },
+    "..."
+  ],
+  "...": "..."
+}
+```
 
 
 ### `preset`
