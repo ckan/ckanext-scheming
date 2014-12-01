@@ -19,9 +19,11 @@ def scheming_dataset_schema_show(context, data_dict):
     Return the scheming schema for a given dataset type
 
     :param type: the dataset type
+    :param expanded: True to expand presets (default)
     '''
     t = get_or_bust(data_dict, 'type')
-    s = scheming_get_dataset_schema(t)
+    expanded = data_dict.get('expanded', True)
+    s = scheming_get_dataset_schema(t, expanded)
     if s is None:
         raise ObjectNotFound()
     return s
@@ -39,9 +41,11 @@ def scheming_group_schema_show(context, data_dict):
     Return the scheming schema for a given group type
 
     :param type: the group type
+    :param expanded: True to expand presets (default)
     '''
     t = get_or_bust(data_dict, 'type')
-    s = scheming_get_group_schema(t)
+    expanded = data_dict.get('expanded', True)
+    s = scheming_get_group_schema(t, expanded)
     if s is None:
         raise ObjectNotFound()
     return s
@@ -60,9 +64,11 @@ def scheming_organization_schema_show(context, data_dict):
     Return the scheming schema for a given organization type
 
     :param type: the organization type
+    :param expanded: True to expand presets (default)
     '''
     t = get_or_bust(data_dict, 'type')
-    s = scheming_get_organization_schema(t)
+    expanded = data_dict.get('expanded', True)
+    s = scheming_get_organization_schema(t, expanded)
     if s is None:
         raise ObjectNotFound()
     return s

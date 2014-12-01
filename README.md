@@ -23,21 +23,23 @@ Configuration
 Set the schemas you want to use with configuration options:
 
 ```ini
-ckan.plugins = scheming_datasets scheming_groups
+ckan.plugins = scheming_datasets
 
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
                            ckanext.spatialx:spatialxy_schema.json
-scheming.group_schemas = ckanext.spatialx:group_schema.json
-scheming.organization_schemas = ckanext.spatialx:org_schema.json
 #   will try to load "spatialx_schema.json" and "spatialxy_schema.json"
-#   as dataset schemas and "group_schema.json" as a group schema and
-#   "org_schema" as an organization schema, all from the directory
-#   containing the ckanext.spatialx module code
+#   as dataset schemas
 #
 #   URLs may also be used, e.g:
 #
 # scheming.dataset_schemas = http://example.com/spatialx_schema.json
+
+#   Preset files may be included as well. The default preset setting is:
+scheming.presets = ckanext.scheming:presets.json
+
+#   The is_fallback setting may be changed as well. Defaults to false:
+scheming.dataset_fallback = false
 ```
 
 
@@ -50,10 +52,12 @@ Example dataset schemas
 These schemas are included in ckanext-scheming and may be enabled
 with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.json`
 
+These schemas use [presets](#preset) defined in
+[presets.json](ckanext/scheming/presets.json).
 
 
-Fields
-------
+Schema Keys
+-----------
 
 
 ### `scheming_version`
@@ -62,16 +66,13 @@ Set to `1`. Future versions of ckanext-scheming may use a larger
 number to indicate a change to the description JSON format.
 
 
-### `dataset_type`, `group_type` or `organization_type`
+### `dataset_type`
 
-These are the "type" fields stored in the dataset, group or organization.
-For datasets it is used to set the URL for searching this type of dataset.
+This is the "type" field stored in the dataset.
+It is also used to set the URL for searching this type of dataset.
 
-Normal datasets would be available under `/dataset`, but datasets with
+Normal datasets would be available under the URL `/dataset`, but datasets with
 the `camel_photos.json` schema above would appear under `/camel-photos` instead.
-
-For organizations this field should be set to `"organization"` as some
-parts of CKAN depend on this value not changing.
 
 
 ### `about_url`
@@ -80,22 +81,24 @@ parts of CKAN depend on this value not changing.
 Its use is optional but highly recommended.
 
 
-### `dataset_fields` and `resource_fields` or `fields`
+### `dataset_fields`, `resource_fields`
 
 Fields are specified in the order you
-would like them to appear in the dataset, group or organization editing
-pages. Datasets have separate lists of dataset and resource fields.
-Organizations and groups have a single fields list.
+would like them to appear in the dataset and resource editing
+pages.
 
 Fields you exclude will not be shown to the end user, and will not
-be accepted when editing or updating this type of dataset, group or
-organization.
+be accepted when editing or updating this type of dataset.
+
+
+Field Keys
+----------
 
 
 ### `field_name`
 
-The `field_name` value is the name of an existing CKAN dataset, resource,
-group or organization field or a new new extra field. Existing dataset
+The `field_name` value is the name of an existing CKAN dataset or resource
+field or a new new extra field. Existing dataset
 field names include:
 
 * `name` - the URI for the dataset
@@ -112,30 +115,99 @@ New field names should follow the current lowercase_with_underscores
 
 This value is available to the form snippet as `field.field_name`.
 
-FIXME: list group/organization fields
-
 
 ### `label`
 
 The `label` value is a human-readable label for this field as
 it will appear in the dataset editing form.
-This label may be a string or an object providing in multiple
-languages:
+This label may be a string or an object providing multiple
+language versions:
 
 ```json
 {
-  "en": "Title",
-  "fr": "Titre"
+  "label": {
+    "en": "Title",
+    "fr": "Titre"
+  },
+  "...": "..."
 }
 ```
 
-When using a plain string translations will be provided with gettext.
+When using a plain string translations will be provided with gettext:
+
+```json
+{
+  "label": "Title",
+  "...": "..."
+}
+```
+
+
+### `required`
+
+Set to `true` for fields that must be included. Set to `false` or
+don't include this key for fields that are optional.
+
+Setting to `true` will mark the field as required in the editing form
+and include `not_empty` in the default validators that will be applied
+when `validators` is not specified.
+
+To honor this settings with custom validators include `scheming_required`
+as the first validator. `scheming_required` will check the required
+setting for this field and apply either the `not_empty` or `ignore_missing`
+validator.
+
+
+### `choices`
+
+The `choices` list must be provided for
+select fields.  List elements include `label`s for human-readable text for
+each element (may be multiple languages like a [field label](#label))
+and `value`s that will be stored in the dataset or resource:
+
+```json
+{
+  "preset": "select",
+  "choices": [
+    {
+      "value": "bactrian",
+      "label": "Bactrian Camel"
+    },
+    "..."
+  ],
+  "...": "..."
+}
+```
+
+
+### `preset`
+
+A `preset` specifies a set of default values for these field keys. They
+are typically used to define validation and snippets for common field
+types.
+
+This extension includes the following presets:
+
+* `"title"` - title validation and large text form snippet
+* `"select"` - validation that choice is from [choices](#choices),
+  form select box and display snippet
+* `"dataset_slug"` - dataset slug validation and form snippet that
+  autofills the value from the title field
+* `"tag_string_autocomplete"` - tag string validation and form autocomplete
+* `"dataset_organization"` - organization validation and form select box
+* `"resource_url_upload"` - resource url validaton and link/upload form
+  field
+* `"resource_format_autocomplete"` - resource format validation with
+  format guessing based on url and autocompleting form field
+
+You may add your own presets by adding them to the `scheming.presets`
+configuration setting.
 
 
 ### `form_snippet`
 
 The `form_snippet` value is the name of the snippet template to
-use for this field in the dataset, group or organization editing form.
+use for this field in the dataset or resource editing form.
 A number of snippets are provided with this
 extension, but you may also provide your own by creating templates
 under `scheming/form_snippets/` in a template directory in your
@@ -161,6 +233,8 @@ This extension includes the following form snippets:
   an organization selection field for datasets
 * [upload.html](ckanext/scheming/templates/scheming/form_snippets/upload.html) -
   an upload field for resource files
+* [select.html](ckanext/scheming/templates/scheming/form_snippets/select.html) -
+  a select box
 
 
 ### `display_snippet`
@@ -204,12 +278,19 @@ This string does not contain arbitrary python code to be executed,
 you may only use registered validator functions, optionally calling
 them with static string values provided.
 
-New validators and converters may be added using the IValidators
-plugin interface.
-
 This extension automatically adds calls to `convert_to_extras`
 for new extra fields,
 so you should not add that to this list.
+
+New validators and converters may be added using the
+[IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
+
+Validators that need access to other values in this schema (e.g.
+to test values against the choices list) May be decorated with
+the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
+function. This decorator will make scheming pass this field dict to the
+validator and use its return value for validation of the field.
+
 
 ### `output_validators`
 
@@ -220,30 +301,5 @@ sent to the user.
 
 This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
-
-
-### `choices`
-
-(not yet implemented)
-
-The `choices` list must be provided for multiple-choice and
-single-choice fields.  The `label`s are human-readable text for
-the dataset editing form and the `value`s are stored in
-the dataset field or are used for tag names in tag vocabularies.
-
-A validator is automatically added for creating or updating datasets
-that only allows values from this list.
-
-
-### `tag_vocabulary`
-
-(not yet implemented)
-
-The `tag_vocabulary` value is used for the name of the tag vocabulary
-that will store the valid choices for a multiple-choice field.
-
-Tag vocabularies are global to the CKAN instance so this name should
-be made unique, e.g. by prefixing it with a domain name in reverse order
-and the name of the schema.
 
 

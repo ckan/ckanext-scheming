@@ -35,3 +35,15 @@ class TestDatasetDisplay(FunctionalTestBase):
         response = app.get(url='/dataset/set-two/resource/' +
             d['resources'][0]['id'])
         assert_true('Camels in Photo' in response.body)
+
+    def test_choice_field_shows_labels(self):
+        user = Sysadmin()
+        d = Dataset(
+            user=user,
+            type='camel-photos',
+            name='with-choice',
+            category='hybrid',
+            )
+        app = self._get_test_app()
+        response = app.get(url='/dataset/with-choice')
+        assert_true('Hybrid Camel' in response.body)

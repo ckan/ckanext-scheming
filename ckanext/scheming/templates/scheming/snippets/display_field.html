@@ -4,7 +4,11 @@
 {%- set display_snippet = field.display_snippet -%}
 
 {%- if not display_snippet -%}
-  {%- set display_snippet = 'text.html' -%}
+  {%- if 'choices' in field -%}
+    {%- set display_snippet = 'select.html' -%}
+  {%- else -%}
+    {%- set display_snippet = 'text.html' -%}
+  {%- endif -%}
 {%- endif -%}
 
 {%- if '/' not in display_snippet -%}
