@@ -37,6 +37,9 @@ scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
 
 #   Preset files may be included as well. The default preset setting is:
 # scheming.presets = ckanext.scheming:presets.json
+
+#   The is_fallback setting may be changed as well. Defaults to false:
+# scheming.dataset_fallback = false
 ```
 
 
