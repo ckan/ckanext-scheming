@@ -58,16 +58,13 @@ Set to `1`. Future versions of ckanext-scheming may use a larger
 number to indicate a change to the description JSON format.
 
 
-### `dataset_type`, `group_type` or `organization_type`
+### `dataset_type`
 
-These are the "type" fields stored in the dataset, group or organization.
-For datasets it is used to set the URL for searching this type of dataset.
+This is the "type" field stored in the dataset.
+It is also used to set the URL for searching this type of dataset.
 
 Normal datasets would be available under `/dataset`, but datasets with
 the `camel_photos.json` schema above would appear under `/camel-photos` instead.
-
-For organizations this field should be set to `"organization"` as some
-parts of CKAN depend on this value not changing.
 
 
 ### `about_url`
@@ -76,16 +73,14 @@ parts of CKAN depend on this value not changing.
 Its use is optional but highly recommended.
 
 
-### `dataset_fields` and `resource_fields` or `fields`
+### `dataset_fields` and `resource_fields`
 
 Fields are specified in the order you
-would like them to appear in the dataset, group or organization editing
-pages. Datasets have separate lists of dataset and resource fields.
-Organizations and groups have a single fields list.
+would like them to appear in the dataset and resource editing
+pages.
 
 Fields you exclude will not be shown to the end user, and will not
-be accepted when editing or updating this type of dataset, group or
-organization.
+be accepted when editing or updating this type of dataset.
 
 
 ### `field_name`
@@ -107,8 +102,6 @@ New field names should follow the current lowercase_with_underscores
  `my_special_field` instead.
 
 This value is available to the form snippet as `field.field_name`.
-
-FIXME: list group/organization fields
 
 
 ### `label`
