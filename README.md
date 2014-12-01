@@ -34,6 +34,9 @@ scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
 #   URLs may also be used, e.g:
 #
 # scheming.dataset_schemas = http://example.com/spatialx_schema.json
+
+#   Preset files may be included as well. The default preset setting is:
+# scheming.presets = ckanext.scheming:presets.json
 ```
 
 
@@ -46,10 +49,12 @@ Example dataset schemas
 These schemas are included in ckanext-scheming and may be enabled
 with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.json`
 
+These schemas use [presets](#preset) defined in
+[presets.json](ckanext/scheming/presets.json).
 
 
-Fields
-------
+Schema Keys
+-----------
 
 
 ### `scheming_version`
@@ -81,6 +86,10 @@ pages.
 
 Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset.
+
+
+Field Keys
+----------
 
 
 ### `field_name`
@@ -130,10 +139,47 @@ Setting to `true` will mark the field as required in the editing form
 and include `not_empty` in the default validators that will be applied
 when `validators` is not specified.
 
+To honor this settings with custom validators include `scheming_required`
+as the first validator. `scheming_required` will check the required
+setting for this field and apply either the `not_empty` or `ignore_missing`
+validator.
+
+
+### `choices`
+
+The `choices` list must be provided for
+choice fields.  List elements include `label`s for human-readable text for
+each element and `value`s that will be stored in the dataset or resource.
+
+
+### `preset`
+
+A `preset` specifies a set of default values for these field keys. They
+are typically used to define validation and snippets for common field
+types.
+
+This extension includes the following presets:
+
+* `"title"` - title validation and large text form snippet
+* `"select"` - validation that choice is from [choices](#choices),
+  form select box and display snippet
+* `"dataset_slug"` - dataset slug validation and form snippet that
+  autofills the value from the title field
+* `"tag_string_autocomplete"` - tag string validation and form autocomplete
+* `"dataset_organization"` - organization validation and form select box
+* `"resource_url_upload"` - resource url validaton and link/upload form
+  field
+* `"resource_format_autocomplete"` - resource format validation with
+  format guessing based on url and autocompleting form field
+
+You may add your own presets by adding them to the `scheming.presets`
+configuration setting.
+
+
 ### `form_snippet`
 
 The `form_snippet` value is the name of the snippet template to
-use for this field in the dataset, group or organization editing form.
+use for this field in the dataset or resource editing form.
 A number of snippets are provided with this
 extension, but you may also provide your own by creating templates
 under `scheming/form_snippets/` in a template directory in your
@@ -220,25 +266,5 @@ sent to the user.
 
 This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
-
-
-### `choices`
-
-The `choices` list must be provided for multiple-choice and
-single-choice fields.  The `label`s are human-readable text for
-the dataset editing form and the `value`s are stored in
-the dataset field or are used for tag names in tag vocabularies.
-
-
-### `tag_vocabulary`
-
-(not yet implemented)
-
-The `tag_vocabulary` value is used for the name of the tag vocabulary
-that will store the valid choices for a multiple-choice field.
-
-Tag vocabularies are global to the CKAN instance so this name should
-be made unique, e.g. by prefixing it with a domain name in reverse order
-and the name of the schema.
 
 
