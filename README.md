@@ -71,7 +71,7 @@ number to indicate a change to the description JSON format.
 This is the "type" field stored in the dataset.
 It is also used to set the URL for searching this type of dataset.
 
-Normal datasets would be available under `/dataset`, but datasets with
+Normal datasets would be available under the URL `/dataset`, but datasets with
 the `camel_photos.json` schema above would appear under `/camel-photos` instead.
 
 
@@ -81,7 +81,7 @@ the `camel_photos.json` schema above would appear under `/camel-photos` instead.
 Its use is optional but highly recommended.
 
 
-### `dataset_fields` and `resource_fields`
+### `dataset_fields`, `resource_fields`
 
 Fields are specified in the order you
 would like them to appear in the dataset and resource editing
@@ -162,7 +162,8 @@ validator.
 
 The `choices` list must be provided for
 select fields.  List elements include `label`s for human-readable text for
-each element and `value`s that will be stored in the dataset or resource:
+each element (may be multiple languages like a [field label](#label))
+and `value`s that will be stored in the dataset or resource:
 
 ```json
 {
@@ -277,12 +278,19 @@ This string does not contain arbitrary python code to be executed,
 you may only use registered validator functions, optionally calling
 them with static string values provided.
 
-New validators and converters may be added using the IValidators
-plugin interface.
-
 This extension automatically adds calls to `convert_to_extras`
 for new extra fields,
 so you should not add that to this list.
+
+New validators and converters may be added using the IValidators
+plugin interface.
+
+Validators that need access to other values in this schema (e.g.
+to test values against the choices list) May be decorated with
+the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
+function. This decorator will make scheming to pass this field dict to the
+validator and use its return value for validation of the field.
+
 
 ### `output_validators`
 
