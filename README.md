@@ -28,12 +28,8 @@ ckan.plugins = scheming_datasets scheming_groups
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
                            ckanext.spatialx:spatialxy_schema.json
-scheming.group_schemas = ckanext.spatialx:group_schema.json
-scheming.organization_schemas = ckanext.spatialx:org_schema.json
 #   will try to load "spatialx_schema.json" and "spatialxy_schema.json"
-#   as dataset schemas and "group_schema.json" as a group schema and
-#   "org_schema" as an organization schema, all from the directory
-#   containing the ckanext.spatialx module code
+#   as dataset schemas
 #
 #   URLs may also be used, e.g:
 #
