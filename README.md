@@ -23,7 +23,7 @@ Configuration
 Set the schemas you want to use with configuration options:
 
 ```ini
-ckan.plugins = scheming_datasets scheming_groups
+ckan.plugins = scheming_datasets
 
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
@@ -36,10 +36,10 @@ scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
 # scheming.dataset_schemas = http://example.com/spatialx_schema.json
 
 #   Preset files may be included as well. The default preset setting is:
-# scheming.presets = ckanext.scheming:presets.json
+scheming.presets = ckanext.scheming:presets.json
 
 #   The is_fallback setting may be changed as well. Defaults to false:
-# scheming.dataset_fallback = false
+scheming.dataset_fallback = false
 ```
 
 
