@@ -282,13 +282,13 @@ This extension automatically adds calls to `convert_to_extras`
 for new extra fields,
 so you should not add that to this list.
 
-New validators and converters may be added using the IValidators
-plugin interface.
+New validators and converters may be added using the
+[IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
 
 Validators that need access to other values in this schema (e.g.
 to test values against the choices list) May be decorated with
 the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
-function. This decorator will make scheming to pass this field dict to the
+function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
 
