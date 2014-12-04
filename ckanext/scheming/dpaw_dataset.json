@@ -1,6 +1,6 @@
 {
   "scheming_version": 1,
-  "dataset_type": "tabular-data",
+  "dataset_type": "dataset",
   "about_url": "http://github.com/florianm/ckanext-scheming",
   "dataset_fields": [
     {
@@ -86,6 +86,16 @@
       "display_property": "dc:contributor",
       "display_snippet": "email.html",
       "display_email_name_field": "maintainer"
+    },
+    {
+      "field_name":"data_update_frequency",
+      "label": "Data update frequency",
+      "preset": "select",
+      "choices": [
+        {"value":"static", "label":"static"},
+        {"value":"infrequent", "label":"infrequent"},
+        {"value":"frequent", "label":"frequent"}
+      ]
     },
     {
       "field_name": "data_last_updated",
