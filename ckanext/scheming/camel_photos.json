@@ -6,16 +6,13 @@
     {
       "field_name": "title",
       "label": "Title",
-      "form_snippet": "large_text.html",
-      "validators": "if_empty_same_as(name) unicode",
-      "form_attrs": {"data-module": "slug-preview-target"},
+      "preset": "title",
       "form_placeholder": "eg. Larry, Peter, Susan"
     },
     {
       "field_name": "name",
       "label": "URL",
-      "form_snippet": "slug.html",
-      "validators": "not_empty unicode name_validator package_name_validator",
+      "preset": "dataset_slug",
       "form_placeholder": "eg. camel-no-5"
     },
     {
@@ -23,6 +20,33 @@
       "label": "Humps",
       "validators": "ignore_missing int_validator",
       "form_placeholder": "eg. 2"
+    },
+    {
+      "field_name": "category",
+      "label": "Category",
+      "preset": "select",
+      "choices": [
+        {
+          "value": "bactrian",
+          "label": "Bactrian Camel"
+        },
+        {
+          "value": "hybrid",
+          "label": "Hybrid Camel"
+        },
+        {
+          "value": "f2hybrid",
+          "label": "F2 Hybrid Camel"
+        },
+        {
+          "value": "snowwhite",
+          "label": "Snow-white Dromedary"
+        },
+        {
+          "value": "black",
+          "label": "Black Camel"
+        }
+      ]
     },
     {
       "field_name": "other",
@@ -34,11 +58,8 @@
     {
       "field_name": "url",
       "label": "Photo",
-      "validators": "not_empty unicode remove_whitespace",
-      "form_snippet": "upload.html",
+      "preset": "resource_url_upload",
       "form_placeholder": "http://example.com/my-camel-photo.jpg",
-      "upload_field": "upload",
-      "upload_clear": "clear_upload",
       "upload_label": "Photo"
     },
     {

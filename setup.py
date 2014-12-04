@@ -16,7 +16,7 @@ setup(
     url='',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-    namespace_packages=['ckanext', 'ckanext.scheming'],
+    namespace_packages=['ckanext'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
@@ -28,6 +28,7 @@ setup(
     scheming_datasets=ckanext.scheming.plugins:SchemingDatasetsPlugin
     scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
     scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
+    scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
 
     [paste.paster_command]
     scheming=ckanext.scheming.commands:SchemingCommand
