@@ -88,22 +88,6 @@
       "display_email_name_field": "maintainer"
     },
     {
-      "field_name":"data_update_frequency",
-      "label": "Data update frequency",
-      "preset": "select",
-      "choices": [
-        {"value":"static", "label":"static"},
-        {"value":"infrequent", "label":"infrequent"},
-        {"value":"frequent", "label":"frequent"}
-      ]
-    },
-    {
-      "field_name": "data_last_updated",
-      "label": "Data last updated on",
-      "form_placeholder": "dd-mm-yyyy",
-      "display_property": "dc:date"
-    },
-    {
       "field_name": "data_temporal_extent_begin",
       "label": "Data temporal extent from",
       "form_placeholder": "dd-mm-yyyy",
@@ -114,6 +98,10 @@
       "label": "Data temporal extent until",
       "form_placeholder": "dd-mm-yyyy",
       "display_property": "dc:date"
+    },
+    {
+      "field_name": "spatial",
+      "label": "Data spatial extent"
     }
   ],
   "resource_fields": [
@@ -147,6 +135,27 @@
         "data-module": "autocomplete",
         "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
       }
+    },
+    {
+      "field_name":"update_frequency",
+      "label": "Update frequency",
+      "preset": "select",
+      "choices": [
+        {"value":"static", "label":"static"},
+        {"value":"infrequent", "label":"infrequently"},
+        {"value":"frequent", "label":"frequently"},
+        {"value":"yearly", "label":"yearly"},
+        {"value":"monthly", "label":"monthly"},
+        {"value":"weekly", "label":"weekly"},
+        {"value":"daily", "label":"daily"},
+        {"value":"unknown", "label":"unknown"}
+      ]
+    },
+    {
+      "field_name": "data_last_updated",
+      "label": "Data last updated on",
+      "form_placeholder": "dd-mm-yyyy",
+      "display_property": "dc:date"
     }
   ]
 }
