@@ -1,6 +1,7 @@
 {
   "scheming_version": 1,
   "dataset_type": "dataset",
+  "about":"Metadata schema for DPaW",
   "about_url": "http://github.com/florianm/ckanext-scheming",
   "dataset_fields": [
     {
@@ -28,7 +29,7 @@
       "field_name": "tag_string",
       "label": "Tags",
       "validators": "ignore_missing tag_string_convert",
-      "form_placeholder": "eg. economy, mental health, government",
+      "form_placeholder": "e.g. asset_, region_, indicator_",
       "form_attrs": {
         "data-module": "autocomplete",
         "data-module-tags": "",
@@ -48,20 +49,23 @@
     },
     {
       "field_name": "url",
-      "label": "Source",
-      "form_placeholder": "http://example.com/dataset.json",
+      "label": "DOI",
+      "help_text": "Dataset DOI or any other online point of truth",
+      "form_placeholder": "http://dx.doi.org/xxxx/yyyy",
       "display_property": "foaf:homepage",
       "display_snippet": "link.html"
     },
     {
       "field_name": "version",
-      "label": "Version",
+      "label": "Data last updated",
+      "help_text": "Date of last update to attached or linked data",
       "validators": "ignore_missing unicode package_version_validator",
-      "form_placeholder": "1.0"
+      "form_placeholder": "dd-mm-yyyy"
     },
     {
       "field_name": "author",
       "label": "Author",
+      "help_text": "Owner of intellectual property of the data, who should be attributed if data is re-used elswhere.",
       "form_placeholder": "Joe Bloggs",
       "display_property": "dc:creator"
     },
@@ -76,6 +80,7 @@
     {
       "field_name": "maintainer",
       "label": "Maintainer",
+      "help_text": "Maintainer of this metadata entry, who will update metadata and handle data requests.",
       "form_placeholder": "Joe Bloggs",
       "display_property": "dc:contributor"
     },
@@ -90,18 +95,21 @@
     {
       "field_name": "data_temporal_extent_begin",
       "label": "Data temporal extent from",
+      "help_text": "Date of earliest observational record in data.",
       "form_placeholder": "dd-mm-yyyy",
       "display_property": "dc:date"
     },
     {
       "field_name": "data_temporal_extent_end",
       "label": "Data temporal extent until",
+      "help_text": "Date of latest observational record in data.",
       "form_placeholder": "dd-mm-yyyy",
       "display_property": "dc:date"
     },
     {
       "field_name": "spatial",
-      "label": "Data spatial extent"
+      "label": "Data spatial extent",
+      "help_text": "GeoJSON geometry of bounding polygon of dataset extent."
     }
   ],
   "resource_fields": [
@@ -118,7 +126,7 @@
     {
       "field_name": "name",
       "label": "Name",
-      "form_placeholder": "eg. January 2011 Gold Prices"
+      "form_placeholder": "eg. Observations of X at Y"
     },
     {
       "field_name": "description",
@@ -130,7 +138,7 @@
       "field_name": "format",
       "label": "Format",
       "validators": "if_empty_guess_format ignore_missing clean_format unicode",
-      "form_placeholder": "eg. CSV, XML or JSON",
+      "form_placeholder": "eg. CSV, PDF or JSON",
       "form_attrs": {
         "data-module": "autocomplete",
         "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
@@ -139,6 +147,7 @@
     {
       "field_name":"update_frequency",
       "label": "Update frequency",
+      "help_text": "How often are attached data expected to be updated?",
       "preset": "select",
       "choices": [
         {"value":"static", "label":"static"},
@@ -150,12 +159,6 @@
         {"value":"daily", "label":"daily"},
         {"value":"unknown", "label":"unknown"}
       ]
-    },
-    {
-      "field_name": "data_last_updated",
-      "label": "Data last updated on",
-      "form_placeholder": "dd-mm-yyyy",
-      "display_property": "dc:date"
     }
   ]
 }
