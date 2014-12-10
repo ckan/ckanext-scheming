@@ -109,7 +109,7 @@
     {
       "field_name": "spatial",
       "label": "spatial",
-      "extra_html": "<span class=\"info-block info-inline\">GeoJSON geometry of bounding polygon of dataset extent.</span>"
+      "help_text": "GeoJSON geometry of bounding polygon of dataset extent."
     }
   ],
   "resource_fields": [
