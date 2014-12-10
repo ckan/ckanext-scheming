@@ -22,7 +22,7 @@
     is_required=h.scheming_field_required(field)
     ) 
 %}
-{% if field.help_text %}
-    {{ form.info(text=field.help_text, inline=true) }}
-{% endif %}
+    {% if field.help_text %}
+        {{ form.info(text=field.help_text, inline=true) }}
+    {% endif %}
 {% endcall %}

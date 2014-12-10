@@ -305,7 +305,6 @@ This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
 
 ### `help_text`
-
-Only if this key is supplied, its value will be shown as inline help text
-styled like the `License` help text. Help text must be plain text, 
-no markdown or HTML are allowed.
+         
+Only if this key is supplied, its value will be shown as inline help text,
+Help text must be plain text, no markdown or HTML are allowed.
