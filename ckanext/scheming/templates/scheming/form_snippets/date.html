@@ -11,7 +11,7 @@
         attrs=field.form_attrs if 'form_attrs' in field else {},
         is_required=h.scheming_field_required(field)
         )
-    %}
+%}
 {% if field.help_text %}
 {{ form.info(text=field.help_text, inline=true) }}
 {% endif %}
