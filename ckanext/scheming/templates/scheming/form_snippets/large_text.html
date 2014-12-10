@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-{{ form.input(
+{% call form.input(
     field.field_name,
     id='field-' + field.field_name,
     label=h.scheming_language_text(field.label),
@@ -10,4 +10,9 @@
     classes=['control-full', 'control-large'],
     attrs=field.form_attrs if 'form_attrs' in field else {},
     is_required=h.scheming_field_required(field)
-    ) }}
+    ) 
+%}
+    {% if field.help_text %}
+        {{ form.info(text=field.help_text, inline=true) }}
+    {% endif %}
+{% endcall %}
