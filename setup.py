@@ -7,12 +7,12 @@ setup(
     name='ckanext-scheming',
     version=version,
     description="Easy, sharable custom CKAN schemas",
-    long_description="""
+    long_description="""Fork by Dept Parks & Wildlife, Western Australia
     """,
     classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords='',
-    author='Government of Canada',
-    author_email='Michel.Gendron@statcan.gc.ca',
+    author='Government of Canada, Government of Western Australia',
+    author_email='Michel.Gendron@statcan.gc.ca, Florian.Mayer@dpaw.wa.gov.au',
     url='',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
