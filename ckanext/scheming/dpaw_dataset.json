@@ -57,7 +57,7 @@
     },
     {
       "field_name": "version",
-      "label": "Data last updated",
+      "label": "Data last updated on",
       "help_text": "Date of last update to attached or linked data",
       "validators": "ignore_missing unicode package_version_validator",
       "form_placeholder": "dd-mm-yyyy"
@@ -108,8 +108,8 @@
     },
     {
       "field_name": "spatial",
-      "label": "Data spatial extent",
-      "help_text": "GeoJSON geometry of bounding polygon of dataset extent."
+      "label": "spatial",
+      "extra_html": "<span class=\"info-block info-inline\">GeoJSON geometry of bounding polygon of dataset extent.</span>"
     }
   ],
   "resource_fields": [
