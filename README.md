@@ -223,6 +223,8 @@ This extension includes the following form snippets:
   a simple text field for free-form text or numbers (default)
 * [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
   a larger text field, typically used for the title
+* [date.html](ckanext/scheming/templates/scheming/form_snippets/date.html) -
+  a date widget with a drop-down date picker
 * [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
   the default name (URL) field
 * [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
@@ -302,4 +304,7 @@ sent to the user.
 This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
 
-
+### `help_text`
+         
+Only if this key is supplied, its value will be shown as inline help text,
+Help text must be plain text, no markdown or HTML are allowed.
