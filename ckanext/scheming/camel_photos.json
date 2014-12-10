@@ -49,8 +49,16 @@
       ]
     },
     {
+      "field_name": "a_relevant_date",
+      "label": "A relevant date",
+      "help_text": "An example of a date field",
+      "form_snippet": "date.html",
+      "validators": "ignore_missing unicode package_version_validator"
+    },
+    {
       "field_name": "other",
       "label": {"en": "Other information"},
+      "help_text": "The help text goes here",
       "output_validators": "ignore_missing"
     }
   ],
