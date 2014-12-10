@@ -56,16 +56,9 @@
       "display_snippet": "link.html"
     },
     {
-      "field_name": "version",
-      "label": "Data last updated on",
-      "help_text": "Date of last update to attached or linked data",
-      "validators": "ignore_missing unicode package_version_validator",
-      "form_placeholder": "dd-mm-yyyy"
-    },
-    {
       "field_name": "author",
       "label": "Author",
-      "help_text": "Owner of intellectual property of the data, who should be attributed if data is re-used elswhere.",
+      "help_text": "Owns data resources",
       "form_placeholder": "Joe Bloggs",
       "display_property": "dc:creator"
     },
@@ -80,7 +73,7 @@
     {
       "field_name": "maintainer",
       "label": "Maintainer",
-      "help_text": "Maintainer of this metadata entry, who will update metadata and handle data requests.",
+      "help_text": "Updates this dataset",
       "form_placeholder": "Joe Bloggs",
       "display_property": "dc:contributor"
     },
@@ -93,23 +86,47 @@
       "display_email_name_field": "maintainer"
     },
     {
+      "field_name": "last_updated_on",
+      "label": "Last updated",
+      "help_text": "Last update of data resources",
+      "form_snippet": "date.html",
+      "validators": "ignore_missing unicode package_version_validator"
+    },
+    {
+      "field_name":"update_frequency",
+      "label": "Update frequency",
+      "help_text": "How often are data resources expected to be updated?",
+      "preset": "select",
+      "choices": [
+        {"value":"static", "label":"one-off snapshot"},
+        {"value":"infrequent", "label":"infrequently"},
+        {"value":"frequent", "label":"frequently"},
+        {"value":"yearly", "label":"yearly"},
+        {"value":"monthly", "label":"monthly"},
+        {"value":"weekly", "label":"weekly"},
+        {"value":"daily", "label":"daily"},
+        {"value":"unknown", "label":"unknown"}
+      ]
+    },
+    {
       "field_name": "data_temporal_extent_begin",
-      "label": "Data temporal extent from",
-      "help_text": "Date of earliest observational record in data.",
-      "form_placeholder": "dd-mm-yyyy",
+      "label": "Data begin on",
+      "help_text": "Earliest record in data resources",
+      "form_snippet": "date.html",
       "display_property": "dc:date"
     },
     {
       "field_name": "data_temporal_extent_end",
-      "label": "Data temporal extent until",
-      "help_text": "Date of latest observational record in data.",
-      "form_placeholder": "dd-mm-yyyy",
+      "label": "Data end on",
+      "help_text": "Latest record in data resources",
+      "form_snippet": "date.html",
       "display_property": "dc:date"
     },
     {
       "field_name": "spatial",
-      "label": "spatial",
-      "help_text": "GeoJSON geometry of bounding polygon of dataset extent."
+      "label": "Spatial Extent",
+      "form_placeholder": "Paste a valid GeoJSON geometry",
+      "help_text": "Bounding polygon of dataset extent"
     }
   ],
   "resource_fields": [
@@ -132,7 +149,7 @@
       "field_name": "description",
       "label": "Description",
       "form_snippet": "markdown.html",
-      "form_placeholder": "Some useful notes about the data"
+      "form_placeholder": "Some useful notes"
     },
     {
       "field_name": "format",
@@ -143,22 +160,6 @@
         "data-module": "autocomplete",
         "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
       }
-    },
-    {
-      "field_name":"update_frequency",
-      "label": "Update frequency",
-      "help_text": "How often are attached data expected to be updated?",
-      "preset": "select",
-      "choices": [
-        {"value":"static", "label":"static"},
-        {"value":"infrequent", "label":"infrequently"},
-        {"value":"frequent", "label":"frequently"},
-        {"value":"yearly", "label":"yearly"},
-        {"value":"monthly", "label":"monthly"},
-        {"value":"weekly", "label":"weekly"},
-        {"value":"daily", "label":"daily"},
-        {"value":"unknown", "label":"unknown"}
-      ]
     }
   ]
 }
