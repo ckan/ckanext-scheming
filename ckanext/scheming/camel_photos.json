@@ -54,7 +54,7 @@
         "label": "A relevant date",
         "help_text": "An example of a date field",
         "form_snippet": "date.html",
-        "validators": "ignore_missing unicode package_version_validator"
+        "validators": "ignore_missing unicode isodate"
     },
     {
       "field_name": "other",
