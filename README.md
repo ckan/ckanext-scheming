@@ -224,7 +224,7 @@ This extension includes the following form snippets:
 * [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
   a larger text field, typically used for the title
 * [date.html](ckanext/scheming/templates/scheming/form_snippets/date.html) -
-  a date widget with a drop-down date picker
+  a date widget with a drop-down date picker - don't forget to use the `isodate` validator
 * [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
   the default name (URL) field
 * [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
@@ -288,11 +288,29 @@ New validators and converters may be added using the
 [IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
 
 Validators that need access to other values in this schema (e.g.
-to test values against the choices list) May be decorated with
+to test values against the choices list) may be decorated with
 the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
 function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
+Validators are useful to clean input from older browsers, where e.g. date 
+picker widgets may default to a simple text input, which by themselves 
+would accept non-ISO 8601 dates or worse. 
+
+For date fields using the form snippet `date.html`, the validator
+`isodate` can be used as follows:
+
+
+```json
+{
+    "field_name": "a_relevant_date",
+    "label": "A relevant date",
+    "help_text": "An example of a date field",
+    "form_snippet": "date.html",
+    "validators": "ignore_missing unicode isodate"
+},
+...
+```
 
 ### `output_validators`
 
