@@ -161,7 +161,8 @@ validator.
 ### `choices`
 
 The `choices` list must be provided for
-select fields.  List elements include `label`s for human-readable text for
+select and multiple choice fields.
+List elements include `label`s for human-readable text for
 each element (may be multiple languages like a [field label](#label))
 and `value`s that will be stored in the dataset or resource:
 
@@ -183,7 +184,7 @@ and `value`s that will be stored in the dataset or resource:
 ### `preset`
 
 A `preset` specifies a set of default values for these field keys. They
-are typically used to define validation and snippets for common field
+are used to define validation and snippets for common field
 types.
 
 This extension includes the following presets:
@@ -191,6 +192,8 @@ This extension includes the following presets:
 * `"title"` - title validation and large text form snippet
 * `"select"` - validation that choice is from [choices](#choices),
   form select box and display snippet
+* `"multiple_choice"` - validation that all choices are from
+  [choices](#choices), form checkboxes and display snippet
 * `"dataset_slug"` - dataset slug validation and form snippet that
   autofills the value from the title field
 * `"tag_string_autocomplete"` - tag string validation and form autocomplete
@@ -235,6 +238,8 @@ This extension includes the following form snippets:
   an upload field for resource files
 * [select.html](ckanext/scheming/templates/scheming/form_snippets/select.html) -
   a select box
+* [multiple_choice.html](ckanext/scheming/templates/scheming/form_snippets/multiple_choice.html) -
+  a group of checkboxes
 
 
 ### `display_snippet`
@@ -258,6 +263,10 @@ This extension includes the following display snippets:
   render as an external link to open in a new window
 * [email.html](ckanext/scheming/templates/scheming/display_snippets/email.html) -
   render as a "mailto:" link
+* [select.html](ckanext/scheming/templates/scheming/display_snippets/select.html) -
+  show the label text for the choice selected
+* [multiple_choice.html](ckanext/scheming/templates/scheming/display_snippets/) -
+  show the label text for all choices selected
 
 
 ### `validators`

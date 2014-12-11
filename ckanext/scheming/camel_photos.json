@@ -49,6 +49,25 @@
       ]
     },
     {
+      "field_name": "personality",
+      "label": "Personality",
+      "preset": "multiple_choice",
+      "choices": [
+        {
+          "value": "friendly",
+          "label": "Often friendly"
+        },
+        {
+          "value": "jealous",
+          "label": "Jealous of others"
+        },
+        {
+          "value": "spits",
+          "label": "Tends to spit"
+        }
+      ]
+    },
+    {
       "field_name": "other",
       "label": {"en": "Other information"},
       "output_validators": "ignore_missing"
