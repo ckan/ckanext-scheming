@@ -293,12 +293,13 @@ the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
 function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
-Validators are useful to clean input from older browsers, where e.g. date 
-picker widgets may default to a simple text input, which by themselves 
-would accept non-ISO 8601 dates or worse. 
-
-For date fields using the form snippet `date.html`, the validator
-`isodate` can be used as follows:
+CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html) 
+lists available validators ready to be used. E.g., date fields using the form snippet
+[date.html](ckanext/scheming/templates/scheming/form_snippets/date.html)
+should use the validator [isodate](http://docs.ckan.org/en/latest/extensions/validators.html#ckan.logic.validators.isodate).
+In this specific case, the `isodate` validator will reject non-ISO8601 values
+from older browsers, which might not be able to render the date picker widget
+correctly, and default to a text field.
 
 
 ```json
