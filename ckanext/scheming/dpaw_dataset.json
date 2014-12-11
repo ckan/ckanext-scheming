@@ -90,7 +90,7 @@
       "label": "Last updated",
       "help_text": "Last update of data resources",
       "form_snippet": "date.html",
-      "validators": "ignore_missing unicode package_version_validator"
+      "validators": "ignore_missing unicode isodate"
     },
     {
       "field_name":"update_frequency",
@@ -113,6 +113,7 @@
       "label": "Data begin on",
       "help_text": "Earliest record in data resources",
       "form_snippet": "date.html",
+      "validators": "ignore_missing unicode isodate",
       "display_property": "dc:date"
     },
     {
@@ -120,6 +121,7 @@
       "label": "Data end on",
       "help_text": "Latest record in data resources",
       "form_snippet": "date.html",
+      "validators": "ignore_missing unicode isodate",
       "display_property": "dc:date"
     },
     {
