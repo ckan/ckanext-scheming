@@ -31,6 +31,10 @@
 {%- set extra_html = caller() if caller -%}
 
 {% call form.input_block(id or name, label or name, error, classes, extra_html=extra_html, is_required=is_required) %}
+    <!-- dev: hotlink resources  -->
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/Leaflet/Leaflet.draw/master/dist/leaflet.draw.css" >
+    <script type="text/javascript" src="https://raw.githubusercontent.com/Leaflet/Leaflet.draw/master/dist/leaflet.draw.js"></script>
+
   <!-- snippet "spatial/snippets/dataset_map_sidebar.html", extent=value -->
 
     <section class="module module-narrow dataset-map">
@@ -38,7 +42,29 @@
       {% snippet "spatial/snippets/dataset_map_base.html", extent=value %}
     </section>
   <!-- /snippet "spatial/snippets/dataset_map_sidebar.html", extent=value -->
+<!--script>
 
+// TODO place this where it gets read after the Leafelet map is instantiated
+
+// Initialise the FeatureGroup to store editable layers
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+// Initialise the draw control and pass it the FeatureGroup of editable layers
+var drawControl = new L.Control.Draw({ edit: {featureGroup: drawnItems}});
+map.addControl(drawControl);
+
+// When a new Polygon is created, update the text input and we've got a stew going
+map.on('draw:created', function (e) {
+        var type = e.layerType,
+        layer = e.layer;
+
+        if (type === 'polygon') { 
+            // TODO update text input with geojson geometry
+        }
+        map.addLayer(layer);
+});
+</script-->
   <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
        the user to draw a bounding polygon - this captures user's silent 
        knowledge about the real dataset extent. -->
