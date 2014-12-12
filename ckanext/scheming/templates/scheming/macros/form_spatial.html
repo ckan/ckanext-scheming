@@ -1,5 +1,4 @@
 {% import 'macros/form.html' as form %}
-
 {#
     Creates all the markup required for a polygon input element. Handles matching labels to
         inputs, error messages and other useful elements.
@@ -8,7 +7,7 @@
         The inpuc can be entered in two ways:
 
         - pasting the plain text GeoJSON polygon geometry in the text input
-        - drawing a polygon on the map
+        - drawing a polygon on the map (TODO assisted by display of any existing geojson resource)
         - TODO enter bounding box coordinates, update polygon from those (if supplied? if some checkbox is ticked?)
 
         name        - The name of the form parameter.
@@ -32,14 +31,17 @@
 {%- set extra_html = caller() if caller -%}
 
 {% call form.input_block(id or name, label or name, error, classes, extra_html=extra_html, is_required=is_required) %}
-  {% snippet "spatial/snippets/dataset_map_sidebar.html", extent=value %}
+  <!-- snippet "spatial/snippets/dataset_map_sidebar.html", extent=value -->
 
-      <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
+    <section class="module module-narrow dataset-map">
+    <h2 class="module-heading"><i class="icon-medium icon-globe"></i> {{ _('Draw spatial extent') }}</h2>
+      {% snippet "spatial/snippets/dataset_map_base.html", extent=value %}
+    </section>
+  <!-- /snippet "spatial/snippets/dataset_map_sidebar.html", extent=value -->
+
+  <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
        the user to draw a bounding polygon - this captures user's silent 
        knowledge about the real dataset extent. -->
-
-
-
 
   <!-- Input #{{id or name}} takes a Polygon GeoJSON geometry.
        The map updates this input on finishing a polygon -->
