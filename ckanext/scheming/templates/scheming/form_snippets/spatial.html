@@ -1,58 +1,15 @@
-{% import 'macros/form.html' as form %}
+{% import 'scheming/macros/form_spatial.html' as form_spatial %} 
 
-<div class="accordion" id="spatial-widget">
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#spatial-widget" href="#paste">
-                Dataset extent: I have it!
-            </a>
-        </div>
-        <div id="paste" class="accordion-body collapse in">
-            <div class="accordion-inner">
-            {% call form.input(
-                field.field_name,
-                id='field-' + field.field_name,
-                label=h.scheming_language_text(field.label),
-                placeholder=h.scheming_language_text(field.form_placeholder),
-                value=data[field.field_name],
-                error=errors[field.field_name],
-                classes=['control-medium'],
-                attrs=field.form_attrs if 'form_attrs' in field else {},
-                is_required=h.scheming_field_required(field)
-                )
-            %}
-            {{ form.info(text="Paste a valid GeoJSON polygon geometry", inline=false) }}
-            {% endcall %}
-            Pretend the form label is actually shown outside this collapsible.
-            </div>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#spatial-widget" href="#draw">
-                Dataset extent: I don't have it but I know it!
-            </a>
-        </div>
-        <div id="draw" class="accordion-body collapse">
-            <div class="accordion-inner">
-                {% snippet "spatial/snippets/dataset_map_sidebar.html", extent=data[field.field_name] %}
-                {{ form.info(text="Draw the dataset extent on the map, double click the last vertex", inline=false) }}
-                Pretend we could draw a polygon on this map and the form would save its geometry.
-            </div>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#spatial-widget" href="#guess">
-                Dataset extent: I don't have it, but I know who has it!
-            </a>
-        </div>
-        <div id="guess" class="accordion-body collapse">
-            <div class="accordion-inner">
-                {{ form.info(text="Select an attached spatial resource to guess the dataset extent", inline=false) }}
-                Pretend we show a dropdown of attached GeoJSON resources. If we pick one, the convex hull
-                of all of its features will be saved as dataset extent.
-            </div>
-        </div>
-    </div>
-</div>
+{% call form_spatial.polygon(
+    field.field_name,
+    id='field-' + field.field_name,
+    label=h.scheming_language_text(field.label),
+    placeholder=h.scheming_language_text(field.form_placeholder),
+    value=data[field.field_name],
+    error=errors[field.field_name],
+    classes=['control-medium'],
+    is_required=h.scheming_field_required(field)
+  )
+%}
+
+{% endcall %}
