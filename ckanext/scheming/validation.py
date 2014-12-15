@@ -1,3 +1,5 @@
+import json
+
 from ckan.plugins.toolkit import get_validator, UnknownValidator, missing, _
 
 from ckanext.scheming.errors import SchemingException
@@ -45,10 +47,9 @@ def scheming_multiple_choice(field):
 
        ["choice-a", "choice-b"]
 
-    2. separate fields for each choice (for form submissions):
+    2. a single string for single item selection in form submissions:
 
-       fieldname-choice-a = "true"
-       fieldname-choice-b = "true"
+       "choice-a"
     """
     choice_values = set(c['value'] for c in field['choices'])
 
@@ -60,19 +61,13 @@ def scheming_multiple_choice(field):
 
         value = data[key]
         if value is not missing:
-            # 1. list of strings
-            if not isinstance(value, list):
+            if isinstance(value, basestring):
+                value = [value]
+            elif not isinstance(value, list):
                 errors[key].append(_('expecting list of strings'))
                 return
         else:
-            # 2. separate fields
-            prefix = key[-1] + '-'
-            extras = data.get(key[:-1] + ('__extras',), {})
             value = []
-            for name, text in extras.iteritems():
-                if not name.startswith(prefix):
-                    continue
-                value.append(name[len(prefix):])
 
         selected = set()
         for element in value:

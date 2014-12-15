@@ -22,7 +22,9 @@ fieldset.checkboxes label input {
         {%- for c in field.choices -%}
             <label for="field-{{ field.field_name }}-{{ c.value }}">
                 <input id="field-{{ field.field_name }}-{{ c.value }}"
-                    type="checkbox" name="{{ field.field_name }}" value="true"
+                    type="checkbox"
+                    name="{{ field.field_name }}"
+                    value="{{ c.value }}"
                     {{"checked " if c.value in data[field.field_name] }} />
                 {{ h.scheming_language_text(c.label) }}
             </label>
