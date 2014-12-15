@@ -223,6 +223,8 @@ This extension includes the following form snippets:
   a simple text field for free-form text or numbers (default)
 * [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
   a larger text field, typically used for the title
+* [date.html](ckanext/scheming/templates/scheming/form_snippets/date.html) -
+  a date widget with a drop-down date picker - don't forget to use the `isodate` validator
 * [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
   the default name (URL) field
 * [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
@@ -286,11 +288,30 @@ New validators and converters may be added using the
 [IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
 
 Validators that need access to other values in this schema (e.g.
-to test values against the choices list) May be decorated with
+to test values against the choices list) may be decorated with
 the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
 function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
+CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html) 
+lists available validators ready to be used. E.g., date fields using the form snippet
+[date.html](ckanext/scheming/templates/scheming/form_snippets/date.html)
+should use the validator [isodate](http://docs.ckan.org/en/latest/extensions/validators.html#ckan.logic.validators.isodate).
+In this specific case, the `isodate` validator will reject non-ISO8601 values
+from older browsers, which might not be able to render the date picker widget
+correctly, and default to a text field.
+
+
+```json
+{
+    "field_name": "a_relevant_date",
+    "label": "A relevant date",
+    "help_text": "An example of a date field",
+    "form_snippet": "date.html",
+    "validators": "ignore_missing unicode isodate"
+},
+...
+```
 
 ### `output_validators`
 
@@ -302,4 +323,7 @@ sent to the user.
 This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
 
-
+### `help_text`
+         
+Only if this key is supplied, its value will be shown as inline help text,
+Help text must be plain text, no markdown or HTML are allowed.

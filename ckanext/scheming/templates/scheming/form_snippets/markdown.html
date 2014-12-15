@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-{{ form.markdown(
+{% call form.markdown(
     field.field_name,
     id='field-' + field.field_name,
     label=h.scheming_language_text(field.label),
@@ -9,5 +9,9 @@
     error=errors[field.field_name],
     attrs=field.form_attrs or {},
     is_required=h.scheming_field_required(field)
-    ) }}
-
+    ) 
+%}
+    {% if field.help_text %}
+        {{ form.info(text=field.help_text, inline=true) }}
+    {% endif %}
+{% endcall %}
