@@ -1,0 +1,32 @@
+{% import 'macros/form.html' as form %}
+
+<style>
+fieldset.checkboxes label {
+    font-weight: normal;
+}
+fieldset.checkboxes label:after {
+    content: none;
+}
+fieldset.checkboxes label input {
+    width: auto;
+    top: 0;
+}
+</style>
+
+{%- call form.input_block(
+    label=h.scheming_language_text(field.label),
+    classes=['control-medium'],
+    error=errors[field.field_name],
+    is_required=h.scheming_field_required(field)) -%}
+    <fieldset class="checkboxes">
+        {%- for c in field.choices -%}
+            <label for="field-{{ field.field_name }}-{{ c.value }}">
+                <input id="field-{{ field.field_name }}-{{ c.value }}"
+                    type="checkbox" name="{{ field.field_name }}" value="true"
+                    {{"checked " if c.value in data[field.field_name] }} />
+                {{ h.scheming_language_text(c.label) }}
+            </label>
+        {%- endfor -%}
+    </fieldset>
+{%- endcall -%}
+
