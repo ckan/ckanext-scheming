@@ -1,0 +1,8 @@
+{%- set values = data[field.field_name] -%}
+<ul>
+{%- for choice in field.choices -%}
+    {%- if choice.value in values -%}
+        <li>{{ h.scheming_language_text(choice.label) }}</li>
+    {%- endif -%}
+{%- endfor -%}
+</ul>
