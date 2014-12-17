@@ -1,0 +1,8 @@
+{% import 'macros/form.html' as form %}
+
+{%- if field.help_text -%}
+    {{- form.info(
+        text=h.scheming_language_text(field.help_text),
+        inline=field.get('help_inline', false)
+        ) -}}
+{%- endif -%}
