@@ -24,7 +24,8 @@
     {
       "field_name": "category",
       "label": "Category",
-      "help_text": "Make and model of camel",
+      "help_text": "Make and model",
+      "help_inline": true,
       "preset": "select",
       "choices": [
         {

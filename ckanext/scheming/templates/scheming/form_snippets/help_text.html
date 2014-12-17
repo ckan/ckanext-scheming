@@ -3,6 +3,6 @@
 {%- if field.help_text -%}
     {{- form.info(
         text=h.scheming_language_text(field.help_text),
-        inline=true
+        inline=field.get('help_inline', false)
         ) -}}
 {%- endif -%}
