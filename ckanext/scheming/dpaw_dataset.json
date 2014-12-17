@@ -58,7 +58,7 @@
     {
       "field_name": "author",
       "label": "Author",
-      "help_text": "Owns data resources",
+      "help_text": "The author (dataset custodian) is responsible for the content of attached data resources",
       "form_placeholder": "Joe Bloggs",
       "display_property": "dc:creator"
     },
@@ -71,9 +71,17 @@
       "display_email_name_field": "author"
     },
     {
+      "field_name": "citation",
+      "label": "Citation",
+      "help_text": "Comprehensive attribution of authors and their affiliation",
+      "form_placeholder": "Author AB (year): Publication",
+      "display_property": "citation",
+      "display_snippet": "text.html"
+    },
+    {
       "field_name": "maintainer",
       "label": "Maintainer",
-      "help_text": "Updates this dataset",
+      "help_text": "The metadata maintainer updates this page on behalf of the author",
       "form_placeholder": "Joe Bloggs",
       "display_property": "dc:contributor"
     },
@@ -87,8 +95,8 @@
     },
     {
       "field_name": "last_updated_on",
-      "label": "Last updated",
-      "help_text": "Last update of data resources",
+      "label": "Data last updated on",
+      "help_text": "Last modification of the content of data resources",
       "form_snippet": "date.html",
       "validators": "ignore_missing unicode isodate"
     },
@@ -159,7 +167,7 @@
       "field_name": "format",
       "label": "Format",
       "validators": "if_empty_guess_format ignore_missing clean_format unicode",
-      "form_placeholder": "eg. CSV, PDF or JSON",
+      "form_placeholder": "eg. CSV, PDF, JPG, PNG, GeoJSON, XML",
       "form_attrs": {
         "data-module": "autocomplete",
         "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"

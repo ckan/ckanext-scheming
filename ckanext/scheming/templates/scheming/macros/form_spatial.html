@@ -4,10 +4,10 @@
         inputs, error messages and other useful elements.
 
         The required input is a GeoJSON polygon geometry.
-        The inpuc can be entered in two ways:
+        The input can be entered:
 
-        - pasting the plain text GeoJSON polygon geometry in the text input
-        - drawing a polygon on the map (TODO assisted by display of any existing geojson resource)
+        - by pasting the plain text GeoJSON polygon geometry in the text input
+        - by drawing a polygon on the map (TODO assisted by display of any existing geojson resource)
         - TODO enter bounding box coordinates, update polygon from those (if supplied? if some checkbox is ticked?)
 
         name        - The name of the form parameter.
@@ -25,54 +25,37 @@
         {% import 'scheming/macros/form_spatial.html' as form_spatial %} 
         {{ form_spatial.polygon('spatial', label=_('Dataset extent'), value=data.spatial, error=errors.spatial) }}
 
+        This macro depends on a custom branch of ckanext-spatial: 
+        https://github.com/florianm/ckanext-spatial/tree/91-spatial-form
+
+        The custom branch contains the JS and templating components, which are
+        more specific to, and therefore belong into, ckanext-spatial rather 
+        than ckanext-scheming.
+
 #}
 
-{% macro polygon(name, id='', label='', value='', placeholder='', type='text', error="", classes=[], is_required=false) %}
-{%- set extra_html = caller() if caller -%}
+{% macro polygon(name, id='', label='', value='', placeholder='', type='text', error='', classes=[], is_required=false) %}
+  {%- set extra_html = caller() if caller -%}
 
-{% call form.input_block(id or name, label or name, error, classes, extra_html=extra_html, is_required=is_required) %}
-    <!-- dev: hotlink resources  -->
-    <link rel="stylesheet" href="https://raw.githubusercontent.com/Leaflet/Leaflet.draw/master/dist/leaflet.draw.css" >
-    <script type="text/javascript" src="https://raw.githubusercontent.com/Leaflet/Leaflet.draw/master/dist/leaflet.draw.js"></script>
+  {% call form.input_block(id or name, label or name, error, classes, extra_html=extra_html, is_required=is_required) %}
+  
+    {% snippet "spatial/snippets/spatial_form.html", input_id="{{ id }}", extent="{{ value }}" %}
 
-  <!-- snippet "spatial/snippets/dataset_map_sidebar.html", extent=value -->
+    <div>macro form_spatial.html<br/>{{ id }}<br/>{{ value }}</div>
 
-    <section class="module module-narrow dataset-map">
-    <h2 class="module-heading"><i class="icon-medium icon-globe"></i> {{ _('Draw spatial extent') }}</h2>
-      {% snippet "spatial/snippets/dataset_map_base.html", extent=value %}
-    </section>
-  <!-- /snippet "spatial/snippets/dataset_map_sidebar.html", extent=value -->
-<!--script>
+    <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
+         the user to draw a bounding polygon around existing spatial features, but also 
+         captures user's silent knowledge about the real dataset extent. -->
 
-// TODO place this where it gets read after the Leafelet map is instantiated
+    <!-- Input #{{ id }} takes a Polygon GeoJSON geometry.
+         The map updates this input on finishing a polygon -->
+    <textarea id="{{ id }}" type="{{ type }}" name="{{ name }}" 
+        placeholder="{{ placeholder }}" rows=10>
+      {{ value | empty_and_escape }}
+    </textarea>
 
-// Initialise the FeatureGroup to store editable layers
-var drawnItems = new L.FeatureGroup();
-map.addLayer(drawnItems);
+    {{ form.info(text="Draw the dataset extent on the map (finish with double-click), 
+       or paste a GeoJSON geometry in the textarea", inline=false) }}
 
-// Initialise the draw control and pass it the FeatureGroup of editable layers
-var drawControl = new L.Control.Draw({ edit: {featureGroup: drawnItems}});
-map.addControl(drawControl);
-
-// When a new Polygon is created, update the text input and we've got a stew going
-map.on('draw:created', function (e) {
-        var type = e.layerType,
-        layer = e.layer;
-
-        if (type === 'polygon') { 
-            // TODO update text input with geojson geometry
-        }
-        map.addLayer(layer);
-});
-</script-->
-  <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
-       the user to draw a bounding polygon - this captures user's silent 
-       knowledge about the real dataset extent. -->
-
-  <!-- Input #{{id or name}} takes a Polygon GeoJSON geometry.
-       The map updates this input on finishing a polygon -->
-  <input id="{{ id or name }}" type="{{ type }}" name="{{ name }}" 
-    value="{{ value | empty_and_escape }}" placeholder="{{ placeholder }}" />
-  {{ form.info(text="Draw the dataset extent on the map (finish with double-click) or paste GeoJSON geometry", inline=false) }}
-{% endcall %}
+  {% endcall %}
 {% endmacro %}
