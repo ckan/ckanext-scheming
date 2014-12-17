@@ -1,7 +1,27 @@
-{% import 'scheming/macros/form_spatial.html' as form_spatial %} 
+{#
+An input widget for polygons, such as the ckanext-spatial "spatial" field for 
+the dataset extent.
 
-{% call form_spatial.polygon(
-    field.field_name,
+This widget retains the plain text input which accepts a valid GeoJSON
+geometry, and also adds a map on which one can simply draw the dataset extent.
+
+Providing alternative map input has two motivations:
+- Drawing is achievable, pasting a valid GeoJSON geometry will post a challenge
+to many non-GIS-trained users
+- Users will have additional, silent expert knowledge on the real extent
+of their dataset.
+
+This form snippet depends on a custom branch of ckanext-spatial, which
+provides (and is the appropriate home for) the JavaScript functions to 
+provide an editable map.
+
+#}
+
+
+{% import 'macros/form.html' as form %}
+
+{% with 
+    name=field.field_name, 
     id='field-' + field.field_name,
     label=h.scheming_language_text(field.label),
     placeholder=h.scheming_language_text(field.form_placeholder),
@@ -9,7 +29,35 @@
     error=errors[field.field_name],
     classes=['control-medium'],
     is_required=h.scheming_field_required(field)
-  )
 %}
 
-{% endcall %}
+  {% call form.input_block(id, label, error, classes, is_required=is_required) %}
+  
+    {% set map_config = h.get_common_map_config() %}
+    <div class="dataset-map" 
+        data-module="spatial-form"
+        data-input_id="{{ id }}"
+        data-extent="{{ value }}" 
+        data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}" 
+        data-module-map_config="{{ h.dump_json(map_config) }}">
+      <div id="dataset-map-container"></div>
+    </div>
+
+    {% resource 'ckanext-spatial/spatial_form' %}
+
+    {{ form.info(text="Draw the dataset extent on the map (finish with double-click), 
+       or paste a GeoJSON  Polygon or Multipolygon geometry in the textarea below", inline=false) }}
+
+    <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
+         the user to draw a bounding polygon around existing spatial features, but also 
+         captures user's silent knowledge about the real dataset extent. -->
+
+    <!-- Textarea #{{ id }} accepts a Polygon GeoJSON geometry.
+         The map updates this input on finishing a polygon -->
+    <textarea id="{{ id }}" type="{{ type }}" name="{{ name }}" 
+        placeholder="{{ placeholder }}" rows=10>
+      {{ value | empty_and_escape }}
+    </textarea>
+
+  {% endcall %}
+{% endwith %}
