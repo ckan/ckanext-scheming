@@ -24,6 +24,8 @@
     {
       "field_name": "category",
       "label": "Category",
+      "help_text": "Make and model",
+      "help_inline": true,
       "preset": "select",
       "choices": [
         {
@@ -66,6 +68,11 @@
           "label": "Tends to spit"
         }
       ]
+    },
+    {
+      "field_name": "a_relevant_date",
+      "label": "A relevant date",
+      "preset": "date"
     },
     {
       "field_name": "other",

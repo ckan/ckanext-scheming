@@ -194,6 +194,7 @@ This extension includes the following presets:
   form select box and display snippet
 * `"multiple_choice"` - validation that all choices are from
   [choices](#choices), form checkboxes and display snippet
+* `"date"` - date validation and form snippet
 * `"dataset_slug"` - dataset slug validation and form snippet that
   autofills the value from the title field
 * `"tag_string_autocomplete"` - tag string validation and form autocomplete
@@ -226,6 +227,8 @@ This extension includes the following form snippets:
   a simple text field for free-form text or numbers (default)
 * [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
   a larger text field, typically used for the title
+* [date.html](ckanext/scheming/templates/scheming/form_snippets/date.html) -
+  a date widget with an html5 date picker
 * [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
   the default name (URL) field
 * [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
@@ -295,11 +298,13 @@ New validators and converters may be added using the
 [IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
 
 Validators that need access to other values in this schema (e.g.
-to test values against the choices list) May be decorated with
+to test values against the choices list) may be decorated with
 the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
 function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
+CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html) 
+lists available validators ready to be used.
 
 ### `output_validators`
 
@@ -311,4 +316,12 @@ sent to the user.
 This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
 
+### `help_text`
 
+Only if this key is supplied, its value will be shown as inline help text,
+Help text must be plain text, no markdown or HTML are allowed.
+Help text may be provided in multiple languages like [label fields](#label).
+
+### `help_inline`
+
+Display help text inline if set to `true`. Default is `false`.

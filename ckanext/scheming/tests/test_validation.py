@@ -37,6 +37,26 @@ class TestChoices(object):
         assert_equals(d['category'], 'f2hybrid')
 
 
+class TestDates(object):
+    def test_date_field_rejects_non_isodates(self):
+        lc = LocalCKAN()
+        assert_raises(ValidationError, lc.action.package_create, 
+            type='camel-photos',
+            name='fred',
+            a_relevant_date='31/11/2014',
+        )
+        assert_raises(ValidationError, lc.action.package_create, 
+            type='camel-photos',
+            name='fred',
+            a_relevant_date='31/11/abcd',
+        )
+        assert_raises(ValidationError, lc.action.package_create, 
+            type='camel-photos',
+            name='fred',
+            a_relevant_date='this-is-not-a-date',
+        )
+
+
 class TestInvalidType(object):
     def test_invalid_dataset_type(self):
         p = SchemingDatasetsPlugin.instance
