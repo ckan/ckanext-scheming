@@ -11,7 +11,5 @@
     is_required=h.scheming_field_required(field)
     ) 
 %}
-    {% if field.help_text %}
-        {{ form.info(text=field.help_text, inline=true) }}
-    {% endif %}
+    {%- snippet 'scheming/form_snippets/help_text.html' field=field -%}
 {% endcall %}
