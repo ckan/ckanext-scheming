@@ -52,9 +52,7 @@
     {
         "field_name": "a_relevant_date",
         "label": "A relevant date",
-        "help_text": "An example of a date field",
-        "form_snippet": "date.html",
-        "validators": "ignore_missing unicode isodate"
+        "preset": "date"
     },
     {
       "field_name": "other",

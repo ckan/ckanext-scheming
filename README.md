@@ -191,6 +191,7 @@ This extension includes the following presets:
 * `"title"` - title validation and large text form snippet
 * `"select"` - validation that choice is from [choices](#choices),
   form select box and display snippet
+* `"date"` - date validation and form snippet
 * `"dataset_slug"` - dataset slug validation and form snippet that
   autofills the value from the title field
 * `"tag_string_autocomplete"` - tag string validation and form autocomplete
@@ -224,7 +225,7 @@ This extension includes the following form snippets:
 * [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
   a larger text field, typically used for the title
 * [date.html](ckanext/scheming/templates/scheming/form_snippets/date.html) -
-  a date widget with a drop-down date picker - don't forget to use the `isodate` validator
+  a date widget with an html5 date picker
 * [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
   the default name (URL) field
 * [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
@@ -294,24 +295,7 @@ function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
 CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html) 
-lists available validators ready to be used. E.g., date fields using the form snippet
-[date.html](ckanext/scheming/templates/scheming/form_snippets/date.html)
-should use the validator [isodate](http://docs.ckan.org/en/latest/extensions/validators.html#ckan.logic.validators.isodate).
-In this specific case, the `isodate` validator will reject non-ISO8601 values
-from older browsers, which might not be able to render the date picker widget
-correctly, and default to a text field.
-
-
-```json
-{
-    "field_name": "a_relevant_date",
-    "label": "A relevant date",
-    "help_text": "An example of a date field",
-    "form_snippet": "date.html",
-    "validators": "ignore_missing unicode isodate"
-},
-...
-```
+lists available validators ready to be used.
 
 ### `output_validators`
 

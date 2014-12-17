@@ -67,6 +67,13 @@
         "display_snippet": "select.html",
         "validators": "scheming_required scheming_choices"
       }
+    },
+    {
+      "preset_name": "date",
+      "values": {
+        "form_snippet": "date.html",
+        "validators": "scheming_required isodate"
+      }
     }
   ]
 }
