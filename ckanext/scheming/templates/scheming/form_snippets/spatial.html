@@ -42,11 +42,10 @@ provide an editable map.
         data-module-map_config="{{ h.dump_json(map_config) }}">
       <div id="dataset-map-container"></div>
     </div>
-
     {% resource 'ckanext-spatial/spatial_form' %}
-
-    {{ form.info(text="Draw the dataset extent on the map (finish with double-click), 
-       or paste a GeoJSON  Polygon or Multipolygon geometry in the textarea below", inline=false) }}
+    
+    {{ form.info(text="Edit the existing, or draw a new dataset extent on the map, 
+       or paste a GeoJSON Polygon or Multipolygon geometry below", inline=false) }}
 
     <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
          the user to draw a bounding polygon around existing spatial features, but also 
@@ -55,7 +54,7 @@ provide an editable map.
     <!-- Textarea #{{ id }} accepts a Polygon GeoJSON geometry.
          The map updates this input on finishing a polygon -->
     <textarea id="{{ id }}" type="{{ type }}" name="{{ name }}" 
-        placeholder="{{ placeholder }}" rows=10>
+        placeholder="{{ placeholder }}" rows=10 style="width:100%;">
       {{ value | empty_and_escape }}
     </textarea>
 
