@@ -54,9 +54,8 @@ provide an editable map.
     <!-- Textarea #{{ id }} accepts a Polygon GeoJSON geometry.
          The map updates this input on drawing/editing/deleting shapes -->
     <textarea id="{{ id }}" type="{{ type }}" name="{{ name }}" 
-        placeholder="{{ placeholder }}" rows=10 style="width:100%;">
-      {{ value | empty_and_escape }}
-    </textarea>
+        placeholder="{{ placeholder }}" rows=10 style="width:100%;"
+    >{{ value | empty_and_escape }}</textarea>
 
   {% endcall %}
 {% endwith %}

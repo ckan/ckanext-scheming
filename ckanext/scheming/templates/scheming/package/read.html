@@ -9,11 +9,11 @@
     might not be compatible with ckanext-scheming
     </p>
   {%- endif -%}
-  {% if 'notes' in schema.dataset_fields and c.pkg_notes_formatted %}
+  {# if 'notes' in schema.dataset_fields and c.pkg_notes_formatted #}
     <div class="notes embedded-content">
-      {{ c.pkg_notes_formatted }}
+      {{ c.pkg_notes_formatted  }}
     </div>
-  {% endif %}
+  {# endif #}
 {% endblock %}
 
 {% block package_additional_info %}
