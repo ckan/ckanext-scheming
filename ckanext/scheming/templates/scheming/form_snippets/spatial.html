@@ -44,7 +44,7 @@ provide an editable map.
     </div>
     {% resource 'ckanext-spatial/spatial_form' %}
     
-    {{ form.info(text="Edit the existing, or draw a new dataset extent on the map, 
+    {{ form.info(text="Draw and edit the dataset extent as rectangles and/or polygons on the map, 
        or paste a GeoJSON Polygon or Multipolygon geometry below", inline=false) }}
 
     <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
@@ -52,7 +52,7 @@ provide an editable map.
          captures user's silent knowledge about the real dataset extent. -->
 
     <!-- Textarea #{{ id }} accepts a Polygon GeoJSON geometry.
-         The map updates this input on finishing a polygon -->
+         The map updates this input on drawing/editing/deleting shapes -->
     <textarea id="{{ id }}" type="{{ type }}" name="{{ name }}" 
         placeholder="{{ placeholder }}" rows=10 style="width:100%;">
       {{ value | empty_and_escape }}

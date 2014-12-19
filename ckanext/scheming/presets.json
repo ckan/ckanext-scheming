@@ -67,6 +67,22 @@
         "display_snippet": "select.html",
         "validators": "scheming_required scheming_choices"
       }
+    },
+    {
+      "preset_name": "multiple_choice",
+      "values": {
+        "form_snippet": "multiple_choice.html",
+        "display_snippet": "multiple_choice.html",
+        "validators": "scheming_multiple_choice",
+        "output_validators": "scheming_multiple_choice_output"
+      }
+    },
+    {
+      "preset_name": "date",
+      "values": {
+        "form_snippet": "date.html",
+        "validators": "scheming_required isodate"
+      }
     }
   ]
 }

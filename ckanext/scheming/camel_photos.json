@@ -24,7 +24,8 @@
     {
       "field_name": "category",
       "label": "Category",
-      "help_text": "Make and model of camel",
+      "help_text": "Make and model",
+      "help_inline": true,
       "preset": "select",
       "choices": [
         {
@@ -50,11 +51,28 @@
       ]
     },
     {
-        "field_name": "a_relevant_date",
-        "label": "A relevant date",
-        "help_text": "An example of a date field",
-        "form_snippet": "date.html",
-        "validators": "ignore_missing unicode isodate"
+      "field_name": "personality",
+      "label": "Personality",
+      "preset": "multiple_choice",
+      "choices": [
+        {
+          "value": "friendly",
+          "label": "Often friendly"
+        },
+        {
+          "value": "jealous",
+          "label": "Jealous of others"
+        },
+        {
+          "value": "spits",
+          "label": "Tends to spit"
+        }
+      ]
+    },
+    {
+      "field_name": "a_relevant_date",
+      "label": "A relevant date",
+      "preset": "date"
     },
     {
       "field_name": "other",

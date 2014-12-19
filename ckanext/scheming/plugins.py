@@ -12,7 +12,8 @@ from paste.deploy.converters import asbool
 from ckanext.scheming import helpers
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import (
-    validators_from_string, scheming_choices, scheming_required)
+    validators_from_string, scheming_choices, scheming_required,
+    scheming_multiple_choice, scheming_multiple_choice_output)
 from ckanext.scheming.logic import (
     scheming_dataset_schema_list, scheming_dataset_schema_show,
     scheming_group_schema_list, scheming_group_schema_show,
@@ -72,6 +73,8 @@ class _SchemingMixin(object):
         return {
             'scheming_choices': scheming_choices,
             'scheming_required': scheming_required,
+            'scheming_multiple_choice': scheming_multiple_choice,
+            'scheming_multiple_choice_output': scheming_multiple_choice_output,
             }
 
     def _add_template_directory(self, config):

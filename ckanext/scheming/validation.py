@@ -1,4 +1,6 @@
-from ckan.plugins.toolkit import get_validator, UnknownValidator
+import json
+
+from ckan.plugins.toolkit import get_validator, UnknownValidator, missing, _
 
 from ckanext.scheming.errors import SchemingException
 
@@ -33,6 +35,64 @@ def scheming_required(field):
     if field.get('required'):
         return not_missing
     return ignore_missing
+
+
+@scheming_validator
+def scheming_multiple_choice(field):
+    """
+    Accept zero or more values from a list of choices and convert
+    to a json list for storage:
+
+    1. a list of strings, eg.:
+
+       ["choice-a", "choice-b"]
+
+    2. a single string for single item selection in form submissions:
+
+       "choice-a"
+    """
+    choice_values = set(c['value'] for c in field['choices'])
+
+    def validator(key, data, errors, context):
+        # if there was an error before calling our validator
+        # don't bother with our validation
+        if errors[key]:
+            return
+
+        value = data[key]
+        if value is not missing:
+            if isinstance(value, basestring):
+                value = [value]
+            elif not isinstance(value, list):
+                errors[key].append(_('expecting list of strings'))
+                return
+        else:
+            value = []
+
+        selected = set()
+        for element in value:
+            if element in choice_values:
+                selected.add(element)
+                continue
+            errors[key].append(_('unexpected choice "%s"') % element)
+
+        if not errors[key]:
+            data[key] = json.dumps([
+                c['value'] for c in field['choices'] if c['value'] in selected])
+
+    return validator
+
+
+def scheming_multiple_choice_output(value):
+    """
+    return stored json as a proper list
+    """
+    if isinstance(value, list):
+        return value
+    try:
+        return json.loads(value)
+    except ValueError:
+        return [value]
 
 
 def validators_from_string(s, field):
