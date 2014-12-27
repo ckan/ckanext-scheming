@@ -52,15 +52,20 @@ provide an editable map.
         $("#{{ id }}").val($("#select-{{ id }}").val());
     }
     </script>
-    <select id="select-{{ id }}" name="{{ name }}" onchange="updateInput()">
+    <select id="select-{{ id }}" onchange="updateInput()">
         <option value="">-- Select pre-defined extent --</option>
       {% for c in field.choices %}
-        <option value="{{ c.value }}">{{ c.label }}</option>
+        <option value="{{ c.value | replace("u'","\"") | replace("'","\"") | empty_and_escape }}">{{ c.label }}</option>
       {% endfor %}
     </select>
     <!-- TODO this should be an autocompleting select box like tags,
          polling from a user-defined custom vocabulary of label/geojson pairs,
-         defined in field.vocabulary or so.
+         defined in the dataset schema as e.g. field.vocabulary.
+         Also, this snippet should be moved into ckanext-spatial's form_spatial.js so the data binding JS
+         is in one place.
+         NOTE The value expects "real strings", not u'nonsense'. For demonstration purposes,
+         let's sanitize the JSON here, so valid JSON goes into the dataset schema and we won't need
+         to touch unicode/string handling in the pylons parts, which could cause more headache than it prevents.
     -->
     <!-- /choose predefined -->
 
@@ -73,7 +78,9 @@ provide an editable map.
        or paste a GeoJSON Polygon or Multipolygon geometry below", inline=false) }}
 
     <!-- Textarea #{{ id }} accepts a Polygon GeoJSON geometry.
-         The map updates this input on drawing/editing/deleting shapes -->
+         The map updates this input on drawing/editing/deleting shapes,
+         the select menu updates this input on selecting options.
+    -->
     <textarea id="{{ id }}" type="{{ type }}" name="{{ name }}" 
         placeholder="{{ placeholder }}" rows=10 style="width:100%;"
     >{{ value | empty_and_escape }}</textarea>
