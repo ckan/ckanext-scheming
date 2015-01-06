@@ -1,0 +1,207 @@
+{
+  "scheming_version": 1,
+  "dataset_type": "dataset",
+  "about":"Metadata schema for DPaW",
+  "about_url": "http://github.com/florianm/ckanext-scheming",
+  "dataset_fields": [
+    {
+      "field_name": "title",
+      "label": "Title",
+      "validators": "if_empty_same_as(name) unicode",
+      "form_snippet": "large_text.html",
+      "form_attrs": {"data-module": "slug-preview-target"},
+      "form_placeholder": "eg. A descriptive title"
+    },
+    {
+      "field_name": "name",
+      "label": "URL",
+      "validators": "not_empty unicode name_validator package_name_validator",
+      "form_snippet": "slug.html",
+      "form_placeholder": "eg. my-dataset"
+    },
+    {
+      "field_name": "notes",
+      "label": "Description",
+      "form_snippet": "markdown.html",
+      "form_placeholder": "eg. Some useful notes about the data"
+    },
+    {
+      "field_name": "tag_string",
+      "label": "Tags",
+      "validators": "ignore_missing tag_string_convert",
+      "form_placeholder": "e.g. asset_, region_, indicator_",
+      "form_attrs": {
+        "data-module": "autocomplete",
+        "data-module-tags": "",
+        "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?"
+      }
+    },
+    {
+      "field_name": "license_id",
+      "label": "License",
+      "form_snippet": "license.html"
+    },
+    {
+      "field_name": "owner_org",
+      "label": "Organization",
+      "validators": "owner_org_validator unicode",
+      "form_snippet": "organization.html"
+    },
+    {
+      "field_name": "url",
+      "label": "DOI",
+      "help_text": "Dataset DOI or any other online point of truth",
+      "help_inline": true,
+      "form_placeholder": "http://dx.doi.org/xxxx/yyyy",
+      "display_property": "foaf:homepage",
+      "display_snippet": "link.html"
+    },
+    {
+      "field_name": "author",
+      "label": "Author",
+      "help_text": "The author (dataset custodian) is responsible for the content of attached data resources",
+      "help_inline": true,
+      "form_placeholder": "Joe Bloggs",
+      "display_property": "dc:creator"
+    },
+    {
+      "field_name": "author_email",
+      "label": "Author Email",
+      "form_placeholder": "joe@example.com",
+      "display_property": "dc:creator",
+      "display_snippet": "email.html",
+      "display_email_name_field": "author"
+    },
+    {
+      "field_name": "citation",
+      "label": "Citation",
+      "help_text": "Comprehensive attribution of authors and their affiliation",
+      "help_inline": true,
+      "form_placeholder": "Author AB (year): Publication",
+      "display_property": "citation",
+      "display_snippet": "text.html"
+    },
+    {
+      "field_name": "maintainer",
+      "label": "Maintainer",
+      "help_text": "The metadata maintainer updates this page on behalf of the author",
+      "help_inline": true,
+      "form_placeholder": "Joe Bloggs",
+      "display_property": "dc:contributor"
+    },
+    {
+      "field_name": "maintainer_email",
+      "label": "Maintainer Email",
+      "form_placeholder": "joe@example.com",
+      "display_property": "dc:contributor",
+      "display_snippet": "email.html",
+      "display_email_name_field": "maintainer"
+    },
+    {
+      "field_name": "last_updated_on",
+      "label": "Data last updated on",
+      "help_text": "Last modification of the content of data resources",
+      "help_inline": true,
+      "preset": "date"
+    },
+    {
+      "field_name":"update_frequency",
+      "label": "Update frequency",
+      "help_text": "How often are data resources expected to be updated?",
+      "help_inline": true,
+      "preset": "select",
+      "choices": [
+        {"value":"static", "label":"one-off snapshot"},
+        {"value":"infrequent", "label":"infrequently"},
+        {"value":"frequent", "label":"frequently"},
+        {"value":"yearly", "label":"yearly"},
+        {"value":"monthly", "label":"monthly"},
+        {"value":"weekly", "label":"weekly"},
+        {"value":"daily", "label":"daily"},
+        {"value":"unknown", "label":"unknown"}
+      ]
+    },
+    {
+      "field_name": "data_temporal_extent_begin",
+      "label": "Data begin on",
+      "help_text": "Earliest record in data resources",
+      "help_inline": true,
+      "preset": "date",
+      "display_property": "dc:date"
+    },
+    {
+      "field_name": "data_temporal_extent_end",
+      "label": "Data end on",
+      "help_text": "Latest record in data resources",
+      "help_inline": true,
+      "preset": "date",
+      "display_property": "dc:date"
+    },
+    {
+      "field_name": "spatial",
+      "label": "Spatial Extent",
+      "form_placeholder": "Paste a valid GeoJSON geometry",
+      "form_snippet":"spatial.html",
+      "display_snippet":"spatial.html",
+      "choices": [
+        {"label":"Western Australia",
+         "value":{
+             "type":"MultiPolygon",
+             "coordinates":[[[
+                [128.84765625000003,-11.523087506868514],
+                [128.67187500000003,-34.88593094075316],
+                [114.43359375000001,-37.020098201368114],
+                [110.91796875000001,-19.973348786110602],
+                [128.84765625000003,-11.523087506868514]
+            ]]]
+         }
+        },
+        {"label": "Ningaloo MPA",
+         "value": {
+            "type":"MultiPolygon",
+            "coordinates":[[[
+                [113.51074218750001,-22.492257220085193],
+                [114.16992187500001,-21.391704731036587],
+                [114.38964843750001,-21.71867980570314],
+                [113.73046875000001,-22.816694126899844],
+                [113.51074218750001,-22.492257220085193]
+            ]]]
+         }
+        }
+      ]
+    }
+  ],
+  "resource_fields": [
+    {
+      "field_name": "url",
+      "label": "URL",
+      "validators": "not_empty unicode remove_whitespace",
+      "form_snippet": "upload.html",
+      "form_placeholder": "http://example.com/my-data.csv",
+      "upload_field": "upload",
+      "upload_clear": "clear_upload",
+      "upload_label": "File"
+    },
+    {
+      "field_name": "name",
+      "label": "Name",
+      "form_placeholder": "eg. Observations of X at Y"
+    },
+    {
+      "field_name": "description",
+      "label": "Description",
+      "form_snippet": "markdown.html",
+      "form_placeholder": "Some useful notes"
+    },
+    {
+      "field_name": "format",
+      "label": "Format",
+      "validators": "if_empty_guess_format ignore_missing clean_format unicode",
+      "form_placeholder": "eg. CSV, PDF, JPG, PNG, GeoJSON, XML",
+      "form_attrs": {
+        "data-module": "autocomplete",
+        "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
+      }
+    }
+  ]
+}

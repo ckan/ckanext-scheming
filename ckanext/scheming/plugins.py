@@ -23,6 +23,9 @@ from ckanext.scheming.logic import (
 import os
 import json
 import inspect
+import logging
+
+log = logging.getLogger(__name__)
 
 ignore_missing = get_validator('ignore_missing')
 not_missing = get_validator('not_missing')
@@ -298,12 +301,13 @@ def _load_schema_module_path(url):
     Given a path like "ckanext.spatialx:spatialx_schema.json"
     find the second part relative to the import path of the first
     """
-
+    log.debug("Schema URL is {0}".format(url))    
     module, file_name = url.split(':', 1)
     try:
         # __import__ has an odd signature
         m = __import__(module, fromlist=[''])
-    except ImportError:
+    except ImportError, e:
+        log.error("Could not load lodule {0}, got {1}".format(module, e))
         return
     p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(p):
