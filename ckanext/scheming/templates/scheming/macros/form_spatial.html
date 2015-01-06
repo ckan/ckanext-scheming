@@ -1,0 +1,61 @@
+{% import 'macros/form.html' as form %}
+{#
+    Creates all the markup required for a polygon input element. Handles matching labels to
+        inputs, error messages and other useful elements.
+
+        The required input is a GeoJSON polygon geometry.
+        The input can be entered:
+
+        - by pasting the plain text GeoJSON polygon geometry in the text input
+        - by drawing a polygon on the map (TODO assisted by display of any existing geojson resource)
+        - TODO enter bounding box coordinates, update polygon from those (if supplied? if some checkbox is ticked?)
+
+        name        - The name of the form parameter.
+        id          - The id to use on the input and label. Convention is to prefix with 'field-'.
+        label       - The human readable label.
+        value       - The value of the input.
+        placeholder - Some placeholder text.
+        type        - The type of input eg. email, url, date (default: text).
+        error       - A list of error strings for the field or just true to highlight the field.
+        classes     - An array of classes to apply to the control-group.
+        is_required - Boolean of whether this input is requred for the form to validate
+
+        Examples:
+
+        {% import 'scheming/macros/form_spatial.html' as form_spatial %} 
+        {{ form_spatial.polygon('spatial', label=_('Dataset extent'), value=data.spatial, error=errors.spatial) }}
+
+        This macro depends on a custom branch of ckanext-spatial: 
+        https://github.com/florianm/ckanext-spatial/tree/91-spatial-form
+
+        The custom branch contains the JS and templating components, which are
+        more specific to, and therefore belong into, ckanext-spatial rather 
+        than ckanext-scheming.
+
+#}
+
+{% macro polygon(name, id='', label='', value='', placeholder='', type='text', error='', classes=[], is_required=false) %}
+  {%- set extra_html = caller() if caller -%}
+
+  {% call form.input_block(id or name, label or name, error, classes, extra_html=extra_html, is_required=is_required) %}
+  
+    {% snippet "spatial/snippets/spatial_form.html", input_id="{{ id }}", extent="{{ value }}" %}
+
+    <!--div>macro form_spatial.html<br/>{{ id }}<br/>{{ value }}</div-->
+
+    <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
+         the user to draw a bounding polygon around existing spatial features, but also 
+         captures user's silent knowledge about the real dataset extent. -->
+
+    <!-- Input #{{ id }} takes a Polygon GeoJSON geometry.
+         The map updates this input on finishing a polygon -->
+    <textarea id="{{ id }}" type="{{ type }}" name="{{ name }}" 
+        placeholder="{{ placeholder }}" rows=10>
+      {{ value | empty_and_escape }}
+    </textarea>
+
+    {{ form.info(text="Draw the dataset extent on the map (finish with double-click), 
+       or paste a GeoJSON geometry in the textarea", inline=false) }}
+
+  {% endcall %}
+{% endmacro %}

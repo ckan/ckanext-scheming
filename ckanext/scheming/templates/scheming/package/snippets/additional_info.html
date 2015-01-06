@@ -2,14 +2,15 @@
 
 {%- set exclude_fields = [
     'title', 
-    'name',
-    'notes',
-    'tag_string',
-    'license_id',
-    'owner_org',
-    ] -%}
+        'name',
+        'notes',
+        'tag_string',
+        'license_id',
+        'owner_org',
+            ] -%}
 
 {% block package_additional_info %}
+
   {%- for field in schema.dataset_fields -%}
     {%- if field.field_name not in exclude_fields -%}
       <tr>

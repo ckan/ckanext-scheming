@@ -55,7 +55,8 @@
       "field_name": "author",
       "label": "Author",
       "form_placeholder": "Joe Bloggs",
-      "display_property": "dc:creator"
+      "display_property": "dc:creator",
+      "display_field": false
     },
     {
       "field_name": "author_email",
@@ -69,7 +70,8 @@
       "field_name": "maintainer",
       "label": "Maintainer",
       "form_placeholder": "Joe Bloggs",
-      "display_property": "dc:contributor"
+      "display_property": "dc:contributor",
+      "display_field": false
     },
     {
       "field_name": "maintainer_email",
