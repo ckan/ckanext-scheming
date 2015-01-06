@@ -62,7 +62,8 @@
       "help_text": "The author (dataset custodian) is responsible for the content of attached data resources",
       "help_inline": true,
       "form_placeholder": "Joe Bloggs",
-      "display_property": "dc:creator"
+      "display_property": "dc:creator",
+      "display_field": false
     },
     {
       "field_name": "author_email",
@@ -87,7 +88,8 @@
       "help_text": "The metadata maintainer updates this page on behalf of the author",
       "help_inline": true,
       "form_placeholder": "Joe Bloggs",
-      "display_property": "dc:contributor"
+      "display_property": "dc:contributor",
+      "display_field": false
     },
     {
       "field_name": "maintainer_email",
