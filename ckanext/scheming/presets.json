@@ -81,6 +81,7 @@
       "preset_name": "date",
       "values": {
         "form_snippet": "date.html",
+        "display_snippet": "date.html",
         "validators": "scheming_required isodate"
       }
     }

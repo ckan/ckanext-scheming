@@ -5,7 +5,7 @@
     label=h.scheming_language_text(field.label),
     placeholder=h.scheming_language_text(field.form_placeholder),
     type='date',
-    value=data[field.field_name],
+    value=h.render_datetime(data[field.field_name], date_format='%Y-%m-%d'),
     error=errors[field.field_name],
     classes=['control-medium'],
     attrs=field.form_attrs if 'form_attrs' in field else {},
