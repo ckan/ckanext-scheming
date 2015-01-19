@@ -1,0 +1,13 @@
+{%- if not c.group_type -%}
+    <p>
+        group_type not passed to template. your version of CKAN
+        might not be compatible with ckanext-scheming
+    </p>
+{%- endif -%}
+
+{%- set schema = h.scheming_get_organization_schema(c.group_type) -%}
+{%- for field in schema['fields'] -%}
+    {%- snippet 'scheming/snippets/form_field.html',
+    field=field, data=c.data, errors=c.errors, licenses=c.licenses,
+    schema=schema -%}
+{%- endfor -%}

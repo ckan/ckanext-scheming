@@ -270,14 +270,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def about_template(self):
         return 'scheming/organization/about.html'
 
-# FIXME: implement this template
-    def edit_template(self):
-        return 'scheming/organization/edit.html'
-
-    def new_template(self):
-        return 'scheming/organization/new.html'
-
-    def group_form():
+    def group_form(group_type=None):
         return 'scheming/group/group_form.html'
 
     def get_actions(self):
