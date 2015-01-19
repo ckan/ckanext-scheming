@@ -127,6 +127,8 @@ class _GroupOrganizationMixin(object):
         c.scheming_schema = self._schemas[group_type]
         c.group_type = group_type
         c.scheming_fields = c.scheming_schema['fields']
+        c.data = data_dict
+        c.errors = {}
 
     def db_to_form_schema_options(self, options):
         # FIXME: investigate why this is necessary
@@ -273,7 +275,10 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
         return 'scheming/organization/edit.html'
 
     def new_template(self):
-        return 'scheming/organization/edit.html'
+        return 'scheming/organization/new.html'
+
+    def group_form():
+        return 'scheming/group/group_form.html'
 
     def get_actions(self):
         return {
