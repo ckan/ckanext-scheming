@@ -1,0 +1,19 @@
+{% extends "organization/base_form_page.html" %}
+
+{% block form %}
+    {%- if not c.group_type -%}
+        <p>
+            group_type not passed to template. your version of CKAN
+            might not be compatible with ckanext-scheming
+        </p>
+    {%- endif -%}
+    {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+    {%- for field in schema.dataset_fields -%}
+        {%- snippet 'scheming/snippets/form_field.html',
+        field=field, data=data, errors=errors, licenses=c.licenses,
+        schema=schema -%}
+    {%- endfor -%}
+{% endblock %}
+
+{% block metadata_fields %}
+{% endblock %}
