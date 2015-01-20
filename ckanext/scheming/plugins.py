@@ -127,12 +127,6 @@ class _GroupOrganizationMixin(object):
         c.scheming_schema = self._schemas[group_type]
         c.group_type = group_type
         c.scheming_fields = c.scheming_schema['fields']
-        c.data = data_dict
-        c.errors = {}
-
-    def db_to_form_schema_options(self, options):
-        # FIXME: investigate why this is necessary
-        return default_show_group_schema()
 
     def validate(self, context, data_dict, schema, action):
         thing, action_type = action.split('_')
