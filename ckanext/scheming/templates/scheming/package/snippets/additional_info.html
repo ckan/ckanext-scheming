@@ -1,7 +1,7 @@
 {% extends "package/snippets/additional_info.html" %}
 
 {%- set exclude_fields = [
-    'title', 
+    'title',
     'name',
     'notes',
     'tag_string',
@@ -18,7 +18,7 @@
         <td class="dataset-details"{%
           if field.display_property %} property="{{ field.display_property
           }}"{% endif %}>{%- snippet 'scheming/snippets/display_field.html',
-          field=field, data=pkg_dict -%}</td>
+          field=field, data=pkg_dict, schema=schema -%}</td>
       </tr>
     {%- endif -%}
   {%- endfor -%}
