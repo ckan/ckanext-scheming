@@ -6,7 +6,7 @@ from ckanext.scheming.errors import SchemingException
 
 OneOf = get_validator('OneOf')
 ignore_missing = get_validator('ignore_missing')
-not_missing = get_validator('not_missing')
+not_empty = get_validator('not_empty')
 
 def scheming_validator(fn):
     """
@@ -33,7 +33,7 @@ def scheming_required(field):
     not_missing if field['required'] else ignore_missing
     """
     if field.get('required'):
-        return not_missing
+        return not_empty
     return ignore_missing
 
 
