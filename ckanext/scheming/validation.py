@@ -30,7 +30,7 @@ def scheming_choices(field):
 @scheming_validator
 def scheming_required(field):
     """
-    not_missing if field['required'] else ignore_missing
+    not_empty if field['required'] else ignore_missing
     """
     if field.get('required'):
         return not_empty
