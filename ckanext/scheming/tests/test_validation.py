@@ -2,7 +2,7 @@ from nose.tools import assert_raises, assert_equals
 from ckanapi import LocalCKAN, ValidationError
 
 from ckanext.scheming.errors import SchemingException
-from ckanext.scheming.validation import get_validator_or_converter
+from ckanext.scheming.validation import get_validator_or_converter, scheming_required
 from ckanext.scheming.plugins import (
     SchemingDatasetsPlugin, SchemingGroupsPlugin)
 from ckan.plugins.toolkit import get_validator
