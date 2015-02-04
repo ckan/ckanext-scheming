@@ -72,7 +72,7 @@
     {
         "field_name": "photographer",
         "label": "Photographer",
-        "help_text": "The photographer of this camel picture",
+        "help_text": "This field will be collapsed with the related email field if hide_field and display_email_name_field are set accordingly.",
         "help_inline": true,
         "form_placeholder": "Joe Bloggs",
         "display_property": "dc:creator",
