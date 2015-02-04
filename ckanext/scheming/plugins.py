@@ -25,7 +25,7 @@ import json
 import inspect
 
 ignore_missing = get_validator('ignore_missing')
-not_missing = get_validator('not_missing')
+not_empty = get_validator('not_empty')
 convert_to_extras = get_converter('convert_to_extras')
 convert_from_extras = get_converter('convert_from_extras')
 
@@ -340,7 +340,7 @@ def _field_validators(f, convert_extras):
     if 'validators' in f:
         validators = validators_from_string(f['validators'], f)
     elif helpers.scheming_field_required(f):
-        validators = [not_missing, unicode]
+        validators = [not_empty, unicode]
     else:
         validators = [ignore_missing, unicode]
 

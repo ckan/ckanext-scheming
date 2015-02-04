@@ -2,9 +2,13 @@ from nose.tools import assert_raises, assert_equals
 from ckanapi import LocalCKAN, ValidationError
 
 from ckanext.scheming.errors import SchemingException
-from ckanext.scheming.validation import get_validator_or_converter
+from ckanext.scheming.validation import get_validator_or_converter, scheming_required
 from ckanext.scheming.plugins import (
     SchemingDatasetsPlugin, SchemingGroupsPlugin)
+from ckan.plugins.toolkit import get_validator
+
+ignore_missing = get_validator('ignore_missing')
+not_empty = get_validator('not_empty')
 
 class TestGetValidatorOrConverter(object):
     def test_missing(self):
@@ -35,6 +39,16 @@ class TestChoices(object):
             category='f2hybrid',
             )
         assert_equals(d['category'], 'f2hybrid')
+		
+class TestRequired(object):
+    def test_required_is_set_to_true(self):
+        assert_equals(not_empty,scheming_required({'required': True}))
+        
+    def test_required_is_set_to_false(self):
+        assert_equals(ignore_missing,scheming_required({'required': False}))
+        
+    def test_required_is_not_present(self):
+        assert_equals(ignore_missing,scheming_required({'other_field': True}))
 
 
 class TestDates(object):

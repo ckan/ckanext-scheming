@@ -70,6 +70,23 @@
       ]
     },
     {
+        "field_name": "photographer",
+        "label": "Photographer",
+        "help_text": "The photographer of this camel picture",
+        "help_inline": true,
+        "form_placeholder": "Joe Bloggs",
+        "display_property": "dc:creator",
+        "hide_field": "true"
+    },
+    {
+        "field_name": "photographer_email",
+        "label": "Photographer Email",
+        "form_placeholder": "joe@bloggs.com",
+        "display_property": "dc:creator",
+        "display_snippet": "email.html",
+        "display_email_name_field": "photographer"
+    },
+    {
       "field_name": "a_relevant_date",
       "label": "A relevant date",
       "preset": "date"
