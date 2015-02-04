@@ -325,3 +325,14 @@ Help text may be provided in multiple languages like [label fields](#label).
 ### `help_inline`
 
 Display help text inline if set to `true`. Default is `false`.
+
+### `hide_field`
+Hide the field from the `package_read` view if set to `true`.
+This is useful for name fields, such as `author`, in combination with related 
+email fields, such as `author_email`.
+
+### `display_email_name_field`
+Useful for email fields, this property specifies the `field_name` of the related
+name field. The label will be the titlecased `field_name` (e.g. "Author" instead
+of "Author Email"); the value will be rendered with `field_name`'s value, i.e.
+the email will be rendered as a clickable name.
