@@ -45,6 +45,8 @@ class TestDatasetDisplay(FunctionalTestBase):
         d = Dataset(
             user=user,
             type='camel-photos',
+            photographer='John Newton',
+            photographer_email='john@email.com',
             name='with-choice',
             category='hybrid',
             )
