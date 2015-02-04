@@ -6,19 +6,28 @@
     'notes',
     'tag_string',
     'license_id',
-    'owner_org',
-    ] -%}
+    'owner_org'
+] -%}
 
 {% block package_additional_info %}
+
   {%- for field in schema.dataset_fields -%}
-    {%- if field.field_name not in exclude_fields -%}
+    {%- if field.field_name not in exclude_fields and not field.hide_field -%}
       <tr>
-        <th scope="row" class="dataset-label">{{
-          h.scheming_language_text(field.label) }}</th>
-        <td class="dataset-details"{%
-          if field.display_property %} property="{{ field.display_property
-          }}"{% endif %}>{%- snippet 'scheming/snippets/display_field.html',
-          field=field, data=pkg_dict -%}</td>
+        <th scope="row" class="dataset-label">
+          {% if field.display_email_name_field %}
+            {{ h.scheming_language_text(field.display_email_name_field)|title }}
+          {% else %}
+            {{ h.scheming_language_text(field.label) }}
+          {% endif %}
+        </th>
+        <td class="dataset-details"
+          {% if field.display_property %} 
+            property="{{ field.display_property}}"
+          {% endif %}>
+            {%- snippet 'scheming/snippets/display_field.html',
+                field=field, data=pkg_dict -%}
+        </td>
       </tr>
     {%- endif -%}
   {%- endfor -%}
