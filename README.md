@@ -192,8 +192,10 @@ This extension includes the following presets:
 * `"title"` - title validation and large text form snippet
 * `"select"` - validation that choice is from [choices](#choices),
   form select box and display snippet
-* `"multiple_choice"` - validation that all choices are from
-  [choices](#choices), form checkboxes and display snippet
+* `"multiple_checkbox"` - multiple choice from [choices](#choices)
+  rendered as checkboxes in the form
+* `"multiple_select"` - multiple choice from [choices](#choices)
+  rendered as a multiple select box in the form
 * `"date"` - date validation and form snippet
 * `"dataset_slug"` - dataset slug validation and form snippet that
   autofills the value from the title field
@@ -241,8 +243,10 @@ This extension includes the following form snippets:
   an upload field for resource files
 * [select.html](ckanext/scheming/templates/scheming/form_snippets/select.html) -
   a select box
-* [multiple_choice.html](ckanext/scheming/templates/scheming/form_snippets/multiple_choice.html) -
+* [multiple_checkbox.html](ckanext/scheming/templates/scheming/form_snippets/multiple_choice.html) -
   a group of checkboxes
+* [multiple_select.html](ckanext/scheming/templates/scheming/form_snippets/multiple_choice.html) -
+  a multiple select box
 
 
 ### `display_snippet`
