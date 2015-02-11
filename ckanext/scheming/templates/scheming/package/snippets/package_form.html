@@ -9,9 +9,11 @@
   {%- endif -%}
   {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
   {%- for field in schema.dataset_fields -%}
-    {%- snippet 'scheming/snippets/form_field.html',
-      field=field, data=data, errors=errors, licenses=c.licenses,
-      schema=schema -%}
+    {%- if field.form_snippet is not none -%}
+      {%- snippet 'scheming/snippets/form_field.html',
+        field=field, data=data, errors=errors, licenses=c.licenses,
+        schema=schema -%}
+    {%- endif -%}
   {%- endfor -%}
 {% endblock %}
 
