@@ -320,6 +320,11 @@ sent to the user.
 This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
 
+### `create_validators`
+
+The `create_validators` value if present overrides `validators` during
+create only.
+
 ### `help_text`
 
 Only if this key is supplied, its value will be shown as inline help text,
