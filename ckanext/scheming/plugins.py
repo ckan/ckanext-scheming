@@ -194,8 +194,12 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 "Unsupported dataset type: {t}".format(t=t)]}
         scheming_schema = self._expanded_schemas[t]
 
-        get_validators = (_field_output_validators
-            if action_type == 'show' else _field_validators)
+        if action_type == 'show':
+            get_validators = _field_output_validators
+        elif action_type == 'create':
+            get_validators = _field_create_validators
+        else:
+            get_validators = _field_validators
 
         for f in scheming_schema['dataset_fields']:
             schema[f['field_name']] = get_validators(f,
@@ -343,6 +347,19 @@ def _field_validators(f, convert_extras):
         validators = [not_missing, unicode]
     else:
         validators = [ignore_missing, unicode]
+
+    if convert_extras:
+        validators = validators + [convert_to_extras]
+    return validators
+
+def _field_create_validators(f, convert_extras):
+    """
+    Return the validators to use when creating for scheming field f,
+    normally the same as the validators used for updating
+    """
+    if 'create_validators' not in f:
+        return _field_validators(f, convert_extras)
+    validators = validators_from_string(f['create_validators'], f)
 
     if convert_extras:
         validators = validators + [convert_to_extras]
