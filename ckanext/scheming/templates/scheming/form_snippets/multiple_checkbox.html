@@ -30,5 +30,6 @@ fieldset.checkboxes label input {
             </label>
         {%- endfor -%}
     </fieldset>
+    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
 {%- endcall -%}
 
