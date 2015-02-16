@@ -69,9 +69,18 @@
       }
     },
     {
-      "preset_name": "multiple_choice",
+      "preset_name": "multiple_checkbox",
       "values": {
-        "form_snippet": "multiple_choice.html",
+        "form_snippet": "multiple_checkbox.html",
+        "display_snippet": "multiple_choice.html",
+        "validators": "scheming_multiple_choice",
+        "output_validators": "scheming_multiple_choice_output"
+      }
+    },
+    {
+      "preset_name": "multiple_select",
+      "values": {
+        "form_snippet": "multiple_select.html",
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
         "output_validators": "scheming_multiple_choice_output"

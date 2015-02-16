@@ -53,7 +53,7 @@
     {
       "field_name": "personality",
       "label": "Personality",
-      "preset": "multiple_choice",
+      "preset": "multiple_checkbox",
       "choices": [
         {
           "value": "friendly",
