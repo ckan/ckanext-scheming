@@ -145,7 +145,7 @@ class _GroupOrganizationMixin(object):
             if action_type == 'show' else _field_validators)
 
         for f in scheming_fields:
-            schema[f['field_name']] = get_validators(f, schema,
+            schema[f['field_name']] = get_validators(f, scheming_schema,
                 f['field_name'] not in schema)
 
         return navl_validate(data_dict, schema, context)
@@ -202,12 +202,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             get_validators = _field_validators
 
         for f in scheming_schema['dataset_fields']:
-            schema[f['field_name']] = get_validators(f, schema,
+            schema[f['field_name']] = get_validators(f, scheming_schema,
                 f['field_name'] not in schema)
 
         resource_schema = schema['resources']
         for f in scheming_schema['resource_fields']:
-            resource_schema[f['field_name']] = get_validators(f, schema, False)
+            resource_schema[f['field_name']] = get_validators(
+                f, scheming_schema, False)
 
         return navl_validate(data_dict, schema, context)
 
