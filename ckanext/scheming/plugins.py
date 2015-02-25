@@ -359,7 +359,7 @@ def _field_create_validators(f, schema, convert_extras):
     normally the same as the validators used for updating
     """
     if 'create_validators' not in f:
-        return _field_validators(f, convert_extras)
+        return _field_validators(f, schema, convert_extras)
     validators = validators_from_string(f['create_validators'], f, schema)
 
     if convert_extras:
