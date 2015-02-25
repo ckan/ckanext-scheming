@@ -13,14 +13,14 @@ def scheming_validator(fn):
     Decorate a validator that needs to have the scheming fields
     passed with this function. When generating navl validator lists
     the function decorated will be called passing the field
-    data to produce the actual validator for each field.
+    and complete schema to produce the actual validator for each field.
     """
     fn.is_a_scheming_validator = True
     return fn
 
 
 @scheming_validator
-def scheming_choices(field):
+def scheming_choices(field, schema):
     """
     Require that one of the field choices values is passed.
     """
@@ -28,7 +28,7 @@ def scheming_choices(field):
 
 
 @scheming_validator
-def scheming_required(field):
+def scheming_required(field, schema):
     """
     not_empty if field['required'] else ignore_missing
     """
@@ -38,7 +38,7 @@ def scheming_required(field):
 
 
 @scheming_validator
-def scheming_multiple_choice(field):
+def scheming_multiple_choice(field, schema):
     """
     Accept zero or more values from a list of choices and convert
     to a json list for storage:
@@ -95,7 +95,7 @@ def scheming_multiple_choice_output(value):
         return [value]
 
 
-def validators_from_string(s, field):
+def validators_from_string(s, field, schema):
     """
     convert a schema validators string to a list of validators
 
@@ -112,7 +112,7 @@ def validators_from_string(s, field):
         else:
             v = get_validator_or_converter(p)
         if getattr(v, 'is_a_scheming_validator', False):
-            v = v(field)
+            v = v(field, schema)
         out.append(v)
     return out
 
