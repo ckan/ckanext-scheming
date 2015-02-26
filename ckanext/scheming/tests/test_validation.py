@@ -39,16 +39,19 @@ class TestChoices(object):
             category='f2hybrid',
             )
         assert_equals(d['category'], 'f2hybrid')
-		
+
 class TestRequired(object):
     def test_required_is_set_to_true(self):
-        assert_equals(not_empty,scheming_required({'required': True}))
-        
+        assert_equals(not_empty, scheming_required(
+            {'required': True}, {}))
+
     def test_required_is_set_to_false(self):
-        assert_equals(ignore_missing,scheming_required({'required': False}))
-        
+        assert_equals(ignore_missing, scheming_required(
+            {'required': False}, {}))
+
     def test_required_is_not_present(self):
-        assert_equals(ignore_missing,scheming_required({'other_field': True}))
+        assert_equals(ignore_missing, scheming_required(
+            {'other_field': True}, {}))
 
 
 class TestDates(object):
