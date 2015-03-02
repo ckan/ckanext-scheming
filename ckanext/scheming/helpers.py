@@ -23,9 +23,10 @@ def scheming_language_text(text, prefer_lang=None, _gettext=None):
         return v
     else:
         if _gettext is None:
-            return gettext(text).decode('utf-8')
-
-        return _gettext(text)
+            _gettext = gettext
+            
+        t = _gettext(text)
+        return t.decode('utf-8')
 
 
 def scheming_choices_label(choices, value):
