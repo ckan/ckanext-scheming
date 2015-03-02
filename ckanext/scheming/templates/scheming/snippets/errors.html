@@ -1,6 +1,7 @@
 {# shallow copy errors so we can remove processed keys #}
 {%- set unprocessed = errors.copy() -%}
 
+{% block errors_list %}
 <div class="error-explanation alert alert-{{ type }}{{ " " ~ classes | join(' ') }}">
   <p>{{ _('The form contains invalid entries:') }}</p>
   <ul>
@@ -32,3 +33,4 @@
     {% endblock %}
   </ul>
 </div>
+{% endblock %}
