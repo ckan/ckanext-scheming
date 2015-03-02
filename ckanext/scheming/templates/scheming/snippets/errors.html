@@ -7,9 +7,17 @@
     {% block all_errors %}
       {%- for field in fields -%}
         {%- if 'error_snippet' in field -%}
-          {%- snippet field.error_snippet, unprocessed=unprocessed,
+          {%- set error_snippet = field.error_snippet -%}
+
+          {%- if '/' not in error_snippet -%}
+            {%- set error_snippet = 'scheming/error_snippets/' +
+              error_snippet -%}
+          {%- endif -%}
+
+          {%- snippet error_snippet, unprocessed=unprocessed,
             field=field, fields=fields, schema=schema -%}
         {%- endif -%}
+
         {%- if field.field_name in unprocessed -%}
           {%- set errors = unprocessed.pop(field.field_name) -%}
           <li data-field-label="{{ field.field_name }}">{{
