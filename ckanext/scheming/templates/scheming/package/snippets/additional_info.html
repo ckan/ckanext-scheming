@@ -2,8 +2,8 @@
 
 {%- set exclude_fields = [
     'title',
-    'name',
     'notes',
+    'name',
     'tag_string',
     'license_id',
     'owner_org'
@@ -12,7 +12,8 @@
 {% block package_additional_info %}
 
   {%- for field in schema.dataset_fields -%}
-    {%- if field.field_name not in exclude_fields and not field.hide_field -%}
+    {%- if field.field_name not in exclude_fields -%}
+      {%- if not field.hide_field -%}
       <tr>
         <th scope="row" class="dataset-label">
           {% if field.display_email_name_field %}
@@ -29,6 +30,7 @@
                 field=field, data=pkg_dict -%}
         </td>
       </tr>
+    {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
   {% if h.check_access('package_update',{'id':pkg_dict.id}) %}

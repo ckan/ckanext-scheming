@@ -1,7 +1,7 @@
 {% extends "package/read.html" %}
 
 {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
-
+<!-- template scheming package read  -->
 {% block package_notes %}
   {%- if not dataset_type -%}
     <p>
@@ -9,7 +9,8 @@
     might not be compatible with ckanext-scheming
     </p>
   {%- endif -%}
-  {% if 'notes' in schema.dataset_fields and c.pkg_notes_formatted %}
+  {# if 'notes' in schema.dataset_fields and c.pkg_notes_formatted #}
+  {% if c.pkg_notes_formatted %}
     <div class="notes embedded-content">
       {{ c.pkg_notes_formatted }}
     </div>
