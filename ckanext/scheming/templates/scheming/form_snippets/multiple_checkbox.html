@@ -3,6 +3,7 @@
 <style>
 fieldset.checkboxes label {
     font-weight: normal;
+    display: block;
 }
 fieldset.checkboxes label:after {
     content: none;
@@ -30,5 +31,6 @@ fieldset.checkboxes label input {
             </label>
         {%- endfor -%}
     </fieldset>
+    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
 {%- endcall -%}
 

@@ -1,0 +1,36 @@
+{# shallow copy errors so we can remove processed keys #}
+{%- set unprocessed = errors.copy() -%}
+
+{% block errors_list %}
+<div class="error-explanation alert alert-{{ type }}{{ " " ~ classes | join(' ') }}">
+  <p>{{ _('The form contains invalid entries:') }}</p>
+  <ul>
+    {% block all_errors %}
+      {%- for field in fields -%}
+        {%- if 'error_snippet' in field -%}
+          {%- set error_snippet = field.error_snippet -%}
+
+          {%- if '/' not in error_snippet -%}
+            {%- set error_snippet = 'scheming/error_snippets/' +
+              error_snippet -%}
+          {%- endif -%}
+
+          {%- snippet error_snippet, unprocessed=unprocessed,
+            field=field, fields=fields, schema=schema -%}
+        {%- endif -%}
+
+        {%- if field.field_name in unprocessed -%}
+          {%- set errors = unprocessed.pop(field.field_name) -%}
+          <li data-field-label="{{ field.field_name }}">{{
+            h.scheming_language_text(field.label) }}:
+            {{ errors[0] }}</li>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- for key, errors in unprocessed.items() | sort -%}
+        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors[0] }}</li>
+      {%- endfor -%}
+    {% endblock %}
+  </ul>
+</div>
+{% endblock %}
