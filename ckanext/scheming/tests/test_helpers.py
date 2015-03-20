@@ -23,6 +23,10 @@ class TestLanguageText(object):
             {'aa': 'hello', 'bb': 'no'},
             prefer_lang='en'))
 
+    def test_decodes_utf8(self):
+        assert_equals(u'\xa1Hola!', scheming_language_text('\xc2\xa1Hola!'))
+
+
 class TestFieldRequired(object):
     def test_explicit_required_true(self):
         assert_equals(True, scheming_field_required({'required': True}))

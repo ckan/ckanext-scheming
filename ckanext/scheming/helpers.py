@@ -24,7 +24,11 @@ def scheming_language_text(text, prefer_lang=None, _gettext=None):
     else:
         if _gettext is None:
             _gettext = gettext
-        return _gettext(text)
+
+        t = _gettext(text)
+        if isinstance(t, str):
+            return t.decode('utf-8')
+        return t
 
 
 def scheming_choices_label(choices, value):
@@ -115,4 +119,3 @@ def scheming_get_organization_schema(organization_type, expanded=True):
     schemas = scheming_organization_schemas(expanded)
     if schemas:
         return schemas.get(organization_type)
-
