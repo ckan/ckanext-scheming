@@ -12,9 +12,7 @@ template snippets for editing and display are also supported.
 Requirements
 ============
 
-This plugin relies on the latest master branch
-of ckan (including at least commit e909360) or
-the upcoming 2.3 release of ckan
+This plugin is compatible with CKAN 2.3 or later.
 
 
 Configuration
