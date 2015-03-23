@@ -5,7 +5,7 @@
   <div class="controls">
     <select id="field-{{ field.field_name }}" name="{{ field.field_name }}"
       data-module="autocomplete">
-      {% for license_desc, license_id in licenses|sort if license_desc  %}
+      {% for license_desc, license_id in licenses|sort %}
         <option value="{{ license_id }}" {% if data.get(field.field_name,
           'notspecified') == license_id %}selected="selected"{%
           endif %}>{{ license_desc }}</option>
