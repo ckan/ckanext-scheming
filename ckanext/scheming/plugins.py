@@ -10,6 +10,7 @@ from ckan.logic.schema import group_form_schema, default_show_group_schema
 from paste.deploy.converters import asbool
 
 from ckanext.scheming import helpers
+from ckanext.scheming import loader
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import (
     validators_from_string, scheming_choices, scheming_required,
@@ -21,7 +22,6 @@ from ckanext.scheming.logic import (
     )
 
 import os
-import json
 import inspect
 
 ignore_missing = get_validator('ignore_missing')
@@ -312,7 +312,7 @@ def _load_schema_module_path(url):
         return
     p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(p):
-        return json.load(open(p))
+        return loader.load(open(p))
 
 def _load_schema_url(url):
     import urllib2
@@ -322,7 +322,7 @@ def _load_schema_url(url):
     except urllib2.URLError:
         raise SchemingException("Could not load %s" % url)
 
-    return json.loads(tables)
+    return loader.loads(tables, url)
 
 
 def _field_output_validators(f, schema, convert_extras):
