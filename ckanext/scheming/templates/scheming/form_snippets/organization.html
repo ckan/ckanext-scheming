@@ -1,20 +1,24 @@
 {# This is specific to datasets' owner_org field and won't work #}
 {# if used with other fields #}
 
-{% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
-{% set dataset_has_organization = data.owner_org or data.group_id %}
-{% set organizations_available = h.organizations_available('create_dataset') %}
-{% set user_is_sysadmin = h.check_access('sysadmin') %}
+{%- set dataset_is_draft = data.get('state', 'draft').startswith('draft')
+    or data.get('state', 'none') ==  'none' %}
+{%- set dataset_has_organization = data.owner_org or data.group_id %}
+{%- set organizations_available = h.organizations_available('create_dataset') %}
+{%- set user_is_sysadmin = h.check_access('sysadmin') %}
+{%- set org_required = not h.check_config_permission('create_unowned_dataset')
+    or h.scheming_field_required(field) -%}
 
   <div data-module="dataset-visibility">
 
   {% set existing_org = data.owner_org or data.group_id %}
   <div class="control-group">
-    <label for="field-organizations" class="control-label">{{
-      h.scheming_language_text(field.label) }}</label>
+    <label for="field-organizations" class="control-label">{% if org_required
+        %}<span title="{{ _("This field is required") }}" class="control-required">*</span>
+      {% endif %}{{ h.scheming_language_text(field.label) }}</label>
     <div class="controls">
       <select id="field-organizations" name="owner_org" data-module="autocomplete">
-        {% if h.check_config_permission('create_unowned_dataset') %}
+        {% if not org_required %}
            <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ _('No organization') }}</option>
         {% endif %}
         {% for organization in organizations_available %}

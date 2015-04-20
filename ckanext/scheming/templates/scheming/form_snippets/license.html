@@ -1,23 +1,25 @@
-<div class="control-group">
-  {% set error = errors[field.field_name] %}
-  <label class="control-label" for="field-license">{{
-     h.scheming_language_text(field.label) }}</label>
-  <div class="controls">
-    <select id="field-{{ field.field_name }}" name="{{ field.field_name }}"
-      data-module="autocomplete">
-      {% for license_desc, license_id in licenses|sort %}
-        <option value="{{ license_id }}" {% if data.get(field.field_name,
-          'notspecified') == license_id %}selected="selected"{%
-          endif %}>{{ license_desc }}</option>
-      {% endfor %}
-    </select>
-    {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
-    <span class="info-block info-inline">
-      <i class="icon-info-sign"></i>
-      {% trans %}
-        License definitions and additional information can be found
-        at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
-      {% endtrans %}
-    </span>
-  </div>
-</div>
+{% import 'macros/form.html' as form %}
+
+{%- set options=[] -%}
+{%- for license_desc, license_id in licenses|sort -%}
+    {%- if license_id or not h.scheming_field_required(field) -%}
+        {%- do options.append({
+            'value': license_id,
+            'text': license_desc}) -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{% call form.select(
+    field.field_name,
+    id='field-' + field.field_name,
+    label=h.scheming_language_text(field.label),
+    options=options,
+    selected=data.get(field.field_name, 'notspecified'),
+    error=errors[field.field_name],
+    classes=['control-medium'],
+    attrs=field.form_attrs if 'form_attrs' in field else {},
+    is_required=h.scheming_field_required(field),
+    )
+%}
+    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+{% endcall %}
