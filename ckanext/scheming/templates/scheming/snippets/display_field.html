@@ -15,5 +15,7 @@
   {%- set display_snippet = 'scheming/display_snippets/' + display_snippet -%}
 {%- endif -%}
 
-{%- snippet display_snippet, field=field, data=data, errors=errors,
-  schema=schema -%}
+{%- if field.field_name in data -%}
+  {%- snippet display_snippet, field=field, data=data, errors=errors,
+    schema=schema -%}
+{%- endif -%}
