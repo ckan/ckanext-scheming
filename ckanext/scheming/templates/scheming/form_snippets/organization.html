@@ -6,8 +6,8 @@
 {%- set dataset_has_organization = data.owner_org or data.group_id %}
 {%- set organizations_available = h.organizations_available('create_dataset') %}
 {%- set user_is_sysadmin = h.check_access('sysadmin') %}
-{%- set org_required = not h.check_config_permission('create_unowned_dataset') %}
-{%- set org_required = true -%}
+{%- set org_required = not h.check_config_permission('create_unowned_dataset')
+    or h.scheming_field_required(field) -%}
 
   <div data-module="dataset-visibility">
 
