@@ -1,17 +1,33 @@
-<div class="control-group">
-  {% set error = errors[field.field_name] %}
-  <label class="control-label" for="field-license">{{
-     h.scheming_language_text(field.label) }}</label>
-  <div class="controls">
+{% import 'macros/form.html' as form %}
+
+{% macro license(name, id='', label='', licenses=[], selected=None,
+    errors=[], classes=[], control_classes=[], is_required=False) %}
+  {% call form.input_block(id or name, label, error, classes, control_classes,
+    extra_html=caller() if caller, is_required=is_required) %}
     <select id="field-{{ field.field_name }}" name="{{ field.field_name }}"
       data-module="autocomplete">
       {% for license_desc, license_id in licenses|sort %}
-        <option value="{{ license_id }}" {% if data.get(field.field_name,
-          'notspecified') == license_id %}selected="selected"{%
-          endif %}>{{ license_desc }}</option>
+        {% if not is_required or license_id %}
+          <option value="{{ license_id }}" {% if selected == license_id
+            %}selected="selected"{% endif %}>{{ license_desc }}</option>
+        {% endif %}
       {% endfor %}
     </select>
-    {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
+  {% endcall %}
+{% endmacro %}
+
+{% call license(
+    field.field_name,
+    id='field-' + field.field_name,
+    label=h.scheming_language_text(field.label),
+    licenses=licenses,
+    selected=data.get(field.field_name, 'notspecified'),
+    errors=errors[field.field_name],
+    classes=[],
+    control_classes=[],
+    is_required=h.scheming_field_required(field),
+    )
+%}
     <span class="info-block info-inline">
       <i class="icon-info-sign"></i>
       {% trans %}
@@ -19,5 +35,4 @@
         at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
       {% endtrans %}
     </span>
-  </div>
-</div>
+{% endcall %}
