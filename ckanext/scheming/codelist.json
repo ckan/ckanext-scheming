@@ -1,0 +1,20 @@
+{
+  "scheming_version": 1,
+  "dataset_type": "codelist",
+  "about": "An example of a dataset type with no resources permitted",
+  "about_url": "http://github.com/open-data/ckanext-scheming",
+  "dataset_fields": [
+    {
+      "field_name": "title",
+      "label": "Code label",
+      "preset": "title",
+      "form_placeholder": "eg. Freshwater fish"
+    },
+    {
+      "field_name": "name",
+      "label": "Code value",
+      "preset": "dataset_slug",
+      "form_placeholder": "eg. freshwater-fish"
+    }
+  ]
+}

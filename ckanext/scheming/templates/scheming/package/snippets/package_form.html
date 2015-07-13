@@ -23,6 +23,10 @@
         schema=schema -%}
     {%- endif -%}
   {%- endfor -%}
+  {%- if 'resource_fields' not in schema -%}
+    <!-- force controller to skip resource-editing step for this type -->
+    <input type="hidden" name="_ckan_phase" value="" />
+  {%- endif -%}
 {% endblock %}
 
 {% block metadata_fields %}
