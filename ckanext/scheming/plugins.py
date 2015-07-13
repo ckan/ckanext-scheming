@@ -206,7 +206,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 f['field_name'] not in schema)
 
         resource_schema = schema['resources']
-        for f in scheming_schema['resource_fields']:
+        for f in scheming_schema.get('resource_fields', []):
             resource_schema[f['field_name']] = get_validators(
                 f, scheming_schema, False)
 
