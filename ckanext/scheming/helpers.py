@@ -12,14 +12,21 @@ def scheming_language_text(text, prefer_lang=None, _gettext=None):
     languag in dict or using gettext if not a dict
     """
     if hasattr(text, 'get'):
-        if prefer_lang is None:
-            prefer_lang = lang()
-        v = text.get(prefer_lang)
-        if not v:
-            v = text.get(config.get('ckan.locale_default', 'en'))
-            if not v:
+        if not text:
+            return ''
+
+        prefer_lang = prefer_lang or lang()
+        default_locale = config.get('ckan.locale_default', 'en')
+
+        try:
+            v = text[prefer_lang]
+        except KeyError:
+            try:
+                v = text[default_locale]
+            except KeyError:
                 # just give me something to display
                 l, v = sorted(text.items())[0]
+
         return v
     else:
         if _gettext is None:
