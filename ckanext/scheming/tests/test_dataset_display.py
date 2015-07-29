@@ -47,3 +47,15 @@ class TestDatasetDisplay(FunctionalTestBase):
         app = self._get_test_app()
         response = app.get(url='/dataset/with-choice')
         assert_true('Hybrid Camel' in response.body)
+
+    def test_notes_field_displayed(self):
+        user = Sysadmin()
+        d = Dataset(
+            user=user,
+            type='dataset',
+            name='plain-jane',
+            notes='# styled notes',
+            )
+        app = self._get_test_app()
+        response = app.get(url='/dataset/plain-jane')
+        assert_true('<h1>styled notes' in response.body)
