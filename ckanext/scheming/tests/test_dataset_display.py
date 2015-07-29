@@ -12,6 +12,8 @@ class TestDatasetDisplay(FunctionalTestBase):
             type='camel-photos',
             name='set-one',
             humps=3,
+            photographer='John Newton',
+            photographer_email='john@email.com',
             resources=[{
                 'url':"http://example.com/camel.txt",
                 'camels_in_photo': 2}])
@@ -27,6 +29,8 @@ class TestDatasetDisplay(FunctionalTestBase):
             type='camel-photos',
             name='set-two',
             humps=3,
+            photographer='John Newton',
+            photographer_email='john@email.com',
             resources=[{
                 'url':"http://example.com/camel.txt",
                 'camels_in_photo': 2}])
@@ -41,6 +45,8 @@ class TestDatasetDisplay(FunctionalTestBase):
         d = Dataset(
             user=user,
             type='camel-photos',
+            photographer='John Newton',
+            photographer_email='john@email.com',
             name='with-choice',
             category='hybrid',
             )
