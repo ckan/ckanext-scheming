@@ -24,20 +24,20 @@ Set the schemas you want to use with configuration options:
 ckan.plugins = scheming_datasets
 
 #   module-path:file to schemas being used
-scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
-                           ckanext.spatialx:spatialxy_schema.json
+ckanext.scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
+                                   ckanext.spatialx:spatialxy_schema.json
 #   will try to load "spatialx_schema.json" and "spatialxy_schema.json"
 #   as dataset schemas
 #
 #   URLs may also be used, e.g:
 #
-# scheming.dataset_schemas = http://example.com/spatialx_schema.json
+# ckanext.scheming.dataset_schemas = http://example.com/spatialx_schema.json
 
 #   Preset files may be included as well. The default preset setting is:
-scheming.presets = ckanext.scheming:presets.json
+ckanext.scheming.presets = ckanext.scheming:presets.json
 
 #   The is_fallback setting may be changed as well. Defaults to false:
-scheming.dataset_fallback = false
+ckanext.scheming.dataset_fallback = false
 ```
 
 
@@ -48,7 +48,7 @@ Example dataset schemas
 * [camel photos schema](ckanext/scheming/camel_photos.json)
 
 These schemas are included in ckanext-scheming and may be enabled
-with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.json`
+with e.g: `ckanext.scheming.dataset_schemas = ckanext.scheming:camel_photos.json`
 
 These schemas use [presets](#preset) defined in
 [presets.json](ckanext/scheming/presets.json).
@@ -204,7 +204,7 @@ This extension includes the following presets:
 * `"resource_format_autocomplete"` - resource format validation with
   format guessing based on url and autocompleting form field
 
-You may add your own presets by adding them to the `scheming.presets`
+You may add your own presets by adding them to the `ckanext.scheming.presets`
 configuration setting.
 
 

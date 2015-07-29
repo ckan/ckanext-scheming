@@ -83,13 +83,21 @@ class _SchemingMixin(object):
     def _load_presets(self, config):
         if _SchemingMixin._presets is not None:
             return
-        presets = config.get('scheming.presets', DEFAULT_PRESETS).split()
+        presets = config.get('ckanext.scheming.presets', DEFAULT_PRESETS).split()
         _SchemingMixin._presets = {}
         for f in reversed(presets):
             for p in _load_schema(f)['presets']:
                 _SchemingMixin._presets[p['preset_name']] = p['values']
 
     def update_config(self, config):
+
+        # Check for old 'scheming.*' config options
+        new_options = {}
+        for key, value in config.iteritems():
+            if key.startswith('scheming.'):
+                new_options['ckanext.' + key] = value
+        config.update(new_options)
+
         if self.instance:
             # reloading plugins, probably in WebTest
             _SchemingMixin._helpers_loaded = False
@@ -159,8 +167,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.IActions)
     p.implements(p.IValidators)
 
-    SCHEMA_OPTION = 'scheming.dataset_schemas'
-    FALLBACK_OPTION = 'scheming.dataset_fallback'
+    SCHEMA_OPTION = 'ckanext.scheming.dataset_schemas'
+    FALLBACK_OPTION = 'ckanext.scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
 
     @classmethod
@@ -230,8 +238,8 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     p.implements(p.IActions)
     p.implements(p.IValidators)
 
-    SCHEMA_OPTION = 'scheming.group_schemas'
-    FALLBACK_OPTION = 'scheming.group_fallback'
+    SCHEMA_OPTION = 'ckanext.scheming.group_schemas'
+    FALLBACK_OPTION = 'ckanext.scheming.group_fallback'
     SCHEMA_TYPE_FIELD = 'group_type'
 
     @classmethod
@@ -260,8 +268,8 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     p.implements(p.IActions)
     p.implements(p.IValidators)
 
-    SCHEMA_OPTION = 'scheming.organization_schemas'
-    FALLBACK_OPTION = 'scheming.organization_fallback'
+    SCHEMA_OPTION = 'ckanext.scheming.organization_schemas'
+    FALLBACK_OPTION = 'ckanext.scheming.organization_fallback'
     SCHEMA_TYPE_FIELD = 'organization_type'
     UNSPECIFIED_GROUP_TYPE = 'organization'
 
