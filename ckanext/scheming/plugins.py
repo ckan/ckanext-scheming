@@ -61,6 +61,8 @@ class _SchemingMixin(object):
                 helpers.scheming_organization_schemas,
             'scheming_get_organization_schema':
                 helpers.scheming_get_organization_schema,
+            'scheming_field_by_name':
+                helpers.scheming_field_by_name,
             }
 
     def get_validators(self):

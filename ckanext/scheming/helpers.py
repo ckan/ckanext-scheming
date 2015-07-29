@@ -126,3 +126,13 @@ def scheming_get_organization_schema(organization_type, expanded=True):
     schemas = scheming_organization_schemas(expanded)
     if schemas:
         return schemas.get(organization_type)
+
+
+def scheming_field_by_name(fields, name):
+    """
+    Simple helper to grab a field from a schema field list
+    based on the field name passed. Returns None when not found.
+    """
+    for f in fields:
+        if f.get('field_name') == name:
+            return f
