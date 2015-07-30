@@ -1,11 +1,19 @@
-from pylons.i18n import _
+#!/usr/bin/env python
+# encoding: utf-8
 from pylons import c
 import ckan.plugins as p
-from ckan.lib.plugins import (DefaultDatasetForm, DefaultGroupForm,
-    DefaultOrganizationForm)
-from ckan.plugins.toolkit import (get_validator, get_converter,
-    navl_validate, add_template_directory, asbool)
-from ckan.logic.schema import group_form_schema, default_show_group_schema
+from ckan.lib.plugins import (
+    DefaultDatasetForm,
+    DefaultGroupForm,
+    DefaultOrganizationForm
+)
+from ckan.plugins.toolkit import (
+    get_validator,
+    get_converter,
+    navl_validate,
+    add_template_directory
+)
+from ckan.logic.schema import default_show_group_schema
 
 from paste.deploy.converters import asbool
 
@@ -90,8 +98,8 @@ class _SchemingMixin(object):
         presets = config.get('scheming.presets', DEFAULT_PRESETS).split()
         _SchemingMixin._presets = {}
         for f in reversed(presets):
-            for p in _load_schema(f)['presets']:
-                _SchemingMixin._presets[p['preset_name']] = p['values']
+            for pp in _load_schema(f)['presets']:
+                _SchemingMixin._presets[pp['preset_name']] = pp['values']
 
     def update_config(self, config):
         if self.instance:
@@ -107,7 +115,10 @@ class _SchemingMixin(object):
         self._is_fallback = asbool(config.get(self.FALLBACK_OPTION, False))
 
         self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
-        self._schemas = _load_schemas(self._schema_urls, self.SCHEMA_TYPE_FIELD)
+        self._schemas = _load_schemas(
+            self._schema_urls,
+            self.SCHEMA_TYPE_FIELD
+        )
         self._expanded_schemas = _expand_schemas(self._schemas)
 
     def is_fallback(self):
@@ -145,12 +156,17 @@ class _GroupOrganizationMixin(object):
         scheming_schema = self._expanded_schemas[t]
         scheming_fields = scheming_schema['fields']
 
-        get_validators = (_field_output_validators
-            if action_type == 'show' else _field_validators)
+        get_validators = (
+            _field_output_validators
+            if action_type == 'show' else _field_validators
+        )
 
         for f in scheming_fields:
-            schema[f['field_name']] = get_validators(f, scheming_schema,
-                f['field_name'] not in schema)
+            schema[f['field_name']] = get_validators(
+                f,
+                scheming_schema,
+                f['field_name'] not in schema
+            )
 
         return navl_validate(data_dict, schema, context)
 
@@ -206,8 +222,11 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             get_validators = _field_validators
 
         for f in scheming_schema['dataset_fields']:
-            schema[f['field_name']] = get_validators(f, scheming_schema,
-                f['field_name'] not in schema)
+            schema[f['field_name']] = get_validators(
+                f,
+                scheming_schema,
+                f['field_name'] not in schema
+            )
 
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
@@ -296,11 +315,13 @@ def _load_schemas(schemas, type_field):
         out[schema[type_field]] = schema
     return out
 
+
 def _load_schema(url):
     schema = _load_schema_module_path(url)
     if not schema:
         schema = _load_schema_url(url)
     return schema
+
 
 def _load_schema_module_path(url):
     """
@@ -317,6 +338,7 @@ def _load_schema_module_path(url):
     p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(p):
         return loader.load(open(p))
+
 
 def _load_schema_url(url):
     import urllib2
@@ -342,6 +364,7 @@ def _field_output_validators(f, schema, convert_extras):
             f['output_validators'], f, schema)
     return validators
 
+
 def _field_validators(f, schema, convert_extras):
     """
     Return the validators for a scheming field f
@@ -358,6 +381,7 @@ def _field_validators(f, schema, convert_extras):
         validators = validators + [convert_to_extras]
     return validators
 
+
 def _field_create_validators(f, schema, convert_extras):
     """
     Return the validators to use when creating for scheming field f,
@@ -370,6 +394,7 @@ def _field_create_validators(f, schema, convert_extras):
     if convert_extras:
         validators = validators + [convert_to_extras]
     return validators
+
 
 def _expand_preset(f):
     """
@@ -384,6 +409,7 @@ def _expand_preset(f):
     if f['preset'] not in _SchemingMixin._presets:
         raise SchemingException("preset '%s' not defined" % f['preset'])
     return dict(_SchemingMixin._presets[f['preset']], **f)
+
 
 def _expand_schemas(schemas):
     """
