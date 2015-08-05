@@ -74,6 +74,30 @@ def scheming_dataset_schemas(expanded=True):
         return p.instance._schemas
 
 
+def scheming_get_presets():
+    """
+    Returns a dict of all defined presets. If the scheming_datasets
+    plugin is not loaded return None.
+    """
+    from ckanext.scheming.plugins import SchemingDatasetsPlugin as p
+    if p.instance:
+        return p._presets
+
+
+def scheming_get_preset(preset_name):
+    """
+    Returns the preset by the name `preset_name`.. If the scheming_datasets
+    plugin is not loaded or the preset does not exist, return None.
+
+    :param preset_name: The preset to lookup.
+    :returns: The preset or None if not found.
+    :rtype: None or dict
+    """
+    schemas = scheming_get_presets()
+    if schemas:
+        return schemas.get(preset_name)
+
+
 def scheming_get_dataset_schema(dataset_type, expanded=True):
     """
     Return the schema for the dataset_type passed or None if
