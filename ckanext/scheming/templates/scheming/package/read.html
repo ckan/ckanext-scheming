@@ -10,9 +10,9 @@
     </p>
   {%- endif -%}
   {% if h.scheming_field_by_name(schema.dataset_fields, 'notes') and
-    c.pkg_notes_formatted %}
+    pkg.notes%}
     <div class="notes embedded-content">
-      {{ c.pkg_notes_formatted }}
+      {{ h.render_markdown(pkg.notes) }}
     </div>
   {% endif %}
 {% endblock %}
