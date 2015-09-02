@@ -2,7 +2,7 @@
 {%- set unprocessed = errors.copy() -%}
 
 {% block errors_list %}
-<div class="error-explanation alert alert-{{ type }}{{ " " ~ classes | join(' ') }}">
+<div class="error-explanation alert alert-error">
   <p>{{ _('The form contains invalid entries:') }}</p>
   <ul>
     {% block all_errors %}
