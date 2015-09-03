@@ -30,7 +30,6 @@ class SchemingCommand(CkanCommand):
     parser.add_option('-c', '--config', dest='config',
         default='development.ini', help='Config file to use.')
 
-
     def command(self):
         cmd = self.args[0]
         self._load_config()
@@ -54,7 +53,9 @@ class SchemingCommand(CkanCommand):
                 print "    no schemas"
             for typ in sorted(s):
                 print " * " + json.dumps(typ)
-                for field in s[typ]['fields']:
+                field_name = 'dataset_fields' if s[typ].get('dataset_fields') \
+                    else 'fields'
+                for field in s[typ][field_name]:
                     print "   - " + json.dumps(field['field_name'])
-            print
 
+            print
