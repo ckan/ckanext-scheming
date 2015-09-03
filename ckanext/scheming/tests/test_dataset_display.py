@@ -47,3 +47,45 @@ class TestDatasetDisplay(FunctionalTestBase):
         app = self._get_test_app()
         response = app.get(url='/dataset/with-choice')
         assert_true('Hybrid Camel' in response.body)
+
+    def test_notes_field_displayed(self):
+        user = Sysadmin()
+        d = Dataset(
+            user=user,
+            type='dataset',
+            name='plain-jane',
+            notes='# styled notes',
+            )
+        app = self._get_test_app()
+        response = app.get(url='/dataset/plain-jane')
+        assert_true('<h1>styled notes' in response.body)
+
+    def test_choice_field_shows_list_if_multiple_options(self):
+        user = Sysadmin()
+        d = Dataset(
+            user=user,
+            type='camel-photos',
+            name='with-multiple-choice-n',
+            personality=['friendly', 'spits'],
+            )
+        app = self._get_test_app()
+        response = app.get(url='/dataset/with-multiple-choice-n')
+
+        assert_true('<ul><li>Often friendly</li><li>Tends to spit</li></ul>'
+                    in response.body)
+
+    def test_choice_field_does_not_show_list_if_one_options(self):
+        user = Sysadmin()
+        d = Dataset(
+            user=user,
+            type='camel-photos',
+            name='with-multiple-choice-one',
+            personality=['friendly'],
+            )
+        app = self._get_test_app()
+        response = app.get(url='/dataset/with-multiple-choice-one')
+
+        assert_true('Often friendly'
+                    in response.body)
+        assert_true('<ul><li>Often friendly</li></ul>'
+                    not in response.body)

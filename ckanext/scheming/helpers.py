@@ -3,27 +3,39 @@ from pylons import config
 from pylons.i18n import gettext
 
 
-def scheming_language_text(text, _gettext=None, _lang=None):
+def scheming_language_text(text, prefer_lang=None, _gettext=None):
     """
     :param text: {lang: text} dict or text string
+    :param prefer_lang: choose this language version if available
 
     Convert "language-text" to users' language by looking up
     languag in dict or using gettext if not a dict
     """
     if hasattr(text, 'get'):
-        if _lang is None:
-            _lang = lang()
-        v = text.get(_lang)
-        if not v:
-            v = text.get(config.get('ckan.locale_default', 'en'))
-            if not v:
+        if not text:
+            return ''
+
+        prefer_lang = prefer_lang or lang()
+        default_locale = config.get('ckan.locale_default', 'en')
+
+        try:
+            v = text[prefer_lang]
+        except KeyError:
+            try:
+                v = text[default_locale]
+            except KeyError:
                 # just give me something to display
                 l, v = sorted(text.items())[0]
+
         return v
     else:
         if _gettext is None:
             _gettext = gettext
-        return _gettext(text)
+
+        t = _gettext(text)
+        if isinstance(t, str):
+            return t.decode('utf-8')
+        return t
 
 
 def scheming_choices_label(choices, value):
@@ -60,6 +72,30 @@ def scheming_dataset_schemas(expanded=True):
         if expanded:
             return p.instance._expanded_schemas
         return p.instance._schemas
+
+
+def scheming_get_presets():
+    """
+    Returns a dict of all defined presets. If the scheming_datasets
+    plugin is not loaded return None.
+    """
+    from ckanext.scheming.plugins import SchemingDatasetsPlugin as p
+    if p.instance:
+        return p._presets
+
+
+def scheming_get_preset(preset_name):
+    """
+    Returns the preset by the name `preset_name`.. If the scheming_datasets
+    plugin is not loaded or the preset does not exist, return None.
+
+    :param preset_name: The preset to lookup.
+    :returns: The preset or None if not found.
+    :rtype: None or dict
+    """
+    schemas = scheming_get_presets()
+    if schemas:
+        return schemas.get(preset_name)
 
 
 def scheming_get_dataset_schema(dataset_type, expanded=True):
@@ -115,3 +151,12 @@ def scheming_get_organization_schema(organization_type, expanded=True):
     if schemas:
         return schemas.get(organization_type)
 
+
+def scheming_field_by_name(fields, name):
+    """
+    Simple helper to grab a field from a schema field list
+    based on the field name passed. Returns None when not found.
+    """
+    for f in fields:
+        if f.get('field_name') == name:
+            return f

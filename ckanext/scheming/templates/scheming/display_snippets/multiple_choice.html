@@ -1,8 +1,18 @@
 {%- set values = data[field.field_name] -%}
-<ul>
+{%- set labels = [] -%}
+
 {%- for choice in field.choices -%}
     {%- if choice.value in values -%}
-        <li>{{ h.scheming_language_text(choice.label) }}</li>
+      {%- do labels.append(h.scheming_language_text(choice.label)) -%}
     {%- endif -%}
 {%- endfor -%}
-</ul>
+
+{%- if labels|length == 1 -%}
+  {{ labels[0] }}
+{%- else -%}
+  <ul>
+    {%- for label in labels -%}
+       <li>{{ label }}</li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

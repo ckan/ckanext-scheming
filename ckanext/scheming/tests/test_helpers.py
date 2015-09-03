@@ -1,27 +1,38 @@
+#!/usr/bin/env python
+# encoding: utf-8
 from nose.tools import assert_equals
 
-from ckanext.scheming.helpers import (scheming_language_text,
-    scheming_field_required)
+from ckanext.scheming.helpers import (
+    scheming_language_text,
+    scheming_field_required,
+    scheming_get_preset,
+    scheming_get_presets
+)
+
 
 class TestLanguageText(object):
     def test_pass_through_gettext(self):
         assert_equals('hello1', scheming_language_text(
-            'hello', _gettext = lambda x: x + '1'))
+            'hello', _gettext=lambda x: x + '1'))
 
     def test_only_one_language(self):
         assert_equals('hello', scheming_language_text(
             {'zh': 'hello'},
-            _lang='en'))
+            prefer_lang='en'))
 
     def test_matching_language(self):
         assert_equals('hello', scheming_language_text(
             {'en': 'hello', 'aa': 'aaaa'},
-            _lang='en'))
+            prefer_lang='en'))
 
     def test_first_when_no_matching_language(self):
         assert_equals('hello', scheming_language_text(
             {'aa': 'hello', 'bb': 'no'},
-            _lang='en'))
+            prefer_lang='en'))
+
+    def test_decodes_utf8(self):
+        assert_equals(u'\xa1Hola!', scheming_language_text('\xc2\xa1Hola!'))
+
 
 class TestFieldRequired(object):
     def test_explicit_required_true(self):
@@ -37,3 +48,28 @@ class TestFieldRequired(object):
     def test_not_empty_not_in_validators(self):
         assert_equals(False, scheming_field_required({
             'validators': 'maybe_not_empty'}))
+
+
+class TestGetPreset(object):
+    def test_scheming_get_presets(self):
+        presets = scheming_get_presets()
+        assert_equals(sorted((
+            u'title',
+            u'tag_string_autocomplete',
+            u'select',
+            u'resource_url_upload',
+            u'resource_format_autocomplete',
+            u'multiple_select',
+            u'multiple_checkbox',
+            u'date',
+            u'dataset_slug',
+            u'dataset_organization'
+        )), sorted(presets.iterkeys()))
+
+    def test_scheming_get_preset(self):
+        preset = scheming_get_preset(u'date')
+        assert_equals(sorted((
+            (u'display_snippet', u'date.html'),
+            (u'form_snippet', u'date.html'),
+            (u'validators', u'scheming_required isodate')
+        )), sorted(preset.iteritems()))
