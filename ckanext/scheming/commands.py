@@ -40,14 +40,28 @@ class SchemingCommand(CkanCommand):
             print self.__doc__
 
     def _show(self):
-        for n, s in (
-                ("Dataset", scheming_dataset_schemas()),
-                ("Group", scheming_group_schemas()),
-                ("Organization", scheming_organization_schemas()),
-                ):
+        dataset_schema = scheming_dataset_schemas()
+
+        resource_schema = None
+        if dataset_schema and dataset_schema['dataset'].get('resource_fields'):
+            resource_schema = \
+                {'resource':
+                    {'fields':
+                     dataset_schema['dataset'].get('resource_fields')}}
+
+        schemas = [
+            ("Dataset", dataset_schema),
+            ("Resource", resource_schema),
+            ("Group", scheming_group_schemas()),
+            ("Organization", scheming_organization_schemas()),
+        ]
+        # and the resource schema...
+        print scheming_group_schemas()
+
+        for n, s in schemas:
             print n, "schemas:"
             if s is None:
-                print "    plugin not loaded\n"
+                print "    plugin not loaded or schema not specified\n"
                 continue
             if not s:
                 print "    no schemas"
