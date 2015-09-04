@@ -1,5 +1,4 @@
 from ckan.lib.cli import CkanCommand
-import ckan.plugins as p
 import paste.script
 
 from ckanext.scheming.helpers import (
@@ -8,10 +7,7 @@ from ckanext.scheming.helpers import (
     scheming_organization_schemas,
     )
 
-import sys
 import json
-from datetime import datetime
-from contextlib import contextmanager
 
 
 class SchemingCommand(CkanCommand):
@@ -28,8 +24,8 @@ class SchemingCommand(CkanCommand):
 
     parser = paste.script.command.Command.standard_parser(verbose=True)
     parser.add_option('-c', '--config', dest='config',
-        default='development.ini', help='Config file to use.')
-
+                      default='development.ini',
+                      help='Config file to use.')
 
     def command(self):
         cmd = self.args[0]
@@ -41,20 +37,27 @@ class SchemingCommand(CkanCommand):
             print self.__doc__
 
     def _show(self):
-        for n, s in (
-                ("Dataset", scheming_dataset_schemas()),
-                ("Group", scheming_group_schemas()),
-                ("Organization", scheming_organization_schemas()),
-                ):
+        schemas = [
+            ("Dataset", scheming_dataset_schemas()),
+            ("Group", scheming_group_schemas()),
+            ("Organization", scheming_organization_schemas()),
+        ]
+
+        for n, s in schemas:
             print n, "schemas:"
             if s is None:
-                print "    plugin not loaded\n"
+                print "    plugin not loaded or schema not specified\n"
                 continue
             if not s:
                 print "    no schemas"
             for typ in sorted(s):
                 print " * " + json.dumps(typ)
-                for field in s[typ]['fields']:
-                    print "   - " + json.dumps(field['field_name'])
-            print
+                field_names = ('dataset_fields', 'fields', 'resource_fields')
 
+                for field_name in field_names:
+                    if s[typ].get(field_name):
+                        if field_name == 'resource_fields':
+                            print " * " + json.dumps("resource")
+                        for field in s[typ][field_name]:
+                            print "   - " + json.dumps(field['field_name'])
+            print
