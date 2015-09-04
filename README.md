@@ -332,3 +332,20 @@ Help text may be provided in multiple languages like [label fields](#label).
 ### `help_inline`
 
 Display help text inline if set to `true`. Default is `false`.
+
+
+Running the Tests
+=================
+
+To run the tests, do:
+
+```nosetests --ckan --nologcapture --with-pylons=test.ini```
+
+and
+
+```nosetests --ckan --nologcapture --with-pylons=test_subclass.ini ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form ckanext.scheming.tests.test_dataset_logic```
+
+To run the tests and produce a coverage report, first make sure you have
+coverage installed in your virtualenv (``pip install coverage``) then run:
+
+```nosetests --ckan --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.scheming --cover-inclusive --cover-erase --cover-tests```

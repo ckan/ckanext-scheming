@@ -10,35 +10,29 @@ sudo apt-get install solr-jetty postgresql-$PGVERSION libgeos-c1
 sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
 sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
 
-mkdir dl
-cd dl
 git clone https://github.com/ckan/ckan
-cd -
-cd dl/ckan
+cd ckan
 python setup.py develop
-# not interested in building CSS, just use production one
-cp ./ckan/public/base/css/main.css ./ckan/public/base/css/main.debug.css
+pip install -r requirements.txt --allow-all-external
+pip install -r dev-requirements.txt --allow-all-external
 cd -
 
-mkdir links
-ln -s ../dl/ckan links/ckan
-pip install -r links/ckan/requirements.txt --allow-all-external
-pip install -r links/ckan/dev-requirements.txt --allow-all-external
-pip install -r requirements.txt --allow-all-external
+echo "Initialising the database..."
+cd ckan
+paster db init -c test-core.ini
+cd -
 
-python setup.py install
+echo "Installing ckanext-scheming and its requirements..."
+python setup.py develop
+pip install -r requirements.txt
 
 # Configure Solr
 echo "NO_START=0\nJETTY_HOST=127.0.0.1\nJETTY_PORT=8983\nJAVA_HOME=$JAVA_HOME" | sudo tee /etc/default/jetty
 # FIXME the solr schema cannot be hardcoded as it is dependent on the ckan version
-sudo cp links/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
+sudo cp ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty restart
 
-SCHEMING_DIR="`pwd`"
-CKAN_DIR="`python -c'import ckan; print ckan.__file__.rsplit("/",2)[0]'`"
-cd "$CKAN_DIR"
-
-echo setting up databases
-paster db init -c test-core.ini
-
-cd -
+echo "Moving test.ini into a subdir..."
+mkdir subdir
+mv test.ini subdir
+mv test_subclass.ini subdir
