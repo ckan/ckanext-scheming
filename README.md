@@ -341,6 +341,10 @@ To run the tests, do:
 
 ```nosetests --ckan --nologcapture --with-pylons=test.ini```
 
+and
+
+```nosetests --ckan --nologcapture --with-pylons=test_subclass.ini ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form ckanext.scheming.tests.test_dataset_logic```
+
 To run the tests and produce a coverage report, first make sure you have
 coverage installed in your virtualenv (``pip install coverage``) then run:
 
