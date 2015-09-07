@@ -56,22 +56,24 @@ class TestDatasetFormNew(FunctionalTestBase):
         form = response.forms['resource-edit']
         assert_true('camels_in_photo' in form.fields)
 
+
 class TestOrganizationFormNew(FunctionalTestBase):
     def test_organization_form_includes_custom_field(self):
         app = self._get_test_app()
         env, response = _get_organization_new_page_as_sysadmin(app)
-        form = response.forms[1] # FIXME: add an id to this form
+        form = response.forms[1]  # FIXME: add an id to this form
 
         # FIXME: generate the form for orgs (this is currently missing)
-        assert_true('department_id' not in form.fields)
-        raise SkipTest
+        assert_true('department_id' in form.fields)
+
 
 class TestGroupFormNew(FunctionalTestBase):
     def test_group_form_includes_custom_field(self):
         app = self._get_test_app()
         env, response = _get_group_new_page_as_sysadmin(app)
-        form = response.forms[1] # FIXME: add an id to this form
+        form = response.forms[1]  # FIXME: add an id to this form
 
         # FIXME: generate the form for orgs (this is currently missing)
-        assert_true('bookface' not in form.fields)
+        # Failing until https://github.com/ckan/ckan/pull/2617 is merged
+        # assert_true('bookface' in form.fields)
         raise SkipTest

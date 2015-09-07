@@ -39,6 +39,9 @@ convert_from_extras = get_converter('convert_from_extras')
 
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
+import logging
+log = logging.getLogger(__name__)
+
 
 class _SchemingMixin(object):
     """
@@ -133,7 +136,7 @@ class _GroupOrganizationMixin(object):
     def group_types(self):
         return list(self._schemas)
 
-    def setup_template_variables(self, context, data_dict, group_type):
+    def setup_template_variables(self, context, data_dict, group_type=None):
         if not group_type:
             if c.group_dict:
                 group_type = c.group_dict['type']
@@ -261,9 +264,8 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def about_template(self):
         return 'scheming/group/about.html'
 
-# FIXME: implement this template
-#    def edit_template(self):
-#        return 'scheming/group/edit.html'
+    def group_form(group_type=None):
+        return 'scheming/group/group_form.html'
 
     def get_actions(self):
         return {
@@ -293,7 +295,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
         return 'scheming/organization/about.html'
 
     def group_form(group_type=None):
-        return 'scheming/group/group_form.html'
+        return 'scheming/organization/group_form.html'
 
     def get_actions(self):
         return {
