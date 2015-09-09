@@ -28,6 +28,7 @@ from ckanext.scheming.logic import (
     scheming_group_schema_list, scheming_group_schema_show,
     scheming_organization_schema_list, scheming_organization_schema_show,
     )
+from ckanext.scheming.converters import convert_from_extras_group
 
 import os
 import inspect
@@ -156,10 +157,9 @@ class _GroupOrganizationMixin(object):
         scheming_fields = scheming_schema['fields']
 
         get_validators = (
-            _field_output_validators
+            _field_output_validators_group
             if action_type == 'show' else _field_validators
         )
-
         for f in scheming_fields:
             schema[f['field_name']] = get_validators(
                 f,
@@ -349,12 +349,23 @@ def _load_schema_url(url):
     return loader.loads(tables, url)
 
 
-def _field_output_validators(f, schema, convert_extras):
+def _field_output_validators_group(f, schema, convert_extras):
+    """
+    Return the output validators for a scheming field f, tailored for groups
+    and orgs.
+    """
+
+    return _field_output_validators(f, schema, convert_extras,
+                                    convert_from_extras_type=convert_from_extras_group)
+
+
+def _field_output_validators(f, schema, convert_extras,
+                             convert_from_extras_type=convert_from_extras):
     """
     Return the output validators for a scheming field f
     """
     if convert_extras:
-        validators = [convert_from_extras, ignore_missing]
+        validators = [convert_from_extras_type, ignore_missing]
     else:
         validators = [ignore_missing]
     if 'output_validators' in f:
