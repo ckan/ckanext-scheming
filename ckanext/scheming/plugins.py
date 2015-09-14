@@ -28,6 +28,7 @@ from ckanext.scheming.logic import (
     scheming_group_schema_list, scheming_group_schema_show,
     scheming_organization_schema_list, scheming_organization_schema_show,
     )
+from ckanext.scheming.converters import convert_from_extras_group
 
 import os
 import inspect
@@ -38,6 +39,9 @@ convert_to_extras = get_converter('convert_to_extras')
 convert_from_extras = get_converter('convert_from_extras')
 
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
+
+import logging
+log = logging.getLogger(__name__)
 
 
 class _SchemingMixin(object):
@@ -133,19 +137,15 @@ class _GroupOrganizationMixin(object):
     def group_types(self):
         return list(self._schemas)
 
-    def setup_template_variables(self, context, data_dict):
-        group_type = context.get('group_type')
+    def setup_template_variables(self, context, data_dict, group_type=None):
         if not group_type:
             if c.group_dict:
                 group_type = c.group_dict['type']
             else:
                 group_type = self.UNSPECIFIED_GROUP_TYPE
         c.scheming_schema = self._schemas[group_type]
+        c.group_type = group_type
         c.scheming_fields = c.scheming_schema['fields']
-
-    def db_to_form_schema_options(self, options):
-        # FIXME: investigate why this is necessary
-        return default_show_group_schema()
 
     def validate(self, context, data_dict, schema, action):
         thing, action_type = action.split('_')
@@ -157,10 +157,9 @@ class _GroupOrganizationMixin(object):
         scheming_fields = scheming_schema['fields']
 
         get_validators = (
-            _field_output_validators
+            _field_output_validators_group
             if action_type == 'show' else _field_validators
         )
-
         for f in scheming_fields:
             schema[f['field_name']] = get_validators(
                 f,
@@ -256,6 +255,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     SCHEMA_OPTION = 'scheming.group_schemas'
     FALLBACK_OPTION = 'scheming.group_fallback'
     SCHEMA_TYPE_FIELD = 'group_type'
+    UNSPECIFIED_GROUP_TYPE = 'group'
 
     @classmethod
     def _store_instance(cls, self):
@@ -264,9 +264,8 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def about_template(self):
         return 'scheming/group/about.html'
 
-# FIXME: implement this template
-#    def edit_template(self):
-#        return 'scheming/group/edit.html'
+    def group_form(group_type=None):
+        return 'scheming/group/group_form.html'
 
     def get_actions(self):
         return {
@@ -295,9 +294,8 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def about_template(self):
         return 'scheming/organization/about.html'
 
-# FIXME: implement this template
-#    def edit_template(self):
-#        return 'scheming/organization/edit.html'
+    def group_form(group_type=None):
+        return 'scheming/organization/group_form.html'
 
     def get_actions(self):
         return {
@@ -351,12 +349,23 @@ def _load_schema_url(url):
     return loader.loads(tables, url)
 
 
-def _field_output_validators(f, schema, convert_extras):
+def _field_output_validators_group(f, schema, convert_extras):
+    """
+    Return the output validators for a scheming field f, tailored for groups
+    and orgs.
+    """
+
+    return _field_output_validators(f, schema, convert_extras,
+                                    convert_from_extras_type=convert_from_extras_group)
+
+
+def _field_output_validators(f, schema, convert_extras,
+                             convert_from_extras_type=convert_from_extras):
     """
     Return the output validators for a scheming field f
     """
     if convert_extras:
-        validators = [convert_from_extras, ignore_missing]
+        validators = [convert_from_extras_type, ignore_missing]
     else:
         validators = [ignore_missing]
     if 'output_validators' in f:
