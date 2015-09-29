@@ -22,7 +22,7 @@ from ckanext.scheming import loader
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import (
     validators_from_string, scheming_choices, scheming_required,
-    scheming_multiple_choice, scheming_multiple_choice_output)
+    scheming_multiple_choice, scheming_multiple_choice_output, scheming_isodatetime)
 from ckanext.scheming.logic import (
     scheming_dataset_schema_list, scheming_dataset_schema_show,
     scheming_group_schema_list, scheming_group_schema_show,
@@ -91,6 +91,7 @@ class _SchemingMixin(object):
             'scheming_multiple_choice': scheming_multiple_choice,
             'scheming_multiple_choice_output': scheming_multiple_choice_output,
             'convert_to_json_if_date': convert_to_json_if_date,
+            'scheming_isodatetime': scheming_isodatetime
             }
 
     def _add_template_directory(self, config):

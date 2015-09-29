@@ -62,6 +62,7 @@ class TestGetPreset(object):
             u'multiple_select',
             u'multiple_checkbox',
             u'date',
+            u'datetime',
             u'dataset_slug',
             u'dataset_organization'
         )), sorted(presets.iterkeys()))
