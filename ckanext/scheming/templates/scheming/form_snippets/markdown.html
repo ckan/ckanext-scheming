@@ -1,11 +1,17 @@
 {% import 'macros/form.html' as form %}
 
+{% if c.action == 'new' and not data[field.field_name] %}
+  {% set value = field.get('default') %}
+{% else %}
+  {% set value = data[field.field_name] %}
+{% endif %}
+
 {% call form.markdown(
     field.field_name,
     id='field-' + field.field_name,
     label=h.scheming_language_text(field.label),
     placeholder=h.scheming_language_text(field.form_placeholder),
-    value=data[field.field_name],
+    value=value,
     error=errors[field.field_name],
     attrs=field.form_attrs or {},
     is_required=h.scheming_field_required(field)

@@ -1,5 +1,11 @@
 {% import 'macros/form.html' as form %}
 
+{% if c.action == 'new' and not data[field.field_name] %}
+  {% set value = field.get('default', '') %}
+{% else %}
+  {% set value = data[field.field_name] %}
+{% endif %}
+
 {%- call form.input_block(
     "field-{{ field.field_name }}",
     label=h.scheming_language_text(field.label),
@@ -10,11 +16,11 @@
         style="display: block"
         id="field-{{ field.field_name }}"
         name="{{ field.field_name }}" >
-        {%- for c in field.choices -%}
-            <option id="field-{{ field.field_name }}-{{ c.value }}"
-                value="{{ c.value }}"
-                {{"selected " if c.value in data[field.field_name] }} />
-                {{ h.scheming_language_text(c.label) }}
+        {%- for choice in field.choices -%}
+            <option id="field-{{ field.field_name }}-{{ choice.value }}"
+                value="{{ choice.value }}"
+                {{"selected " if choice.value in value }} />
+                {{ h.scheming_language_text(choice.label) }}
             </option>
         {%- endfor -%}
     </select>
