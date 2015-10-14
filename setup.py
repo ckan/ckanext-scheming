@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.0.2'
+version = '1.0.0'
 
 setup(
     name='ckanext-scheming',
@@ -12,8 +12,8 @@ setup(
     classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords='',
     author='Government of Canada',
-    author_email='Michel.Gendron@statcan.gc.ca',
-    url='',
+    author_email='ian@excess.org',
+    url='https://github.com/open-data/ckanext-scheming',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     namespace_packages=['ckanext'],
