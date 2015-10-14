@@ -28,7 +28,9 @@ from ckanext.scheming.logic import (
     scheming_group_schema_list, scheming_group_schema_show,
     scheming_organization_schema_list, scheming_organization_schema_show,
     )
-from ckanext.scheming.converters import convert_from_extras_group
+from ckanext.scheming.converters import (
+        convert_from_extras_group, convert_to_json_if_date
+        )
 
 import os
 import inspect
@@ -88,6 +90,7 @@ class _SchemingMixin(object):
             'scheming_required': scheming_required,
             'scheming_multiple_choice': scheming_multiple_choice,
             'scheming_multiple_choice_output': scheming_multiple_choice_output,
+            'convert_to_json_if_date': convert_to_json_if_date,
             }
 
     def _add_template_directory(self, config):

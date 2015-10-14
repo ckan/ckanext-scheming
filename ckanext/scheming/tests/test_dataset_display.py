@@ -29,12 +29,14 @@ class TestDatasetDisplay(FunctionalTestBase):
             humps=3,
             resources=[{
                 'url':"http://example.com/camel.txt",
-                'camels_in_photo': 2}])
+                'camels_in_photo': 2,
+                'date': '2015-01-01'}])
 
         app = self._get_test_app()
         response = app.get(url='/dataset/set-two/resource/' +
             d['resources'][0]['id'])
         assert_true('Camels in Photo' in response.body)
+        assert_true('Date' in response.body)
 
     def test_choice_field_shows_labels(self):
         user = Sysadmin()

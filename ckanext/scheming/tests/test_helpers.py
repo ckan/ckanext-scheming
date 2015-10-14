@@ -71,5 +71,5 @@ class TestGetPreset(object):
         assert_equals(sorted((
             (u'display_snippet', u'date.html'),
             (u'form_snippet', u'date.html'),
-            (u'validators', u'scheming_required isodate')
+            (u'validators', u'scheming_required isodate convert_to_json_if_date')
         )), sorted(preset.iteritems()))

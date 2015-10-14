@@ -98,6 +98,12 @@
       "field_name": "others_in_photo",
       "label": "Other Thing in Photo",
       "output_validators": "ignore_missing"
+    },
+    {
+      "field_name": "date",
+      "label": "Date",
+      "preset": "date"
     }
+
   ]
 }

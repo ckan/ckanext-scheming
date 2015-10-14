@@ -73,6 +73,12 @@ class TestDates(object):
             a_relevant_date='this-is-not-a-date',
         )
 
+    def test_date_field_in_resource(self):
+        lc = LocalCKAN()
+        lc.action.package_create(type='camel-photos', name='derf', resources=[{
+                'url': "http://example.com/camel.txt",
+                'camels_in_photo': 2,
+                'date': '2015-01-01'}])
 
 class TestInvalidType(object):
     def test_invalid_dataset_type(self):
