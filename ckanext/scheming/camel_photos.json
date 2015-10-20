@@ -75,6 +75,11 @@
       "preset": "date"
     },
     {
+      "field_name": "a_relevant_datetime",
+      "label": "A relevant date and time",
+      "preset": "datetime"
+    },
+    {
       "field_name": "other",
       "label": {"en": "Other information"},
       "output_validators": "ignore_missing"
