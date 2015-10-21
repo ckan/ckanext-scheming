@@ -1,3 +1,5 @@
+import datetime
+
 from nose.tools import assert_raises, assert_equals
 from ckanapi import LocalCKAN, ValidationError
 
@@ -70,7 +72,7 @@ class TestDates(object):
         with assert_raises(ValidationError) as cm:
             lc.action.package_create(
                 type='camel-photos',
-                name='fred_date1',
+                name='fred_date2',
                 a_relevant_date='31/11/abcd',
             )
         assert_equals(cm.exception.error_dict['a_relevant_date'], ['Date format incorrect'])
@@ -78,10 +80,28 @@ class TestDates(object):
         with assert_raises(ValidationError) as cm:
             lc.action.package_create(
                 type='camel-photos',
-                name='fred_date1',
+                name='fred_date3',
                 a_relevant_date='this-is-not-a-date',
             )
         assert_equals(cm.exception.error_dict['a_relevant_date'], ['Date format incorrect'])
+
+    def test_date_field_valid_date_str(self):
+        lc = LocalCKAN()
+        d = lc.action.package_create(
+            type='camel-photos',
+            name='fred_date4',
+            a_relevant_date='2014-01-01',
+        )
+        assert_equals(d['a_relevant_date'], '2014-01-01')
+
+    def test_date_field_valid_date_datetime(self):
+        lc = LocalCKAN()
+        d = lc.action.package_create(
+            type='camel-photos',
+            name='fred_date5',
+            a_relevant_date=datetime.datetime(2014, 1, 1),
+        )
+        assert_equals(d['a_relevant_date'], '2014-01-01')
 
     def test_date_field_in_resource(self):
         lc = LocalCKAN()
