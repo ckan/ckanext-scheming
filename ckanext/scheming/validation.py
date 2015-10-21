@@ -80,6 +80,9 @@ def scheming_multiple_choice(field, schema):
             data[key] = json.dumps([
                 c['value'] for c in field['choices'] if c['value'] in selected])
 
+            if field.get('required') and not selected:
+                errors[key].append(_('Select at least one'))
+
     return validator
 
 
