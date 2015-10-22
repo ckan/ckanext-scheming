@@ -27,13 +27,20 @@ class TestGetValidatorOrConverter(object):
 class TestChoices(object):
     def test_choice_field_only_accepts_given_choices(self):
         lc = LocalCKAN()
-        with assert_raises(ValidationError) as cm:
+
+        try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_choices1',
                 category='rocker',
             )
-        assert_equals(cm.exception.error_dict['category'], ['Value must be one of: bactrian; hybrid; f2hybrid; snowwhite; black (not \'rocker\')'])
+        except ValidationError as e:
+            assert_equals(
+                e.error_dict['category'],
+                    ['Value must be one of: bactrian; hybrid; f2hybrid; snowwhite; black (not \'rocker\')']
+            )
+        else:
+            raise AssertionError('ValidationError not raised')
 
     def test_choice_field_accepts_valid_choice(self):
         lc = LocalCKAN()
@@ -61,29 +68,45 @@ class TestRequired(object):
 class TestDates(object):
     def test_date_field_rejects_non_isodates(self):
         lc = LocalCKAN()
-        with assert_raises(ValidationError) as cm:
+
+        try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_date1',
                 a_relevant_date='31/11/2014',
             )
-        assert_equals(cm.exception.error_dict['a_relevant_date'], ['Date format incorrect'])
+        except ValidationError as e:
+            assert_equals(e.error_dict['a_relevant_date'],
+                ['Date format incorrect']
+            )
+        else:
+            raise AssertionError('ValidationError not raised')
 
-        with assert_raises(ValidationError) as cm:
+        try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_date2',
                 a_relevant_date='31/11/abcd',
             )
-        assert_equals(cm.exception.error_dict['a_relevant_date'], ['Date format incorrect'])
+        except ValidationError as e:
+            assert_equals(e.error_dict['a_relevant_date'],
+                ['Date format incorrect']
+            )
+        else:
+            raise AssertionError('ValidationError not raised')
 
-        with assert_raises(ValidationError) as cm:
+        try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_date3',
                 a_relevant_date='this-is-not-a-date',
             )
-        assert_equals(cm.exception.error_dict['a_relevant_date'], ['Date format incorrect'])
+        except ValidationError as e:
+            assert_equals(e.error_dict['a_relevant_date'],
+                ['Date format incorrect']
+            )
+        else:
+            raise AssertionError('ValidationError not raised')
 
     def test_date_field_valid_date_str(self):
         lc = LocalCKAN()
