@@ -128,7 +128,7 @@ class TestDates(object):
 
     def test_date_field_in_resource(self):
         lc = LocalCKAN()
-        lc.action.package_create(type='camel-photos', name='derf', resources=[{
+        lc.action.package_create(type='camel-photos', name='derf_date', resources=[{
                 'url': "http://example.com/camel.txt",
                 'camels_in_photo': 2,
                 'date': '2015-01-01'}])
@@ -208,7 +208,7 @@ class TestDateTimes(object):
             name='fred_datetime6',
             a_relevant_datetime='2014-01-01T12:35:00',
         )
-        assert_equals(d['a_relevant_datetime'], '2014-01-01 12:35:00')
+        assert_equals(d['a_relevant_datetime'], '2014-01-01T12:35:00')
 
     def test_date_field_valid_date_datetime(self):
         lc = LocalCKAN()
@@ -217,7 +217,7 @@ class TestDateTimes(object):
             name='fred_datetime7',
             a_relevant_datetime=datetime.datetime(2014, 1, 1, 12, 35),
         )
-        assert_equals(d['a_relevant_datetime'], '2014-01-01 12:35:00')
+        assert_equals(d['a_relevant_datetime'], '2014-01-01T12:35:00')
 
     def test_date_field_valid_date_datetime(self):
         lc = LocalCKAN()
@@ -226,7 +226,7 @@ class TestDateTimes(object):
             name='fred_datetime7',
             a_relevant_datetime=datetime.datetime(2014, 1, 1, 12, 35),
         )
-        assert_equals(d['a_relevant_datetime'], '2014-01-01 12:35:00')
+        assert_equals(d['a_relevant_datetime'], '2014-01-01T12:35:00')
 
     def test_datetime_field_rejects_invalid_separate_date(self):
         lc = LocalCKAN()
@@ -283,7 +283,15 @@ class TestDateTimes(object):
             a_relevant_datetime_date='2014-01-01',
             a_relevant_datetime_time='12:35:00',
         )
-        assert_equals(d['a_relevant_datetime'], '2014-01-01 12:35:00')
+        assert_equals(d['a_relevant_datetime'], '2014-01-01T12:35:00')
+
+    def test_datetime_field_in_resource(self):
+        lc = LocalCKAN()
+        lc.action.package_create(type='camel-photos', name='derf_datetime', resources=[{
+                'url': "http://example.com/camel.txt",
+                'camels_in_photo': 2,
+                'datetime': '2015-01-01T12:35:00'}])
+
 
 class TestInvalidType(object):
     def test_invalid_dataset_type(self):

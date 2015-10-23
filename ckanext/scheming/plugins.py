@@ -29,7 +29,7 @@ from ckanext.scheming.logic import (
     scheming_organization_schema_list, scheming_organization_schema_show,
     )
 from ckanext.scheming.converters import (
-        convert_from_extras_group, convert_to_json_if_date
+        convert_from_extras_group, convert_to_json_if_date, convert_to_json_if_datetime
         )
 
 import os
@@ -91,6 +91,7 @@ class _SchemingMixin(object):
             'scheming_multiple_choice': scheming_multiple_choice,
             'scheming_multiple_choice_output': scheming_multiple_choice_output,
             'convert_to_json_if_date': convert_to_json_if_date,
+            'convert_to_json_if_datetime': convert_to_json_if_datetime,
             'scheming_isodatetime': scheming_isodatetime
             }
 
