@@ -1,6 +1,9 @@
 import json
+import datetime
+import re
+import ckan.lib.helpers as h
 
-from ckan.plugins.toolkit import get_validator, UnknownValidator, missing, _
+from ckan.plugins.toolkit import get_validator, UnknownValidator, missing, Invalid, _
 
 from ckanext.scheming.errors import SchemingException
 
@@ -85,6 +88,65 @@ def scheming_multiple_choice(field, schema):
 
     return validator
 
+@scheming_validator
+def scheming_isodatetime(field, schema):
+    def validator(key, data, errors, context):
+        value = data[key]
+        date_error = _('Date format incorrect')
+        time_error = _('Time format incorrect')
+
+        date = None
+
+        if isinstance(value, datetime.datetime):
+            return value
+        if value is not missing:
+            try:
+                 date = h.date_str_to_datetime(value)
+            except (TypeError, ValueError), e:
+                raise Invalid(date_error)
+        else:
+            extras = data.get(('__extras',))
+            if not extras or key[0] + '_date' not in extras:
+                if field.get('required'):
+                    not_empty(key, data, errors, context)
+            else:
+                def get_input(suffix):
+                    inpt = key[0] + '_' + suffix
+                    new_key = (inpt,) + tuple(x for x in key if x != key[0])
+                    value = extras[inpt]
+                    data[new_key] = value
+                    errors[new_key] = []
+
+                    del extras[inpt]
+
+                    if field.get('required'):
+                        not_empty(new_key, data, errors, context)
+
+                    return (new_key, value)
+
+                date_key, value = get_input('date')
+                value_full = ''
+                if value != '':
+                    try:
+                        value_full = value
+                        date = h.date_str_to_datetime(value)
+                    except (TypeError, ValueError), e:
+                        return errors[date_key].append(date_error)
+
+                time_key, value = get_input('time')
+                if value != '':
+                    if value_full == '':
+                        return errors[date_key].append(_('Date is required when a time is provided'))
+
+                    try:
+                        value_full += ' ' + value
+                        date = h.date_str_to_datetime(value_full)
+                    except (TypeError, ValueError), e:
+                        return errors[time_key].append(time_error)
+
+        data[key] = date
+
+    return validator
 
 def scheming_multiple_choice_output(value):
     """

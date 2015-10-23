@@ -194,6 +194,7 @@ This extension includes the following presets:
 * `"multiple_select"` - multiple choice from [choices](#choices)
   rendered as a multiple select box in the form
 * `"date"` - date validation and form snippet
+* `"datetime"` date and time validation and form snippet
 * `"dataset_slug"` - dataset slug validation and form snippet that
   autofills the value from the title field
 * `"tag_string_autocomplete"` - tag string validation and form autocomplete

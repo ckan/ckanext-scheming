@@ -31,3 +31,8 @@ def convert_to_json_if_date(date, context):
     else:
         return date
 
+def convert_to_json_if_datetime(date, context):
+    if isinstance(date, datetime.datetime):
+        return date.isoformat()
+
+    return date
