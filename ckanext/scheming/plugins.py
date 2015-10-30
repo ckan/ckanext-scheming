@@ -13,7 +13,6 @@ from ckan.plugins.toolkit import (
     navl_validate,
     add_template_directory
 )
-from ckan.logic.schema import default_show_group_schema
 
 from paste.deploy.converters import asbool
 
