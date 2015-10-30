@@ -14,6 +14,7 @@ from ckan.plugins.toolkit import (
     add_template_directory
 )
 
+from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 
 from ckanext.scheming import helpers
@@ -349,6 +350,7 @@ def _load_schema_module_path(url):
         return
     p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(p):
+        watch_file(p)
         return loader.load(open(p))
 
 
