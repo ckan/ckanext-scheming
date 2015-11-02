@@ -17,5 +17,4 @@ def loads(s, url):
     return json.loads(s)
 
 def is_yaml(n):
-    n = n.lower()
-    return n.endswith('.yaml') or n.endswith('.yml')
+    return n.lower().endswith(('.yaml', '.yml'))
