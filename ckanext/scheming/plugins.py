@@ -13,24 +13,34 @@ from ckan.plugins.toolkit import (
     navl_validate,
     add_template_directory
 )
-from ckan.logic.schema import default_show_group_schema
 
+from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 
 from ckanext.scheming import helpers
 from ckanext.scheming import loader
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import (
-    validators_from_string, scheming_choices, scheming_required,
-    scheming_multiple_choice, scheming_multiple_choice_output, scheming_isodatetime)
+    validators_from_string,
+    scheming_choices,
+    scheming_required,
+    scheming_multiple_choice,
+    scheming_multiple_choice_output,
+    scheming_isodatetime
+)
 from ckanext.scheming.logic import (
-    scheming_dataset_schema_list, scheming_dataset_schema_show,
-    scheming_group_schema_list, scheming_group_schema_show,
-    scheming_organization_schema_list, scheming_organization_schema_show,
-    )
+    scheming_dataset_schema_list,
+    scheming_dataset_schema_show,
+    scheming_group_schema_list,
+    scheming_group_schema_show,
+    scheming_organization_schema_list,
+    scheming_organization_schema_show
+)
 from ckanext.scheming.converters import (
-        convert_from_extras_group, convert_to_json_if_date
-        )
+    convert_from_extras_group,
+    convert_to_json_if_date,
+    convert_to_json_if_datetime
+)
 
 import os
 import inspect
@@ -91,6 +101,7 @@ class _SchemingMixin(object):
             'scheming_multiple_choice': scheming_multiple_choice,
             'scheming_multiple_choice_output': scheming_multiple_choice_output,
             'convert_to_json_if_date': convert_to_json_if_date,
+            'convert_to_json_if_datetime': convert_to_json_if_datetime,
             'scheming_isodatetime': scheming_isodatetime
             }
 
@@ -175,7 +186,7 @@ class _GroupOrganizationMixin(object):
 
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
-        _SchemingMixin):
+                             _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
@@ -249,7 +260,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
-        DefaultGroupForm, _SchemingMixin):
+                           DefaultGroupForm, _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
@@ -279,7 +290,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
 
 class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
-        DefaultOrganizationForm, _SchemingMixin):
+                                  DefaultOrganizationForm, _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
@@ -339,6 +350,7 @@ def _load_schema_module_path(url):
         return
     p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(p):
+        watch_file(p)
         return loader.load(open(p))
 
 
@@ -359,8 +371,12 @@ def _field_output_validators_group(f, schema, convert_extras):
     and orgs.
     """
 
-    return _field_output_validators(f, schema, convert_extras,
-                                    convert_from_extras_type=convert_from_extras_group)
+    return _field_output_validators(
+        f,
+        schema,
+        convert_extras,
+        convert_from_extras_type=convert_from_extras_group
+    )
 
 
 def _field_output_validators(f, schema, convert_extras,

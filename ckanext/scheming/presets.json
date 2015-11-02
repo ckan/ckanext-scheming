@@ -99,7 +99,7 @@
       "values": {
         "form_snippet": "datetime.html",
         "display_snippet": "datetime.html",
-        "validators": "scheming_isodatetime"
+        "validators": "scheming_isodatetime convert_to_json_if_datetime"
       }
     }
   ]

@@ -1,5 +1,13 @@
 {% extends 'package/snippets/resource_form.html' %}
 
+{% block errors %}
+  {%- if errors -%}
+    {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+    {%- snippet 'scheming/snippets/errors.html',
+      errors=errors, fields=schema.resource_fields, schema=schema -%}
+  {%- endif -%}
+{% endblock %}
+
 {% block basic_fields %}
   {%- if not dataset_type -%}
     <p>

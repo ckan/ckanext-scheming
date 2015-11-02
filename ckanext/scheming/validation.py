@@ -83,6 +83,9 @@ def scheming_multiple_choice(field, schema):
             data[key] = json.dumps([
                 c['value'] for c in field['choices'] if c['value'] in selected])
 
+            if field.get('required') and not selected:
+                errors[key].append(_('Select at least one'))
+
     return validator
 
 @scheming_validator
@@ -91,11 +94,12 @@ def scheming_isodatetime(field, schema):
         value = data[key]
         date_error = _('Date format incorrect')
         time_error = _('Time format incorrect')
+
         date = None
 
         if isinstance(value, datetime.datetime):
             return value
-        if not value is missing:
+        if value is not missing:
             try:
                  date = h.date_str_to_datetime(value)
             except (TypeError, ValueError), e:
@@ -106,36 +110,41 @@ def scheming_isodatetime(field, schema):
                 if field.get('required'):
                     not_empty(key, data, errors, context)
             else:
-                for input_suffix in ['date', 'time']:
-                    input = key[0] + '_' + input_suffix
-                    new_key = (input,) + tuple(x for x in key if x != key[0])
-                    value = extras[input]
+                def get_input(suffix):
+                    inpt = key[0] + '_' + suffix
+                    new_key = (inpt,) + tuple(x for x in key if x != key[0])
+                    value = extras[inpt]
                     data[new_key] = value
                     errors[new_key] = []
 
-                    del extras[input]
+                    del extras[inpt]
 
                     if field.get('required'):
                         not_empty(new_key, data, errors, context)
 
-                    if input_suffix == 'date' and not value == '':
-                        try:
-                            value_full = value
-                            date = h.date_str_to_datetime(value)
-                        except (TypeError, ValueError), e:
-                            errors[new_key].append(date_error)
-                            raise Invalid(date_error)
-                    elif input_suffix == 'time' and not value == '':
-                        try:
-                            value_full += ' ' + value
-                            date = h.date_str_to_datetime(value_full)
-                        except (TypeError, ValueError), e:
-                            errors[new_key].append(time_error)
-                            #raise Invalid(time_error)
+                    return (new_key, value)
+
+                date_key, value = get_input('date')
+                value_full = ''
+                if value != '':
+                    try:
+                        value_full = value
+                        date = h.date_str_to_datetime(value)
+                    except (TypeError, ValueError), e:
+                        return errors[date_key].append(date_error)
+
+                time_key, value = get_input('time')
+                if value != '':
+                    if value_full == '':
+                        return errors[date_key].append(_('Date is required when a time is provided'))
+
+                    try:
+                        value_full += ' ' + value
+                        date = h.date_str_to_datetime(value_full)
+                    except (TypeError, ValueError), e:
+                        return errors[time_key].append(time_error)
 
         data[key] = date
-        return date
-
 
     return validator
 

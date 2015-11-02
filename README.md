@@ -6,8 +6,7 @@ CKAN schemas using a JSON schema description. Custom
 template snippets for editing and display are also supported.
 
 [![Build Status](https://travis-ci.org/open-data/ckanext-scheming.svg?branch=master)](https://travis-ci.org/open-data/ckanext-scheming)
-[![Coverage](https://img.shields.io/coveralls/open-data/ckanext-scheming.svg?branch=master)](https://coveralls.io/r/open-data/ckanext-scheming)
-
+[![Coverage](https://coveralls.io/repos/open-data/ckanext-scheming/badge.svg?branch=master&service=github)](https://coveralls.io/github/open-data/ckanext-scheming?branch=master)
 
 Requirements
 ============
@@ -195,6 +194,7 @@ This extension includes the following presets:
 * `"multiple_select"` - multiple choice from [choices](#choices)
   rendered as a multiple select box in the form
 * `"date"` - date validation and form snippet
+* `"datetime"` date and time validation and form snippet
 * `"dataset_slug"` - dataset slug validation and form snippet that
   autofills the value from the title field
 * `"tag_string_autocomplete"` - tag string validation and form autocomplete

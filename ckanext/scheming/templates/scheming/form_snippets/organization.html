@@ -20,7 +20,7 @@
     is_required=org_required,
     extra_html=caller() if caller,
     ) %}
-    <div class="input-prepend" {{
+    <div {{
       form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
     <select id="field-organizations" name="owner_org" data-module="autocomplete">
       {% if not org_required %}
