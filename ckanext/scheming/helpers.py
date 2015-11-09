@@ -11,10 +11,10 @@ def scheming_language_text(text, prefer_lang=None, _gettext=None):
     Convert "language-text" to users' language by looking up
     languag in dict or using gettext if not a dict
     """
-    if hasattr(text, 'get'):
-        if not text:
-            return ''
+    if not text:
+        return ''
 
+    if hasattr(text, 'get'):
         prefer_lang = prefer_lang or lang()
         default_locale = config.get('ckan.locale_default', 'en')
 
