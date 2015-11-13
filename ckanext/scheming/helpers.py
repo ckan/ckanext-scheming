@@ -15,13 +15,12 @@ def scheming_language_text(text, prefer_lang=None, _gettext=None):
         return ''
 
     if hasattr(text, 'get'):
-        prefer_lang = prefer_lang or lang()
-        default_locale = config.get('ckan.locale_default', 'en')
-
         try:
+            prefer_lang = prefer_lang or lang()
             v = text[prefer_lang]
-        except KeyError:
+        except (KeyError, TypeError):
             try:
+                default_locale = config.get('ckan.locale_default', 'en')
                 v = text[default_locale]
             except KeyError:
                 # just give me something to display
