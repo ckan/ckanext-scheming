@@ -33,6 +33,13 @@ class TestLanguageText(object):
     def test_decodes_utf8(self):
         assert_equals(u'\xa1Hola!', scheming_language_text('\xc2\xa1Hola!'))
 
+    def test_no_user_lang(self):
+        def no_lang()
+            raise Exception
+        assert_equals('hello', scheming_language_text(
+            {'en': 'hello', 'aa': 'aaaa'},
+            _lang=no_lang))
+
 
 class TestFieldRequired(object):
     def test_explicit_required_true(self):
