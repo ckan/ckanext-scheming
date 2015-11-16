@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from nose.tools import assert_equals
+from mock import patch
 
 from ckanext.scheming.helpers import (
     scheming_language_text,
