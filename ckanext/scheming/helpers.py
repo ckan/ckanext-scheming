@@ -3,7 +3,7 @@ from pylons import config
 from pylons.i18n import gettext
 
 
-def scheming_language_text(text, prefer_lang=None, _gettext=None, _lang=None):
+def scheming_language_text(text, prefer_lang=None):
     """
     :param text: {lang: text} dict or text string
     :param prefer_lang: choose this language version if available
@@ -15,9 +15,6 @@ def scheming_language_text(text, prefer_lang=None, _gettext=None, _lang=None):
         return u''
 
     if hasattr(text, 'get'):
-        if _lang is None:
-            _lang = lang
-
         try:
             if prefer_lang is None:
                 prefer_lang = lang()
@@ -38,10 +35,7 @@ def scheming_language_text(text, prefer_lang=None, _gettext=None, _lang=None):
         l, v = sorted(text.items())[0]
         return v
 
-    if _gettext is None:
-        _gettext = gettext
-
-    t = _gettext(text)
+    t = gettext(text)
     if isinstance(t, str):
         return t.decode('utf-8')
     return t
