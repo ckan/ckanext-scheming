@@ -3,7 +3,7 @@ from pylons import config
 from pylons.i18n import gettext
 
 
-def scheming_language_text(text, prefer_lang=None, _gettext=None):
+def scheming_language_text(text, prefer_lang=None):
     """
     :param text: {lang: text} dict or text string
     :param prefer_lang: choose this language version if available
@@ -12,30 +12,33 @@ def scheming_language_text(text, prefer_lang=None, _gettext=None):
     languag in dict or using gettext if not a dict
     """
     if not text:
-        return ''
+        return u''
 
     if hasattr(text, 'get'):
-        prefer_lang = prefer_lang or lang()
-        default_locale = config.get('ckan.locale_default', 'en')
-
         try:
-            v = text[prefer_lang]
-        except KeyError:
+            if prefer_lang is None:
+                prefer_lang = lang()
+        except:
+            pass  # lang() call will fail when no user language available
+        else:
             try:
-                v = text[default_locale]
+                return text[prefer_lang]
             except KeyError:
-                # just give me something to display
-                l, v = sorted(text.items())[0]
+                pass
 
+        default_locale = config.get('ckan.locale_default', 'en')
+        try:
+            return text[default_locale]
+        except KeyError:
+            pass
+
+        l, v = sorted(text.items())[0]
         return v
-    else:
-        if _gettext is None:
-            _gettext = gettext
 
-        t = _gettext(text)
-        if isinstance(t, str):
-            return t.decode('utf-8')
-        return t
+    t = gettext(text)
+    if isinstance(t, str):
+        return t.decode('utf-8')
+    return t
 
 
 def scheming_choices_label(choices, value):
