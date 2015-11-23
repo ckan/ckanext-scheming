@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from nose.tools import assert_equals
+from mock import patch
 
 from ckanext.scheming.helpers import (
     scheming_language_text,
@@ -11,9 +12,10 @@ from ckanext.scheming.helpers import (
 
 
 class TestLanguageText(object):
-    def test_pass_through_gettext(self):
-        assert_equals('hello1', scheming_language_text(
-            'hello', _gettext=lambda x: x + '1'))
+    @patch('ckanext.scheming.helpers.gettext')
+    def test_pass_through_gettext(self, gettext):
+        gettext.side_effect = lambda x: x + '1'
+        assert_equals('hello1', scheming_language_text('hello'))
 
     def test_only_one_language(self):
         assert_equals('hello', scheming_language_text(
@@ -32,6 +34,12 @@ class TestLanguageText(object):
 
     def test_decodes_utf8(self):
         assert_equals(u'\xa1Hola!', scheming_language_text('\xc2\xa1Hola!'))
+
+    @patch('ckanext.scheming.helpers.lang')
+    def test_no_user_lang(self, lang):
+        lang.side_effect = Exception()
+        assert_equals('hello', scheming_language_text(
+            {'en': 'hello', 'aa': 'aaaa'}))
 
 
 class TestFieldRequired(object):
