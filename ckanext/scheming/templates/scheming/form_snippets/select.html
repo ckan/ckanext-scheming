@@ -4,10 +4,20 @@
 {%- if not h.scheming_field_required(field) -%}
     {%- do options.append({'value': ''}) -%}
 {%- endif -%}
-{%- for c in field.choices -%}
+{%- set localized_choices = {} -%}
+{%- for choice in field.choices -%}
+    {%- do localized_choices.update(
+        {choice.value:h.scheming_language_text(choice.label)}) -%}
+{%- endfor -%}
+{%- if 'sorted_choices' in field -%}
+    {%- set localized_choices = localized_choices|dictsort(false, 'value') -%}
+{%- else -%}
+    {%- set localized_choices = localized_choices.iteritems() %}
+{%- endif -%}
+{%- for c, v in localized_choices -%}
     {%- do options.append({
-        'value': c.value,
-        'text': h.scheming_language_text(c.label)}) -%}
+        'value': c,
+        'text': v}) -%}
 {%- endfor -%}
 
 {% call form.select(
