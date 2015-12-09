@@ -1,1 +1,3 @@
-{{ data[field.field_name].split()[0] }}
+{% if data[field.field_name] %}
+  {{ data[field.field_name].split()[0] }}
+{% endif %}
