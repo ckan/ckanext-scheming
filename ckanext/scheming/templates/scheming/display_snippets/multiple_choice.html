@@ -10,9 +10,12 @@
 {%- if labels|length == 1 -%}
   {{ labels[0] }}
 {%- else -%}
-  <ul>
+    {%- if field.get('sorted_choices') -%}
+        {%- set labels = labels|sort -%}
+    {%- endif -%}
+    <ul>
     {%- for label in labels -%}
        <li>{{ label }}</li>
     {%- endfor -%}
-  </ul>
+    </ul>
 {%- endif -%}

@@ -274,6 +274,19 @@ This extension includes the following display snippets:
   show the label text for all choices selected
 
 
+### `select_size`
+
+Set to the number of [choices](#choices) to display in select, multiple_select
+and multiple_check_box [form](#form_snippet) and [display](#display_snippet) 
+snippets.
+ 
+ 
+### `sorted_choices`
+
+Set to `"true"` to sort [choices](#choices) alphabetically in [form](#form_snippet) 
+and [display](#display_snippet) snippets.
+
+
 ### `validators`
 
 The `validators` value is a space-separated string of validator and
