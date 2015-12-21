@@ -6,5 +6,4 @@ nosetests --with-pylons=subdir/test_subclass.ini --nologcapture \
 	ckanext.scheming.tests.test_dataset_display \
 	ckanext.scheming.tests.test_form:TestDatasetFormNew \
 	ckanext.scheming.tests.test_dataset_logic
-nosetests --with-pylons=subdir/test.ini --nologcapture \
-	--with-coverage --cover-package=ckanext.scheming
+nosetests --with-pylons=subdir/test.ini --nologcapture

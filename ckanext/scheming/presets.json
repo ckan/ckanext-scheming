@@ -1,7 +1,7 @@
 {
   "scheming_presets_version": 1,
   "about": "these are the default scheming field presets",
-  "about_url": "http://github.com/open-data/ckanext-scheming#preset",
+  "about_url": "http://github.com/ckan/ckanext-scheming#preset",
   "presets": [
     {
       "preset_name": "title",
