@@ -9,7 +9,7 @@
     {%- do localized_choices.update(
         {choice.value:h.scheming_language_text(choice.label)}) -%}
 {%- endfor -%}
-{%- if 'sorted_choices' in field -%}
+{%- if field.get('sorted_choices') -%}
     {%- set localized_choices = localized_choices|dictsort(false, 'value') -%}
 {%- else -%}
     {%- set localized_choices = localized_choices.iteritems() %}

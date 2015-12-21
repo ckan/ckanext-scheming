@@ -10,7 +10,7 @@
 {%- if labels|length == 1 -%}
   {{ labels[0] }}
 {%- else -%}
-    {%- if 'sorted_choices' in field -%}
+    {%- if field.get('sorted_choices') -%}
         {%- set labels = labels|sort -%}
     {%- endif -%}
     <ul>
