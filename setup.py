@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.0.0'
+version = '1.0.1b'
 
 setup(
     name='ckanext-scheming',
@@ -13,7 +13,7 @@ setup(
     keywords='',
     author='Government of Canada',
     author_email='ian@excess.org',
-    url='https://github.com/open-data/ckanext-scheming',
+    url='https://github.com/ckan/ckanext-scheming',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     namespace_packages=['ckanext'],

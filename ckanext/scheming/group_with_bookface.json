@@ -1,7 +1,7 @@
 {
   "scheming_version": 1,
   "group_type": "group",
-  "about_url": "http://github.com/open-data/ckanext-scheming",
+  "about_url": "http://github.com/ckan/ckanext-scheming",
   "fields": [
     {
       "field_name": "title",

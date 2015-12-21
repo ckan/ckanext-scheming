@@ -2,7 +2,7 @@
   "scheming_version": 1,
   "dataset_type": "codelist",
   "about": "An example of a dataset type with no resources permitted",
-  "about_url": "http://github.com/open-data/ckanext-scheming",
+  "about_url": "http://github.com/ckan/ckanext-scheming",
   "dataset_fields": [
     {
       "field_name": "title",
