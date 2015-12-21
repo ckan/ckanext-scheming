@@ -1,12 +1,18 @@
 {% import 'macros/form.html' as form %}
 
+{% if c.action == 'new' and not data[field.field_name] %}
+  {% set value = field.get('default') %}
+{% else %}
+  {% set value = data[field.field_name] %}
+{% endif %}
+
 {%- set options=[] -%}
 {%- if not h.scheming_field_required(field) -%}
     {%- do options.append({'value': ''}) -%}
 {%- endif -%}
-{%- for c in field.choices -%}
+{%- for choice in field.choices -%}
     {%- do options.append({
-        'value': c.value,
+        'value': choice.value,
         'text': h.scheming_language_text(c.label)}) -%}
 {%- endfor -%}
 
@@ -15,7 +21,7 @@
     id='field-' + field.field_name,
     label=h.scheming_language_text(field.label),
     options=options,
-    selected=data[field.field_name],
+    selected=value,
     error=errors[field.field_name],
     classes=['control-medium'],
     attrs=field.form_attrs if 'form_attrs' in field else {},
