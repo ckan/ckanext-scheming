@@ -4,7 +4,8 @@
   {%- if errors -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
     {%- snippet 'scheming/snippets/errors.html',
-      errors=errors, fields=schema.dataset_fields, schema=schema -%}
+      errors=errors, fields=schema.dataset_fields,
+      entity_type='dataset', object_type=dataset_type -%}
   {%- endif -%}
 {% endblock %}
 
@@ -20,7 +21,7 @@
     {%- if field.form_snippet is not none -%}
       {%- snippet 'scheming/snippets/form_field.html',
         field=field, data=data, errors=errors, licenses=c.licenses,
-        schema=schema -%}
+        entity_type='dataset', object_type=dataset_type -%}
     {%- endif -%}
   {%- endfor -%}
   {%- if 'resource_fields' not in schema -%}

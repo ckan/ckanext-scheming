@@ -10,7 +10,7 @@
     {%- for field in schema['fields'] -%}
         {%- snippet 'scheming/snippets/form_field.html',
         field=field, data=data, errors=errors, licenses=licenses,
-        schema=schema -%}
+        entity_type='organization', object_type=c.group_type -%}
     {%- endfor -%}
 
     <div class="form-actions">

@@ -16,7 +16,8 @@
           {%- endif -%}
 
           {%- snippet error_snippet, unprocessed=unprocessed,
-            field=field, fields=fields, schema=schema -%}
+            field=field, fields=fields,
+            entity_type=entity_type, object_type=object_type -%}
         {%- endif -%}
 
         {%- if field.field_name in unprocessed -%}
