@@ -17,5 +17,5 @@
 
 {%- if field.field_name in data -%}
   {%- snippet display_snippet, field=field, data=data, errors=errors,
-    schema=schema -%}
+    entity_type=entity_type, object_type=object_type -%}
 {%- endif -%}

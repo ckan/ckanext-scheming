@@ -52,7 +52,8 @@
                 </th>
                 <td>
                   {%- snippet 'scheming/snippets/display_field.html',
-                      field=field, data=res, schema=schema -%}
+                      field=field, data=res, entity_type='dataset',
+                      object_type=dataset_type -%}
                 </td>
               </tr>
             {%- endif -%}

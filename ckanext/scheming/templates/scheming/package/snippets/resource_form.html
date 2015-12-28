@@ -4,7 +4,8 @@
   {%- if errors -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
     {%- snippet 'scheming/snippets/errors.html',
-      errors=errors, fields=schema.resource_fields, schema=schema -%}
+      errors=errors, fields=schema.resource_fields,
+      entity_type='dataset', object_type=dataset_type -%}
   {%- endif -%}
 {% endblock %}
 
@@ -18,7 +19,8 @@
   {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
   {%- for field in schema.resource_fields -%}
     {%- snippet 'scheming/snippets/form_field.html',
-      field=field, data=data, errors=errors, schema=schema -%}
+      field=field, data=data, errors=errors,
+      entity_type='dataset', object_type=dataset_type -%}
   {%- endfor -%}
 {% endblock %}
 
