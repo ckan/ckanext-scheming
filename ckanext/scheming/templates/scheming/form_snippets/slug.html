@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-{%- entity_type == 'dataset' %}
+{%- if entity_type == 'dataset' %}
     {%- set controller = 'package' -%}
     {%- set module_placeholder = '<dataset>' -%}
 {%- elif entity_type == 'organization' %}
