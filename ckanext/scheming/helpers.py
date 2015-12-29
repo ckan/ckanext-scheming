@@ -155,6 +155,19 @@ def scheming_get_organization_schema(organization_type, expanded=True):
         return schemas.get(organization_type)
 
 
+def scheming_get_schema(entity_type, object_type, expanded=True):
+    """
+    Return the schema for the entity and object types passed
+    or None if no schema is defined for the passed types
+    """
+    if entity_type == 'dataset':
+        return scheming_get_dataset_schema(object_type, expanded)
+    elif entity_type == 'organization':
+        return scheming_get_organization_schema(object_type, expanded)
+    elif entity_type == 'group':
+        return scheming_get_group_schema(object_type, expanded)
+
+
 def scheming_field_by_name(fields, name):
     """
     Simple helper to grab a field from a schema field list
