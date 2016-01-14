@@ -2,7 +2,7 @@
 
 {%- set options=[] -%}
 {%- if not h.scheming_field_required(field) -%}
-  {%- do options.append({'value': ''}) -%}
+  {%- do options.append({'value': '', 'text': ''}) -%}
 {%- endif -%}
 {%- for c in field.choices -%}
   {%- do options.append({
