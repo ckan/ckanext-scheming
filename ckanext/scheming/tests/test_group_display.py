@@ -1,7 +1,7 @@
 from nose.tools import assert_true
 
-from ckan.new_tests.factories import Sysadmin, Organization, Group
-from ckan.new_tests.helpers import FunctionalTestBase
+from ckan.tests.factories import Sysadmin, Organization, Group
+from ckan.tests.helpers import FunctionalTestBase
 
 
 class TestOrganizationDisplay(FunctionalTestBase):
