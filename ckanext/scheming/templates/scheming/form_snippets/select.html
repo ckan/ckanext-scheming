@@ -2,21 +2,16 @@
 
 {%- set options=[] -%}
 {%- if not h.scheming_field_required(field) -%}
-    {%- do options.append({'value': ''}) -%}
+  {%- do options.append({'value': '', 'text': ''}) -%}
 {%- endif -%}
-{%- set localized_choices = [] -%}
-{%- for choice in field.choices -%}
-    {%- do localized_choices.append(
-        (h.scheming_language_text(choice.label), choice.value)) -%}
+{%- for c in field.choices -%}
+  {%- do options.append({
+    'value': c.value,
+    'text': h.scheming_language_text(c.label) }) -%}
 {%- endfor -%}
 {%- if field.get('sorted_choices') -%}
-    {%- set localized_choices = localized_choices|sort -%}
+  {%- set options = options|sort(case_sensitive=false, attribute='text') -%}
 {%- endif -%}
-{%- for v, c in localized_choices -%}
-    {%- do options.append({
-        'value': c,
-        'text': v}) -%}
-{%- endfor -%}
 
 {% call form.select(
     field.field_name,

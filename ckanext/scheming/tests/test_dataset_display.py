@@ -1,7 +1,7 @@
 from nose.tools import assert_true
 
-from ckan.new_tests.factories import Sysadmin, Dataset
-from ckan.new_tests.helpers import FunctionalTestBase, submit_and_follow
+from ckan.tests.factories import Sysadmin, Dataset
+from ckan.tests.helpers import FunctionalTestBase, submit_and_follow
 
 
 class TestDatasetDisplay(FunctionalTestBase):

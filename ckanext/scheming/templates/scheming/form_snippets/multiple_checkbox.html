@@ -19,23 +19,23 @@ fieldset.checkboxes label input {
     classes=['control-medium'],
     error=errors[field.field_name],
     is_required=h.scheming_field_required(field)) -%}
-  {%- set localized_choices = [] -%}
-  {%- for choice in field.choices -%}
-    {%- do localized_choices.append(
-        (h.scheming_language_text(choice.label), choice.value)) -%}
+  {%- set choices = [] -%}
+  {%- for c in field.choices -%}
+    {%- do choices.append(
+      (c.value, h.scheming_language_text(c.label))) -%}
   {%- endfor -%}
   {%- if field.get('sorted_choices') -%}
-    {%- set localized_choices = localized_choices|sort -%}
+    {%- set choices = choices|sort(case_sensitive=false, attribute=1) -%}
   {%- endif -%}
     <fieldset class="checkboxes">
-        {%- for v, c in localized_choices -%}
-            <label for="field-{{ field.field_name }}-{{ c }}">
-                <input id="field-{{ field.field_name }}-{{ c }}"
+        {%- for val, label in choices -%}
+            <label for="field-{{ field.field_name }}-{{ val }}">
+                <input id="field-{{ field.field_name }}-{{ val }}"
                     type="checkbox"
                     name="{{ field.field_name }}"
-                    value="{{ c }}"
-                    {{"checked " if c in data[field.field_name] }} />
-                {{ v }}
+                    value="{{ val }}"
+                    {{"checked " if val in data[field.field_name] }} />
+                {{ label }}
             </label>
         {%- endfor -%}
     </fieldset>

@@ -6,24 +6,24 @@
     classes=['control-medium'],
     error=errors[field.field_name],
     is_required=h.scheming_field_required(field)) -%}
-  {%- set localized_choices = [] -%}
-  {%- for choice in field.choices -%}
-    {%- do localized_choices.append(
-        (h.scheming_language_text(choice.label), choice.value)) -%}
+  {%- set choices = [] -%}
+  {%- for c in field.choices -%}
+    {%- do choices.append(
+      (c.value, h.scheming_language_text(c.label))) -%}
   {%- endfor -%}
   {%- if field.get('sorted_choices') -%}
-    {%- set localized_choices = localized_choices|sort -%}
+    {%- set choices = choices|sort(case_sensitive=false, attribute=1) -%}
   {%- endif -%}
   <select multiple
       size="{{ ([field.get('select_size', 10), field.choices|length]|sort)[0] }}"
       style="display: block"
       id="field-{{ field.field_name }}"
       name="{{ field.field_name }}" >
-    {%- for v, c in localized_choices -%}
-      <option id="field-{{ field.field_name }}-{{ c }}"
-          value="{{ c }}"
-          {{"selected " if c in data[field.field_name] }} />
-        {{ v }}
+    {%- for val, label in choices -%}
+      <option id="field-{{ field.field_name }}-{{ val }}"
+          value="{{ val }}"
+          {{"selected " if val in data[field.field_name] }} />
+        {{ label }}
       </option>
     {%- endfor -%}
   </select>

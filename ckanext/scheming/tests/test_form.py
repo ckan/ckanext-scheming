@@ -1,8 +1,8 @@
 from nose import SkipTest
 from nose.tools import assert_true
 
-from ckan.new_tests.factories import Sysadmin
-from ckan.new_tests.helpers import FunctionalTestBase, submit_and_follow
+from ckan.tests.factories import Sysadmin
+from ckan.tests.helpers import FunctionalTestBase, submit_and_follow
 
 def _get_package_new_page_as_sysadmin(app):
     user = Sysadmin()
