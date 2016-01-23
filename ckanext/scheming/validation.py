@@ -80,8 +80,10 @@ def scheming_multiple_choice(field, schema):
             errors[key].append(_('unexpected choice "%s"') % element)
 
         if not errors[key]:
-            data[key] = json.dumps([
-                c['value'] for c in field['choices'] if c['value'] in selected])
+            if 'vocabulary' not in field:
+                data[key] = json.dumps([
+                    c['value'] for c in field['choices']
+                    if c['value'] in selected])
 
             if field.get('required') and not selected:
                 errors[key].append(_('Select at least one'))

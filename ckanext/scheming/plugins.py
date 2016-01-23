@@ -240,6 +240,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         if action_type == 'show':
             get_validators = _field_output_validators
+            schema['tags']['__extras'].append(get_converter('free_tags_only'))
         elif action_type == 'create':
             get_validators = _field_create_validators
         else:
@@ -262,7 +263,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         for f in scheming_schema.get('resource_fields', []):
             resource_schema[f['field_name']] = get_validators(
                 f, scheming_schema, False)
-
         return navl_validate(data_dict, schema, context)
 
     def get_actions(self):
@@ -428,8 +428,6 @@ def _field_validators(f, schema, convert):
         validators = validators + [convert_to_extras]
     elif convert == 'vocabulary':
         validators = validators + [convert_to_tags(f['vocabulary'])]
-    print("------------- _field_validators -----------------")
-    print("f: {} - validators=\n{}".format(f['field_name'], validators))
     return validators
 
 
