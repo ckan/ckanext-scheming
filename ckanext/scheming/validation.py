@@ -3,7 +3,7 @@ import datetime
 import re
 import ckan.lib.helpers as h
 
-from ckan.plugins.toolkit import get_validator, UnknownValidator, missing, Invalid, _
+from ckantoolkit import get_validator, UnknownValidator, missing, Invalid, _
 
 from ckanext.scheming.errors import SchemingException
 

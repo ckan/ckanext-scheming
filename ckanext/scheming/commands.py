@@ -1,4 +1,4 @@
-from ckan.lib.cli import CkanCommand
+from ckantoolkit import CkanCommand
 import paste.script
 
 from ckanext.scheming.helpers import (

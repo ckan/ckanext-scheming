@@ -1,7 +1,9 @@
-from ckan.lib.helpers import lang
+from ckantoolkit import h
+
 from pylons import config
 from pylons.i18n import gettext
 
+lang = h.lang
 
 def scheming_language_text(text, prefer_lang=None):
     """

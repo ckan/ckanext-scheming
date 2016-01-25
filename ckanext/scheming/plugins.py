@@ -2,16 +2,14 @@
 # encoding: utf-8
 from pylons import c
 import ckan.plugins as p
-from ckan.lib.plugins import (
+from ckantoolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
-    DefaultOrganizationForm
-)
-from ckan.plugins.toolkit import (
+    DefaultOrganizationForm,
     get_validator,
     get_converter,
     navl_validate,
-    add_template_directory
+    add_template_directory,
 )
 
 from paste.reloader import watch_file
