@@ -1,2 +1,2 @@
 ckanapi
-ckantoolkit
+ckantoolkit>=0.0.2
