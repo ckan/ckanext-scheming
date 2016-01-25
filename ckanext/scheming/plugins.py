@@ -52,6 +52,7 @@ convert_to_extras = get_converter('convert_to_extras')
 convert_from_extras = get_converter('convert_from_extras')
 convert_to_tags = get_converter('convert_to_tags')
 convert_from_tags = get_converter('convert_from_tags')
+free_tags_only = get_converter('free_tags_only')
 
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
@@ -92,7 +93,7 @@ class _SchemingMixin(object):
             'scheming_field_by_name': helpers.scheming_field_by_name,
             'scheming_get_presets': helpers.scheming_get_presets,
             'scheming_get_preset': helpers.scheming_get_preset,
-            'scheming_get_schema': helpers.scheming_get_schema,
+            'scheming_get_schema': helpers.scheming_get_schema
             }
 
     def get_validators(self):
@@ -240,7 +241,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         if action_type == 'show':
             get_validators = _field_output_validators
-            schema['tags']['__extras'].append(get_converter('free_tags_only'))
         elif action_type == 'create':
             get_validators = _field_create_validators
         else:
@@ -258,11 +258,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 scheming_schema,
                 convert
             )
+        _add_free_tags_only(schema)
 
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
             resource_schema[f['field_name']] = get_validators(
                 f, scheming_schema, False)
+
         return navl_validate(data_dict, schema, context)
 
     def get_actions(self):
@@ -482,7 +484,7 @@ def _expand_vocabulary(f):
 
     choices = [{'value': tn, 'label': tn} for tn in tagnames]
     return dict({'choices': choices}, **f)
-    
+
 def _expand_schemas(schemas):
     """
     Return a new dict of schemas with all field presets expanded.
@@ -497,3 +499,12 @@ def _expand_schemas(schemas):
             s[fname] = [_expand_vocabulary(f) for f in s[fname]]
         out[name] = s
     return out
+
+def _add_free_tags_only(schema):
+    """
+    Adds the free_tags_only - coverter to schema, if necessary.
+    """
+    tag_string_validators = [func.__name__ for func in
+                             schema.get('tag_string', [lambda x:x])]
+    if 'free_tags_only' in tag_string_validators:
+        schema['tags']['__extras'].append(free_tags_only)
