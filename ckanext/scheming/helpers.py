@@ -1,6 +1,7 @@
-from ckantoolkit import h, _ as gettext
+from ckantoolkit import h
 
 from pylons import config
+from pylons.i18n import gettext
 
 lang = h.lang
 
