@@ -7,7 +7,7 @@ from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import get_validator_or_converter, scheming_required
 from ckanext.scheming.plugins import (
     SchemingDatasetsPlugin, SchemingGroupsPlugin)
-from ckan.plugins.toolkit import get_validator
+from ckantoolkit import get_validator
 
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
