@@ -241,6 +241,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         if action_type == 'show':
             get_validators = _field_output_validators
+            if scheming_schema.get('free_tags_only'):
+                schema['tags']['__extras'].append(free_tags_only)
         elif action_type == 'create':
             get_validators = _field_create_validators
         else:
@@ -258,7 +260,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 scheming_schema,
                 convert
             )
-        _add_free_tags_only(schema)
 
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
@@ -499,12 +500,3 @@ def _expand_schemas(schemas):
             s[fname] = [_expand_vocabulary(f) for f in s[fname]]
         out[name] = s
     return out
-
-def _add_free_tags_only(schema):
-    """
-    Adds the free_tags_only - coverter to schema, if necessary.
-    """
-    tag_string_validators = [func.__name__ for func in
-                             schema.get('tag_string', [lambda x:x])]
-    if 'free_tags_only' in tag_string_validators:
-        schema['tags']['__extras'].append(free_tags_only)
