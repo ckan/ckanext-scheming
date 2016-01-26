@@ -27,7 +27,7 @@ def scheming_choices(field, schema):
     """
     Require that one of the field choices values is passed.
     """
-    return OneOf([c['value'] for c in field['choices']])
+    return OneOf([c['value'] for c in field['choices']], testValueList=True)
 
 
 @scheming_validator

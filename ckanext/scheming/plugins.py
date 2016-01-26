@@ -263,8 +263,14 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
+            if 'vocabulary' in f:
+                convert = 'vocabulary'
+            elif f['field_name'] not in schema:
+                convert = 'extras'
+            else:
+                convert = None
             resource_schema[f['field_name']] = get_validators(
-                f, scheming_schema, False)
+                f, scheming_schema, convert)
 
         return navl_validate(data_dict, schema, context)
 
