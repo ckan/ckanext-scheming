@@ -52,6 +52,10 @@ def scheming_choices_label(choices, value):
     the value passed when not found. Result is passed through
     scheming_language_text before being returned.
     """
+    try:    # value might by a single element list
+        value = value.pop() if value else ''
+    except AttributeError:
+        pass
     for c in choices:
         if c['value'] == value:
             return scheming_language_text(c['label'])

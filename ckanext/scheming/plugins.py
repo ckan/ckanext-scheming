@@ -10,6 +10,7 @@ from ckantoolkit import (
     get_converter,
     navl_validate,
     add_template_directory,
+    get_action
 )
 
 from paste.reloader import watch_file
@@ -47,6 +48,9 @@ ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
 convert_to_extras = get_converter('convert_to_extras')
 convert_from_extras = get_converter('convert_from_extras')
+convert_to_tags = get_converter('convert_to_tags')
+convert_from_tags = get_converter('convert_from_tags')
+free_tags_only = get_converter('free_tags_only')
 
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
@@ -66,6 +70,7 @@ class _SchemingMixin(object):
     _presets = None
     _template_dir_added = False
     _validators_loaded = False
+    _vocabularies = None
 
     def get_helpers(self):
         if _SchemingMixin._helpers_loaded:
@@ -86,7 +91,7 @@ class _SchemingMixin(object):
             'scheming_field_by_name': helpers.scheming_field_by_name,
             'scheming_get_presets': helpers.scheming_get_presets,
             'scheming_get_preset': helpers.scheming_get_preset,
-            'scheming_get_schema': helpers.scheming_get_schema,
+            'scheming_get_schema': helpers.scheming_get_schema
             }
 
     def get_validators(self):
@@ -117,6 +122,10 @@ class _SchemingMixin(object):
         for f in reversed(presets):
             for pp in _load_schema(f)['presets']:
                 _SchemingMixin._presets[pp['preset_name']] = pp['values']
+    def _load_vocabularies(self):
+        if _SchemingMixin._vocabularies is not None:
+            return
+        _SchemingMixin._vocabularies = get_action('vocabulary_list')()
 
     def update_config(self, config):
         if self.instance:
@@ -128,6 +137,7 @@ class _SchemingMixin(object):
         self._store_instance(self)
         self._add_template_directory(config)
         self._load_presets(config)
+        self._load_vocabularies()
 
         self._is_fallback = asbool(config.get(self.FALLBACK_OPTION, False))
 
@@ -228,22 +238,36 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         if action_type == 'show':
             get_validators = _field_output_validators
+            if scheming_schema.get('free_tags_only'):
+                schema['tags']['__extras'].append(free_tags_only)
         elif action_type == 'create':
             get_validators = _field_create_validators
         else:
             get_validators = _field_validators
 
         for f in scheming_schema['dataset_fields']:
+            if 'vocabulary' in f:
+                convert = 'vocabulary'
+            elif f['field_name'] not in schema:
+                convert = 'extras'
+            else:
+                convert = None
             schema[f['field_name']] = get_validators(
                 f,
                 scheming_schema,
-                f['field_name'] not in schema
+                convert
             )
 
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
+            if 'vocabulary' in f:
+                convert = 'vocabulary'
+            elif f['field_name'] not in schema:
+                convert = 'extras'
+            else:
+                convert = None
             resource_schema[f['field_name']] = get_validators(
-                f, scheming_schema, False)
+                f, scheming_schema, convert)
 
         return navl_validate(data_dict, schema, context)
 
@@ -377,13 +401,15 @@ def _field_output_validators_group(f, schema, convert_extras):
     )
 
 
-def _field_output_validators(f, schema, convert_extras,
+def _field_output_validators(f, schema, convert,
                              convert_from_extras_type=convert_from_extras):
     """
     Return the output validators for a scheming field f
     """
-    if convert_extras:
+    if convert == 'extras':
         validators = [convert_from_extras_type, ignore_missing]
+    elif convert == 'vocabulary':
+        validators = [convert_from_tags(f['vocabulary']), ignore_missing]
     else:
         validators = [ignore_missing]
     if 'output_validators' in f:
@@ -392,7 +418,7 @@ def _field_output_validators(f, schema, convert_extras,
     return validators
 
 
-def _field_validators(f, schema, convert_extras):
+def _field_validators(f, schema, convert):
     """
     Return the validators for a scheming field f
     """
@@ -404,22 +430,26 @@ def _field_validators(f, schema, convert_extras):
     else:
         validators = [ignore_missing, unicode]
 
-    if convert_extras:
+    if convert == 'extras':
         validators = validators + [convert_to_extras]
+    elif convert == 'vocabulary':
+        validators = validators + [convert_to_tags(f['vocabulary'])]
     return validators
 
 
-def _field_create_validators(f, schema, convert_extras):
+def _field_create_validators(f, schema, convert):
     """
     Return the validators to use when creating for scheming field f,
     normally the same as the validators used for updating
     """
     if 'create_validators' not in f:
-        return _field_validators(f, schema, convert_extras)
+        return _field_validators(f, schema, convert)
     validators = validators_from_string(f['create_validators'], f, schema)
 
-    if convert_extras:
+    if convert == 'extras':
         validators = validators + [convert_to_extras]
+    elif convert == 'vocabulary':
+        validators = validators + [convert_to_tags(f['vocabulary'])]
     return validators
 
 
@@ -437,6 +467,27 @@ def _expand_preset(f):
         raise SchemingException("preset '%s' not defined" % f['preset'])
     return dict(_SchemingMixin._presets[f['preset']], **f)
 
+def _expand_vocabulary(f):
+    """
+    If scheming field f includes a key 'vocabulary', return a new field
+    that includes a key 'choices' with a value derived from the
+    corresponding vocabulary tags. Overwrites item 'choices' if present in
+    f.
+
+    Raises SchemingException if the vocabulary given is not found.
+    """
+    if 'vocabulary' not in f:
+        return f
+    try:
+        vocab = [v for v in _SchemingMixin._vocabularies
+                 if v['name'] == f['vocabulary']][0]
+    except IndexError:
+        raise SchemingException("vocabulary '%s' not defined" % f['vocabulary'])
+    else:
+        tagnames = [tag['name'] for tag in vocab['tags']]
+
+    choices = [{'value': tn, 'label': tn} for tn in tagnames]
+    return dict({'choices': choices}, **f)
 
 def _expand_schemas(schemas):
     """
@@ -449,5 +500,6 @@ def _expand_schemas(schemas):
             if fname not in s:
                 continue
             s[fname] = [_expand_preset(f) for f in s[fname]]
+            s[fname] = [_expand_vocabulary(f) for f in s[fname]]
         out[name] = s
     return out
