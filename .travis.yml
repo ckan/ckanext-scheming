@@ -5,6 +5,7 @@ python:
  - "2.7"
 env:
  - PGVERSION=9.1
+sudo: required
 install: ./bin/travis-install
 script: ./bin/travis-script
 after_success:
