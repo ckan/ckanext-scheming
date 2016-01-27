@@ -310,6 +310,10 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def group_form(group_type=None):
         return 'scheming/organization/group_form.html'
 
+    # use the correct controller (see ckan/ckan#2771)
+    def group_controller(self):
+        return 'organization'
+
     def get_actions(self):
         return {
             'scheming_organization_schema_list':
