@@ -20,7 +20,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        # -*- Extra requirements: -*-
+        "ckanapi",
+        "ckantoolkit>=0.0.2",
     ],
     entry_points=\
     """
