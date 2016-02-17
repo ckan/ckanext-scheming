@@ -1,3 +1,7 @@
+import re
+import datetime
+import pytz
+
 from pylons import config
 from pylons.i18n import gettext
 
@@ -180,3 +184,89 @@ def scheming_field_by_name(fields, name):
     for f in fields:
         if f.get('field_name') == name:
             return f
+
+
+def date_tz_str_to_datetime(date_str):
+    '''Convert ISO-like formatted datestring with timezone to datetime object.
+
+    This function converts ISO format datetime-strings into datetime objects.
+    Times may be specified down to the microsecond.  UTC offset or timezone
+    information be included in the string.
+
+    Note - Although originally documented as parsing ISO date(-times), this
+           function doesn't fully adhere to the format.  It allows microsecond
+           precision, despite that not being part of the ISO format.
+    '''
+    split = date_str.split('T')
+
+    if len(split) < 2:
+        raise ValueError('Unable to parse time')
+
+    tz_split = re.split('([Z+-])', split[1])
+
+    date = split[0] + 'T' + tz_split[0]
+    time_tuple = re.split('[^\d]+', date, maxsplit=5)
+
+    # Extract seconds and microseconds
+    if len(time_tuple) >= 6:
+        m = re.match('(?P<seconds>\d{2})(\.(?P<microseconds>\d{3,6}))?$',
+                     time_tuple[5])
+        if not m:
+            raise ValueError('Unable to parse %s as seconds.microseconds' %
+                             time_tuple[5])
+        seconds = int(m.groupdict().get('seconds'))
+        microseconds = int(m.groupdict(0).get('microseconds'))
+        time_tuple = time_tuple[:5] + [seconds, microseconds]
+
+    final_date = datetime.datetime(*map(int, time_tuple))
+
+    # Apply the timezone offset
+    if len(tz_split) > 1 and not tz_split[1] == 'Z':
+        tz = tz_split[2]
+        tz_tuple = re.split('[^\d]+', tz)
+
+        if tz_tuple[0] == '':
+            raise ValueError('Unable to parse timezone')
+        offset = int(tz_tuple[0]) * 60
+
+        if len(tz_tuple) > 1 and not tz_tuple[1] == '':
+            offset += int(tz_tuple[1])
+
+        if tz_split[1] == '+':
+            offset *= -1
+
+        final_date += datetime.timedelta(minutes=offset)
+
+    return final_date
+
+
+def scheming_datetime_to_UTC(date):
+    if (date.tzinfo):
+        date = date.astimezone(pytz.utc)
+
+    # Make date naive before returning
+    return date.replace(tzinfo=None)
+
+
+def scheming_datetime_to_tz(date, tz):
+    if isinstance(tz, basestring):
+        tz = pytz.timezone(tz)
+
+    # Make date naive before returning
+    return pytz.utc.localize(date).astimezone(tz).replace(tzinfo=None)
+
+
+def scheming_get_timezones(field):
+    def to_options(list):
+        return [{'value':tz, 'text':tz} for tz in list]
+
+    def validate_tz(list):
+        return [tz for tz in list if tz in pytz.all_timezones]
+
+    timezones = field.get('timezones')
+    if timezones == 'all':
+        return to_options(pytz.all_timezones)
+    elif isinstance(timezones, list):
+        return to_options(validate_tz(timezones))
+
+    return to_options(pytz.common_timezones)
