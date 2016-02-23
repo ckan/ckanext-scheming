@@ -78,8 +78,7 @@ class TestDates(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_date'],
-                ['Date format incorrect']
-            )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -91,8 +90,7 @@ class TestDates(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_date'],
-                ['Date format incorrect']
-            )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -104,8 +102,7 @@ class TestDates(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_date'],
-                ['Date format incorrect']
-            )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -129,10 +126,15 @@ class TestDates(object):
 
     def test_date_field_in_resource(self):
         lc = LocalCKAN()
-        lc.action.package_create(type='camel-photos', name='derf_date', resources=[{
+        lc.action.package_create(
+            type='camel-photos',
+            name='derf_date', resources=[{
                 'url': "http://example.com/camel.txt",
                 'camels_in_photo': 2,
-                'date': '2015-01-01'}])
+                'date': '2015-01-01'
+            }]
+        )
+
 
 class TestDateTimes(object):
     def test_datetime_field_rejects_non_isodates(self):
@@ -145,8 +147,7 @@ class TestDateTimes(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime'],
-                ['Date format incorrect']
-        )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -158,8 +159,7 @@ class TestDateTimes(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime'],
-                ['Date format incorrect']
-        )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -171,8 +171,7 @@ class TestDateTimes(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime'],
-                ['Date format incorrect']
-        )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -184,8 +183,7 @@ class TestDateTimes(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime'],
-                ['Date format incorrect']
-        )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -197,8 +195,7 @@ class TestDateTimes(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime'],
-                ['Date format incorrect']
-        )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -208,15 +205,6 @@ class TestDateTimes(object):
             type='camel-photos',
             name='fred_datetime6',
             a_relevant_datetime='2014-01-01T12:35:00',
-        )
-        assert_equals(d['a_relevant_datetime'], '2014-01-01T12:35:00')
-
-    def test_date_field_valid_date_datetime(self):
-        lc = LocalCKAN()
-        d = lc.action.package_create(
-            type='camel-photos',
-            name='fred_datetime7',
-            a_relevant_datetime=datetime.datetime(2014, 1, 1, 12, 35),
         )
         assert_equals(d['a_relevant_datetime'], '2014-01-01T12:35:00')
 
@@ -239,8 +227,7 @@ class TestDateTimes(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime_date'],
-                ['Date format incorrect']
-        )
+                          ['Date format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -255,8 +242,7 @@ class TestDateTimes(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime_time'],
-                ['Time format incorrect']
-        )
+                          ['Time format incorrect'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -271,8 +257,7 @@ class TestDateTimes(object):
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime_date'],
-                ['Date is required when a time is provided']
-        )
+                          ['Date is required when a time is provided'])
         else:
             raise AssertionError('ValidationError not raised')
 
@@ -288,10 +273,15 @@ class TestDateTimes(object):
 
     def test_datetime_field_in_resource(self):
         lc = LocalCKAN()
-        lc.action.package_create(type='camel-photos', name='derf_datetime', resources=[{
+        lc.action.package_create(
+            type='camel-photos',
+            name='derf_datetime',
+            resources=[{
                 'url': "http://example.com/camel.txt",
                 'camels_in_photo': 2,
-                'datetime': '2015-01-01T12:35:00'}])
+                'datetime': '2015-01-01T12:35:00'
+            }]
+        )
 
 
 class TestDateTimesTZ(object):
