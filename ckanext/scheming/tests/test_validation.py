@@ -137,13 +137,13 @@ class TestDates(object):
 
 
 class TestDateTimes(object):
-    def test_datetime_field_rejects_non_isodates(self):
+    def test_datetime_field_rejects_non_dates(self):
         lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_datetime1',
-                a_relevant_datetime='31/11/2014',
+                a_relevant_datetime='this-is-not-a-date',
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime'],
@@ -151,6 +151,8 @@ class TestDateTimes(object):
         else:
             raise AssertionError('ValidationError not raised')
 
+    def test_datetime_field_rejects_text_in_dates(self):
+        lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
@@ -163,22 +165,12 @@ class TestDateTimes(object):
         else:
             raise AssertionError('ValidationError not raised')
 
+    def test_datetime_field_rejects_text_as_time(self):
+        lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_datetime3',
-                a_relevant_datetime='this-is-not-a-date',
-            )
-        except ValidationError as e:
-            assert_equals(e.error_dict['a_relevant_datetime'],
-                          ['Date format incorrect'])
-        else:
-            raise AssertionError('ValidationError not raised')
-
-        try:
-            lc.action.package_create(
-                type='camel-photos',
-                name='fred_datetime4',
                 a_relevant_datetime='2014-11-15Tabcd',
             )
         except ValidationError as e:
@@ -187,11 +179,27 @@ class TestDateTimes(object):
         else:
             raise AssertionError('ValidationError not raised')
 
+    def test_datetime_field_rejects_text_in_time(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type='camel-photos',
+                name='fred_datetime4',
+                a_relevant_datetime='2014-11-15T12:00:ab',
+            )
+        except ValidationError as e:
+            assert_equals(e.error_dict['a_relevant_datetime'],
+                          ['Date format incorrect'])
+        else:
+            raise AssertionError('ValidationError not raised')
+
+    def test_datetime_field_rejects_non_isodates(self):
+        lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_datetime5',
-                a_relevant_datetime='2014-11-15T12:00:ab',
+                a_relevant_datetime='31/11/2014',
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime'],
@@ -285,13 +293,13 @@ class TestDateTimes(object):
 
 
 class TestDateTimesTZ(object):
-    def test_datetime_field_rejects_non_isodates(self):
+    def test_datetime_field_rejects_non_dates(self):
         lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_datetime_tz1',
-                a_relevant_datetime_tz='31/11/2014',
+                a_relevant_datetime_tz='this-is-not-a-date',
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime_tz'],
@@ -299,6 +307,8 @@ class TestDateTimesTZ(object):
         else:
             raise AssertionError('ValidationError not raised')
 
+    def test_datetime_field_rejects_text_in_dates(self):
+        lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
@@ -311,22 +321,12 @@ class TestDateTimesTZ(object):
         else:
             raise AssertionError('ValidationError not raised')
 
+    def test_datetime_field_rejects_text_as_time(self):
+        lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_datetime_tz3',
-                a_relevant_datetime_tz='this-is-not-a-date',
-            )
-        except ValidationError as e:
-            assert_equals(e.error_dict['a_relevant_datetime_tz'],
-                          ['Date format incorrect'])
-        else:
-            raise AssertionError('ValidationError not raised')
-
-        try:
-            lc.action.package_create(
-                type='camel-photos',
-                name='fred_datetime_tz4',
                 a_relevant_datetime_tz='2014-11-15Tabcd',
             )
         except ValidationError as e:
@@ -335,10 +335,12 @@ class TestDateTimesTZ(object):
         else:
             raise AssertionError('ValidationError not raised')
 
+    def test_datetime_field_rejects_text_in_time(self):
+        lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
-                name='fred_datetime_tz5',
+                name='fred_datetime_tz4',
                 a_relevant_datetime_tz='2014-11-15T12:00:ab',
             )
         except ValidationError as e:
@@ -347,6 +349,22 @@ class TestDateTimesTZ(object):
         else:
             raise AssertionError('ValidationError not raised')
 
+    def test_datetime_field_rejects_non_isodates(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type='camel-photos',
+                name='fred_datetime_tz5',
+                a_relevant_datetime_tz='31/11/2014',
+            )
+        except ValidationError as e:
+            assert_equals(e.error_dict['a_relevant_datetime_tz'],
+                          ['Date format incorrect'])
+        else:
+            raise AssertionError('ValidationError not raised')
+
+    def test_datetime_field_rejects_invalid_timezone_identifier(self):
+        lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
@@ -359,6 +377,8 @@ class TestDateTimesTZ(object):
         else:
             raise AssertionError('ValidationError not raised')
 
+    def test_datetime_field_rejects_invalid_timezone_offset(self):
+        lc = LocalCKAN()
         try:
             lc.action.package_create(
                 type='camel-photos',
