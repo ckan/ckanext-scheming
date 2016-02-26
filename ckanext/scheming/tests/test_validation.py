@@ -260,8 +260,7 @@ class TestDateTimes(object):
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_datetime10',
-                a_relevant_datetime_date='',
-                a_relevant_datetime_time='12:35:aa',
+                a_relevant_datetime_time='12:35:00',
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime_date'],
@@ -493,8 +492,7 @@ class TestDateTimesTZ(object):
             lc.action.package_create(
                 type='camel-photos',
                 name='fred_datetime_tz15',
-                a_relevant_datetime_tz_date='',
-                a_relevant_datetime_tz_time='12:35:aa',
+                a_relevant_datetime_tz_time='12:35:00',
             )
         except ValidationError as e:
             assert_equals(e.error_dict['a_relevant_datetime_tz_date'],

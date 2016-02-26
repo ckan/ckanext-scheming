@@ -114,7 +114,8 @@ def validate_date_inputs(field, key, data, extras, errors, context):
 
     date_key, value = get_input('date')
     value_full = ''
-    if value != '':
+
+    if value:
         try:
             value_full = value
             date = h.date_str_to_datetime(value)
@@ -122,19 +123,19 @@ def validate_date_inputs(field, key, data, extras, errors, context):
             errors[date_key].append(date_error)
 
     time_key, value = get_input('time')
-    if value != '':
-        if value_full == '':
+    if value:
+        if not value_full:
             errors[date_key].append(
                 _('Date is required when a time is provided'))
-
-        try:
-            value_full += ' ' + value
-            date = h.date_str_to_datetime(value_full)
-        except (TypeError, ValueError), e:
-            errors[time_key].append(time_error)
+        else:
+            try:
+                value_full += ' ' + value
+                date = h.date_str_to_datetime(value_full)
+            except (TypeError, ValueError), e:
+                errors[time_key].append(time_error)
 
     tz_key, value = get_input('tz')
-    if value and value != '':
+    if value:
         if value not in pytz.all_timezones:
             errors[tz_key].append('Invalid timezone')
         else:
@@ -160,7 +161,8 @@ def scheming_isodatetime(field, schema):
                     raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))
-            if not extras or key[0] + '_date' not in extras:
+            if not extras or (key[0] + '_date' not in extras and
+                              key[0] + '_time' not in extras):
                 if field.get('required'):
                     not_empty(key, data, errors, context)
             else:
@@ -188,7 +190,8 @@ def scheming_isodatetime_tz(field, schema):
                     raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))
-            if not extras or key[0] + '_date' not in extras:
+            if not extras or (key[0] + '_date' not in extras and
+                              key[0] + '_time' not in extras):
                 if field.get('required'):
                     not_empty(key, data, errors, context)
             else:
