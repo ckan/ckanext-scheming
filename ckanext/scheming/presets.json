@@ -101,6 +101,14 @@
         "display_snippet": "datetime.html",
         "validators": "scheming_isodatetime convert_to_json_if_datetime"
       }
+    },
+    {
+      "preset_name": "datetime_tz",
+      "values": {
+        "form_snippet": "datetime_tz.html",
+        "display_snippet": "datetime_tz.html",
+        "validators": "scheming_isodatetime_tz convert_to_json_if_datetime"
+      }
     }
   ]
 }

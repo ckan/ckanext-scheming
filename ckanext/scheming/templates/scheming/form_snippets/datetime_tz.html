@@ -1,0 +1,63 @@
+{% import 'macros/form.html' as form %}
+{% set date = data.get(field.field_name + '_date') %}
+{% set time = data.get(field.field_name + '_time') %}
+{% set tz = data.get(field.field_name + '_tz', h.get_display_timezone().zone) %}
+
+
+{% if not date is string and not time is string %}
+    {% set date = data.get(field.field_name) %}
+
+    {% if date %}
+        {% set tz = h.get_display_timezone().zone %}
+        {% set localdate = h.scheming_datetime_to_tz(h.date_str_to_datetime(date), tz).isoformat() %}
+
+        {% set parts = localdate.split('T') %}
+        {% set date = parts[0] %}
+        {% set time = parts[1] %}
+    {% endif %}
+{% endif %}
+{% call form.input(
+    field.field_name + '_date',
+    id='field-' + field.field_name +  '-date',
+    label= h.scheming_language_text(field.label),
+    type='date',
+    value=date,
+    error=errors[field.field_name + '_date'],
+    classes=['control-medium'],
+    attrs=field.form_attrs if 'form_attrs' in field else {},
+    is_required=h.scheming_field_required(field)
+    )
+%}
+    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+{% endcall %}
+
+{% call form.input(
+    field.field_name + '_time',
+    id='field-' + field.field_name + '-time',
+    label= h.scheming_language_text(field.get('label_time', 'Time')),
+    type='time',
+    value=time,
+    error=errors[field.field_name + '_time'],
+    classes=['control-medium'],
+    attrs=field.form_attrs if 'form_attrs' in field else {},
+    is_required=h.scheming_field_required(field)
+    )
+%}
+    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+{% endcall %}
+
+{% set tz_list = h.scheming_get_timezones(field) %}
+{% call form.select(
+    field.field_name + '_tz',
+    id='field-' + field.field_name + '-tz',
+    label=h.scheming_language_text(field.get('label_tz', 'Timezone')),
+    options=tz_list,
+    selected=tz,
+    error=errors[field.field_name + '_tz'],
+    classes=['control-medium'],
+    attrs=field.form_attrs if 'form_attrs' in field else {},
+    is_required=h.scheming_field_required(field)
+    )
+%}
+    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+{% endcall %}

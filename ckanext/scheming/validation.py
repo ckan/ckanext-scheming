@@ -1,7 +1,9 @@
 import json
 import datetime
+import pytz
 import re
 import ckan.lib.helpers as h
+import ckanext.scheming.helpers as sh
 
 from ckantoolkit import get_validator, UnknownValidator, missing, Invalid, _
 
@@ -88,65 +90,120 @@ def scheming_multiple_choice(field, schema):
 
     return validator
 
+
+def validate_date_inputs(field, key, data, extras, errors, context):
+    date_error = _('Date format incorrect')
+    time_error = _('Time format incorrect')
+
+    date = None
+
+    def get_input(suffix):
+        inpt = key[0] + '_' + suffix
+        new_key = (inpt,) + tuple(x for x in key if x != key[0])
+        value = extras.get(inpt)
+        data[new_key] = value
+        errors[new_key] = []
+
+        if value:
+            del extras[inpt]
+
+        if field.get('required'):
+            not_empty(new_key, data, errors, context)
+
+        return (new_key, value)
+
+    date_key, value = get_input('date')
+    value_full = ''
+
+    if value:
+        try:
+            value_full = value
+            date = h.date_str_to_datetime(value)
+        except (TypeError, ValueError), e:
+            errors[date_key].append(date_error)
+
+    time_key, value = get_input('time')
+    if value:
+        if not value_full:
+            errors[date_key].append(
+                _('Date is required when a time is provided'))
+        else:
+            try:
+                value_full += ' ' + value
+                date = h.date_str_to_datetime(value_full)
+            except (TypeError, ValueError), e:
+                errors[time_key].append(time_error)
+
+    tz_key, value = get_input('tz')
+    if value:
+        if value not in pytz.all_timezones:
+            errors[tz_key].append('Invalid timezone')
+        else:
+            if isinstance(date, datetime.datetime):
+                date = pytz.timezone(value).localize(date)
+
+    return date
+
+
 @scheming_validator
 def scheming_isodatetime(field, schema):
     def validator(key, data, errors, context):
         value = data[key]
-        date_error = _('Date format incorrect')
-        time_error = _('Time format incorrect')
-
         date = None
 
-        if isinstance(value, datetime.datetime):
-            return value
-        if value is not missing:
-            try:
-                 date = h.date_str_to_datetime(value)
-            except (TypeError, ValueError), e:
-                raise Invalid(date_error)
+        if value:
+            if isinstance(value, datetime.datetime):
+                return value
+            else:
+                try:
+                    date = h.date_str_to_datetime(value)
+                except (TypeError, ValueError), e:
+                    raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))
-            if not extras or key[0] + '_date' not in extras:
+            if not extras or (key[0] + '_date' not in extras and
+                              key[0] + '_time' not in extras):
                 if field.get('required'):
                     not_empty(key, data, errors, context)
             else:
-                def get_input(suffix):
-                    inpt = key[0] + '_' + suffix
-                    new_key = (inpt,) + tuple(x for x in key if x != key[0])
-                    value = extras[inpt]
-                    data[new_key] = value
-                    errors[new_key] = []
-
-                    del extras[inpt]
-
-                    if field.get('required'):
-                        not_empty(new_key, data, errors, context)
-
-                    return (new_key, value)
-
-                date_key, value = get_input('date')
-                value_full = ''
-                if value != '':
-                    try:
-                        value_full = value
-                        date = h.date_str_to_datetime(value)
-                    except (TypeError, ValueError), e:
-                        return errors[date_key].append(date_error)
-
-                time_key, value = get_input('time')
-                if value != '':
-                    if value_full == '':
-                        return errors[date_key].append(_('Date is required when a time is provided'))
-
-                    try:
-                        value_full += ' ' + value
-                        date = h.date_str_to_datetime(value_full)
-                    except (TypeError, ValueError), e:
-                        return errors[time_key].append(time_error)
+                date = validate_date_inputs(
+                    field, key, data, extras, errors, context)
 
         data[key] = date
 
     return validator
+
+
+@scheming_validator
+def scheming_isodatetime_tz(field, schema):
+    def validator(key, data, errors, context):
+        value = data[key]
+        date = None
+
+        if value:
+            if isinstance(value, datetime.datetime):
+                date = sh.scheming_datetime_to_UTC(value)
+            else:
+                try:
+                    date = sh.date_tz_str_to_datetime(value)
+                except (TypeError, ValueError), e:
+                    raise Invalid(_('Date format incorrect'))
+        else:
+            extras = data.get(('__extras',))
+            if not extras or (key[0] + '_date' not in extras and
+                              key[0] + '_time' not in extras):
+                if field.get('required'):
+                    not_empty(key, data, errors, context)
+            else:
+                date = validate_date_inputs(
+                    field, key, data, extras, errors, context)
+                if isinstance(date, datetime.datetime):
+                    date = sh.scheming_datetime_to_UTC(date)
+
+        data[key] = date
+
+    return validator
+
 
 def scheming_multiple_choice_output(value):
     """
