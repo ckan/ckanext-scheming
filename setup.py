@@ -22,6 +22,7 @@ setup(
     install_requires=[
         "ckanapi",
         "ckantoolkit>=0.0.2",
+        "pytz",
     ],
     entry_points=\
     """
