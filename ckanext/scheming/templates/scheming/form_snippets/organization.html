@@ -23,8 +23,10 @@
     <div {{
       form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
     <select id="field-organizations" name="owner_org" data-module="autocomplete">
-      {% if not org_required %}
-         <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ _('No organization') }}</option>
+      {% if not org_required or field.get('form_include_blank_choice', false) %}
+        <option value="" {% if not selected_org and (data.id
+          or field.get('form_include_blank_choice', false))
+          %} selected="selected" {% endif %}>{{ _('No organization') }}</option>
       {% endif %}
       {% for organization in organizations_available %}
         {# get out first org from users list only if there is not an existing org #}

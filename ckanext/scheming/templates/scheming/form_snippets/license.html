@@ -1,8 +1,13 @@
 {% import 'macros/form.html' as form %}
 
 {%- set options=[] -%}
+{%- if field.get('form_include_blank_choice', false) -%}
+    {%- do options.append({
+        'value': '',
+        'text': ''}) -%}
+{%- endif -%}
 {%- for license_desc, license_id in licenses|sort -%}
-    {%- if license_id or not h.scheming_field_required(field) -%}
+    {%- if license_id or not h.scheming_field_required(field)
         {%- do options.append({
             'value': license_id,
             'text': license_desc}) -%}
