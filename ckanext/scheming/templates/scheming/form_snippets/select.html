@@ -1,13 +1,13 @@
 {% import 'macros/form.html' as form %}
 
 {%- set options=[] -%}
-{%- set form_show_choices=field.get('form_show_choices') -%}
+{%- set form_include_choices=field.get('form_include_choices') -%}
 {%- if not h.scheming_field_required(field) or
     field.get('form_include_blank_choice', false) -%}
   {%- do options.append({'value': '', 'text': ''}) -%}
 {%- endif -%}
 {%- for c in field.choices -%}
-  {%- if not form_show_choices or c.value in form_show_choices -%}
+  {%- if not form_include_choices or c.value in form_include_choices -%}
     {%- do options.append({
       'value': c.value,
       'text': h.scheming_language_text(c.label) }) -%}
