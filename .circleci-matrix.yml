@@ -6,8 +6,9 @@ env:
 
 command:
 - cd ckan; git checkout $CKAN_VERSION
-- pip install -r ckan/requirements.txt --allow-all-external
-- pip install -r ckan/dev-requirements.txt --allow-all-external
+- sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default:pass@\/datastore_test/' ckan/test-core.ini
+- pip install -q -r ckan/requirements.txt --allow-all-external
+- pip install -q -r ckan/dev-requirements.txt --allow-all-external
 - cd ckan; python setup.py develop
 - cd ckan; paster db init -c test-core.ini
 - nosetests --with-pylons=subdir/test_subclass.ini --nologcapture ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form:TestDatasetFormNew ckanext.scheming.tests.test_dataset_logic
