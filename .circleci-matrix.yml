@@ -1,0 +1,16 @@
+env:
+- CKAN_VERSION=release-v2.3-latest
+- CKAN_VERSION=release-v2.4-latest
+- CKAN_VERSION=release-v2.5-latest
+- CKAN_VERSION=master
+
+command:
+- cd ckan; git checkout $CKAN_VERSION
+- sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default:pass@\/datastore_test/' ckan/test-core.ini
+- cp ckan/ckan/public/base/css/main.css ckan/ckan/public/base/css/main.debug.css
+- pip install -q -r ckan/requirements.txt --allow-all-external
+- pip install -q -r ckan/dev-requirements.txt --allow-all-external
+- cd ckan; python setup.py develop
+- cd ckan; paster db init -c test-core.ini
+- nosetests --with-pylons=subdir/test_subclass.ini --nologcapture ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form:TestDatasetFormNew ckanext.scheming.tests.test_dataset_logic
+- nosetests --with-pylons=subdir/test.ini --nologcapture
