@@ -1,9 +1,14 @@
 env:
-- CKAN_VERSION=2.3
-- CKAN_VERSION=2.4
-- CKAN_VERSION=2.5
+- CKAN_VERSION=release-v2.3-latest
+- CKAN_VERSION=release-v2.4-latest
+- CKAN_VERSION=release-v2.5-latest
 - CKAN_VERSION=master
 
 command:
-- echo 'hi!'
-- echo "Version is $CKAN_VERSION"
+- cd ckan; git checkout $CKAN_VERSION
+- pip install -r ckan/requirements.txt --allow-all-external
+- pip install -r ckan/dev-requirements.txt --allow-all-external
+- cd ckan; python setup.py develop
+- cd ckan; paster db init -c test-core.ini
+- nosetests --with-pylons=subdir/test_subclass.ini --nologcapture ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form:TestDatasetFormNew ckanext.scheming.tests.test_dataset_logic
+- nosetests --with-pylons=subdir/test.ini --nologcapture
