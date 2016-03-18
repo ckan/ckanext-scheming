@@ -1,0 +1,9 @@
+env:
+- CKAN_VERSION=2.3
+- CKAN_VERSION=2.4
+- CKAN_VERSION=2.5
+- CKAN_VERSION=master
+
+command:
+- echo 'hi!'
+- echo "Version is $CKAN_VERSION"
