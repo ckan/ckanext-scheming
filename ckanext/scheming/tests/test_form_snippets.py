@@ -1,5 +1,4 @@
 from nose.tools import assert_in, assert_not_in
-from ckantoolkit import h
 from ckan.lib.base import render_snippet
 
 from ckanext.scheming.tests.mock_pylons_request import mock_pylons_request
@@ -14,7 +13,6 @@ def render_form_snippet(name, data=None, **kwargs):
         return render_snippet(
             'scheming/form_snippets/' + name,
             field=field,
-            h=h,
             data=data,
             errors=None,
         )
