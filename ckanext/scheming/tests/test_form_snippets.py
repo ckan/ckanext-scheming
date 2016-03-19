@@ -107,3 +107,34 @@ class TestOrganizationFormSnippet(object):
                 'organization_option_tag': organization_option_tag,
                 'org_required': False})
         assert_in('<option value="1">One</option>', html)
+
+    def test_no_organization_shown(self):
+        html = render_form_snippet(
+            '_organization_select.html',
+            extra_args={
+                'organizations_available': [
+                    {'id': '1', 'display_name': 'One'}],
+                'organization_option_tag': organization_option_tag,
+                'org_required': False})
+        assert_in('<option value="">No organization', html)
+
+    def test_no_organization_hidden_when_required(self):
+        html = render_form_snippet(
+            '_organization_select.html',
+            extra_args={
+                'organizations_available': [
+                    {'id': '1', 'display_name': 'One'}],
+                'organization_option_tag': organization_option_tag,
+                'org_required': True})
+        assert_not_in('<option value="">', html)
+
+    def test_blank_choice_shown_when_required(self):
+        html = render_form_snippet(
+            '_organization_select.html',
+            form_include_blank_choice=True,
+            extra_args={
+                'organizations_available': [
+                    {'id': '1', 'display_name': 'One'}],
+                'organization_option_tag': organization_option_tag,
+                'org_required': True})
+        assert_in('<option value=""></option>', html)

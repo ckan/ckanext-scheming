@@ -15,9 +15,7 @@ not used as a form_snippet directly #}
       form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
     <select id="field-organizations" name="owner_org" data-module="autocomplete">
       {% if not org_required or field.get('form_include_blank_choice', false) %}
-        <option value="" {% if not selected_org and (data.id
-          or field.get('form_include_blank_choice', false))
-          %} selected="selected" {% endif %}>{% if not org_required
+        <option value="">{% if not org_required
           %}{{ _('No organization') }}{% endif %}</option>
       {% endif %}
       {% for organization in organizations_available %}
