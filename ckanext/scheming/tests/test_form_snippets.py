@@ -1,9 +1,10 @@
 from nose.tools import assert_in, assert_not_in
 from ckan.lib.base import render_snippet
+from jinja2 import Markup
 
 from ckanext.scheming.tests.mock_pylons_request import mock_pylons_request
 
-def render_form_snippet(name, data=None, **kwargs):
+def render_form_snippet(name, data=None, extra_args=None, **kwargs):
     field = {
         'field_name': 'test',
         'label': 'Test',
@@ -13,9 +14,9 @@ def render_form_snippet(name, data=None, **kwargs):
         return render_snippet(
             'scheming/form_snippets/' + name,
             field=field,
-            data=data,
+            data=data or {},
             errors=None,
-        )
+            **(extra_args or {}))
 
 class TestSelectFormSnippet(object):
     def test_choices_visible(self):
@@ -81,3 +82,28 @@ class TestSelectFormSnippet(object):
         assert_in('<option value="a">', rest)
         middle, last = rest.split('<option value="a">', 1)
         assert_in('<option value="c">', last)
+
+
+def organization_option_tag(organization, selected_org):
+    return Markup('<option value="{orgid}"{selected}>'
+        '{display_name}</option>'.format(
+        orgid=organization['id'],
+        selected=' selected' if selected_org else '',
+        display_name=organization['display_name']))
+
+
+class TestOrganizationFormSnippet(object):
+    # It's hard to unit test 'form_snippets/organization.html' because it
+    # fetches lists of orgs for the current user, so here we're just testing
+    # the org selection part.
+    # XXX: Add functional testing in test_form.py to cover that
+
+    def test_organizations_visible(self):
+        html = render_form_snippet(
+            '_organization_select.html',
+            extra_args={
+                'organizations_available': [
+                    {'id': '1', 'display_name': 'One'}],
+                'organization_option_tag': organization_option_tag,
+                'org_required': False})
+        assert_in('<option value="1">One</option>', html)
