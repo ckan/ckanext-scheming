@@ -20,24 +20,31 @@ def render_form_snippet(name, data=None, **kwargs):
     pylons.tmpl_context._push_object({})
     pylons.url._push_object(None)
 
-    field = {
-        'field_name': 'test',
-        'label': 'Test',
-    }
-    field.update(kwargs)
-    return render_snippet(
-        'scheming/form_snippets/' + name,
-        field=field,
-        h=h,
-        data=data,
-        errors=None,
-    )
+    try:
+        field = {
+            'field_name': 'test',
+            'label': 'Test',
+        }
+        field.update(kwargs)
+        return render_snippet(
+            'scheming/form_snippets/' + name,
+            field=field,
+            h=h,
+            data=data,
+            errors=None,
+        )
+    finally:
+        pylons.response._pop_object()
+        pylons.request._pop_object()
+        pylons.session._pop_object()
+        pylons.tmpl_context._pop_object()
+        pylons.url._pop_object()
+
 
 class TestSelectFormSnippet(object):
     def test_choices_visible(self):
         html = render_form_snippet(
             'select.html',
             choices=[{'value': 'one', 'label': 'One'}])
-        assert_in('one', html)
-        assert_in('One', html)
+        assert_in('<option value="one">One</option>', html)
 
