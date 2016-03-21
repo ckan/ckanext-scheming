@@ -138,3 +138,36 @@ class TestOrganizationFormSnippet(object):
                 'organization_option_tag': organization_option_tag,
                 'org_required': True})
         assert_in('<option value=""></option>', html)
+
+
+class TestLicenseFormSnippet(object):
+    def test_license_choices_visible(self):
+        html = render_form_snippet(
+            'license.html',
+            extra_args={'licenses': [('Aaa', 'aa'), ('Bbb', 'bb')]})
+        assert_in('<option value="aa">Aaa</option>', html)
+        assert_in('<option value="bb">Bbb</option>', html)
+
+    def test_license_sorted_by_default(self):
+        html = render_form_snippet(
+            'license.html',
+            extra_args={'licenses': [('Zzz', 'zz'), ('Bbb', 'bb')]})
+        assert_in('<option value="bb">', html)
+        first, rest = html.split('<option value="bb">', 1)
+        assert_in('<option value="zz">', rest)
+
+    def test_license_order_maintained_when_sorted_false(self):
+        html = render_form_snippet(
+            'license.html',
+            sorted_choices=False,
+            extra_args={'licenses': [('Zzz', 'zz'), ('Bbb', 'bb')]})
+        assert_in('<option value="zz">', html)
+        first, rest = html.split('<option value="zz">', 1)
+        assert_in('<option value="bb">', rest)
+
+    def test_blank_choice_shown_on_form_include_blank(self):
+        html = render_form_snippet(
+            'license.html',
+            form_include_blank_choice=True,
+            extra_args={'licenses': [('Aaa', 'aa'), ('Bbb', 'bb')]})
+        assert_in('<option value=""></option>', html)

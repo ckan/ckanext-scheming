@@ -6,7 +6,10 @@
         'value': '',
         'text': ''}) -%}
 {%- endif -%}
-{%- for license_desc, license_id in licenses|sort -%}
+{%- if field.get('sorted_choices', true) -%}
+    {%- set licenses = licenses|sort -%}
+{%- endif -%}
+{%- for license_desc, license_id in licenses -%}
     {%- if license_id or not h.scheming_field_required(field) -%}
         {%- do options.append({
             'value': license_id,
