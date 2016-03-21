@@ -1,13 +1,17 @@
 {% import 'macros/form.html' as form %}
 
 {%- set options=[] -%}
-{%- if not h.scheming_field_required(field) -%}
+{%- set form_restrict_choices_to=field.get('form_restrict_choices_to') -%}
+{%- if not h.scheming_field_required(field) or
+    field.get('form_include_blank_choice', false) -%}
   {%- do options.append({'value': '', 'text': ''}) -%}
 {%- endif -%}
 {%- for c in field.choices -%}
-  {%- do options.append({
-    'value': c.value,
-    'text': h.scheming_language_text(c.label) }) -%}
+  {%- if not form_restrict_choices_to or c.value in form_restrict_choices_to -%}
+    {%- do options.append({
+      'value': c.value,
+      'text': h.scheming_language_text(c.label) }) -%}
+  {%- endif -%}
 {%- endfor -%}
 {%- if field.get('sorted_choices') -%}
   {%- set options = options|sort(case_sensitive=false, attribute='text') -%}

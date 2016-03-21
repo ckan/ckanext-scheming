@@ -1,48 +1,24 @@
-{% import 'macros/form.html' as form %}
-
 {# This is specific to datasets' owner_org field and won't work #}
 {# if used with other fields #}
 
 
-{%- set dataset_is_draft = data.get('state', 'draft').startswith('draft')
-    or data.get('state', 'none') ==  'none' %}
-{%- set dataset_has_organization = data.owner_org or data.group_id %}
-{%- set organizations_available = h.organizations_available('create_dataset') %}
-{%- set user_is_sysadmin = h.check_access('sysadmin') %}
-{%- set org_required = not h.check_config_permission('create_unowned_dataset')
-    or h.scheming_field_required(field) -%}
-
-{% macro _organization() %}
-  {% set existing_org = data.owner_org or data.group_id %}
-  {% call form.input_block('field-organizations',
-    label=h.scheming_language_text(field.label),
-    error=errors[field.field_name],
-    is_required=org_required,
-    extra_html=caller() if caller,
-    ) %}
-    <div {{
-      form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
-    <select id="field-organizations" name="owner_org" data-module="autocomplete">
-      {% if not org_required %}
-         <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ _('No organization') }}</option>
-      {% endif %}
-      {% for organization in organizations_available %}
-        {# get out first org from users list only if there is not an existing org #}
-        {% set selected_org = (existing_org and existing_org == organization.id) or (
-          not existing_org and not data.id and organization.id == organizations_available[0].id) %}
-        {% block organization_option scoped %}
-          <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.display_name }}</option>
-        {% endblock %}
-      {% endfor %}
-    </select>
-    </div>
-  {% endcall %}
+{% macro organization_option_tag(organization, selected_org) %}
+  {% block organization_option scoped %}
+    <option value="{{ organization.id }}"{%
+      if selected_org %} selected="selected"{% endif
+      %}>{{ organization.display_name }}</option>
+  {% endblock %}
 {% endmacro %}
 
   <div data-module="dataset-visibility">
-  {% call _organization() %}
-    {%- snippet 'scheming/form_snippets/help_text.html', field=field %}
-  {% endcall %}
+  {% snippet "scheming/form_snippets/_organization_select.html",
+    field=field,
+    data=data,
+    errors=errors,
+    organizations_available=h.organizations_available('create_dataset'),
+    org_required=not h.check_config_permission('create_unowned_dataset')
+      or h.scheming_field_required(field),
+    organization_option_tag=organization_option_tag %}
 
   {% block package_metadata_fields_visibility %}
     <div class="control-group">
