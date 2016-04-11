@@ -60,7 +60,7 @@ def scheming_choices_label(choices, value):
     """
     for c in choices:
         if c['value'] == value:
-            return scheming_language_text(c['label'])
+            return scheming_language_text(c.get('label', value))
     return scheming_language_text(value)
 
 
