@@ -31,6 +31,7 @@ database:
   - sudo -E -u postgres ckan/bin/postgres_init/1_create_ckan_db.sh
   - sudo -E -u postgres ckan/bin/postgres_init/2_create_ckan_datastore_db.sh
   - paster datastore -c test-core.ini set-permissions | sudo -u postgres psql
+  - while ! grep "Started" $HOME/solr.log; do sleep 0.1; done
   - ckan/bin/solr_init/create_core.sh
 
 test:
