@@ -7,6 +7,7 @@ env:
 command:
 - cd ckan; git checkout $CKAN_VERSION
 - sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default:pass@\/datastore_test/' ckan/test-core.ini
+- sed -i -e 's/solr_url.*/solr_url = http:\/\/127.0.0.1:8983\/solr\/ckan/' ckan/test-core.ini
 - cp ckan/ckan/public/base/css/main.css ckan/ckan/public/base/css/main.debug.css
 - pip install -q -r ckan/requirements.txt --allow-all-external
 - pip install -q -r ckan/dev-requirements.txt --allow-all-external
