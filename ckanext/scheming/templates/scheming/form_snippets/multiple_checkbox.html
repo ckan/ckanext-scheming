@@ -20,7 +20,7 @@ fieldset.checkboxes label input {
     error=errors[field.field_name],
     is_required=h.scheming_field_required(field)) -%}
   {%- set choices = [] -%}
-  {%- for c in field.choices -%}
+  {%- for c in h.scheming_field_choices(field) -%}
     {%- do choices.append(
       (c.value, h.scheming_language_text(c.label))) -%}
   {%- endfor -%}
