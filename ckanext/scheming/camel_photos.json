@@ -54,20 +54,7 @@
       "field_name": "personality",
       "label": "Personality",
       "preset": "multiple_checkbox",
-      "choices": [
-        {
-          "value": "friendly",
-          "label": "Often friendly"
-        },
-        {
-          "value": "jealous",
-          "label": "Jealous of others"
-        },
-        {
-          "value": "spits",
-          "label": "Tends to spit"
-        }
-      ]
+      "choices_helper": "scheming_camel_personality_choices"
     },
     {
       "field_name": "a_relevant_date",

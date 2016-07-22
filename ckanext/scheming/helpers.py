@@ -55,7 +55,11 @@ def scheming_field_choices(field):
     :returns: choices iterable or None if not found.
     """
     if 'choices' in field:
-        return field['choices']  # simple stub for now
+        return field['choices']
+    if 'choices_helper' in field:
+        from ckantoolkit import h
+        choices_fn = getattr(h, field['choices_helper'])
+        return choices_fn(field)
 
 
 def scheming_choices_label(choices, value):
@@ -71,6 +75,26 @@ def scheming_choices_label(choices, value):
         if c['value'] == value:
             return scheming_language_text(c.get('label', value))
     return scheming_language_text(value)
+
+
+def scheming_camel_personality_choices(field):
+    """
+    Example custom choices helper
+    """
+    return [
+        {
+          "value": "friendly",
+          "label": "Often friendly"
+        },
+        {
+          "value": "jealous",
+          "label": "Jealous of others"
+        },
+        {
+          "value": "spits",
+          "label": "Tends to spit"
+        }
+    ]
 
 
 def scheming_field_required(field):
