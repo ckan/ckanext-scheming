@@ -97,6 +97,39 @@ def scheming_camel_personality_choices(field):
     ]
 
 
+def scheming_datastore_choices(field):
+    """
+    Required scheming field:
+    "datastore_choices_resource": "resource_id_or_alias"
+
+    Optional scheming fields:
+    "datastore_choices_columns": {
+        "value": "value_column_name",
+        "label": "label_column_name" }
+    "datastore_choices_limit": 1000 (default)
+
+    When columns aren't specified the first column is used as value
+    and second column used as label.
+    """
+    import ckanapi
+    resource_id = field['datastore_choices_resource']
+    limit = field.get('datastore_choices_limit', 1000)
+    columns = field.get('datastore_choices_columns')
+    fields = None
+    if columns:
+        fields = [columns['value'], columns['label']]
+
+    # anon user must be able to read choices or this helper
+    # could be used to leak data from private datastore tables
+    lc = ckanapi.LocalCKAN(user='')
+    result = lc.action.datastore_search(
+        resource_id=resource_id,
+        limit=limit,
+        fields=fields)
+
+    return [{'value': r[0], 'label': r[1]} for r in result['records']]
+
+
 def scheming_field_required(field):
     """
     Return field['required'] or guess based on validators if not present.
