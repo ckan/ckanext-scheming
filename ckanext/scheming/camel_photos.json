@@ -76,14 +76,15 @@
     },
     {
       "field_name": "a_relevant_datetime",
-      "label": "A relevant date",
-      "label_time": "A relevant time",
+      "label": "Date+Time",
+      "label_time": "Time (combined with above)",
       "preset": "datetime"
     },
     {
       "field_name": "a_relevant_datetime_tz",
-      "label": "A relevant date",
-      "label_time": "A relevant time",
+      "label": "Date+Time+Tz",
+      "label_time": "Time (for above)",
+      "label_tz": "Timezone (for above)",
       "preset": "datetime_tz"
     },
     {
