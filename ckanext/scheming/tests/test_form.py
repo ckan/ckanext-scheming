@@ -8,7 +8,7 @@ def _get_package_new_page_as_sysadmin(app):
     user = Sysadmin()
     env = {'REMOTE_USER': user['name'].encode('ascii')}
     response = app.get(
-        url='/camel-photos/new',
+        url='/test-schema/new',
         extra_environ=env,
     )
     return env, response

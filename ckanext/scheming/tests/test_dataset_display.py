@@ -9,7 +9,7 @@ class TestDatasetDisplay(FunctionalTestBase):
         user = Sysadmin()
         Dataset(
             user=user,
-            type='camel-photos',
+            type='test-schema',
             name='set-one',
             humps=3,
             resources=[{
@@ -24,7 +24,7 @@ class TestDatasetDisplay(FunctionalTestBase):
         user = Sysadmin()
         d = Dataset(
             user=user,
-            type='camel-photos',
+            type='test-schema',
             name='set-two',
             humps=3,
             resources=[{
@@ -42,7 +42,7 @@ class TestDatasetDisplay(FunctionalTestBase):
         user = Sysadmin()
         d = Dataset(
             user=user,
-            type='camel-photos',
+            type='test-schema',
             name='with-choice',
             category='hybrid',
             )
@@ -66,7 +66,7 @@ class TestDatasetDisplay(FunctionalTestBase):
         user = Sysadmin()
         d = Dataset(
             user=user,
-            type='camel-photos',
+            type='test-schema',
             name='with-multiple-choice-n',
             personality=['friendly', 'spits'],
             )
@@ -80,7 +80,7 @@ class TestDatasetDisplay(FunctionalTestBase):
         user = Sysadmin()
         d = Dataset(
             user=user,
-            type='camel-photos',
+            type='test-schema',
             name='with-multiple-choice-one',
             personality=['friendly'],
             )
