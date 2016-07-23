@@ -54,7 +54,7 @@
       "field_name": "personality",
       "label": "Personality",
       "preset": "multiple_checkbox",
-      "choices_helper": "scheming_camel_personality_choices"
+      "choices_helper": "scheming_test_schema_choices"
     },
     {
       "field_name": "a_relevant_date",

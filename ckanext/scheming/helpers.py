@@ -77,26 +77,6 @@ def scheming_choices_label(choices, value):
     return scheming_language_text(value)
 
 
-def scheming_camel_personality_choices(field):
-    """
-    Example custom choices helper
-    """
-    return [
-        {
-          "value": "friendly",
-          "label": "Often friendly"
-        },
-        {
-          "value": "jealous",
-          "label": "Jealous of others"
-        },
-        {
-          "value": "spits",
-          "label": "Tends to spit"
-        }
-    ]
-
-
 def scheming_datastore_choices(field):
     """
     Required scheming field:
