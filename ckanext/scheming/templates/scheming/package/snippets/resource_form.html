@@ -7,7 +7,7 @@
     {%- snippet 'scheming/snippets/errors.html',
       errors=errors, fields=schema.resource_fields,
       entity_type='dataset', object_type=dataset_type -%}
-  {%- elif error_summary -%}
+  {%- elif error_summary|default(false) -%}
     {{ form.errors(error_summary) }}
   {%- endif -%}
 {% endblock %}
