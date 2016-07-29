@@ -36,7 +36,7 @@ def scheming_choices(field, schema):
         choices = sh.scheming_field_choices(field)
         for c in choices:
             if value == c['value']:
-                return
+                return value
         raise Invalid(_('unexpected choice "%s"') % value)
 
     return validator
