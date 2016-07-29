@@ -1,0 +1,48 @@
+{
+  "scheming_version": 1,
+  "dataset_type": "test-datastore-choices",
+  "about_url": "http://github.com/ckan/ckanext-scheming",
+  "dataset_fields": [
+    {
+      "field_name": "title",
+      "label": "Title",
+      "preset": "title",
+      "form_placeholder": "eg. Larry, Peter, Susan"
+    },
+    {
+      "field_name": "name",
+      "label": "URL",
+      "preset": "dataset_slug",
+      "form_placeholder": "eg. camel-no-5"
+    },
+    {
+      "field_name": "category",
+      "label": "Category",
+      "help_text": "Make and model",
+      "help_inline": true,
+      "preset": "select",
+      "choices_helper": "scheming_datastore_choices",
+      "datastore_choices_resource": "category-choices"
+    },
+    {
+      "field_name": "personality",
+      "label": "Personality",
+      "preset": "multiple_checkbox",
+      "choices_helper": "scheming_datastore_choices",
+      "datastore_choices_resource": "personality-choices",
+      "datastore_choices_columns": {
+        "value": "valcol",
+	"label": "labelcol"
+      }
+    }
+  ],
+  "resource_fields": [
+    {
+      "field_name": "url",
+      "label": "Photo",
+      "preset": "resource_url_upload",
+      "form_placeholder": "http://example.com/my-camel-photo.jpg",
+      "upload_label": "Photo"
+    }
+  ]
+}

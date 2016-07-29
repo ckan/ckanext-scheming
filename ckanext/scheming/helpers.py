@@ -91,7 +91,7 @@ def scheming_datastore_choices(field):
     When columns aren't specified the first column is used as value
     and second column used as label.
     """
-    import ckanapi
+    from ckanapi import LocalCKAN, NotFound, NotAuthorized
     resource_id = field['datastore_choices_resource']
     limit = field.get('datastore_choices_limit', 1000)
     columns = field.get('datastore_choices_columns')
@@ -101,11 +101,14 @@ def scheming_datastore_choices(field):
 
     # anon user must be able to read choices or this helper
     # could be used to leak data from private datastore tables
-    lc = ckanapi.LocalCKAN(user='')
-    result = lc.action.datastore_search(
-        resource_id=resource_id,
-        limit=limit,
-        fields=fields)
+    lc = LocalCKAN(username='')
+    try:
+        result = lc.action.datastore_search(
+            resource_id=resource_id,
+            limit=limit,
+            fields=fields)
+    except (NotFound, NotAuthorized):
+        return []
 
     return [{'value': r[0], 'label': r[1]} for r in result['records']]
 
