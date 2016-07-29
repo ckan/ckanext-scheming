@@ -110,7 +110,11 @@ def scheming_datastore_choices(field):
     except (NotFound, NotAuthorized):
         return []
 
-    return [{'value': r[0], 'label': r[1]} for r in result['records']]
+    if not fields:
+        fields = [f['id'] for f in result['fields'] if f['id'] != '_id']
+
+    return [{'value': r[fields[0]], 'label': r[fields[1]]}
+        for r in result['records']]
 
 
 def scheming_field_required(field):
