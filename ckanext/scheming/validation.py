@@ -39,6 +39,8 @@ def scheming_choices(field, schema):
                 return
         raise Invalid(_('unexpected choice "%s"') % value)
 
+    return validator
+
 
 @scheming_validator
 def scheming_required(field, schema):
