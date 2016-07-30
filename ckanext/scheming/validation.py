@@ -33,6 +33,8 @@ def scheming_choices(field, schema):
         return OneOf([c['value'] for c in field['choices']])
 
     def validator(value):
+        if value is missing or not value:
+            return value
         choices = sh.scheming_field_choices(field)
         for c in choices:
             if value == c['value']:
