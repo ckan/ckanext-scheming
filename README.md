@@ -157,7 +157,7 @@ validator.
 
 ### `choices`
 
-The `choices` list must be provided for
+The `choices` list may be provided for
 select and multiple choice fields.
 List elements include `label`s for human-readable text for
 each element (may be multiple languages like a [field label](#label))
@@ -174,6 +174,27 @@ and `value`s that will be stored in the dataset or resource:
     "..."
   ],
   "...": "..."
+}
+```
+
+### `choices_helper`
+
+If a choices list is not provided you must provide a `choices_helper`
+function that will return a list of choices in the same format as
+the `choices` list above.
+
+You may register your own helper function or use the
+`scheming_datastore_choices` helper included in ckanext-scheming:
+
+```json
+{
+  "preset": "select",
+  "choices_helper": "scheming_datastore_choices",
+  "datastore_choices_resource": "countries-resource-id-or-alias",
+  "datastore_choices_columns": {
+    "value": "Country Code",
+    "label": "English Country Name"
+  }
 }
 ```
 
