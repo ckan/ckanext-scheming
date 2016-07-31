@@ -5,6 +5,8 @@ import pytz
 from pylons import config
 from pylons.i18n import gettext
 
+from ckanapi import LocalCKAN, NotFound, NotAuthorized
+
 def lang():
     # access this function late in case ckan
     # is not set up fully when importing this module
@@ -49,6 +51,19 @@ def scheming_language_text(text, prefer_lang=None):
     return t
 
 
+def scheming_field_choices(field):
+    """
+    :param field: scheming field definition
+    :returns: choices iterable or None if not found.
+    """
+    if 'choices' in field:
+        return field['choices']
+    if 'choices_helper' in field:
+        from ckantoolkit import h
+        choices_fn = getattr(h, field['choices_helper'])
+        return choices_fn(field)
+
+
 def scheming_choices_label(choices, value):
     """
     :param choices: choices list of {"label": .., "value": ..} dicts
@@ -62,6 +77,45 @@ def scheming_choices_label(choices, value):
         if c['value'] == value:
             return scheming_language_text(c.get('label', value))
     return scheming_language_text(value)
+
+
+def scheming_datastore_choices(field):
+    """
+    Required scheming field:
+    "datastore_choices_resource": "resource_id_or_alias"
+
+    Optional scheming fields:
+    "datastore_choices_columns": {
+        "value": "value_column_name",
+        "label": "label_column_name" }
+    "datastore_choices_limit": 1000 (default)
+
+    When columns aren't specified the first column is used as value
+    and second column used as label.
+    """
+    resource_id = field['datastore_choices_resource']
+    limit = field.get('datastore_choices_limit', 1000)
+    columns = field.get('datastore_choices_columns')
+    fields = None
+    if columns:
+        fields = [columns['value'], columns['label']]
+
+    # anon user must be able to read choices or this helper
+    # could be used to leak data from private datastore tables
+    lc = LocalCKAN(username='')
+    try:
+        result = lc.action.datastore_search(
+            resource_id=resource_id,
+            limit=limit,
+            fields=fields)
+    except (NotFound, NotAuthorized):
+        return []
+
+    if not fields:
+        fields = [f['id'] for f in result['fields'] if f['id'] != '_id']
+
+    return [{'value': r[fields[0]], 'label': r[fields[1]]}
+        for r in result['records']]
 
 
 def scheming_field_required(field):

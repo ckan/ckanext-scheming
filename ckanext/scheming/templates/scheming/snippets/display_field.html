@@ -4,7 +4,7 @@
 {%- set display_snippet = field.display_snippet -%}
 
 {%- if not display_snippet -%}
-  {%- if 'choices' in field -%}
+  {%- if h.scheming_field_choices(field) -%}
     {%- set display_snippet = 'select.html' -%}
   {%- else -%}
     {%- set display_snippet = 'text.html' -%}

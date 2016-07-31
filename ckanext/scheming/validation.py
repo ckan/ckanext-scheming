@@ -29,7 +29,19 @@ def scheming_choices(field, schema):
     """
     Require that one of the field choices values is passed.
     """
-    return OneOf([c['value'] for c in field['choices']])
+    if 'choices' in field:
+        return OneOf([c['value'] for c in field['choices']])
+
+    def validator(value):
+        if value is missing or not value:
+            return value
+        choices = sh.scheming_field_choices(field)
+        for c in choices:
+            if value == c['value']:
+                return value
+        raise Invalid(_('unexpected choice "%s"') % value)
+
+    return validator
 
 
 @scheming_validator
@@ -56,7 +68,10 @@ def scheming_multiple_choice(field, schema):
 
        "choice-a"
     """
-    choice_values = set(c['value'] for c in field['choices'])
+    static_choice_values = None
+    if 'choices' in field:
+        static_choice_order = [c['value'] for c in field['choices']]
+        static_choice_values = set(static_choice_order)
 
     def validator(key, data, errors, context):
         # if there was an error before calling our validator
@@ -74,6 +89,11 @@ def scheming_multiple_choice(field, schema):
         else:
             value = []
 
+        choice_values = static_choice_values
+        if not choice_values:
+            choice_order = [c['value'] for c in sh.scheming_field_choices(field)]
+            choice_values = set(choice_order)
+
         selected = set()
         for element in value:
             if element in choice_values:
@@ -82,8 +102,9 @@ def scheming_multiple_choice(field, schema):
             errors[key].append(_('unexpected choice "%s"') % element)
 
         if not errors[key]:
-            data[key] = json.dumps([
-                c['value'] for c in field['choices'] if c['value'] in selected])
+            data[key] = json.dumps([v for v in
+                (static_choice_order if static_choice_values else choice_order)
+                if v in selected])
 
             if field.get('required') and not selected:
                 errors[key].append(_('Select at least one'))

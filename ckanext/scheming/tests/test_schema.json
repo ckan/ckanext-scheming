@@ -1,7 +1,7 @@
 {
   "scheming_version": 1,
-  "dataset_type": "camel-photos",
-  "about_url": "http://example.com/the-camel-photos-schema",
+  "dataset_type": "test-schema",
+  "about_url": "http://github.com/ckan/ckanext-scheming",
   "dataset_fields": [
     {
       "field_name": "title",
@@ -54,20 +54,25 @@
       "field_name": "personality",
       "label": "Personality",
       "preset": "multiple_checkbox",
-      "choices": [
-        {
-          "value": "friendly",
-          "label": "Often friendly"
-        },
-        {
-          "value": "jealous",
-          "label": "Jealous of others"
-        },
-        {
-          "value": "spits",
-          "label": "Tends to spit"
-        }
-      ]
+      "choices_helper": "scheming_test_schema_choices"
+    },
+    {
+      "field_name": "a_relevant_date",
+      "label": "A relevant date",
+      "preset": "date"
+    },
+    {
+      "field_name": "a_relevant_datetime",
+      "label": "Date+Time",
+      "label_time": "Time (combined with above)",
+      "preset": "datetime"
+    },
+    {
+      "field_name": "a_relevant_datetime_tz",
+      "label": "Date+Time+Tz",
+      "label_time": "Time (for above)",
+      "label_tz": "Timezone (for above)",
+      "preset": "datetime_tz"
     },
     {
       "field_name": "other",
@@ -95,10 +100,22 @@
       "output_validators": "ignore_missing"
     },
     {
+      "field_name": "date",
+      "label": "Date",
+      "preset": "date"
+    },
+    {
       "field_name": "datetime",
       "label": "Date Taken",
       "label_time": "Time Taken",
       "preset": "datetime"
+    },
+    {
+      "field_name": "datetime_tz",
+      "label": "Date Taken",
+      "label_time": "Time Taken",
+      "preset": "datetime_tz"
     }
+
   ]
 }
