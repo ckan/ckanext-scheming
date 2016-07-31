@@ -133,3 +133,23 @@ class TestDatastoreChoices(object):
             resource_id='simple-one',
             limit=1000,
             fields=None)
+
+    @patch('ckanext.scheming.helpers.LocalCKAN')
+    def test_call_with_all_params(self, LocalCKAN):
+        lc = Mock()
+        lc.action.datastore_search.return_value = {
+            'records': [{'a': 'one', 'b': 'two'}, {'a': 'three', 'b': 'four'}],
+            }
+        LocalCKAN.return_value = lc
+        assert_equals(
+            scheming_datastore_choices({
+                'datastore_choices_resource': 'all-params',
+                'datastore_choices_limit': 5,
+                'datastore_choices_columns': {'value': 'a', 'label': 'b'}}),
+            [{'value': 'one', 'label': 'two'}, {'value': 'three', 'label': 'four'}])
+
+        LocalCKAN.asset_called_once_with(username='')
+        lc.action.datastore_search.assert_called_once_with(
+            resource_id='all-params',
+            limit=5,
+            fields=['a', 'b'])
