@@ -5,6 +5,8 @@ import pytz
 from pylons import config
 from pylons.i18n import gettext
 
+from ckanapi import LocalCKAN, NotFound, NotAuthorized
+
 def lang():
     # access this function late in case ckan
     # is not set up fully when importing this module
@@ -91,7 +93,6 @@ def scheming_datastore_choices(field):
     When columns aren't specified the first column is used as value
     and second column used as label.
     """
-    from ckanapi import LocalCKAN, NotFound, NotAuthorized
     resource_id = field['datastore_choices_resource']
     limit = field.get('datastore_choices_limit', 1000)
     columns = field.get('datastore_choices_columns')

@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from nose.tools import assert_equals
-from mock import patch
+from mock import patch, Mock
 
 from ckanext.scheming.helpers import (
     scheming_language_text,
     scheming_field_required,
     scheming_get_preset,
-    scheming_get_presets
+    scheming_get_presets,
+    scheming_datastore_choices,
 )
+
+from ckanapi import NotFound, NotAuthorized
 
 
 class TestLanguageText(object):
@@ -83,3 +86,50 @@ class TestGetPreset(object):
             (u'form_snippet', u'date.html'),
             (u'validators', u'scheming_required isodate convert_to_json_if_date')
         )), sorted(preset.iteritems()))
+
+
+class TestDatastoreChoices(object):
+    @patch('ckanext.scheming.helpers.LocalCKAN')
+    def test_no_choices_on_not_found(self, LocalCKAN):
+        lc = Mock()
+        lc.action.datastore_search.side_effect = NotFound()
+        LocalCKAN.return_value = lc
+        assert_equals(scheming_datastore_choices(
+            {'datastore_choices_resource': 'not-found'}), [])
+        lc.action.datastore_search.assert_called_once()
+
+    @patch('ckanext.scheming.helpers.LocalCKAN')
+    def test_no_choices_on_not_authorized(self, LocalCKAN):
+        lc = Mock()
+        lc.action.datastore_search.side_effect = NotFound()
+        LocalCKAN.return_value = lc
+        assert_equals(scheming_datastore_choices(
+            {'datastore_choices_resource': 'not-allowed'}), [])
+        lc.action.datastore_search.assert_called_once()
+
+    @patch('ckanext.scheming.helpers.LocalCKAN')
+    def test_no_choices_on_not_authorized(self, LocalCKAN):
+        lc = Mock()
+        lc.action.datastore_search.side_effect = NotFound()
+        LocalCKAN.return_value = lc
+        assert_equals(scheming_datastore_choices(
+            {'datastore_choices_resource': 'not-allowed'}), [])
+        lc.action.datastore_search.assert_called_once()
+
+    @patch('ckanext.scheming.helpers.LocalCKAN')
+    def test_simple_call_with_defaults(self, LocalCKAN):
+        lc = Mock()
+        lc.action.datastore_search.return_value = {
+            'fields': [{'id': '_id'}, {'id': 'a'}, {'id': 'b'}],
+            'records': [{'a': 'one', 'b': 'two'}, {'a': 'three', 'b': 'four'}],
+            }
+        LocalCKAN.return_value = lc
+        assert_equals(scheming_datastore_choices(
+            {'datastore_choices_resource': 'simple-one'}),
+            [{'value': 'one', 'label': 'two'}, {'value': 'three', 'label': 'four'}])
+
+        LocalCKAN.asset_called_once_with(username='')
+        lc.action.datastore_search.assert_called_once_with(
+            resource_id='simple-one',
+            limit=1000,
+            fields=None)
