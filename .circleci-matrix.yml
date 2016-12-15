@@ -2,6 +2,8 @@ env:
 - CKAN_VERSION=release-v2.3-latest
 - CKAN_VERSION=release-v2.4-latest
 - CKAN_VERSION=release-v2.5-latest
+- CKAN_VERSION=release-v2.6-latest
+- CKAN_VERSION=dev-v2.6
 - CKAN_VERSION=master
 
 command:
