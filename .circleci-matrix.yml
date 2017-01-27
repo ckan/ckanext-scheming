@@ -11,9 +11,9 @@ command:
 - sed -i -e 's/solr_url.*/solr_url = http:\/\/127.0.0.1:8983\/solr\/ckan/' ckan/test-core.ini
 - cp ckan/ckan/public/base/css/main.css ckan/ckan/public/base/css/main.debug.css
 - [ "$CKAN_VERSION" != "release-v2.5-latest" ] || pip install html5lib==0.999  # FIXME remove this terrible workaround
+- pip install -U setuptools
 - pip install -q -r ckan/requirements.txt --allow-all-external
 - pip install -q -r ckan/dev-requirements.txt --allow-all-external
-- pip install -U setuptools
 - cd ckan; python setup.py develop
 - cd ckan; paster db init -c test-core.ini
 - nosetests --with-pylons=subdir/test_subclass.ini --nologcapture ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form:TestDatasetFormNew ckanext.scheming.tests.test_dataset_logic
