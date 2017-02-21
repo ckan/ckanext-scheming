@@ -28,7 +28,7 @@ def scheming_language_text(text, prefer_lang=None):
         try:
             if prefer_lang is None:
                 prefer_lang = lang()
-        except:
+        except TypeError:
             pass  # lang() call will fail when no user language available
         else:
             try:

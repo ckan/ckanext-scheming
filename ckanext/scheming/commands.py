@@ -5,6 +5,7 @@ from ckanext.scheming.helpers import (
     scheming_dataset_schemas,
     scheming_group_schemas,
     scheming_organization_schemas,
+    scheming_language_text,
     )
 
 import json
@@ -59,5 +60,6 @@ class SchemingCommand(CkanCommand):
                         if field_name == 'resource_fields':
                             print " * " + json.dumps("resource")
                         for field in s[typ][field_name]:
-                            print "   - " + json.dumps(field['field_name'])
+                            print "   - " + json.dumps(field['field_name']),
+                            print scheming_language_text(field.get('label'))
             print
