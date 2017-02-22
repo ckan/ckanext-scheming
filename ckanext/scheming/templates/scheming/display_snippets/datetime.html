@@ -1,1 +1,3 @@
-{% extends 'scheming/display_snippets/text.html' %}
+{%- macro display(h, field, data, errors, entity_type, object_type) -%}
+{{ data[field.field_name] }}
+{%- endmacro -%}
