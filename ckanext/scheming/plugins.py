@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from pylons import c
 import ckan.plugins as p
+from ckan.common import c
 from ckantoolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
