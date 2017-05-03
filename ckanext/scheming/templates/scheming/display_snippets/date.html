@@ -1,3 +1,5 @@
+{%- macro display(h, field, data, errors, entity_type, object_type) -%}
 {% if data[field.field_name] %}
   {{ data[field.field_name].split()[0] }}
 {% endif %}
+{%- endmacro -%}

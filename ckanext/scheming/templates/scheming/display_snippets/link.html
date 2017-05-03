@@ -1,1 +1,3 @@
+{%- macro display(h, field, data, errors, entity_type, object_type) -%}
 {{ h.link_to(data[field.field_name], data[field.field_name], rel=field.display_property, target='_blank') }}
+{%- endmacro -%}

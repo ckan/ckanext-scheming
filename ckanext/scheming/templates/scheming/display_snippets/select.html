@@ -1,3 +1,5 @@
+{%- macro display(h, field, data, errors, entity_type, object_type) -%}
 {{ h.scheming_choices_label(
   h.scheming_field_choices(field),
   data[field.field_name]) }}
+{%- endmacro -%}
