@@ -264,14 +264,14 @@ This extension includes the following form snippets:
   a select box
 * [multiple_checkbox.html](ckanext/scheming/templates/scheming/form_snippets/multiple_choice.html) -
   a group of checkboxes
-* [multiple_select.html](ckanext/scheming/templates/scheming/form_snippets/multiple_choice.html) -
+* [multiple_select.html](ckanext/scheming/templates/scheming/form_snippets/multiple_select.html) -
   a multiple select box
 
 
 ### `display_snippet`
 
 The `display_snippet` value is the name of the snippet template to
-use for this field in the dataset, group or organization view page.
+use for this field in the dataset, resource, group or organization view page.
 A number of snippets are provided with this
 extension, but you may also provide your own by creating templates
 under `scheming/display_snippets/` in a template directory in your
@@ -294,17 +294,18 @@ This extension includes the following display snippets:
 * [multiple_choice.html](ckanext/scheming/templates/scheming/display_snippets/) -
   show the label text for all choices selected
 
+If `null` is passed as value in `display_snippet`, it will remove the field from being displayed at the view page.
 
 ### `select_size`
 
 Set to the number of [choices](#choices) to display in select, multiple_select
-and multiple_check_box [form](#form_snippet) and [display](#display_snippet) 
+and multiple_check_box [form](#form_snippet) and [display](#display_snippet)
 snippets.
- 
- 
+
+
 ### `sorted_choices`
 
-Set to `"true"` to sort [choices](#choices) alphabetically in [form](#form_snippet) 
+Set to `"true"` to sort [choices](#choices) alphabetically in [form](#form_snippet)
 and [display](#display_snippet) snippets.
 
 
@@ -339,7 +340,7 @@ the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
 function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
-CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html) 
+CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html)
 lists available validators ready to be used.
 
 ### `output_validators`
