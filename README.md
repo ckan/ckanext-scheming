@@ -271,7 +271,7 @@ This extension includes the following form snippets:
 ### `display_snippet`
 
 The `display_snippet` value is the name of the snippet template to
-use for this field in the dataset, group or organization view page.
+use for this field in the dataset, resource, group or organization view page.
 A number of snippets are provided with this
 extension, but you may also provide your own by creating templates
 under `scheming/display_snippets/` in a template directory in your
