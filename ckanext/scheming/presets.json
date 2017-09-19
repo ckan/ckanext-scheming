@@ -9,7 +9,8 @@
         "validators": "if_empty_same_as(name) unicode",
         "form_snippet": "large_text.html",
         "form_attrs": {
-          "data-module": "slug-preview-target"
+          "data-module": "slug-preview-target",
+          "class": "form-control"
         }
       }
     },
@@ -24,6 +25,7 @@
       "preset_name": "tag_string_autocomplete",
       "values": {
         "validators": "ignore_missing tag_string_convert",
+        "classes": ["control-full"],
         "form_attrs": {
           "data-module": "autocomplete",
           "data-module-tags": "",

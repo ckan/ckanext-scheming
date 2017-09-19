@@ -8,9 +8,9 @@
     value=data[field.field_name],
     error=errors[field.field_name],
     classes=['control-full', 'control-large'],
-    attrs=field.form_attrs if 'form_attrs' in field else {},
+    attrs=field.form_attrs if 'form_attrs' in field else {"class": "form-control"},
     is_required=h.scheming_field_required(field)
-    ) 
+    )
 %}
     {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
 {% endcall %}
