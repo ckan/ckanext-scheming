@@ -76,7 +76,8 @@ class TestGetPreset(object):
             u'datetime',
             u'datetime_tz',
             u'dataset_slug',
-            u'dataset_organization'
+            u'dataset_organization',
+            u'json',
         )), sorted(presets.iterkeys()))
 
     def test_scheming_get_preset(self):

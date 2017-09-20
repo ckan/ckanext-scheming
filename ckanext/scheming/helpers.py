@@ -1,17 +1,20 @@
 import re
 import datetime
 import pytz
+import json
 
 from pylons import config
 from pylons.i18n import gettext
 
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
 
+
 def lang():
     # access this function late in case ckan
     # is not set up fully when importing this module
     from ckantoolkit import h
     return h.lang()
+
 
 def scheming_language_text(text, prefer_lang=None):
     """
@@ -324,3 +327,18 @@ def scheming_get_timezones(field):
         return to_options(validate_tz(timezones))
 
     return to_options(pytz.common_timezones)
+
+
+def scheming_display_json_value(value, indent=2):
+    """
+    Returns the object passed serialized as a JSON string.
+
+    :param value: The object to serialize.
+    :returns: The serialized object, or the original value if it could not be
+        serialized.
+    :rtype: string
+    """
+    try:
+        return json.dumps(value, indent=indent)
+    except (TypeError, ValueError):
+        return value

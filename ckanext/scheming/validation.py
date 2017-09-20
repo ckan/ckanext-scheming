@@ -226,6 +226,51 @@ def scheming_isodatetime_tz(field, schema):
     return validator
 
 
+def scheming_valid_json(value, context):
+    """Store a JSON object as a serialized JSON string
+
+    It accepts two types of inputs:
+        1. A valid serialized JSON string (it must be an object or a list)
+        2. An object that can be serialized to JSON
+
+    """
+    if not value:
+        return
+    elif isinstance(value, basestring):
+        try:
+            loaded = json.loads(value)
+
+            if not isinstance(loaded, (dict, list)):
+                raise Invalid(
+                    _('Unsupported value for JSON field: {}'.format(value))
+                )
+
+            return value
+        except (ValueError, TypeError) as e:
+            raise Invalid(_('Invalid JSON string: {}'.format(e)))
+
+    elif isinstance(value, dict):
+        try:
+            return json.dumps(value)
+        except (ValueError, TypeError) as e:
+            raise Invalid(_('Invalid JSON object: {}'.format(e)))
+    else:
+        raise Invalid(
+            _('Unsupported type for JSON field: {}'.format(type(value)))
+        )
+
+    return value
+
+
+def scheming_load_json(value, context):
+    if isinstance(value, basestring):
+        try:
+            return json.loads(value)
+        except ValueError:
+            return value
+    return value
+
+
 def scheming_multiple_choice_output(value):
     """
     return stored json as a proper list
