@@ -4,7 +4,7 @@ import pytz
 from nose.tools import assert_raises, assert_equals
 from ckanapi import LocalCKAN, ValidationError
 
-from ckan.tests.helpers import reset_db
+from ckan.tests.helpers import FunctionalTestBase
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import get_validator_or_converter, scheming_required
 from ckanext.scheming.plugins import (
@@ -26,7 +26,7 @@ class TestGetValidatorOrConverter(object):
         assert get_validator_or_converter('remove_whitespace')
 
 
-class TestChoices(object):
+class TestChoices(FunctionalTestBase):
     def test_choice_field_only_accepts_given_choices(self):
         lc = LocalCKAN()
 
@@ -53,7 +53,6 @@ class TestChoices(object):
             )
         assert_equals(d['category'], 'f2hybrid')
 
-        reset_db()
 
 class TestRequired(object):
     def test_required_is_set_to_true(self):
@@ -539,10 +538,7 @@ class TestInvalidType(object):
         assert_equals(list(errors), ['type'])
 
 
-class TestJSONValidatorsDatasetValid(object):
-
-    def teardown(self):
-        reset_db()
+class TestJSONValidatorsDatasetValid(FunctionalTestBase):
 
     def test_valid_json_string_object(self):
         lc = LocalCKAN()
@@ -574,10 +570,7 @@ class TestJSONValidatorsDatasetValid(object):
         assert_equals(dataset['a_json_field'], {'a': 1, 'b': 2})
 
 
-class TestJSONValidatorsResourceValid(object):
-
-    def teardown(self):
-        reset_db()
+class TestJSONValidatorsResourceValid(FunctionalTestBase):
 
     def test_valid_json_string_object(self):
         lc = LocalCKAN()
