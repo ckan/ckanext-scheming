@@ -339,6 +339,6 @@ def scheming_display_json_value(value, indent=2):
     :rtype: string
     """
     try:
-        return json.dumps(value, indent=indent)
+        return json.dumps(value, indent=indent, sort_keys=True)
     except (TypeError, ValueError):
         return value
