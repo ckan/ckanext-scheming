@@ -111,6 +111,16 @@
         "display_snippet": "datetime_tz.html",
         "validators": "scheming_isodatetime_tz convert_to_json_if_datetime"
       }
+    },
+    {
+      "preset_name": "json_object",
+      "values": {
+        "validators": "scheming_required scheming_valid_json_object",
+        "output_validators": "scheming_load_json",
+        "form_snippet": "json.html",
+        "display_snippet": "json.html"
+      }
     }
+
   ]
 }

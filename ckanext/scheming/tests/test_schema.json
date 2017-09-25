@@ -78,6 +78,11 @@
       "field_name": "other",
       "label": {"en": "Other information"},
       "output_validators": "ignore_missing"
+    },
+    {
+      "label": "Example JSON",
+      "field_name": "a_json_field",
+      "preset": "json_object"
     }
   ],
   "resource_fields": [
@@ -115,7 +120,11 @@
       "label": "Date Taken",
       "label_time": "Time Taken",
       "preset": "datetime_tz"
+    },
+    {
+      "label": "Example JSON Resource",
+      "field_name": "a_resource_json_field",
+      "preset": "json_object"
     }
-
   ]
 }

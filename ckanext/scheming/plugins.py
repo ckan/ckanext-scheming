@@ -25,7 +25,9 @@ from ckanext.scheming.validation import (
     scheming_multiple_choice,
     scheming_multiple_choice_output,
     scheming_isodatetime,
-    scheming_isodatetime_tz
+    scheming_isodatetime_tz,
+    scheming_valid_json_object,
+    scheming_load_json,
 )
 from ckanext.scheming.logic import (
     scheming_dataset_schema_list,
@@ -92,6 +94,7 @@ class _SchemingMixin(object):
             'scheming_get_timezones': helpers.scheming_get_timezones,
             'scheming_datetime_to_tz': helpers.scheming_datetime_to_tz,
             'scheming_datastore_choices': helpers.scheming_datastore_choices,
+            'scheming_display_json_value': helpers.scheming_display_json_value,
             }
 
     def get_validators(self):
@@ -107,6 +110,8 @@ class _SchemingMixin(object):
             'convert_to_json_if_datetime': convert_to_json_if_datetime,
             'scheming_isodatetime': scheming_isodatetime,
             'scheming_isodatetime_tz': scheming_isodatetime_tz,
+            'scheming_valid_json_object': scheming_valid_json_object,
+            'scheming_load_json': scheming_load_json,
             }
 
     def _add_template_directory(self, config):

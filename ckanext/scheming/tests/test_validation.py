@@ -4,6 +4,7 @@ import pytz
 from nose.tools import assert_raises, assert_equals
 from ckanapi import LocalCKAN, ValidationError
 
+from ckan.tests.helpers import FunctionalTestBase
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import get_validator_or_converter, scheming_required
 from ckanext.scheming.plugins import (
@@ -25,7 +26,7 @@ class TestGetValidatorOrConverter(object):
         assert get_validator_or_converter('remove_whitespace')
 
 
-class TestChoices(object):
+class TestChoices(FunctionalTestBase):
     def test_choice_field_only_accepts_given_choices(self):
         lc = LocalCKAN()
 
@@ -51,6 +52,7 @@ class TestChoices(object):
             category='f2hybrid',
             )
         assert_equals(d['category'], 'f2hybrid')
+
 
 class TestRequired(object):
     def test_required_is_set_to_true(self):
@@ -534,3 +536,264 @@ class TestInvalidType(object):
         p = SchemingGroupsPlugin.instance
         data, errors = p.validate({}, {'type': 'banana'}, {}, 'dataset_show')
         assert_equals(list(errors), ['type'])
+
+
+class TestJSONValidatorsDatasetValid(FunctionalTestBase):
+
+    def test_valid_json_string_object(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type='test-schema',
+            name='bob_json_1',
+            a_json_field='{"a": 1, "b": 2}',
+        )
+
+        assert_equals(dataset['a_json_field'], {'a': 1, 'b': 2})
+
+    def test_valid_json_object(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type='test-schema',
+            name='bob_json_1',
+            a_json_field={'a': 1, 'b': 2},
+        )
+
+        assert_equals(dataset['a_json_field'], {'a': 1, 'b': 2})
+
+
+class TestJSONValidatorsResourceValid(FunctionalTestBase):
+
+    def test_valid_json_string_object(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type='test-schema',
+            name='bob_json_1',
+            resources=[{
+                'url': 'http://example.com/data.csv',
+                'a_resource_json_field': '{"a": 1, "b": 2}'
+            }],
+        )
+
+        assert_equals(
+                dataset['resources'][0]['a_resource_json_field'],
+                {'a': 1, 'b': 2})
+
+    def test_valid_json_object(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type='test-schema',
+            name='bob_json_1',
+            resources=[{
+                'url': 'http://example.com/data.csv',
+                'a_resource_json_field': {'a': 1, 'b': 2}
+            }],
+        )
+
+        assert_equals(
+                dataset['resources'][0]['a_resource_json_field'],
+                {'a': 1, 'b': 2})
+
+
+class TestJSONValidatorsDatasetInvalid(object):
+
+    def test_invalid_json_string_not_json(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type='test-schema',
+                name='bob_json_1',
+                a_json_field='not-json',
+            )
+        except ValidationError as e:
+            assert e.error_dict['a_json_field'][0].startswith(
+                'Invalid JSON string: No JSON object could be decoded')
+        else:
+            raise AssertionError('ValidationError not raised')
+
+    def test_invalid_json_string_values(self):
+        lc = LocalCKAN()
+        values = [
+            '22',
+            'true',
+            'false',
+            'null',
+            '[1,2,3]',
+        ]
+        for value in values:
+            try:
+                lc.action.package_create(
+                    type='test-schema',
+                    name='bob_json_1',
+                    a_json_field=value,
+                )
+            except ValidationError as e:
+                assert e.error_dict['a_json_field'][0].startswith(
+                    'Unsupported value for JSON field')
+            else:
+                raise AssertionError('ValidationError not raised')
+
+    def test_invalid_json_string(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type='test-schema',
+                name='bob_json_1',
+                a_json_field='{"type": "walnut", "codes": 1, 2 ,3}',
+            )
+        except ValidationError as e:
+            assert e.error_dict['a_json_field'][0].startswith(
+                'Invalid JSON string: Expecting property name')
+        else:
+            raise AssertionError('ValidationError not raised')
+
+    def test_invalid_json_object(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type='test-schema',
+                name='bob_json_1',
+                a_json_field={
+                    'type': 'walnut',
+                    'date': datetime.datetime.utcnow()
+                },
+            )
+        except ValidationError as e:
+            assert e.error_dict['a_json_field'][0].startswith(
+                'Invalid JSON object:')
+            assert e.error_dict['a_json_field'][0].endswith(
+                'is not JSON serializable')
+        else:
+            raise AssertionError('ValidationError not raised')
+
+    def test_invalid_json_value(self):
+        lc = LocalCKAN()
+
+        values = [
+            True,
+            datetime.datetime.utcnow(),
+            (2, 3),
+            23,
+            [1, 2, 3],
+        ]
+        for value in values:
+            try:
+                lc.action.package_create(
+                    type='test-schema',
+                    name='bob_json_1',
+                    a_json_field=value,
+                )
+            except ValidationError as e:
+                assert e.error_dict['a_json_field'][0].startswith(
+                    'Unsupported type for JSON field:')
+            else:
+                raise AssertionError('ValidationError not raised')
+
+
+class TestJSONValidatorsResourceInvalid(object):
+
+    def test_invalid_json_string_not_json(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type='test-schema',
+                name='bob_json_1',
+                resources=[{
+                    'url': 'http://example.com/data.csv',
+                    'a_resource_json_field': 'not-json',
+                }],
+            )
+        except ValidationError as e:
+            assert e.error_dict['resources'][0]['a_resource_json_field'][0].startswith(
+                'Invalid JSON string: No JSON object could be decoded')
+        else:
+            raise AssertionError('ValidationError not raised')
+
+    def test_invalid_json_string_values(self):
+        lc = LocalCKAN()
+        values = [
+            '22',
+            'true',
+            'false',
+            'null',
+            '[1,2,3]',
+        ]
+        for value in values:
+            try:
+                lc.action.package_create(
+                    type='test-schema',
+                    name='bob_json_1',
+                    resources=[{
+                        'url': 'http://example.com/data.csv',
+                        'a_resource_json_field': value
+                    }],
+                )
+            except ValidationError as e:
+                assert e.error_dict['resources'][0]['a_resource_json_field'][0].startswith(
+                    'Unsupported value for JSON field')
+            else:
+                raise AssertionError('ValidationError not raised')
+
+    def test_invalid_json_string(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type='test-schema',
+                name='bob_json_1',
+                resources=[{
+                    'url': 'http://example.com/data.csv',
+                    'a_resource_json_field': '{"type": "walnut", "codes": 1, 2 ,3}'
+                }],
+            )
+        except ValidationError as e:
+            assert e.error_dict['resources'][0]['a_resource_json_field'][0].startswith(
+                'Invalid JSON string: Expecting property name')
+        else:
+            raise AssertionError('ValidationError not raised')
+
+    def test_invalid_json_object(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type='test-schema',
+                name='bob_json_1',
+                resources=[{
+                    'url': 'http://example.com/data.csv',
+                    'a_resource_json_field': {
+                        'type': 'walnut',
+                        'date': datetime.datetime.utcnow()
+                    }
+                }],
+            )
+        except ValidationError as e:
+            assert e.error_dict['resources'][0]['a_resource_json_field'][0].startswith(
+                'Invalid JSON object:')
+            assert e.error_dict['resources'][0]['a_resource_json_field'][0].endswith(
+                'is not JSON serializable')
+        else:
+            raise AssertionError('ValidationError not raised')
+
+    def test_invalid_json_value(self):
+        lc = LocalCKAN()
+
+        values = [
+            True,
+            datetime.datetime.utcnow(),
+            (2, 3),
+            [2, 3],
+            23
+        ]
+        for value in values:
+            try:
+                lc.action.package_create(
+                    type='test-schema',
+                    name='bob_json_1',
+                    resources=[{
+                        'url': 'http://example.com/data.csv',
+                        'a_resource_json_field': value
+                    }],
+                )
+            except ValidationError as e:
+                assert e.error_dict['resources'][0]['a_resource_json_field'][0].startswith(
+                    'Unsupported type for JSON field:')
+            else:
+                raise AssertionError('ValidationError not raised')

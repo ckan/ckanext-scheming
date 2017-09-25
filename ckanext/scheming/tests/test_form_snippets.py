@@ -4,6 +4,7 @@ from jinja2 import Markup
 
 from ckanext.scheming.tests.mock_pylons_request import mock_pylons_request
 
+
 def render_form_snippet(name, data=None, extra_args=None, **kwargs):
     field = {
         'field_name': 'test',
@@ -17,6 +18,7 @@ def render_form_snippet(name, data=None, extra_args=None, **kwargs):
             data=data or {},
             errors=None,
             **(extra_args or {}))
+
 
 class TestSelectFormSnippet(object):
     def test_choices_visible(self):
@@ -171,3 +173,29 @@ class TestLicenseFormSnippet(object):
             form_include_blank_choice=True,
             extra_args={'licenses': [('Aaa', 'aa'), ('Bbb', 'bb')]})
         assert_in('<option value=""></option>', html)
+
+
+class TestJSONFormSnippet(object):
+    def test_json_value(self):
+        html = render_form_snippet(
+            'json.html',
+            field_name='a_json_field',
+            data={'a_json_field': {'a': '1', 'b': '2'}},
+        )
+        expected = '''{
+  "a": "1", 
+  "b": "2"
+}'''.replace('"', '&#34;')   # Ask webhelpers
+
+        assert_in(expected, html)
+
+    def test_json_value_no_indent(self):
+        html = render_form_snippet(
+            'json.html',
+            field_name='a_json_field',
+            data={'a_json_field': {'a': '1', 'b': '2'}},
+            indent=None
+        )
+        expected = '''{"a": "1", "b": "2"}'''.replace('"', '&#34;')
+
+        assert_in(expected, html)
