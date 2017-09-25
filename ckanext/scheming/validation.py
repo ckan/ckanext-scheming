@@ -242,21 +242,21 @@ def scheming_valid_json_object(value, context):
 
             if not isinstance(loaded, dict):
                 raise Invalid(
-                    _('Unsupported value for JSON field: {}'.format(value))
+                    _('Unsupported value for JSON field: {}').format(value)
                 )
 
             return value
         except (ValueError, TypeError) as e:
-            raise Invalid(_('Invalid JSON string: {}'.format(e)))
+            raise Invalid(_('Invalid JSON string: {}').format(e))
 
     elif isinstance(value, dict):
         try:
             return json.dumps(value)
         except (ValueError, TypeError) as e:
-            raise Invalid(_('Invalid JSON object: {}'.format(e)))
+            raise Invalid(_('Invalid JSON object: {}').format(e))
     else:
         raise Invalid(
-            _('Unsupported type for JSON field: {}'.format(type(value)))
+            _('Unsupported type for JSON field: {}').format(type(value))
         )
 
     return value
