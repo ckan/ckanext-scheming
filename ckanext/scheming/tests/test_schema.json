@@ -82,7 +82,7 @@
     {
       "label": "Example JSON",
       "field_name": "a_json_field",
-      "preset": "json"
+      "preset": "json_object"
     }
   ],
   "resource_fields": [
@@ -124,7 +124,7 @@
     {
       "label": "Example JSON Resource",
       "field_name": "a_resource_json_field",
-      "preset": "json"
+      "preset": "json_object"
     }
   ]
 }

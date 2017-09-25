@@ -550,15 +550,6 @@ class TestJSONValidatorsDatasetValid(FunctionalTestBase):
 
         assert_equals(dataset['a_json_field'], {'a': 1, 'b': 2})
 
-    def test_valid_json_string_list(self):
-        lc = LocalCKAN()
-        dataset = lc.action.package_create(
-            type='test-schema',
-            name='bob_json_1',
-            a_json_field='[{"a": 1}, {"b": 2}]',
-        )
-        assert_equals(dataset['a_json_field'], [{'a': 1}, {'b': 2}])
-
     def test_valid_json_object(self):
         lc = LocalCKAN()
         dataset = lc.action.package_create(
@@ -586,21 +577,6 @@ class TestJSONValidatorsResourceValid(FunctionalTestBase):
         assert_equals(
                 dataset['resources'][0]['a_resource_json_field'],
                 {'a': 1, 'b': 2})
-
-    def test_valid_json_string_list(self):
-        lc = LocalCKAN()
-        dataset = lc.action.package_create(
-            type='test-schema',
-            name='bob_json_1',
-            resources=[{
-                'url': 'http://example.com/data.csv',
-                'a_resource_json_field': '[{"a": 1}, {"b": 2}]'
-            }],
-        )
-
-        assert_equals(
-                dataset['resources'][0]['a_resource_json_field'],
-                [{'a': 1}, {'b': 2}])
 
     def test_valid_json_object(self):
         lc = LocalCKAN()
@@ -641,6 +617,7 @@ class TestJSONValidatorsDatasetInvalid(object):
             'true',
             'false',
             'null',
+            '[1,2,3]',
         ]
         for value in values:
             try:
@@ -738,6 +715,7 @@ class TestJSONValidatorsResourceInvalid(object):
             'true',
             'false',
             'null',
+            '[1,2,3]',
         ]
         for value in values:
             try:
@@ -801,6 +779,7 @@ class TestJSONValidatorsResourceInvalid(object):
             True,
             datetime.datetime.utcnow(),
             (2, 3),
+            [2, 3],
             23
         ]
         for value in values:

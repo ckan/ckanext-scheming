@@ -26,7 +26,7 @@ from ckanext.scheming.validation import (
     scheming_multiple_choice_output,
     scheming_isodatetime,
     scheming_isodatetime_tz,
-    scheming_valid_json,
+    scheming_valid_json_object,
     scheming_load_json,
 )
 from ckanext.scheming.logic import (
@@ -110,7 +110,7 @@ class _SchemingMixin(object):
             'convert_to_json_if_datetime': convert_to_json_if_datetime,
             'scheming_isodatetime': scheming_isodatetime,
             'scheming_isodatetime_tz': scheming_isodatetime_tz,
-            'scheming_valid_json': scheming_valid_json,
+            'scheming_valid_json_object': scheming_valid_json_object,
             'scheming_load_json': scheming_load_json,
             }
 

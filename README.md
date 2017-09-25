@@ -224,7 +224,7 @@ This extension includes the following presets:
   field
 * `"resource_format_autocomplete"` - resource format validation with
   format guessing based on url and autocompleting form field
-* `"json"` - JSON based input. Only JSON objects and arrays are supported.
+* `"json_object"` - JSON based input. Only JSON objects are supported.
   The input JSON will be loaded during output (eg when loading the dataset in
   a template or via the API).
 

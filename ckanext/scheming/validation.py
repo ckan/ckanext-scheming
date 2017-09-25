@@ -226,7 +226,7 @@ def scheming_isodatetime_tz(field, schema):
     return validator
 
 
-def scheming_valid_json(value, context):
+def scheming_valid_json_object(value, context):
     """Store a JSON object as a serialized JSON string
 
     It accepts two types of inputs:
@@ -240,7 +240,7 @@ def scheming_valid_json(value, context):
         try:
             loaded = json.loads(value)
 
-            if not isinstance(loaded, (dict, list)):
+            if not isinstance(loaded, dict):
                 raise Invalid(
                     _('Unsupported value for JSON field: {}'.format(value))
                 )
