@@ -27,6 +27,7 @@ def scheming_language_text(text, prefer_lang=None):
     if not text:
         return u''
 
+    assert text != {}
     if hasattr(text, 'get'):
         try:
             if prefer_lang is None:
