@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import datetime
+
 from nose.tools import assert_equals
 from mock import patch, Mock
 
@@ -9,6 +11,7 @@ from ckanext.scheming.helpers import (
     scheming_get_preset,
     scheming_get_presets,
     scheming_datastore_choices,
+    scheming_display_json_value,
 )
 
 from ckanapi import NotFound, NotAuthorized
@@ -154,3 +157,47 @@ class TestDatastoreChoices(object):
             resource_id='all-params',
             limit=5,
             fields=['a', 'b'])
+
+
+class TestJSONHelpers(object):
+
+    def test_display_json_value_default(self):
+
+        value = {'a': 'b'}
+
+        assert_equals(scheming_display_json_value(value), '{\n  "a": "b"\n}')
+
+    def test_display_json_value_indent(self):
+
+        value = {'a': 'b'}
+
+        assert_equals(
+            scheming_display_json_value(value, indent=4), '{\n    "a": "b"\n}')
+
+    def test_display_json_value_no_indent(self):
+
+        value = {'a': 'b'}
+
+        assert_equals(
+            scheming_display_json_value(value, indent=None), '{"a": "b"}')
+
+    def test_display_json_value_keys_are_sorted(self):
+
+        value = {'c': 'd', 'a': 'b'}
+
+        assert_equals(
+                scheming_display_json_value(value, indent=4),
+                '{\n    "a": "b", \n    "c": "d"\n}')
+
+    def test_display_json_value_json_error(self):
+
+        date = datetime.datetime.now()
+        value = ('a', date)
+
+        assert_equals(scheming_display_json_value(value), ('a', date))
+
+    def test_display_json_value_empty_string(self):
+
+        value = ''
+
+        assert_equals(scheming_display_json_value(value, indent=None), '')
