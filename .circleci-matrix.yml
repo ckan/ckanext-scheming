@@ -16,5 +16,6 @@ command:
 - pip install -q -r ckan/dev-requirements.txt --allow-all-external
 - cd ckan; python setup.py develop
 - cd ckan; paster db init -c test-core.ini
+- pip install -q -r test-requirements.txt --allow-all-external
 - nosetests --with-pylons=subdir/test_subclass.ini --nologcapture ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form:TestDatasetFormNew ckanext.scheming.tests.test_dataset_logic
 - nosetests --with-pylons=subdir/test.ini --nologcapture
