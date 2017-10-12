@@ -195,9 +195,3 @@ class TestJSONHelpers(object):
         value = ('a', date)
 
         assert_equals(scheming_display_json_value(value), ('a', date))
-
-    def test_display_json_value_empty_string(self):
-
-        value = ''
-
-        assert_equals(scheming_display_json_value(value, indent=None), '')
