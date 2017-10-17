@@ -209,3 +209,14 @@ class TestJSONFormSnippet(object):
         expected = '></textarea>'
 
         assert_in(expected, html)
+
+    def test_json_value_is_displayed_correctly_if_string(self):
+        value = '{"a": 1, "b": 2}'
+        html = render_form_snippet(
+            'json.html',
+            field_name='a_json_field',
+            data={'a_json_field': value},
+        )
+        expected = value.replace('"', '&#34;')
+
+        assert_in(expected, html)
