@@ -115,9 +115,6 @@ class _SchemingMixin(object):
             }
 
     def _add_template_directory(self, config):
-        if _SchemingMixin._template_dir_added:
-            return
-        _SchemingMixin._template_dir_added = True
         add_template_directory(config, 'templates')
 
     def _load_presets(self, config):
