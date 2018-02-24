@@ -161,7 +161,8 @@ class _GroupOrganizationMixin(object):
     def group_types(self):
         return list(self._schemas)
 
-    def setup_template_variables(self, context, data_dict, group_type=None):
+    def setup_template_variables(self, context, data_dict):
+        group_type = data_dict.get('type')
         if not group_type:
             if c.group_dict:
                 group_type = c.group_dict['type']
