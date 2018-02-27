@@ -1,4 +1,5 @@
 import json
+import ckantoolkit
 
 from nose import SkipTest
 from nose.tools import assert_true, assert_in, assert_equals
@@ -114,6 +115,10 @@ class TestOrganizationFormNew(FunctionalTestBase):
 
 class TestGroupFormNew(FunctionalTestBase):
     def test_group_form_includes_custom_field(self):
+
+        if not ckantoolkit.check_ckan_version(min_version='2.7.0'):
+            raise SkipTest
+
         app = self._get_test_app()
         env, response = _get_group_new_page_as_sysadmin(app)
         form = response.forms[1]  # FIXME: add an id to this form
@@ -130,6 +135,10 @@ class TestGroupFormNew(FunctionalTestBase):
 
 class TestCustomGroupFormNew(FunctionalTestBase):
     def test_group_form_includes_custom_field(self):
+
+        if not ckantoolkit.check_ckan_version(min_version='2.8.0'):
+            raise SkipTest
+
         app = self._get_test_app()
         env, response = _get_group_new_page_as_sysadmin(app, type='theme')
         form = response.forms[1]
@@ -142,7 +151,12 @@ class TestCustomGroupFormNew(FunctionalTestBase):
 
 
 class TestCustomOrgFormNew(FunctionalTestBase):
+
     def test_org_form_includes_custom_field(self):
+
+        if not ckantoolkit.check_ckan_version(min_version='2.8.0'):
+            raise SkipTest
+
         app = self._get_test_app()
         env, response = _get_organization_new_page_as_sysadmin(
             app, type='publisher')

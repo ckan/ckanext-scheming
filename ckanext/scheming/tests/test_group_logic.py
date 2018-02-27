@@ -5,7 +5,7 @@ class TestGroupSchemaLists(object):
     def test_group_schema_list(self):
         lc = LocalCKAN('visitor')
         group_schemas = lc.action.scheming_group_schema_list()
-        assert_equals(group_schemas, ['group'])
+        assert_equals(sorted(group_schemas), ['group', 'theme'])
 
     def test_group_schema_show(self):
         lc = LocalCKAN('visitor')
@@ -22,7 +22,7 @@ class TestGroupSchemaLists(object):
     def test_organization_schema_list(self):
         lc = LocalCKAN('visitor')
         org_schemas = lc.action.scheming_organization_schema_list()
-        assert_equals(org_schemas, ['organization'])
+        assert_equals(sorted(org_schemas), ['organization', 'publisher'])
 
     def test_organization_schema_show(self):
         lc = LocalCKAN('visitor')
