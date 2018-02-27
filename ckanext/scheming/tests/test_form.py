@@ -50,25 +50,24 @@ def _get_resource_update_page_as_sysadmin(app, id, resource_id):
     return env, response
 
 
-def _get_organization_new_page_as_sysadmin(app):
+def _get_organization_new_page_as_sysadmin(app, type='organization'):
     user = Sysadmin()
     env = {'REMOTE_USER': user['name'].encode('ascii')}
     response = app.get(
-        url='/organization/new',
+        url='/{0}/new'.format(type),
         extra_environ=env,
     )
     return env, response
 
 
-def _get_group_new_page_as_sysadmin(app):
+def _get_group_new_page_as_sysadmin(app, type='group'):
     user = Sysadmin()
     env = {'REMOTE_USER': user['name'].encode('ascii')}
     response = app.get(
-        url='/group/new',
+        url='/{0}/new'.format(type),
         extra_environ=env,
     )
     return env, response
-
 
 
 class TestDatasetFormNew(FunctionalTestBase):
@@ -82,7 +81,6 @@ class TestDatasetFormNew(FunctionalTestBase):
         """The default prefix shouldn't be /packages?id="""
         app = self._get_test_app()
         env, response = _get_package_new_page_as_sysadmin(app)
-        form = response.forms['dataset-edit']
         assert_true('packages?id=' not in response.body)
         assert_true('/dataset/' in response.body)
 
@@ -106,6 +104,13 @@ class TestOrganizationFormNew(FunctionalTestBase):
         # FIXME: generate the form for orgs (this is currently missing)
         assert_true('department_id' in form.fields)
 
+    def test_organization_form_slug_says_organization(self):
+        """The default prefix shouldn't be /packages?id="""
+        app = self._get_test_app()
+        env, response = _get_organization_new_page_as_sysadmin(app)
+        assert_true('packages?id=' not in response.body)
+        assert_true('/organization/' in response.body)
+
 
 class TestGroupFormNew(FunctionalTestBase):
     def test_group_form_includes_custom_field(self):
@@ -113,9 +118,40 @@ class TestGroupFormNew(FunctionalTestBase):
         env, response = _get_group_new_page_as_sysadmin(app)
         form = response.forms[1]  # FIXME: add an id to this form
 
-        # FIXME: generate the form for orgs (this is currently missing)
-        # Failing until https://github.com/ckan/ckan/pull/2617 is merged
-        # assert_true('bookface' in form.fields)
+        assert_true('bookface' in form.fields)
+
+    def test_group_form_slug_says_group(self):
+        """The default prefix shouldn't be /packages?id="""
+        app = self._get_test_app()
+        env, response = _get_group_new_page_as_sysadmin(app)
+        assert_true('packages?id=' not in response.body)
+        assert_true('/group/' in response.body)
+
+
+class TestCustomGroupFormNew(FunctionalTestBase):
+    def test_group_form_includes_custom_field(self):
+        app = self._get_test_app()
+        env, response = _get_group_new_page_as_sysadmin(app, type='theme')
+        form = response.forms[1]
+
+        assert_true('status' in form.fields)
+
+    def test_group_form_slug_uses_custom_type(self):
+        # Not implemented
+        raise SkipTest
+
+
+class TestCustomOrgFormNew(FunctionalTestBase):
+    def test_org_form_includes_custom_field(self):
+        app = self._get_test_app()
+        env, response = _get_organization_new_page_as_sysadmin(
+            app, type='publisher')
+        form = response.forms[1]
+
+        assert_true('address' in form.fields)
+
+    def test_org_form_slug_uses_custom_type(self):
+        # Not implemented
         raise SkipTest
 
 
@@ -231,7 +267,9 @@ class TestJSONResourceForm(FunctionalTestBase):
             app, dataset['id'], dataset['resources'][0]['id'])
         form = response.forms['resource-edit']
 
-        assert_equals(form['a_resource_json_field'].value, json.dumps(value, indent=2))
+        assert_equals(
+            form['a_resource_json_field'].value,
+            json.dumps(value, indent=2))
 
         value = {
             'a': 1,
