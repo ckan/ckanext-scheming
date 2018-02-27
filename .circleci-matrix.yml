@@ -3,7 +3,6 @@ env:
 - CKAN_VERSION=release-v2.4-latest
 - CKAN_VERSION=release-v2.5-latest
 - CKAN_VERSION=dev-v2.6
-- CKAN_VERSION=dev-v2.7
 
 command:
 - cd ckan; git reset --hard; git checkout $CKAN_VERSION
