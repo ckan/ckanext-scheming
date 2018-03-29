@@ -412,7 +412,6 @@ def _field_validators(f, schema, convert_extras):
     """
     Return the validators for a scheming field f
     """
-    validators = []
     if 'validators' in f:
         validators = validators_from_string(f['validators'], f, schema)
     elif helpers.scheming_field_required(f):
