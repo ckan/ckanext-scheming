@@ -124,14 +124,23 @@ class _SchemingMixin(object):
         _SchemingMixin._template_dir_added = True
         add_template_directory(config, 'templates')
 
-    def _load_presets(self, config):
+    @staticmethod
+    def _load_presets(config):
         if _SchemingMixin._presets is not None:
             return
-        presets = config.get('scheming.presets', DEFAULT_PRESETS).split()
-        _SchemingMixin._presets = {}
-        for f in reversed(presets):
-            for pp in _load_schema(f)['presets']:
-                _SchemingMixin._presets[pp['preset_name']] = pp['values']
+
+        presets = reversed(
+            config.get(
+                'scheming.presets',
+                DEFAULT_PRESETS
+            ).split()
+        )
+
+        _SchemingMixin._presets = {
+            field['preset_name']: field['values']
+            for preset_path in presets
+            for field in _load_schema(preset_path)['presets']
+        }
 
     def update_config(self, config):
         if self.instance:
@@ -389,7 +398,6 @@ def _field_output_validators_group(f, schema, convert_extras):
     Return the output validators for a scheming field f, tailored for groups
     and orgs.
     """
-
     return _field_output_validators(
         f,
         schema,
@@ -444,19 +452,26 @@ def _field_create_validators(f, schema, convert_extras):
     return validators
 
 
-def _expand_preset(f):
+def _expand(schema, field):
     """
     If scheming field f includes a preset value return a new field
     based on the preset with values from f overriding any values in the
-    preset.
+    preset. Applies default values to fields that are expected to always exist.
 
     raises SchemingException if the preset given is not found.
     """
-    if 'preset' not in f:
-        return f
-    if f['preset'] not in _SchemingMixin._presets:
-        raise SchemingException("preset '%s' not defined" % f['preset'])
-    return dict(_SchemingMixin._presets[f['preset']], **f)
+    preset = field.get('preset')
+    if preset:
+        if preset not in _SchemingMixin._presets:
+            raise SchemingException("preset '%s' not defined" % f['preset'])
+        field = dict(_SchemingMixin._presets[preset], **field)
+
+    field.setdefault('display_group', schema.get(
+        'display_group_default',
+        u'General'
+    ))
+
+    return field
 
 
 def _expand_schemas(schemas):
@@ -465,10 +480,15 @@ def _expand_schemas(schemas):
     """
     out = {}
     for name, original in schemas.iteritems():
-        s = dict(original)
-        for fname in ('fields', 'dataset_fields', 'resource_fields'):
-            if fname not in s:
+        schema = dict(original)
+        for grouping in ('fields', 'dataset_fields', 'resource_fields'):
+            if grouping not in schema:
                 continue
-            s[fname] = [_expand_preset(f) for f in s[fname]]
-        out[name] = s
+
+            schema[grouping] = [
+                _expand(schema, field)
+                for field in schema[grouping]
+            ]
+
+        out[name] = schema
     return out
