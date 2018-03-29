@@ -15,19 +15,8 @@ from ckantoolkit import (
 from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 
-from ckanext.scheming import helpers
+from ckanext.scheming import helpers, validation
 from ckanext.scheming.errors import SchemingException
-from ckanext.scheming.validation import (
-    validators_from_string,
-    scheming_choices,
-    scheming_required,
-    scheming_multiple_choice,
-    scheming_multiple_choice_output,
-    scheming_isodatetime,
-    scheming_isodatetime_tz,
-    scheming_valid_json_object,
-    scheming_load_json,
-)
 from ckanext.scheming.logic import (
     scheming_dataset_schema_list,
     scheming_dataset_schema_show,
@@ -91,18 +80,21 @@ class _SchemingMixin(object):
         if _SchemingMixin._validators_loaded:
             return {}
         _SchemingMixin._validators_loaded = True
-        return {
-            'scheming_choices': scheming_choices,
-            'scheming_required': scheming_required,
-            'scheming_multiple_choice': scheming_multiple_choice,
-            'scheming_multiple_choice_output': scheming_multiple_choice_output,
+
+        validators = dict(
+            inspect.getmembers(
+                validation,
+                lambda o: inspect.isfunction(o) and o.__name__.startswith(
+                    'scheming_')
+            )
+        )
+
+        validators.update({
             'convert_to_json_if_date': convert_to_json_if_date,
-            'convert_to_json_if_datetime': convert_to_json_if_datetime,
-            'scheming_isodatetime': scheming_isodatetime,
-            'scheming_isodatetime_tz': scheming_isodatetime_tz,
-            'scheming_valid_json_object': scheming_valid_json_object,
-            'scheming_load_json': scheming_load_json,
-        }
+            'convert_to_json_if_datetime': convert_to_json_if_datetime
+        })
+
+        return validators
 
     def _add_template_directory(self, config):
         if _SchemingMixin._template_dir_added:
@@ -403,7 +395,7 @@ def _field_output_validators(f, schema, convert_extras,
     else:
         validators = [ignore_missing]
     if 'output_validators' in f:
-        validators += validators_from_string(
+        validators += validation.validators_from_string(
             f['output_validators'], f, schema)
     return validators
 
@@ -413,7 +405,11 @@ def _field_validators(f, schema, convert_extras):
     Return the validators for a scheming field f
     """
     if 'validators' in f:
-        validators = validators_from_string(f['validators'], f, schema)
+        validators = validation.validators_from_string(
+            f['validators'],
+            f,
+            schema
+        )
     elif helpers.scheming_field_required(f):
         validators = [not_empty, unicode]
     else:
@@ -431,7 +427,12 @@ def _field_create_validators(f, schema, convert_extras):
     """
     if 'create_validators' not in f:
         return _field_validators(f, schema, convert_extras)
-    validators = validators_from_string(f['create_validators'], f, schema)
+
+    validators = validation.validators_from_string(
+        f['create_validators'],
+        f,
+        schema
+    )
 
     if convert_extras:
         validators = validators + [convert_to_extras]
