@@ -69,6 +69,10 @@ class _SchemingMixin(object):
     _presets = None
     _template_dir_added = False
     _validators_loaded = False
+    _is_fallback = False
+    _schema_urls = tuple()
+    _schemas = tuple()
+    _expanded_schemas = tuple()
 
     def get_helpers(self):
         if _SchemingMixin._helpers_loaded:
