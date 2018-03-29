@@ -16,7 +16,6 @@ from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 
 from ckanext.scheming import helpers
-from ckanext.scheming import loader
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import (
     validators_from_string,
@@ -46,6 +45,7 @@ from ckanext.scheming.converters import (
 import os
 import inspect
 import logging
+import yaml
 
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
@@ -365,7 +365,7 @@ def _load_schema_module_path(url):
     path = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(path):
         watch_file(path)
-        return loader.load(open(path))
+        return yaml.load(open(path))
 
 
 def _load_schema_url(url):
@@ -376,7 +376,7 @@ def _load_schema_url(url):
     except urllib2.URLError:
         raise SchemingException("Could not load %s" % url)
 
-    return loader.loads(tables, url)
+    return yaml.loads(tables, url)
 
 
 def _field_output_validators_group(f, schema, convert_extras):
