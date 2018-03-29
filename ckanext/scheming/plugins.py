@@ -365,7 +365,8 @@ def _load_schema_module_path(url):
     path = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(path):
         watch_file(path)
-        return yaml.load(open(path))
+        with open(path, 'rb') as schema_file:
+            return yaml.load(schema_file)
 
 
 def _load_schema_url(url):
