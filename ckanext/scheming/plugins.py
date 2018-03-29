@@ -366,10 +366,11 @@ def _load_schema_module_path(url):
         m = __import__(module, fromlist=[''])
     except ImportError:
         return
-    p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
-    if os.path.exists(p):
-        watch_file(p)
-        return loader.load(open(p))
+
+    path = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
+    if os.path.exists(path):
+        watch_file(path)
+        return loader.load(open(path))
 
 
 def _load_schema_url(url):

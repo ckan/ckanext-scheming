@@ -37,8 +37,8 @@ def scheming_choices(field, schema):
         if value is missing or not value:
             return value
         choices = sh.scheming_field_choices(field)
-        for c in choices:
-            if value == c['value']:
+        for choice in choices:
+            if value == choice['value']:
                 return value
         raise Invalid(_('unexpected choice "%s"') % value)
 
@@ -93,8 +93,8 @@ def scheming_multiple_choice(field, schema):
         choice_values = static_choice_values
         if not choice_values:
             choice_order = [
-                c['value']
-                for c in sh.scheming_field_choices(field)
+                choice['value']
+                for choice in sh.scheming_field_choices(field)
             ]
             choice_values = set(choice_order)
 
@@ -127,17 +127,17 @@ def validate_date_inputs(field, key, data, extras, errors, context):
     def get_input(suffix):
         inpt = key[0] + '_' + suffix
         new_key = (inpt,) + tuple(x for x in key if x != key[0])
-        value = extras.get(inpt)
-        data[new_key] = value
+        key_value = extras.get(inpt)
+        data[new_key] = key_value
         errors[new_key] = []
 
-        if value:
+        if key_value:
             del extras[inpt]
 
         if field.get('required'):
             not_empty(new_key, data, errors, context)
 
-        return new_key, value
+        return new_key, key_value
 
     date_key, value = get_input('date')
     value_full = ''
