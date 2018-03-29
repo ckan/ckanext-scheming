@@ -335,6 +335,7 @@ def scheming_display_json_value(value, indent=2):
     Returns the object passed serialized as a JSON string.
 
     :param value: The object to serialize.
+    :param indent: Indentation level to pass through to json.dumps().
     :returns: The serialized object, or the original value if it could not be
         serialized.
     :rtype: string
