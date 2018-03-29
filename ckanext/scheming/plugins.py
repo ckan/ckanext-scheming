@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import os
+import inspect
+import logging
+
+import yaml
 import ckan.plugins as p
+from paste.reloader import watch_file
+from paste.deploy.converters import asbool
 from ckan.common import c
 from ckantoolkit import (
     DefaultDatasetForm,
@@ -12,29 +19,14 @@ from ckantoolkit import (
     add_template_directory,
 )
 
-from paste.reloader import watch_file
-from paste.deploy.converters import asbool
-
-from ckanext.scheming import helpers, validation
+from ckanext.scheming import helpers, validation, logic
 from ckanext.scheming.errors import SchemingException
-from ckanext.scheming.logic import (
-    scheming_dataset_schema_list,
-    scheming_dataset_schema_show,
-    scheming_group_schema_list,
-    scheming_group_schema_show,
-    scheming_organization_schema_list,
-    scheming_organization_schema_show
-)
 from ckanext.scheming.converters import (
     convert_from_extras_group,
     convert_to_json_if_date,
     convert_to_json_if_datetime
 )
 
-import os
-import inspect
-import logging
-import yaml
 
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
@@ -255,8 +247,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         publish dataset schemas
         """
         return {
-            'scheming_dataset_schema_list': scheming_dataset_schema_list,
-            'scheming_dataset_schema_show': scheming_dataset_schema_show,
+            'scheming_dataset_schema_list': logic.scheming_dataset_schema_list,
+            'scheming_dataset_schema_show': logic.scheming_dataset_schema_show,
         }
 
 
@@ -285,8 +277,8 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
     def get_actions(self):
         return {
-            'scheming_group_schema_list': scheming_group_schema_list,
-            'scheming_group_schema_show': scheming_group_schema_show,
+            'scheming_group_schema_list': logic.scheming_group_schema_list,
+            'scheming_group_schema_show': logic.scheming_group_schema_show,
         }
 
 
@@ -320,9 +312,9 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def get_actions(self):
         return {
             'scheming_organization_schema_list':
-                scheming_organization_schema_list,
+                logic.scheming_organization_schema_list,
             'scheming_organization_schema_show':
-                scheming_organization_schema_show,
+                logic.scheming_organization_schema_show,
         }
 
 
@@ -450,7 +442,7 @@ def _expand(schema, field):
     preset = field.get('preset')
     if preset:
         if preset not in _SchemingMixin._presets:
-            raise SchemingException("preset '%s' not defined" % f['preset'])
+            raise SchemingException('preset \'{}\' not defined'.format(preset))
         field = dict(_SchemingMixin._presets[preset], **field)
 
     field.setdefault('display_group', schema.get(
