@@ -264,8 +264,6 @@ def scheming_valid_json_object(value, context):
             _('Unsupported type for JSON field: {}').format(type(value))
         )
 
-    return value
-
 
 def scheming_load_json(value, context):
     if isinstance(value, basestring):
