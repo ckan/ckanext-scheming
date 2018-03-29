@@ -1,7 +1,8 @@
 import datetime
 
+
 def convert_from_extras_group(key, data, errors, context):
-    '''Converts values from extras, tailored for groups.'''
+    """Converts values from extras, tailored for groups."""
 
     def remove_from_extras(data, key):
         to_remove = []
@@ -30,6 +31,7 @@ def convert_to_json_if_date(date, context):
         return date.isoformat()
     else:
         return date
+
 
 def convert_to_json_if_datetime(date, context):
     if isinstance(date, datetime.datetime):

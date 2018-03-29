@@ -13,6 +13,7 @@ OneOf = get_validator('OneOf')
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
 
+
 def scheming_validator(fn):
     """
     Decorate a validator that needs to have the scheming fields
@@ -91,7 +92,10 @@ def scheming_multiple_choice(field, schema):
 
         choice_values = static_choice_values
         if not choice_values:
-            choice_order = [c['value'] for c in sh.scheming_field_choices(field)]
+            choice_order = [
+                c['value']
+                for c in sh.scheming_field_choices(field)
+            ]
             choice_values = set(choice_order)
 
         selected = set()
@@ -102,9 +106,11 @@ def scheming_multiple_choice(field, schema):
             errors[key].append(_('unexpected choice "%s"') % element)
 
         if not errors[key]:
-            data[key] = json.dumps([v for v in
+            data[key] = json.dumps([
+                v for v in
                 (static_choice_order if static_choice_values else choice_order)
-                if v in selected])
+                if v in selected
+            ])
 
             if field.get('required') and not selected:
                 errors[key].append(_('Select at least one'))
@@ -131,7 +137,7 @@ def validate_date_inputs(field, key, data, extras, errors, context):
         if field.get('required'):
             not_empty(new_key, data, errors, context)
 
-        return (new_key, value)
+        return new_key, value
 
     date_key, value = get_input('date')
     value_full = ''
@@ -203,7 +209,7 @@ def scheming_isodatetime_tz(field, schema):
 
         if value:
             if isinstance(value, datetime.datetime):
-                date = sh.scheming_datetime_to_UTC(value)
+                date = sh.scheming_datetime_to_utc(value)
             else:
                 try:
                     date = sh.date_tz_str_to_datetime(value)
@@ -219,7 +225,7 @@ def scheming_isodatetime_tz(field, schema):
                 date = validate_date_inputs(
                     field, key, data, extras, errors, context)
                 if isinstance(date, datetime.datetime):
-                    date = sh.scheming_datetime_to_UTC(date)
+                    date = sh.scheming_datetime_to_utc(date)
 
         data[key] = date
 

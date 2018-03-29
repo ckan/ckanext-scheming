@@ -45,6 +45,7 @@ from ckanext.scheming.converters import (
 
 import os
 import inspect
+import logging
 
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
@@ -53,7 +54,6 @@ convert_from_extras = get_converter('convert_from_extras')
 
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
-import logging
 log = logging.getLogger(__name__)
 
 
