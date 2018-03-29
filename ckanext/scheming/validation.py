@@ -1,7 +1,6 @@
 import json
 import datetime
 import pytz
-import re
 import ckan.lib.helpers as h
 import ckanext.scheming.helpers as sh
 
