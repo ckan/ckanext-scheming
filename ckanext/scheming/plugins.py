@@ -78,28 +78,14 @@ class _SchemingMixin(object):
         if _SchemingMixin._helpers_loaded:
             return {}
         _SchemingMixin._helpers_loaded = True
-        return {
-            'scheming_language_text': helpers.scheming_language_text,
-            'scheming_choices_label': helpers.scheming_choices_label,
-            'scheming_field_choices': helpers.scheming_field_choices,
-            'scheming_field_required': helpers.scheming_field_required,
-            'scheming_dataset_schemas': helpers.scheming_dataset_schemas,
-            'scheming_get_dataset_schema': helpers.scheming_get_dataset_schema,
-            'scheming_group_schemas': helpers.scheming_group_schemas,
-            'scheming_get_group_schema': helpers.scheming_get_group_schema,
-            'scheming_organization_schemas':
-                helpers.scheming_organization_schemas,
-            'scheming_get_organization_schema':
-                helpers.scheming_get_organization_schema,
-            'scheming_field_by_name': helpers.scheming_field_by_name,
-            'scheming_get_presets': helpers.scheming_get_presets,
-            'scheming_get_preset': helpers.scheming_get_preset,
-            'scheming_get_schema': helpers.scheming_get_schema,
-            'scheming_get_timezones': helpers.scheming_get_timezones,
-            'scheming_datetime_to_tz': helpers.scheming_datetime_to_tz,
-            'scheming_datastore_choices': helpers.scheming_datastore_choices,
-            'scheming_display_json_value': helpers.scheming_display_json_value,
-            }
+
+        return dict(
+            inspect.getmembers(
+                helpers,
+                lambda o: inspect.isfunction(o) and o.__name__.startswith(
+                    'scheming_')
+            )
+        )
 
     def get_validators(self):
         if _SchemingMixin._validators_loaded:
@@ -116,7 +102,7 @@ class _SchemingMixin(object):
             'scheming_isodatetime_tz': scheming_isodatetime_tz,
             'scheming_valid_json_object': scheming_valid_json_object,
             'scheming_load_json': scheming_load_json,
-            }
+        }
 
     def _add_template_directory(self, config):
         if _SchemingMixin._template_dir_added:
