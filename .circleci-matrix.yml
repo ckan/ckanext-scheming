@@ -11,10 +11,10 @@ command:
 - cp ckan/ckan/public/base/css/main.css ckan/ckan/public/base/css/main.debug.css
 - [ "$CKAN_VERSION" != "release-v2.5-latest" ] || pip install html5lib==0.999  # FIXME remove this terrible workaround
 - pip install -U setuptools
-- pip install -q -r ckan/requirements.txt --allow-all-external
-- pip install -q -r ckan/dev-requirements.txt --allow-all-external
+- pip install -q -r ckan/requirements.txt
+- pip install -q -r ckan/dev-requirements.txt
 - cd ckan; python setup.py develop
 - cd ckan; paster db init -c test-core.ini
-- pip install -q -r test-requirements.txt --allow-all-external
+- pip install -q -r test-requirements.txt
 - nosetests --with-pylons=subdir/test_subclass.ini --nologcapture ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form:TestDatasetFormNew ckanext.scheming.tests.test_dataset_logic
 - nosetests --with-pylons=subdir/test.ini --nologcapture
