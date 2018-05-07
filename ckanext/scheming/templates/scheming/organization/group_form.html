@@ -1,3 +1,4 @@
+{% import 'macros/form.html' as form %}
 {%- if not c.group_type -%}
     <p>
         group_type not passed to template. your version of CKAN
@@ -23,5 +24,6 @@
         {% endif %}
         {% endblock %}
         <button class="btn btn-primary" name="save" type="submit">{% block save_text %}{{ _('Save Organization') }}{% endblock %}</button>
+        {{ form.required_message() }}
     </div>
 </form>
