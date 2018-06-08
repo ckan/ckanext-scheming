@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from ckantoolkit import CkanCommand
 import paste.script
 
@@ -35,7 +37,7 @@ class SchemingCommand(CkanCommand):
         if cmd == 'show':
             self._show()
         else:
-            print self.__doc__
+            print(self.__doc__)
 
     def _show(self):
         schemas = [
@@ -45,21 +47,21 @@ class SchemingCommand(CkanCommand):
         ]
 
         for n, s in schemas:
-            print n, "schemas:"
+            print(n, "schemas:")
             if s is None:
-                print "    plugin not loaded or schema not specified\n"
+                print("    plugin not loaded or schema not specified\n")
                 continue
             if not s:
-                print "    no schemas"
+                print("    no schemas")
             for typ in sorted(s):
-                print " * " + json.dumps(typ)
+                print(" * " + json.dumps(typ))
                 field_names = ('dataset_fields', 'fields', 'resource_fields')
 
                 for field_name in field_names:
                     if s[typ].get(field_name):
                         if field_name == 'resource_fields':
-                            print " * " + json.dumps("resource")
+                            print(" * " + json.dumps("resource"))
                         for field in s[typ][field_name]:
-                            print "   - " + json.dumps(field['field_name']),
-                            print scheming_language_text(field.get('label'))
-            print
+                            print("   - " + json.dumps(field['field_name']), end='')
+                            print(scheming_language_text(field.get('label')))
+            print()
