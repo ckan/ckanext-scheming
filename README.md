@@ -14,6 +14,19 @@ Requirements
 This plugin is compatible with CKAN 2.3 or later.
 
 
+Installation
+============
+
+You can install the extension with the following shell commands:
+
+```sh
+cd $CKAN_VENV/src/
+
+pip install -e "git+https://github.com/ckan/ckanext-scheming.git#egg=ckanext-scheming"
+pip install -r ckanext-scheming/requirements.txt
+```
+
+
 Configuration
 =============
 
