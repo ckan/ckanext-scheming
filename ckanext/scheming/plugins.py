@@ -235,16 +235,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         thing, action_type = action.split('_')
         t = data_dict.get('type')
         if not t or t not in self._schemas:
-            return data_dict, {'type': [
-                "Unsupported dataset type: {t}".format(t=t)]}
+            return data_dict, {
+                'type': [
+                    "Unsupported dataset type: {t}".format(t=t)
+                ]
+            }
+
         scheming_schema = self._expanded_schemas[t]
 
-        if action_type == 'show':
-            get_validators = _field_output_validators
-        elif action_type == 'create':
-            get_validators = _field_create_validators
-        else:
-            get_validators = _field_validators
+        get_validators = {
+            'show': _field_output_validators,
+            'create': _field_create_validators
+        }.get(action_type, _field_validators)
 
         for f in scheming_schema['dataset_fields']:
             schema[f['field_name']] = get_validators(
@@ -252,6 +254,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 scheming_schema,
                 f['field_name'] not in schema
             )
+
+            # Apply default field values before going through validation. This
+            # deals with fields that have form_snippet set to null, and fields
+            # that have defaults added after initial creation.
+            v = data_dict.get(f['field_name'])
+            if v is None:
+                data_dict[f['field_name']] = f.get('default')
 
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
