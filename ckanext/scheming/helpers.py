@@ -118,8 +118,10 @@ def scheming_datastore_choices(field):
     if not fields:
         fields = [f['id'] for f in result['fields'] if f['id'] != '_id']
 
-    return [{'value': r[fields[0]], 'label': r[fields[1]]}
-        for r in result['records']]
+    return [{
+        'value': r[fields[0]],
+        'label': r[fields[1]]
+    } for r in result['records']]
 
 
 def scheming_field_required(field):
@@ -245,7 +247,7 @@ def scheming_field_by_name(fields, name):
 
 
 def date_tz_str_to_datetime(date_str):
-    '''Convert ISO-like formatted datestring with timezone to datetime object.
+    """Convert ISO-like formatted datestring with timezone to datetime object.
 
     This function converts ISO format datetime-strings into datetime objects.
     Times may be specified down to the microsecond.  UTC offset or timezone
@@ -254,7 +256,7 @@ def date_tz_str_to_datetime(date_str):
     Note - Although originally documented as parsing ISO date(-times), this
            function doesn't fully adhere to the format.  It allows microsecond
            precision, despite that not being part of the ISO format.
-    '''
+    """
     split = date_str.split('T')
 
     if len(split) < 2:
@@ -298,8 +300,8 @@ def date_tz_str_to_datetime(date_str):
     return final_date
 
 
-def scheming_datetime_to_UTC(date):
-    if (date.tzinfo):
+def scheming_datetime_to_utc(date):
+    if date.tzinfo:
         date = date.astimezone(pytz.utc)
 
     # Make date naive before returning
@@ -315,11 +317,11 @@ def scheming_datetime_to_tz(date, tz):
 
 
 def scheming_get_timezones(field):
-    def to_options(list):
-        return [{'value':tz, 'text':tz} for tz in list]
+    def to_options(l):
+        return [{'value': tz, 'text': tz} for tz in l]
 
-    def validate_tz(list):
-        return [tz for tz in list if tz in pytz.all_timezones]
+    def validate_tz(l):
+        return [tz for tz in l if tz in pytz.all_timezones]
 
     timezones = field.get('timezones')
     if timezones == 'all':
@@ -335,6 +337,7 @@ def scheming_display_json_value(value, indent=2):
     Returns the object passed serialized as a JSON string.
 
     :param value: The object to serialize.
+    :param indent: Indentation level to pass through to json.dumps().
     :returns: The serialized object, or the original value if it could not be
         serialized.
     :rtype: string

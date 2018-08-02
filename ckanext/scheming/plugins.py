@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import os
+import inspect
+import logging
+
+import yaml
 import ckan.plugins as p
+from paste.reloader import watch_file
+from paste.deploy.converters import asbool
 from ckan.common import c
 from ckantoolkit import (
     DefaultDatasetForm,
@@ -12,39 +19,14 @@ from ckantoolkit import (
     add_template_directory,
 )
 
-from paste.reloader import watch_file
-from paste.deploy.converters import asbool
-
-from ckanext.scheming import helpers
-from ckanext.scheming import loader
+from ckanext.scheming import helpers, validation, logic
 from ckanext.scheming.errors import SchemingException
-from ckanext.scheming.validation import (
-    validators_from_string,
-    scheming_choices,
-    scheming_required,
-    scheming_multiple_choice,
-    scheming_multiple_choice_output,
-    scheming_isodatetime,
-    scheming_isodatetime_tz,
-    scheming_valid_json_object,
-    scheming_load_json,
-)
-from ckanext.scheming.logic import (
-    scheming_dataset_schema_list,
-    scheming_dataset_schema_show,
-    scheming_group_schema_list,
-    scheming_group_schema_show,
-    scheming_organization_schema_list,
-    scheming_organization_schema_show
-)
 from ckanext.scheming.converters import (
     convert_from_extras_group,
     convert_to_json_if_date,
     convert_to_json_if_datetime
 )
 
-import os
-import inspect
 
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
@@ -53,7 +35,6 @@ convert_from_extras = get_converter('convert_from_extras')
 
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
-import logging
 log = logging.getLogger(__name__)
 
 
@@ -69,50 +50,43 @@ class _SchemingMixin(object):
     _presets = None
     _template_dir_added = False
     _validators_loaded = False
+    _is_fallback = False
+    _schema_urls = tuple()
+    _schemas = tuple()
+    _expanded_schemas = tuple()
 
     def get_helpers(self):
         if _SchemingMixin._helpers_loaded:
             return {}
         _SchemingMixin._helpers_loaded = True
-        return {
-            'scheming_language_text': helpers.scheming_language_text,
-            'scheming_choices_label': helpers.scheming_choices_label,
-            'scheming_field_choices': helpers.scheming_field_choices,
-            'scheming_field_required': helpers.scheming_field_required,
-            'scheming_dataset_schemas': helpers.scheming_dataset_schemas,
-            'scheming_get_dataset_schema': helpers.scheming_get_dataset_schema,
-            'scheming_group_schemas': helpers.scheming_group_schemas,
-            'scheming_get_group_schema': helpers.scheming_get_group_schema,
-            'scheming_organization_schemas':
-                helpers.scheming_organization_schemas,
-            'scheming_get_organization_schema':
-                helpers.scheming_get_organization_schema,
-            'scheming_field_by_name': helpers.scheming_field_by_name,
-            'scheming_get_presets': helpers.scheming_get_presets,
-            'scheming_get_preset': helpers.scheming_get_preset,
-            'scheming_get_schema': helpers.scheming_get_schema,
-            'scheming_get_timezones': helpers.scheming_get_timezones,
-            'scheming_datetime_to_tz': helpers.scheming_datetime_to_tz,
-            'scheming_datastore_choices': helpers.scheming_datastore_choices,
-            'scheming_display_json_value': helpers.scheming_display_json_value,
-            }
+
+        return dict(
+            inspect.getmembers(
+                helpers,
+                lambda o: inspect.isfunction(o) and o.__name__.startswith(
+                    'scheming_')
+            )
+        )
 
     def get_validators(self):
         if _SchemingMixin._validators_loaded:
             return {}
         _SchemingMixin._validators_loaded = True
-        return {
-            'scheming_choices': scheming_choices,
-            'scheming_required': scheming_required,
-            'scheming_multiple_choice': scheming_multiple_choice,
-            'scheming_multiple_choice_output': scheming_multiple_choice_output,
+
+        validators = dict(
+            inspect.getmembers(
+                validation,
+                lambda o: inspect.isfunction(o) and o.__name__.startswith(
+                    'scheming_')
+            )
+        )
+
+        validators.update({
             'convert_to_json_if_date': convert_to_json_if_date,
-            'convert_to_json_if_datetime': convert_to_json_if_datetime,
-            'scheming_isodatetime': scheming_isodatetime,
-            'scheming_isodatetime_tz': scheming_isodatetime_tz,
-            'scheming_valid_json_object': scheming_valid_json_object,
-            'scheming_load_json': scheming_load_json,
-            }
+            'convert_to_json_if_datetime': convert_to_json_if_datetime
+        })
+
+        return validators
 
     def _add_template_directory(self, config):
         if _SchemingMixin._template_dir_added:
@@ -120,14 +94,23 @@ class _SchemingMixin(object):
         _SchemingMixin._template_dir_added = True
         add_template_directory(config, 'templates')
 
-    def _load_presets(self, config):
+    @staticmethod
+    def _load_presets(config):
         if _SchemingMixin._presets is not None:
             return
-        presets = config.get('scheming.presets', DEFAULT_PRESETS).split()
-        _SchemingMixin._presets = {}
-        for f in reversed(presets):
-            for pp in _load_schema(f)['presets']:
-                _SchemingMixin._presets[pp['preset_name']] = pp['values']
+
+        presets = reversed(
+            config.get(
+                'scheming.presets',
+                DEFAULT_PRESETS
+            ).split()
+        )
+
+        _SchemingMixin._presets = {
+            field['preset_name']: field['values']
+            for preset_path in presets
+            for field in _load_schema(preset_path)['presets']
+        }
 
     def update_config(self, config):
         if self.instance:
@@ -274,8 +257,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         publish dataset schemas
         """
         return {
-            'scheming_dataset_schema_list': scheming_dataset_schema_list,
-            'scheming_dataset_schema_show': scheming_dataset_schema_show,
+            'scheming_dataset_schema_list': logic.scheming_dataset_schema_list,
+            'scheming_dataset_schema_show': logic.scheming_dataset_schema_show,
         }
 
 
@@ -304,8 +287,8 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
     def get_actions(self):
         return {
-            'scheming_group_schema_list': scheming_group_schema_list,
-            'scheming_group_schema_show': scheming_group_schema_show,
+            'scheming_group_schema_list': logic.scheming_group_schema_list,
+            'scheming_group_schema_show': logic.scheming_group_schema_show,
         }
 
 
@@ -339,9 +322,9 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def get_actions(self):
         return {
             'scheming_organization_schema_list':
-                scheming_organization_schema_list,
+                logic.scheming_organization_schema_list,
             'scheming_organization_schema_show':
-                scheming_organization_schema_show,
+                logic.scheming_organization_schema_show,
         }
 
 
@@ -372,10 +355,12 @@ def _load_schema_module_path(url):
         m = __import__(module, fromlist=[''])
     except ImportError:
         return
-    p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
-    if os.path.exists(p):
-        watch_file(p)
-        return loader.load(open(p))
+
+    path = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
+    if os.path.exists(path):
+        watch_file(path)
+        with open(path, 'rb') as schema_file:
+            return yaml.load(schema_file)
 
 
 def _load_schema_url(url):
@@ -386,7 +371,7 @@ def _load_schema_url(url):
     except urllib2.URLError:
         raise SchemingException("Could not load %s" % url)
 
-    return loader.loads(tables, url)
+    return yaml.loads(tables, url)
 
 
 def _field_output_validators_group(f, schema, convert_extras):
@@ -394,7 +379,6 @@ def _field_output_validators_group(f, schema, convert_extras):
     Return the output validators for a scheming field f, tailored for groups
     and orgs.
     """
-
     return _field_output_validators(
         f,
         schema,
@@ -413,7 +397,7 @@ def _field_output_validators(f, schema, convert_extras,
     else:
         validators = [ignore_missing]
     if 'output_validators' in f:
-        validators += validators_from_string(
+        validators += validation.validators_from_string(
             f['output_validators'], f, schema)
     return validators
 
@@ -422,9 +406,12 @@ def _field_validators(f, schema, convert_extras):
     """
     Return the validators for a scheming field f
     """
-    validators = []
     if 'validators' in f:
-        validators = validators_from_string(f['validators'], f, schema)
+        validators = validation.validators_from_string(
+            f['validators'],
+            f,
+            schema
+        )
     elif helpers.scheming_field_required(f):
         validators = [not_empty, unicode]
     else:
@@ -442,26 +429,38 @@ def _field_create_validators(f, schema, convert_extras):
     """
     if 'create_validators' not in f:
         return _field_validators(f, schema, convert_extras)
-    validators = validators_from_string(f['create_validators'], f, schema)
+
+    validators = validation.validators_from_string(
+        f['create_validators'],
+        f,
+        schema
+    )
 
     if convert_extras:
         validators = validators + [convert_to_extras]
     return validators
 
 
-def _expand_preset(f):
+def _expand(schema, field):
     """
     If scheming field f includes a preset value return a new field
     based on the preset with values from f overriding any values in the
-    preset.
+    preset. Applies default values to fields that are expected to always exist.
 
     raises SchemingException if the preset given is not found.
     """
-    if 'preset' not in f:
-        return f
-    if f['preset'] not in _SchemingMixin._presets:
-        raise SchemingException("preset '%s' not defined" % f['preset'])
-    return dict(_SchemingMixin._presets[f['preset']], **f)
+    preset = field.get('preset')
+    if preset:
+        if preset not in _SchemingMixin._presets:
+            raise SchemingException('preset \'{}\' not defined'.format(preset))
+        field = dict(_SchemingMixin._presets[preset], **field)
+
+    field.setdefault('display_group', schema.get(
+        'display_group_default',
+        u'General'
+    ))
+
+    return field
 
 
 def _set_defaults(f):
@@ -476,14 +475,15 @@ def _expand_schemas(schemas):
     """
     out = {}
     for name, original in schemas.iteritems():
-        s = dict(original)
-        for fname in ('fields', 'dataset_fields', 'resource_fields'):
-            if fname not in s:
+        schema = dict(original)
+        for grouping in ('fields', 'dataset_fields', 'resource_fields'):
+            if grouping not in schema:
                 continue
 
-            s[fname] = [_set_defaults(
-                _expand_preset(f)
-            ) for f in s[fname]]
+            schema[grouping] = [
+                _expand(schema, field)
+                for field in schema[grouping]
+            ]
 
-        out[name] = s
+        out[name] = schema
     return out
