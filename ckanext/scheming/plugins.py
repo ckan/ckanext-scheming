@@ -7,7 +7,11 @@ import logging
 
 import ckan.plugins as p
 from ckan.common import c
-from ckan.lib.helpers import helper_functions as core_helper_functions
+try:
+    from ckan.lib.helpers import helper_functions as core_helper_functions
+except ImportError:  # CKAN <= 2.5
+    core_helper_functions = None
+
 from ckantoolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
@@ -68,12 +72,18 @@ class _SchemingMixin(object):
     """
     instance = None
     _presets = None
+    _helpers_loaded = False
     _template_dir_added = False
     _validators_loaded = False
 
     def get_helpers(self):
-        if 'scheming_language_text' in core_helper_functions:
+        if core_helper_functions is None:
+            if _SchemingMixin._helpers_loaded:
+                return {}
+            _SchemingMixin._helpers_loaded = True
+        elif 'scheming_language_text' in core_helper_functions:
             return {}
+
         return {
             'scheming_language_text': helpers.scheming_language_text,
             'scheming_choices_label': helpers.scheming_choices_label,
