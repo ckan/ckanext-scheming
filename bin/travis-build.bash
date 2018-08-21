@@ -51,6 +51,9 @@ pip install -r requirements.txt
 pip install -r test-requirements.txt
 python setup.py develop
 
+echo "Updating solr_url to single core"
+sed -i -e 's/use = config:..\/ckan\/test-core.ini/use = config:..\/ckan\/test-core.ini\nsolr_url = http:\/\/127.0.0.1:8983\/solr/' test*.ini
+
 
 echo "Moving test.ini into a subdir..."
 mkdir subdir
