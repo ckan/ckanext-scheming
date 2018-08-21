@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
+
+import os
+import inspect
+import logging
+
 import ckan.plugins as p
 from ckan.common import c
+from ckan.lib.helpers import helper_functions as core_helper_functions
 from ckantoolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
@@ -43,9 +49,6 @@ from ckanext.scheming.converters import (
     convert_to_json_if_datetime
 )
 
-import os
-import inspect
-
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
 convert_to_extras = get_converter('convert_to_extras')
@@ -53,7 +56,6 @@ convert_from_extras = get_converter('convert_from_extras')
 
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
-import logging
 log = logging.getLogger(__name__)
 
 
@@ -65,15 +67,13 @@ class _SchemingMixin(object):
     only do them once when any plugin is loaded.
     """
     instance = None
-    _helpers_loaded = False
     _presets = None
     _template_dir_added = False
     _validators_loaded = False
 
     def get_helpers(self):
-        if _SchemingMixin._helpers_loaded:
+        if 'scheming_language_text' in core_helper_functions:
             return {}
-        _SchemingMixin._helpers_loaded = True
         return {
             'scheming_language_text': helpers.scheming_language_text,
             'scheming_choices_label': helpers.scheming_choices_label,
