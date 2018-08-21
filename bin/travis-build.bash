@@ -29,7 +29,7 @@ fi
 python setup.py develop
 
 pip install -r requirements.txt
-pip install -r test-requirements.txt
+pip install -r dev-requirements.txt
 cd -
 
 echo "Setting up Solr..."
@@ -45,6 +45,12 @@ echo "Initialising the database..."
 cd ckan
 paster db init -c test-core.ini
 cd -
+
+echo "Installing ckanext-scheming and its requirements..."
+pip install -r requirements.txt
+pip install -r test-requirements.txt
+python setup.py develop
+
 
 echo "Moving test.ini into a subdir..."
 mkdir subdir
