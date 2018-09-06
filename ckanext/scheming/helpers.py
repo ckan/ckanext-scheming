@@ -3,8 +3,7 @@ import datetime
 import pytz
 import json
 
-from pylons import config
-from pylons.i18n import gettext
+from ckantoolkit import config, _
 
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
 
@@ -49,9 +48,9 @@ def scheming_language_text(text, prefer_lang=None):
         l, v = sorted(text.items())[0]
         return v
 
-    t = gettext(text)
-    if isinstance(t, str):
-        return t.decode('utf-8')
+    if isinstance(text, str):
+        text = text.decode('utf-8')
+    t = _(text)
     return t
 
 
@@ -119,7 +118,7 @@ def scheming_datastore_choices(field):
         fields = [f['id'] for f in result['fields'] if f['id'] != '_id']
 
     return [{'value': r[fields[0]], 'label': r[fields[1]]}
-        for r in result['records']]
+            for r in result['records']]
 
 
 def scheming_field_required(field):
@@ -316,7 +315,7 @@ def scheming_datetime_to_tz(date, tz):
 
 def scheming_get_timezones(field):
     def to_options(list):
-        return [{'value':tz, 'text':tz} for tz in list]
+        return [{'value': tz, 'text': tz} for tz in list]
 
     def validate_tz(list):
         return [tz for tz in list if tz in pytz.all_timezones]

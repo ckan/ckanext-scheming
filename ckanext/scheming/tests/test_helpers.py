@@ -11,13 +11,13 @@ from ckanext.scheming.helpers import (
     scheming_datastore_choices,
 )
 
-from ckanapi import NotFound, NotAuthorized
+from ckanapi import NotFound
 
 
 class TestLanguageText(object):
-    @patch('ckanext.scheming.helpers.gettext')
-    def test_pass_through_gettext(self, gettext):
-        gettext.side_effect = lambda x: x + '1'
+    @patch('ckanext.scheming.helpers._')
+    def test_pass_through_gettext(self, _):
+        _.side_effect = lambda x: x + '1'
         assert_equals('hello1', scheming_language_text('hello'))
 
     def test_only_one_language(self):
