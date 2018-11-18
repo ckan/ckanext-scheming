@@ -252,7 +252,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
             resource_schema[f['field_name']] = get_validators(
-                f, scheming_schema, False)
+                f,
+                scheming_schema,
+                False
+            )
+
+            if data_dict.get(f['field_name']) is None:
+                # data_dict[f['field_name']] = f.get('default')
+                default = f.get('default')
+                if default:
+                    data_dict[f['field_name']] = helpers.scheming_render_from_string(
+                        source=default
+                    )
 
         return navl_validate(data_dict, schema, context)
 

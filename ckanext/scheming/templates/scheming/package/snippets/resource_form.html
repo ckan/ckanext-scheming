@@ -16,13 +16,44 @@
     might not be compatible with ckanext-scheming
     </p>
   {%- endif -%}
-  {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
-  {%- for field in schema.resource_fields -%}
-    {%- snippet 'scheming/snippets/form_field.html',
-      field=field, data=data, errors=errors,
-      entity_type='dataset', object_type=dataset_type -%}
-  {%- endfor -%}
+
+    {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+    {%- for group in schema.resource_fields|groupby('display_group') -%}
+        <h3 class="page-heading">
+            {{ _(group.grouper) }}
+        </h3>
+        <hr />
+        {%- for field in group.list -%}
+            {%- if field.form_snippet is not none -%}
+                {%- if field.field_name not in data %}
+                    {# Set the field default value before rendering but only if
+                    it doesn't already exist in data which would mean the form
+                    has been submitted. #}
+                    {% if field.default %}
+                        {% set _x_ = data.__setitem__(
+                            field.field_name,
+                            h.scheming_render_from_string(field.default)) %}
+                    {% endif %}
+                {% endif -%}
+                {%- snippet 'scheming/snippets/form_field.html',
+                    field=field,
+                    data=data,
+                    errors=errors,
+                    licenses=c.licenses,
+                    entity_type='dataset',
+                    object_type=dataset_type
+                -%}
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endfor -%}
+
+  {%- if 'resource_fields' not in schema -%}
+    <!-- force controller to skip resource-editing step for this type -->
+    <input type="hidden" name="_ckan_phase" value="" />
+  {%- endif -%}
+
 {% endblock %}
+
 
 {% block metadata_fields %}
 {% endblock %}
