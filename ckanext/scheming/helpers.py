@@ -3,6 +3,7 @@ import datetime
 import pytz
 import json
 
+from jinja2 import Environment
 from pylons import config
 from pylons.i18n import gettext
 
@@ -346,3 +347,20 @@ def scheming_display_json_value(value, indent=2):
         return json.dumps(value, indent=indent, sort_keys=True)
     except (TypeError, ValueError):
         return value
+
+
+def scheming_render_from_string(source, **kwargs):
+    # Temporary solution for rendering defaults and including the CKAN
+    # helpers. The core CKAN lib does not include a string rendering
+    # utility that works across 2.6-2.8.
+    from ckantoolkit import h
+
+    env = Environment(autoescape=True)
+    template = env.from_string(
+        source,
+        globals={
+            'h': h
+        }
+    )
+
+    return template.render(**kwargs)

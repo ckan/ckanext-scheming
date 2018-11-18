@@ -241,9 +241,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             # Apply default field values before going through validation. This
             # deals with fields that have form_snippet set to null, and fields
             # that have defaults added after initial creation.
-            v = data_dict.get(f['field_name'])
-            if v is None:
-                data_dict[f['field_name']] = f.get('default')
+            if data_dict.get(f['field_name']) is None:
+                # data_dict[f['field_name']] = f.get('default')
+                default = f.get('default')
+                if default:
+                    data_dict[f['field_name']] = helpers.scheming_render_from_string(
+                        source=default
+                    )
 
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
@@ -461,12 +465,6 @@ def _expand(schema, field):
     ))
 
     return field
-
-
-def _set_defaults(f):
-    if 'group' not in f:
-        f['group'] = 'General'
-    return f
 
 
 def _expand_schemas(schemas):
