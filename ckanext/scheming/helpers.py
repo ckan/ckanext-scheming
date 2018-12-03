@@ -364,3 +364,29 @@ def scheming_render_from_string(source, **kwargs):
     )
 
     return template.render(**kwargs)
+
+
+def scheming_massage_subfield(field, subfield, index, data):
+    # Subfield & data are re-used, we must not modify the original!
+    sf = subfield.copy()
+    data = data.copy()
+
+    new_field_name = '{field_name}-{index}-{subfield_name}'.format(
+        field_name=field['field_name'],
+        index=index,
+        subfield_name=subfield['field_name']
+    )
+
+    field_data = data.pop(sf['field_name'], None)
+    if field_data is not None:
+        data[new_field_name] = field_data
+
+    sf['field_name'] = new_field_name
+
+    return sf, data
+
+def scheming_composite_load(value):
+    if value:
+        value = json.loads(value)
+        return [value] if isinstance(value, dict) else value
+    return []

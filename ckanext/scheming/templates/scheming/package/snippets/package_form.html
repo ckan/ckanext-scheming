@@ -19,10 +19,9 @@
 
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
     {%- for group in schema.dataset_fields|groupby('display_group') -%}
-        <h3 class="page-heading">
+        <h3 class="scheming-group-title">
             {{ _(group.grouper) }}
         </h3>
-        <hr />
         {%- for field in group.list -%}
             {%- if field.form_snippet is not none -%}
                 {%- if field.field_name not in data %}

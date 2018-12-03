@@ -1,11 +1,20 @@
 import json
 import datetime
+from collections import defaultdict
+import itertools
+
 import pytz
 import ckan.lib.helpers as h
+from ckan.lib.navl.dictization_functions import convert
+from ckantoolkit import (
+    get_validator,
+    UnknownValidator,
+    missing,
+    Invalid,
+    _
+)
+
 import ckanext.scheming.helpers as sh
-
-from ckantoolkit import get_validator, UnknownValidator, missing, Invalid, _
-
 from ckanext.scheming.errors import SchemingException
 
 OneOf = get_validator('OneOf')
@@ -22,6 +31,105 @@ def scheming_validator(fn):
     """
     fn.is_a_scheming_validator = True
     return fn
+
+
+@scheming_validator
+def composite_form(field, schema):
+    """
+    A special validator used to collect and pack composite & repeating fields.
+    """
+    from ckanext.scheming.plugins import _field_create_validators
+    from pprint import pprint
+
+    def composite_validator(key, data, errors, context):
+        # If the field is coming from the API the value will be set directly.
+        pprint('*' * 80)
+        value = data.get(key)
+        if not value:
+            # ... otherwise, it's a form submission so our values are stuck
+            # unrolled in __extras.
+            # If we're working on a package field, the key will look like:
+            #   (<field name>,)
+            # and if we're working on a resource it'll be:
+            #   ('resources', <resource #>, <field name>)
+            prefix = key[-1] + '-'
+            _extras = data.get(key[:-1] + ('__extras',), {})
+
+            # Group our unrolled fields by their index.
+            values = defaultdict(dict)
+            for k in _extras.keys():
+                if k.startswith(prefix):
+                    name = k[len(prefix):]
+                    index, name = name.split('-', 1)
+                    # Always pop, we don't want handled values to remain in
+                    # __extras or they'll end up on the model.
+                    values[int(index)][name] = _extras.pop(k)
+
+            # ... then turn it back into an ordered list.
+            value = [v for k, v in sorted(values.iteritems())]
+        elif isinstance(value, basestring):
+            value = json.loads(value)
+
+        if not isinstance(value, list):
+            # We treat all composite fields as repeatable when processing, even
+            # when they aren't defined that way in the schema.
+            value = [value]
+
+        for subfield in field['subfields']:
+            validators = _field_create_validators(subfield, schema, False)
+            for entry in value:
+                # This right here is why we recommend globally unique field
+                # names, else you risk trampling values from the top-level
+                # schema. Some validators like require_when_published require
+                # other top-level fields.
+                entry_as_data = {(k,): v for k, v in entry.iteritems()}
+                entry_as_data.update(data)
+
+                entry_errors = defaultdict(list)
+
+                for v in validators:
+                    convert(
+                        v,
+                        (subfield['field_name'],),
+                        entry_as_data,
+                        entry_errors,
+                        context
+                    )
+
+                # Any subfield errors should be added as errors to the parent
+                # since this is the only way we have to let other plugins know
+                # of issues.
+                errors[key].extend(
+                    itertools.chain.from_iterable(
+                        v for v in entry_errors.itervalues()
+                    )
+                )
+
+                # Pull our potentially modified fields back. What if validators
+                # modified other fields such as a top-level field? Is this
+                # "allowed" in CKAN validators? We might have to replace
+                # entry_as_data with a write-tracing dict to capture all
+                # changes.
+                for k in entry.keys():
+                    entry[k] = entry_as_data[(k,)]
+
+        # It would be preferable to just always store as a list, but some plugins
+        # such as ckanext-restricted make assumptions on how ckanext-composite
+        # stored its values.
+        if field.get('repeatable', False):
+            data[key] = json.dumps(value)
+        elif value:
+            data[key] = json.dumps(value[0])
+
+    return composite_validator
+
+
+@scheming_validator
+def composite_display(field, schema):
+    def composite_display(key, data, errors, context):
+        pass
+
+    return composite_display
 
 
 @scheming_validator

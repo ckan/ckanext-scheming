@@ -1,15 +1,66 @@
+{% resource 'scheming/composite-repeating.js' %}
+
 {#- master snippet for all scheming form fields -#}
 {#- render the field the user requested, or use a default field -#}
+{%- if field.subfields %}
+  {# A complex field with sub-fields, which can optionally be repeatable. #}
+  <fieldset class="composite-fieldset" {% if field.repeatable %}data-module="composite-repeating"{% endif %}>
+    <legend>
+      {{ _(field.label) }}
+    </legend>
+    {% set help_text = h.scheming_language_text(field.help_text)%}
+    {% if help_text %}
+    <div class="info-block">
+       {{ help_text }}
+    </div>
+    {% endif %}
 
-{%- set form_snippet = field.form_snippet -%}
+    {% set group_data = h.scheming_composite_load(data[field.field_name]) %}
+    {% set group_count = group_data|length|default(field.form_blanks, True)|default(1) %}
 
-{%- if not form_snippet -%}
-  {%- set form_snippet = 'text.html' -%}
+    {# Even fields not marked as repeatable are still treated as a repeating
+    list of 1 to simplify things. #}
+    {% for index in range(group_count) %}
+        {%- if group_data %}
+            {% set group_payload = group_data[index] %}
+        {% else %}
+            {% set group_payload = {} %}
+        {% endif -%}
+        <div class="composite-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
+        {% for subfield in field.subfields %}
+            {% set sf, payload = h.scheming_massage_subfield(
+                field,
+                subfield,
+                index,
+                group_payload)
+            %}
+
+            {%- snippet 'scheming/snippets/form_field.html',
+                field=sf,
+                data=payload,
+                errors=errors,
+                licenses=licenses,
+                entity_type=entity_type,
+                object_type=object_type
+            -%}
+        {% endfor %}
+        </div>
+    {% endfor %}
+  </fieldset>
+{%- else -%}
+  {# A simple field. #}
+  {%- set form_snippet = field.form_snippet|default('text.html') -%}
+
+  {%- if '/' not in form_snippet -%}
+    {%- set form_snippet = 'scheming/form_snippets/' + form_snippet -%}
+  {%- endif -%}
+
+  {%- snippet form_snippet,
+    field=field,
+    data=data,
+    errors=errors,
+    licenses=licenses,
+    entity_type=entity_type,
+    object_type=object_type
+  -%}
 {%- endif -%}
-
-{%- if '/' not in form_snippet -%}
-  {%- set form_snippet = 'scheming/form_snippets/' + form_snippet -%}
-{%- endif -%}
-
-{%- snippet form_snippet, field=field, data=data, errors=errors,
-  licenses=licenses, entity_type=entity_type, object_type=object_type -%}

@@ -17,6 +17,7 @@ from ckantoolkit import (
     get_converter,
     navl_validate,
     add_template_directory,
+    add_resource
 )
 
 from ckanext.scheming import helpers, validation, logic
@@ -93,6 +94,7 @@ class _SchemingMixin(object):
             return
         _SchemingMixin._template_dir_added = True
         add_template_directory(config, 'templates')
+        add_resource('fanstatic', 'scheming')
 
     @staticmethod
     def _load_presets(config):
@@ -231,40 +233,32 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             'create': _field_create_validators
         }.get(action_type, _field_validators)
 
-        for f in scheming_schema['dataset_fields']:
-            schema[f['field_name']] = get_validators(
-                f,
-                scheming_schema,
-                f['field_name'] not in schema
-            )
+        fg = (
+            (scheming_schema['dataset_fields'], schema),
+            (scheming_schema['resource_fields'], schema['resources'])
+        )
 
-            # Apply default field values before going through validation. This
-            # deals with fields that have form_snippet set to null, and fields
-            # that have defaults added after initial creation.
-            if data_dict.get(f['field_name']) is None:
-                # data_dict[f['field_name']] = f.get('default')
-                default = f.get('default')
-                if default:
-                    data_dict[f['field_name']] = helpers.scheming_render_from_string(
-                        source=default
-                    )
+        for field_list, destination in fg:
+            for f in field_list:
+                destination[f['field_name']] = get_validators(
+                    f,
+                    scheming_schema,
+                    f['field_name'] not in schema
+                )
 
-        resource_schema = schema['resources']
-        for f in scheming_schema.get('resource_fields', []):
-            resource_schema[f['field_name']] = get_validators(
-                f,
-                scheming_schema,
-                False
-            )
+                # Apply default field values before going through validation. This
+                # deals with fields that have form_snippet set to null, and fields
+                # that have defaults added after initial creation.
+                if data_dict.get(f['field_name']) is None:
+                    default = f.get('default')
+                    if default:
+                        data_dict[f['field_name']] = (
+                            helpers.scheming_render_from_string(
+                                source=default
+                            )
+                        )
 
-            if data_dict.get(f['field_name']) is None:
-                # data_dict[f['field_name']] = f.get('default')
-                default = f.get('default')
-                if default:
-                    data_dict[f['field_name']] = helpers.scheming_render_from_string(
-                        source=default
-                    )
-
+        schema['__before'].append(validators.composite_preprocessor)
         return navl_validate(data_dict, schema, context)
 
     def get_actions(self):
@@ -428,12 +422,19 @@ def _field_validators(f, schema, convert_extras):
             schema
         )
     elif helpers.scheming_field_required(f):
-        validators = [not_empty, unicode]
+        validators = [not_empty]
     else:
-        validators = [ignore_missing, unicode]
+        validators = [ignore_missing]
 
     if convert_extras:
-        validators = validators + [convert_to_extras]
+        validators.append(convert_to_extras)
+
+    # If this field contains children, we need a special validator to handle
+    # them.
+    if 0:
+        if f.get('subfields'):
+            validators = [validation.composite_form(f, schema)] + validators
+
     return validators
 
 
@@ -452,7 +453,14 @@ def _field_create_validators(f, schema, convert_extras):
     )
 
     if convert_extras:
-        validators = validators + [convert_to_extras]
+        validators.append(convert_to_extras)
+
+    # If this field contains children, we need a special validator to handle
+    # them.
+    if 0:
+        if f.get('subfields'):
+            validators = [validation.composite_form(f, schema)] + validators
+
     return validators
 
 
@@ -493,6 +501,13 @@ def _expand_schemas(schemas):
                 _expand(schema, field)
                 for field in schema[grouping]
             ]
+
+            for field in schema[grouping]:
+                if 'subfields' in field:
+                    field['subfields'] = [
+                        _expand(schema, subfield)
+                        for subfield in field['subfields']
+                    ]
 
         out[name] = schema
     return out
