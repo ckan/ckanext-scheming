@@ -28,7 +28,7 @@ this.ckan.module('composite-repeating', function (jQuery, _) {
             var group = parseInt($copy.data('groupIndex'), 10) + 1,
                 field = $copy.data('field');
 
-            $copy.data('groupIndex', group);
+            $copy.attr('data-group-index', group);
 
             function replace_index(index, string) {
                 return string.replace(new RegExp('(^' + field + '-)([0-9]+)'), '$1' + group);

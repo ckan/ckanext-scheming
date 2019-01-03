@@ -39,11 +39,9 @@ def composite_form(field, schema):
     A special validator used to collect and pack composite & repeating fields.
     """
     from ckanext.scheming.plugins import _field_create_validators
-    from pprint import pprint
 
     def composite_validator(key, data, errors, context):
         # If the field is coming from the API the value will be set directly.
-        pprint('*' * 80)
         value = data.get(key)
         if not value:
             # ... otherwise, it's a form submission so our values are stuck
@@ -116,6 +114,7 @@ def composite_form(field, schema):
         # It would be preferable to just always store as a list, but some plugins
         # such as ckanext-restricted make assumptions on how ckanext-composite
         # stored its values.
+
         if field.get('repeatable', False):
             data[key] = json.dumps(value)
         elif value:

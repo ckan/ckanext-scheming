@@ -230,7 +230,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         get_validators = {
             'show': _field_output_validators,
-            'create': _field_create_validators
+            'create': _field_create_validators,
+            'upate': _field_create_validators
         }.get(action_type, _field_validators)
 
         fg = (
@@ -258,7 +259,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                             )
                         )
 
-        schema['__before'].append(validators.composite_preprocessor)
         return navl_validate(data_dict, schema, context)
 
     def get_actions(self):
@@ -431,9 +431,8 @@ def _field_validators(f, schema, convert_extras):
 
     # If this field contains children, we need a special validator to handle
     # them.
-    if 0:
-        if f.get('subfields'):
-            validators = [validation.composite_form(f, schema)] + validators
+    if 'subfields' in f:
+        validators = [validation.composite_form(f, schema)] + validators
 
     return validators
 
@@ -457,9 +456,8 @@ def _field_create_validators(f, schema, convert_extras):
 
     # If this field contains children, we need a special validator to handle
     # them.
-    if 0:
-        if f.get('subfields'):
-            validators = [validation.composite_form(f, schema)] + validators
+    if 'subfields' in f:
+        validators = [validation.composite_form(f, schema)] + validators
 
     return validators
 
