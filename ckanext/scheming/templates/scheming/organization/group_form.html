@@ -8,7 +8,11 @@
 {%- endif -%}
 
 <form class="dataset-form form-horizontal" method="post" data-module="basic-form" enctype="multipart/form-data">
-    {%- set schema = h.scheming_get_organization_schema(c.group_type) -%}
+  {% block error_summary %}
+    {{ form.errors(error_summary) }}
+  {% endblock %}
+
+  {%- set schema = h.scheming_get_organization_schema(c.group_type) -%}
     {%- for field in schema['fields'] -%}
         {%- snippet 'scheming/snippets/form_field.html',
         field=field, data=data, errors=errors, licenses=licenses,
