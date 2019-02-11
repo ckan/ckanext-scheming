@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-{%- set is_upload = (data.url_type == 'upload') -%}
+{%- set is_upload = (data.url_type == 'upload') or (data.image_url and not data.image_url.startswith('http')) -%}
 {{ form.image_upload(
     data,
     errors,
