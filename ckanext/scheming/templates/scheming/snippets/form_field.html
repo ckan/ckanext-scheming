@@ -21,30 +21,30 @@
     {# Even fields not marked as repeatable are still treated as a repeating
     list of 1 to simplify things. #}
     {% for index in range(group_count) %}
-        {%- if group_data %}
-            {% set group_payload = group_data[index] %}
-        {% else %}
-            {% set group_payload = {} %}
-        {% endif -%}
-        <div class="composite-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
-        {% for subfield in field.subfields %}
-            {% set sf, payload = h.scheming_massage_subfield(
-                field,
-                subfield,
-                index,
-                group_payload)
-            %}
+      {%- if group_data %}
+        {% set group_payload = group_data[index] %}
+      {% else %}
+        {% set group_payload = {} %}
+      {% endif -%}
+      <div class="composite-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
+      {% for subfield in field.subfields %}
+        {% set sf, payload = h.scheming_massage_subfield(
+          field,
+          subfield,
+          index,
+          group_payload)
+        %}
 
-            {%- snippet 'scheming/snippets/form_field.html',
-                field=sf,
-                data=payload,
-                errors=errors,
-                licenses=licenses,
-                entity_type=entity_type,
-                object_type=object_type
-            -%}
-        {% endfor %}
-        </div>
+        {%- snippet 'scheming/snippets/form_field.html',
+          field=sf,
+          data=payload,
+          errors=errors,
+          licenses=licenses,
+          entity_type=entity_type,
+          object_type=object_type
+        -%}
+      {% endfor %}
+      </div>
     {% endfor %}
   </fieldset>
 {%- else -%}
