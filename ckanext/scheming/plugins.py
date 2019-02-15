@@ -198,19 +198,15 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         thing, action_type = action.split('_')
         t = data_dict.get('type')
         if not t or t not in self._schemas:
-            return data_dict, {
-                'type': [
-                    "Unsupported dataset type: {t}".format(t=t)
-                ]
-            }
+            return data_dict, {'type': [
+                "Unsupported dataset type: {t}".format(t=t)]}
 
         scheming_schema = self._expanded_schemas[t]
 
-        get_validators = {
-            'show': _field_output_validators,
-            'create': _field_create_validators,
-            'upate': _field_create_validators
-        }.get(action_type, _field_validators)
+        if action_type == 'show':
+            get_validators = _field_output_validators
+        elif action_type == 'create':
+            get_validators = _field_create_validators
 
         fg = (
             (scheming_schema['dataset_fields'], schema),
