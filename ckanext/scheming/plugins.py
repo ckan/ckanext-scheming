@@ -225,13 +225,16 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 # deals with fields that have form_snippet set to null, and fields
                 # that have defaults added after initial creation.
                 if data_dict.get(f['field_name']) is None:
+                    default_jinja2 = f.get('default_jinja2')
                     default = f.get('default')
-                    if default:
+                    if default_jinja2:
                         data_dict[f['field_name']] = (
                             helpers.scheming_render_from_string(
-                                source=default
+                                source=default_jinja2
                             )
                         )
+                    elif default:
+                        data_dict[f['field_name']] = default
 
         return navl_validate(data_dict, schema, context)
 
