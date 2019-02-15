@@ -21,6 +21,14 @@ OneOf = get_validator('OneOf')
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
 
+all_validators = {}
+
+def validator(fn):
+    """
+    collect helper functions into ckanext.scheming.all_helpers dict
+    """
+    all_validator[fn.__name__] = fn
+
 
 def scheming_validator(fn):
     """
@@ -30,6 +38,7 @@ def scheming_validator(fn):
     and complete schema to produce the actual validator for each field.
     """
     fn.is_a_scheming_validator = True
+    validator(fn)
     return fn
 
 
@@ -338,6 +347,7 @@ def scheming_isodatetime_tz(field, schema):
     return validator
 
 
+@validator
 def scheming_valid_json_object(value, context):
     """Store a JSON object as a serialized JSON string
 
@@ -372,6 +382,7 @@ def scheming_valid_json_object(value, context):
         )
 
 
+@validator
 def scheming_load_json(value, context):
     if isinstance(value, basestring):
         try:
@@ -381,6 +392,7 @@ def scheming_load_json(value, context):
     return value
 
 
+@validator
 def scheming_multiple_choice_output(value):
     """
     return stored json as a proper list
@@ -427,3 +439,44 @@ def get_validator_or_converter(name):
     except UnknownValidator:
         pass
     raise SchemingException('validator/converter not found: %r' % name)
+
+
+def convert_from_extras_group(key, data, errors, context):
+    """Converts values from extras, tailored for groups."""
+
+    def remove_from_extras(data, key):
+        to_remove = []
+        for data_key, data_value in data.iteritems():
+            if (data_key[0] == 'extras'
+                    and data_key[1] == key):
+                to_remove.append(data_key)
+        for item in to_remove:
+            del data[item]
+
+    for data_key, data_value in data.iteritems():
+        if (data_key[0] == 'extras'
+            and 'key' in data_value
+                and data_value['key'] == key[-1]):
+            data[key] = data_value['value']
+            break
+    else:
+        return
+    remove_from_extras(data, data_key[1])
+
+
+@validator
+def convert_to_json_if_date(date, context):
+    if isinstance(date, datetime.datetime):
+        return date.date().isoformat()
+    elif isinstance(date, datetime.date):
+        return date.isoformat()
+    else:
+        return date
+
+
+@validator
+def convert_to_json_if_datetime(date, context):
+    if isinstance(date, datetime.datetime):
+        return date.isoformat()
+
+    return date

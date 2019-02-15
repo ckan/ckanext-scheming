@@ -22,11 +22,6 @@ from ckantoolkit import (
 
 from ckanext.scheming import helpers, validation, logic, loader
 from ckanext.scheming.errors import SchemingException
-from ckanext.scheming.converters import (
-    convert_from_extras_group,
-    convert_to_json_if_date,
-    convert_to_json_if_datetime
-)
 
 
 ignore_missing = get_validator('ignore_missing')
@@ -68,18 +63,7 @@ class _SchemingMixin(object):
             return {}
         _SchemingMixin._validators_loaded = True
 
-        validators = dict(
-            inspect.getmembers(
-                validation,
-                lambda o: inspect.isfunction(o) and o.__name__.startswith(
-                    'scheming_')
-            )
-        )
-
-        validators.update({
-            'convert_to_json_if_date': convert_to_json_if_date,
-            'convert_to_json_if_datetime': convert_to_json_if_datetime
-        })
+        validators = dict(validation.all_validators)
 
         return validators
 
@@ -386,7 +370,7 @@ def _field_output_validators_group(f, schema, convert_extras):
         f,
         schema,
         convert_extras,
-        convert_from_extras_type=convert_from_extras_group
+        convert_from_extras_type=validation.convert_from_extras_group
     )
 
 
