@@ -61,13 +61,7 @@ class _SchemingMixin(object):
             return {}
         _SchemingMixin._helpers_loaded = True
 
-        return dict(
-            inspect.getmembers(
-                helpers,
-                lambda o: inspect.isfunction(o) and o.__name__.startswith(
-                    'scheming_')
-            )
-        )
+        return dict(helpers.all_helpers)
 
     def get_validators(self):
         if _SchemingMixin._validators_loaded:

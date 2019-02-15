@@ -9,6 +9,14 @@ from pylons.i18n import gettext
 
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
 
+all_helpers = {}
+
+def helper(fn):
+    """
+    collect helper functions into ckanext.scheming.all_helpers dict
+    """
+    all_helpers[fn.__name__] = fn
+
 
 def lang():
     # access this function late in case ckan
@@ -17,6 +25,7 @@ def lang():
     return h.lang()
 
 
+@helper
 def scheming_language_text(text, prefer_lang=None):
     """
     :param text: {lang: text} dict or text string
@@ -56,6 +65,7 @@ def scheming_language_text(text, prefer_lang=None):
     return t
 
 
+@helper
 def scheming_field_choices(field):
     """
     :param field: scheming field definition
@@ -69,6 +79,7 @@ def scheming_field_choices(field):
         return choices_fn(field)
 
 
+@helper
 def scheming_choices_label(choices, value):
     """
     :param choices: choices list of {"label": .., "value": ..} dicts
@@ -84,6 +95,7 @@ def scheming_choices_label(choices, value):
     return scheming_language_text(value)
 
 
+@helper
 def scheming_datastore_choices(field):
     """
     Required scheming field:
@@ -125,6 +137,7 @@ def scheming_datastore_choices(field):
     } for r in result['records']]
 
 
+@helper
 def scheming_field_required(field):
     """
     Return field['required'] or guess based on validators if not present.
@@ -134,6 +147,7 @@ def scheming_field_required(field):
     return 'not_empty' in field.get('validators', '').split()
 
 
+@helper
 def scheming_dataset_schemas(expanded=True):
     """
     Return the dict of dataset schemas. Or if scheming_datasets
@@ -146,6 +160,7 @@ def scheming_dataset_schemas(expanded=True):
         return p.instance._schemas
 
 
+@helper
 def scheming_get_presets():
     """
     Returns a dict of all defined presets. If the scheming_datasets
@@ -156,6 +171,7 @@ def scheming_get_presets():
         return p._presets
 
 
+@helper
 def scheming_get_preset(preset_name):
     """
     Returns the preset by the name `preset_name`.. If the scheming_datasets
@@ -170,6 +186,7 @@ def scheming_get_preset(preset_name):
         return schemas.get(preset_name)
 
 
+@helper
 def scheming_get_dataset_schema(dataset_type, expanded=True):
     """
     Return the schema for the dataset_type passed or None if
@@ -180,6 +197,7 @@ def scheming_get_dataset_schema(dataset_type, expanded=True):
         return schemas.get(dataset_type)
 
 
+@helper
 def scheming_group_schemas(expanded=True):
     """
     Return the dict of group schemas. Or if scheming_groups
@@ -192,6 +210,7 @@ def scheming_group_schemas(expanded=True):
         return p.instance._schemas
 
 
+@helper
 def scheming_get_group_schema(group_type, expanded=True):
     """
     Return the schema for the group_type passed or None if
@@ -202,6 +221,7 @@ def scheming_get_group_schema(group_type, expanded=True):
         return schemas.get(group_type)
 
 
+@helper
 def scheming_organization_schemas(expanded=True):
     """
     Return the dict of organization schemas. Or if scheming_organizations
@@ -214,6 +234,7 @@ def scheming_organization_schemas(expanded=True):
         return p.instance._schemas
 
 
+@helper
 def scheming_get_organization_schema(organization_type, expanded=True):
     """
     Return the schema for the organization_type passed or None if
@@ -224,6 +245,7 @@ def scheming_get_organization_schema(organization_type, expanded=True):
         return schemas.get(organization_type)
 
 
+@helper
 def scheming_get_schema(entity_type, object_type, expanded=True):
     """
     Return the schema for the entity and object types passed
@@ -237,6 +259,7 @@ def scheming_get_schema(entity_type, object_type, expanded=True):
         return scheming_get_group_schema(object_type, expanded)
 
 
+@helper
 def scheming_field_by_name(fields, name):
     """
     Simple helper to grab a field from a schema field list
@@ -301,6 +324,7 @@ def date_tz_str_to_datetime(date_str):
     return final_date
 
 
+@helper
 def scheming_datetime_to_utc(date):
     if date.tzinfo:
         date = date.astimezone(pytz.utc)
@@ -309,6 +333,7 @@ def scheming_datetime_to_utc(date):
     return date.replace(tzinfo=None)
 
 
+@helper
 def scheming_datetime_to_tz(date, tz):
     if isinstance(tz, basestring):
         tz = pytz.timezone(tz)
@@ -317,6 +342,7 @@ def scheming_datetime_to_tz(date, tz):
     return pytz.utc.localize(date).astimezone(tz).replace(tzinfo=None)
 
 
+@helper
 def scheming_get_timezones(field):
     def to_options(l):
         return [{'value': tz, 'text': tz} for tz in l]
@@ -333,6 +359,7 @@ def scheming_get_timezones(field):
     return to_options(pytz.common_timezones)
 
 
+@helper
 def scheming_display_json_value(value, indent=2):
     """
     Returns the object passed serialized as a JSON string.
@@ -349,6 +376,7 @@ def scheming_display_json_value(value, indent=2):
         return value
 
 
+@helper
 def scheming_render_from_string(source, **kwargs):
     # Temporary solution for rendering defaults and including the CKAN
     # helpers. The core CKAN lib does not include a string rendering
@@ -366,6 +394,7 @@ def scheming_render_from_string(source, **kwargs):
     return template.render(**kwargs)
 
 
+@helper
 def scheming_massage_subfield(field, subfield, index, data):
     # Subfield & data are re-used, we must not modify the original!
     sf = subfield.copy()
@@ -385,6 +414,8 @@ def scheming_massage_subfield(field, subfield, index, data):
 
     return sf, data
 
+
+@helper
 def scheming_composite_load(value):
     if value:
         value = json.loads(value)
