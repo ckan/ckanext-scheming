@@ -9,6 +9,11 @@ import ckan.plugins as p
 from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 from ckan.common import c
+try:
+    from ckan.lib.helpers import helper_functions as core_helper_functions
+except ImportError:  # CKAN <= 2.5
+    core_helper_functions = None
+
 from ckantoolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
@@ -22,7 +27,6 @@ from ckantoolkit import (
 
 from ckanext.scheming import helpers, validation, logic, loader
 from ckanext.scheming.errors import SchemingException
-
 
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
@@ -42,8 +46,8 @@ class _SchemingMixin(object):
     only do them once when any plugin is loaded.
     """
     instance = None
-    _helpers_loaded = False
     _presets = None
+    _helpers_loaded = False
     _template_dir_added = False
     _validators_loaded = False
     _is_fallback = False
@@ -52,7 +56,11 @@ class _SchemingMixin(object):
     _expanded_schemas = tuple()
 
     def get_helpers(self):
-        if _SchemingMixin._helpers_loaded:
+        if core_helper_functions is None:
+            if _SchemingMixin._helpers_loaded:
+                return {}
+            _SchemingMixin._helpers_loaded = True
+        elif 'scheming_language_text' in core_helper_functions:
             return {}
         _SchemingMixin._helpers_loaded = True
 

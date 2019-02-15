@@ -4,8 +4,7 @@ import pytz
 import json
 
 from jinja2 import Environment
-from pylons import config
-from pylons.i18n import gettext
+from ckantoolkit import config, _
 
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
 
@@ -59,9 +58,9 @@ def scheming_language_text(text, prefer_lang=None):
         l, v = sorted(text.items())[0]
         return v
 
-    t = gettext(text)
-    if isinstance(t, str):
-        return t.decode('utf-8')
+    if isinstance(text, str):
+        text = text.decode('utf-8')
+    t = _(text)
     return t
 
 
