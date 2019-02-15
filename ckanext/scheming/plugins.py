@@ -20,7 +20,7 @@ from ckantoolkit import (
     add_resource
 )
 
-from ckanext.scheming import helpers, validation, logic
+from ckanext.scheming import helpers, validation, logic, loader
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.converters import (
     convert_from_extras_group,
@@ -365,11 +365,11 @@ def _load_schema_module_path(url):
     except ImportError:
         return
 
-    path = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
-    if os.path.exists(path):
-        watch_file(path)
-        with open(path, 'rb') as schema_file:
-            return yaml.load(schema_file)
+    p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
+    if os.path.exists(p):
+        watch_file(p)
+        with open(p) as schema_file:
+            return loader.load(p)
 
 
 def _load_schema_url(url):
@@ -380,7 +380,7 @@ def _load_schema_url(url):
     except urllib2.URLError:
         raise SchemingException("Could not load %s" % url)
 
-    return yaml.loads(tables, url)
+    return loader.loads(tables, url)
 
 
 def _field_output_validators_group(f, schema, convert_extras):
