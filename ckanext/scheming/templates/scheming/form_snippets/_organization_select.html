@@ -10,7 +10,7 @@ not used as a form_snippet directly #}
     error=errors[field.field_name],
     is_required=org_required,
     classes=['form-group', 'control-medium'],
-    extra_html=caller() if caller
+    extra_html=caller() if caller,
     ) %}
     <div {{
       form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
