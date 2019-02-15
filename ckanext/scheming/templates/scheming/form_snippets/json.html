@@ -8,7 +8,7 @@
     value=h.scheming_display_json_value(data[field.field_name], indent=field.get('indent', 2)),
     error=errors[field.field_name],
     attrs=field.form_attrs or {"class": "form-control"},
-    is_required=h.scheming_field_required(field)
+    is_required=h.scheming_field_required(field),
     )
 %}
     {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}

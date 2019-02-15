@@ -24,12 +24,15 @@
       size="{{ ([field.get('select_size', 10), field.choices|length]|sort)[0] }}"
       style="display: block"
       id="field-{{ field.field_name }}"
-      name="{{ field.field_name }}" >
+      name="{{ field.field_name }}"
+      {{ form.attributes(field.get('form_select_attrs', {})) }}>
     {%- for val, label in choices -%}
-      <option id="field-{{ field.field_name }}-{{ val }}" value="{{ val }}"
-          {{"selected " if val in data[field.field_name] }}>
+      <option id="field-{{ field.field_name }}-{{ val }}"
+          value="{{ val }}"
+          {{"selected " if val in data[field.field_name] }} />
         {{ label }}
       </option>
     {%- endfor -%}
   </select>
 {%- endcall -%}
+
