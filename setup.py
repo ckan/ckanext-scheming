@@ -27,5 +27,10 @@ setup(
     scheming_datasets=ckanext.scheming.plugins:SchemingDatasetsPlugin
     scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
     scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
+    scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
+    scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
+
+    [paste.paster_command]
+    scheming=ckanext.scheming.commands:SchemingCommand
     """,
 )
