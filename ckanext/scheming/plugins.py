@@ -215,6 +215,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             get_validators = _field_output_validators
         elif action_type == 'create':
             get_validators = _field_create_validators
+        else:
+            get_validators = _field_validators
 
         fg = (
             (scheming_schema['dataset_fields'], schema),
