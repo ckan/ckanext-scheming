@@ -33,7 +33,7 @@
               field.field_name,
               h.scheming_render_from_string(field.default_jinja2)) %}
           {% elif field.default %}
-            {% cakk data.__setitem__(field.field_name, field.default) %}
+            {% do data.__setitem__(field.field_name, field.default) %}
           {% endif %}
         {% endif -%}
         {%- snippet 'scheming/snippets/form_field.html',
