@@ -28,6 +28,7 @@ def validator(fn):
     collect helper functions into ckanext.scheming.all_helpers dict
     """
     all_validators[fn.__name__] = fn
+    return fn
 
 
 def scheming_validator(fn):
