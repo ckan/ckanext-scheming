@@ -354,7 +354,7 @@ def _load_schema_module_path(url):
     if os.path.exists(p):
         watch_file(p)
         with open(p) as schema_file:
-            return loader.load(p)
+            return loader.load(schema_file)
 
 
 def _load_schema_url(url):
