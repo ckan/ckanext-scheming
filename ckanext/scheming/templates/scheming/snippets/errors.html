@@ -29,7 +29,7 @@
       {%- endfor -%}
 
       {%- for key, errors in unprocessed.items() | sort -%}
-        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors[0] }}</li>
+        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors }}</li>
       {%- endfor -%}
     {% endblock %}
   </ul>
