@@ -30,4 +30,3 @@ class TestGroupDisplay(FunctionalTestBase):
         app = self._get_test_app()
         response = app.get(url='/group/about/group-one')
         assert_true('Bookface' in response.body)
-

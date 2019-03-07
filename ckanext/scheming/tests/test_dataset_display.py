@@ -1,7 +1,7 @@
 from nose.tools import assert_true, assert_in
 
 from ckantoolkit.tests.factories import Sysadmin, Dataset
-from ckantoolkit.tests.helpers import FunctionalTestBase, submit_and_follow
+from ckantoolkit.tests.helpers import FunctionalTestBase
 
 
 class TestDatasetDisplay(FunctionalTestBase):
@@ -13,7 +13,7 @@ class TestDatasetDisplay(FunctionalTestBase):
             name='set-one',
             humps=3,
             resources=[{
-                'url':"http://example.com/camel.txt",
+                'url': "http://example.com/camel.txt",
                 'camels_in_photo': 2}])
 
         app = self._get_test_app()
@@ -28,19 +28,19 @@ class TestDatasetDisplay(FunctionalTestBase):
             name='set-two',
             humps=3,
             resources=[{
-                'url':"http://example.com/camel.txt",
+                'url': "http://example.com/camel.txt",
                 'camels_in_photo': 2,
                 'date': '2015-01-01'}])
 
         app = self._get_test_app()
         response = app.get(url='/dataset/set-two/resource/' +
-            d['resources'][0]['id'])
+                               d['resources'][0]['id'])
         assert_true('Camels in Photo' in response.body)
         assert_true('Date' in response.body)
 
     def test_choice_field_shows_labels(self):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
             type='test-schema',
             name='with-choice',
@@ -52,7 +52,7 @@ class TestDatasetDisplay(FunctionalTestBase):
 
     def test_notes_field_displayed(self):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
             type='dataset',
             name='plain-jane',
@@ -64,7 +64,7 @@ class TestDatasetDisplay(FunctionalTestBase):
 
     def test_choice_field_shows_list_if_multiple_options(self):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
             type='test-schema',
             name='with-multiple-choice-n',
@@ -78,7 +78,7 @@ class TestDatasetDisplay(FunctionalTestBase):
 
     def test_choice_field_does_not_show_list_if_one_options(self):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
             type='test-schema',
             name='with-multiple-choice-one',
@@ -94,7 +94,7 @@ class TestDatasetDisplay(FunctionalTestBase):
 
     def test_json_field_displayed(self):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
             type='test-schema',
             name='plain-json',
@@ -104,9 +104,9 @@ class TestDatasetDisplay(FunctionalTestBase):
         response = app.get(url='/dataset/plain-json')
 
         expected = '''{
-  "a": "1", 
-  "b": "2"
-}'''.replace('"', '&#34;')   # Ask webhelpers
+          "a": "1",
+          "b": "2"
+          }'''.replace('"', '&#34;')   # Ask webhelpers
 
         assert_in(expected, response.body)
         assert_in('Example JSON', response.body)
