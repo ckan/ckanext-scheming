@@ -103,10 +103,10 @@ class TestDatasetDisplay(FunctionalTestBase):
         app = self._get_test_app()
         response = app.get(url='/dataset/plain-json')
 
-        expected = '''{
-          "a": "1",
-          "b": "2"
-          }'''.replace('"', '&#34;')   # Ask webhelpers
+        expected = ('{\n'
+                    '  "a": "1", \n'
+                    '  "b": "2"\n'
+                    '}').replace('"', '&#34;')   # Ask webhelpers
 
         assert_in(expected, response.body)
         assert_in('Example JSON', response.body)
