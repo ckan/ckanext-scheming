@@ -9,7 +9,9 @@
 {%- if field.get('sorted_choices', true) -%}
     {%- set licenses = licenses|sort -%}
 {%- endif -%}
-{%- for license_desc, license_id in licenses -%}
+{% set existing_license_id = data.get('license_id') %}
+
+{%- for license_id, license_desc in h.license_options(existing_license_id) -%}
     {%- if license_id or not h.scheming_field_required(field) -%}
         {%- do options.append({
             'value': license_id,

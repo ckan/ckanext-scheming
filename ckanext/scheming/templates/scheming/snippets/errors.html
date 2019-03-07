@@ -24,7 +24,7 @@
           {%- set errors = unprocessed.pop(field.field_name) -%}
           <li data-field-label="{{ field.field_name }}">{{
             h.scheming_language_text(field.label) }}:
-            {{ errors[0] }}</li>
+            {{ errors }}</li>
         {%- endif -%}
       {%- endfor -%}
 
