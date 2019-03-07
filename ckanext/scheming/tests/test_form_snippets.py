@@ -181,10 +181,10 @@ class TestJSONFormSnippet(object):
             field_name='a_json_field',
             data={'a_json_field': {'a': '1', 'b': '2'}},
         )
-        expected = '''{
-  "a": "1",
-  "b": "2"
-}'''.replace('"', '&#34;')   # Ask webhelpers
+        expected = ('{\n'
+                    '  "a": "1", \n'
+                    '  "b": "2"\n'
+                    '}').replace('"', '&#34;')   # Ask webhelpers
 
         assert_in(expected, html)
 
