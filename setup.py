@@ -16,10 +16,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'pyyaml',
-        'ckanapi',
-        'ckantoolkit>=0.0.2',
-        'pytz'
     ],
     entry_points=\
     """

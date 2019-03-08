@@ -1,0 +1,4 @@
+pyyaml
+ckanapi
+ckantoolkit >= 0.0.2
+pytz
