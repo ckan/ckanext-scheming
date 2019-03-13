@@ -28,6 +28,7 @@
     Resource Type does not exists
     {% endif %}
     {% endif %}
+  
   {%- for group in schema.resource_fields|groupby('display_group') -%}
     <h3 class="page-heading">
       {{ _(group.grouper) }}

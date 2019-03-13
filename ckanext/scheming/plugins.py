@@ -9,6 +9,8 @@ import ckan.plugins as p
 from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 from ckan.common import c
+from collections import OrderedDict
+import ckan.lib.helpers as h
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
@@ -24,7 +26,7 @@ from ckantoolkit import (
     add_template_directory,
     add_resource
 )
-
+import ckan.plugins.toolkit as toolkit
 from ckanext.scheming import helpers, validation, logic, loader
 from ckanext.scheming.errors import SchemingException
 
@@ -119,8 +121,8 @@ class _SchemingMixin(object):
             self.SCHEMA_TYPE_FIELD
         )
 
-        
-        
+
+
         self._expanded_schemas = _expand_schemas(self._schemas)
 
     def is_fallback(self):
@@ -176,12 +178,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.IPackageController, inherit=True)
 
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
-    
-    
+
+
     @classmethod
     def _store_instance(cls, self):
         SchemingDatasetsPlugin.instance = self
@@ -200,6 +203,12 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
     def package_types(self):
         return list(self._schemas)
+
+    def after_create(self, context, pkg_dict):
+        logging.warning('Hello')
+        logging.warning(context)
+        logging.warning(pkg_dict)
+        toolkit.h.redirect_to('/dataset/'+pkg_dict['name'])
 
     def validate(self, context, data_dict, schema, action):
         """
@@ -465,7 +474,7 @@ def _expand(schema, field):
             raise SchemingException('preset \'{}\' not defined'.format(preset))
         field = dict(_SchemingMixin._presets[preset], **field)
 
-    field.setdefault('display_group', schema.get(
+    field.setdefault(u'display_group', schema.get(
         'display_group_default',
         u'General'
     ))
@@ -496,12 +505,23 @@ def _expand_schemas(schemas):
                         for subfield in field['subfields']
                     ]
 
+        # Expand and combine resource-specific fields
+        # with the package's general resource fields.
+        # At present resource-specific fields can only be appended
         for resource in schema.get("resources", []):
-            expanded_fields = [
+            expanded_fields = schema.get("resource_fields", []) + [
                 _expand(schema, field)
                 for field in resource["resource_fields"]
-            ] + schema.get("resource_fields", [])
+            ]
+            # Resource-specific fields with the same name override
+            expanded_fields = list( v for v in (OrderedDict(
+                (x['field_name'], x)
+                for x in expanded_fields
+            ).values()))
+            logging.warning(expanded_fields)
             resource["resource_fields"] = expanded_fields
-            schema.setdefault("resource_schemas", {})[resource["resource_type"]] = resource
+            schema.setdefault(
+                "resource_schemas", {}
+            )[resource["resource_type"]] = resource
         out[name] = schema
     return out

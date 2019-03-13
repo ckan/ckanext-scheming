@@ -1,5 +1,9 @@
 {% extends 'package/new_package_form.html' %}
 
+{% block stages %}
+<input type="hidden" name="_ckan_phase" value="" />
+{% endblock %}
+
 {% block errors %}
 
  {%- if errors -%}
@@ -62,3 +66,8 @@
 
 {% block metadata_fields %}
 {% endblock %}
+
+{% block save_button %}
+  <button class="btn btn-primary" type="submit" name="save">{% block save_button_text %}{{ _('Create Data Package') }}{% endblock %}</button>
+{% endblock %}
+{{ form.required_message() }}
