@@ -119,6 +119,8 @@ class _SchemingMixin(object):
             self.SCHEMA_TYPE_FIELD
         )
 
+        
+        
         self._expanded_schemas = _expand_schemas(self._schemas)
 
     def is_fallback(self):
@@ -178,7 +180,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
-
+    
+    
     @classmethod
     def _store_instance(cls, self):
         SchemingDatasetsPlugin.instance = self
@@ -222,7 +225,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             (scheming_schema['dataset_fields'], schema),
             (scheming_schema['resource_fields'], schema['resources'])
         )
-
         for field_list, destination in fg:
             for f in field_list:
                 destination[f['field_name']] = get_validators(
@@ -494,5 +496,12 @@ def _expand_schemas(schemas):
                         for subfield in field['subfields']
                     ]
 
+        for resource in schema.get("resources", []):
+            expanded_fields = [
+                _expand(schema, field)
+                for field in resource["resource_fields"]
+            ] + schema.get("resource_fields", [])
+            resource["resource_fields"] = expanded_fields
+            schema.setdefault("resource_schemas", {})[resource["resource_type"]] = resource
         out[name] = schema
     return out
