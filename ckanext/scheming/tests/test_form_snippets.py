@@ -87,8 +87,7 @@ class TestSelectFormSnippet(object):
 
 
 def organization_option_tag(organization, selected_org):
-    return Markup('<option value="{orgid}"{selected}>'
-        '{display_name}</option>'.format(
+    return Markup('<option value="{orgid}"{selected}>{display_name}</option>'.format(
         orgid=organization['id'],
         selected=' selected' if selected_org else '',
         display_name=organization['display_name']))
@@ -182,10 +181,10 @@ class TestJSONFormSnippet(object):
             field_name='a_json_field',
             data={'a_json_field': {'a': '1', 'b': '2'}},
         )
-        expected = '''{
-  "a": "1", 
-  "b": "2"
-}'''.replace('"', '&#34;')   # Ask webhelpers
+        expected = ('{\n'
+                    '  "a": "1", \n'
+                    '  "b": "2"\n'
+                    '}').replace('"', '&#34;')   # Ask webhelpers
 
         assert_in(expected, html)
 

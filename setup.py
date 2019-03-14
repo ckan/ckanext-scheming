@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-import sys, os
 
 version = '1.1.0'
 
@@ -9,7 +8,7 @@ setup(
     description="Easy, sharable custom CKAN schemas",
     long_description="""
     """,
-    classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords='',
     author='Government of Canada',
     author_email='ian@excess.org',
@@ -20,8 +19,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[],
-    entry_points=\
-    """
+    entry_points="""
     [ckan.plugins]
     scheming_datasets=ckanext.scheming.plugins:SchemingDatasetsPlugin
     scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin

@@ -3,6 +3,7 @@ from nose.tools import assert_equals, assert_raises
 from ckanext.scheming.plugins import _load_schema
 from ckanext.scheming.errors import SchemingException
 
+
 class TestLoadSchema(object):
     def test_invalid_module(self):
         assert_raises(SchemingException, _load_schema, 'verybad.nogood:schema')

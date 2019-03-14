@@ -1,7 +1,6 @@
 import json
 import datetime
 import pytz
-import re
 import ckan.lib.helpers as h
 import ckanext.scheming.helpers as sh
 
@@ -12,6 +11,7 @@ from ckanext.scheming.errors import SchemingException
 OneOf = get_validator('OneOf')
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
+
 
 def scheming_validator(fn):
     """
@@ -103,8 +103,8 @@ def scheming_multiple_choice(field, schema):
 
         if not errors[key]:
             data[key] = json.dumps([v for v in
-                (static_choice_order if static_choice_values else choice_order)
-                if v in selected])
+                                    (static_choice_order if static_choice_values else choice_order)
+                                    if v in selected])
 
             if field.get('required') and not selected:
                 errors[key].append(_('Select at least one'))
@@ -140,7 +140,7 @@ def validate_date_inputs(field, key, data, extras, errors, context):
         try:
             value_full = value
             date = h.date_str_to_datetime(value)
-        except (TypeError, ValueError), e:
+        except (TypeError, ValueError):
             errors[date_key].append(date_error)
 
     time_key, value = get_input('time')
@@ -152,7 +152,7 @@ def validate_date_inputs(field, key, data, extras, errors, context):
             try:
                 value_full += ' ' + value
                 date = h.date_str_to_datetime(value_full)
-            except (TypeError, ValueError), e:
+            except (TypeError, ValueError):
                 errors[time_key].append(time_error)
 
     tz_key, value = get_input('tz')
@@ -178,7 +178,7 @@ def scheming_isodatetime(field, schema):
             else:
                 try:
                     date = h.date_str_to_datetime(value)
-                except (TypeError, ValueError), e:
+                except (TypeError, ValueError):
                     raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))
@@ -207,7 +207,7 @@ def scheming_isodatetime_tz(field, schema):
             else:
                 try:
                     date = sh.date_tz_str_to_datetime(value)
-                except (TypeError, ValueError), e:
+                except (TypeError, ValueError):
                     raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))

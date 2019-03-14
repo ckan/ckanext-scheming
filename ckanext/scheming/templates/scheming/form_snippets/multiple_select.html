@@ -24,7 +24,9 @@
       size="{{ ([field.get('select_size', 10), field.choices|length]|sort)[0] }}"
       style="display: block"
       id="field-{{ field.field_name }}"
-      name="{{ field.field_name }}" >
+      name="{{ field.field_name }}"
+      {{ form.attributes(dict(
+        {"class": "form-control"}, **field.get('form_select_attrs', {}))) }}>
     {%- for val, label in choices -%}
       <option id="field-{{ field.field_name }}-{{ val }}"
           value="{{ val }}"
