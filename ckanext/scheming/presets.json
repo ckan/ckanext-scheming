@@ -22,8 +22,9 @@
     },
     {
       "preset_name": "tag_string_autocomplete",
-      "values": {
-        "validators": "ignore_missing tag_string_convert",
+	"values": {
+          "validators": "ignore_missing tag_string_convert",
+	  "form_snippet": "autocomplete.html",
         "classes": ["control-full"],
         "form_attrs": {
           "data-module": "autocomplete",
@@ -54,7 +55,8 @@
       "preset_name": "resource_format_autocomplete",
       "values": {
         "validators": "if_empty_guess_format ignore_missing clean_format unicode",
-        "form_placeholder": "eg. CSV, XML or JSON",
+          "form_placeholder": "eg. CSV, XML or JSON",
+	  "form_snippet": "autocomplete.html",
         "form_attrs": {
           "data-module": "autocomplete",
           "data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
