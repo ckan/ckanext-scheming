@@ -1,0 +1,38 @@
+<!-- <p>
+  <a href="/dataset/{{pkg.name}}/resource/new?resource_type={{res.resource_type}}">
+    {{res.name}}
+  </a>
+</p> -->
+
+{% if can_edit %}
+<li class="resource-item missing-resource">
+  {% block resource_item_title %}
+  <a class="heading"
+     href="/dataset/{{pkg.name}}/resource/new?resource_type={{res.resource_type}}" title="{{ res.name or res.description }}">
+    {{ h.resource_display_name(res) | truncate(50) }}
+    <span class="description"> ({{ _('Missing resource') }})</span>
+    <span class="format-label">{{ _('Missing resource') }}</span>
+  </a>
+  {% endblock %}
+
+  {% block resource_item_description %}
+    <p class="description">
+      {% if res.about %}
+        {{ h.markdown_extract(h.get_translated(res, 'about'), extract_length=80) }}
+      {% endif %}
+    </p>
+  {% endblock %}
+
+  {% block resource_item_explore %}
+  {% if not url_is_edit %}
+  <div class="dropdown btn-group">
+    <a href="/dataset/{{pkg.name}}/resource/new?resource_type={{res.resource_type}}"
+       class="btn btn-primary">
+      <i class="fa fa-share"></i>
+      {{ _('Upload a Dataset') }}
+    </a>
+  </div>
+  {% endif %}
+  {% endblock %}
+</li>
+{% endif %}

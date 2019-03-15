@@ -2,6 +2,7 @@ import re
 import datetime
 import pytz
 import json
+import logging
 
 from jinja2 import Environment
 from ckantoolkit import config, _
@@ -23,6 +24,24 @@ def lang():
     # is not set up fully when importing this module
     from ckantoolkit import h
     return h.lang()
+
+
+@helper
+def get_missing_resources(pkg, schema):
+    """
+    Identify which pre-specified resources are defined in the package
+    schema but currently missing from the actual package. Return the
+    details of those missing resources. A pre-specified resource is
+    defined in the package schema e.g a HIVE package should contain ART
+    data, ANC data and SVY data.
+    """
+    pkg_res = dict((r['resource_type'], r) for r in pkg['resources'])
+    scm_res = dict((r['resource_type'], r) for r in schema['resources'])
+
+    all(scm_res.pop(k, None) for k in pkg_res)
+    logging.warning(scm_res)
+
+    return list(scm_res.values())
 
 
 @helper

@@ -23,12 +23,12 @@
 
     {% if resource_type in schema.get("resource_schemas") %}
     {%- set schema = schema.resource_schemas[resource_type] -%}
-    <h2>{{schema["resource_name"] }} </h2>
+    <h2>{{schema["name"] }} </h2>
     {% else %}
     Resource Type does not exists
     {% endif %}
     {% endif %}
-  
+
   {%- for group in schema.resource_fields|groupby('display_group') -%}
     <h3 class="page-heading">
       {{ _(group.grouper) }}
