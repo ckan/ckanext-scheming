@@ -4,14 +4,16 @@
   {%- if error_summary -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
     {%- snippet 'scheming/snippets/errors.html',
-      errors=error_summary, fields=schema.resource_fields,
-      entity_type='dataset', object_type=dataset_type -%}
+     errors=error_summary, fields=schema.resource_fields,
+     entity_type='dataset', object_type=dataset_type -%}
   {%- endif -%}
 {% endblock %}
 
 {% block basic_fields %}
 {% set resource_type = request.args["resource_type"] %}
-
+{% if not resource_tupe and "resource_type" in data %}
+  {% set resource_type = data["resource_type"] %}
+{% endif %}
   {%- if not dataset_type -%}
     <p>
     dataset_type not passed to template. your version of CKAN

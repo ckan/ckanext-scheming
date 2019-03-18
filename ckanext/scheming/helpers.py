@@ -39,7 +39,6 @@ def get_missing_resources(pkg, schema):
     scm_res = dict((r['resource_type'], r) for r in schema['resources'])
 
     all(scm_res.pop(k, None) for k in pkg_res)
-    logging.warning(scm_res)
 
     return list(scm_res.values())
 
