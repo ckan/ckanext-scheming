@@ -205,9 +205,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         return list(self._schemas)
 
     def after_create(self, context, pkg_dict):
-        logging.warning('Hello')
-        logging.warning(context)
-        logging.warning(pkg_dict)
         toolkit.h.redirect_to('/dataset/'+pkg_dict['name'])
 
     def validate(self, context, data_dict, schema, action):
@@ -518,7 +515,6 @@ def _expand_schemas(schemas):
                 (x['field_name'], x)
                 for x in expanded_fields
             ).values()))
-            logging.warning(expanded_fields)
             resource["resource_fields"] = expanded_fields
             schema.setdefault(
                 "resource_schemas", {}
