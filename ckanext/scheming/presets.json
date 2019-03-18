@@ -96,6 +96,13 @@
         "display_snippet": "date.html",
         "validators": "scheming_required isodate convert_to_json_if_date"
       }
+    },  {
+      "preset_name": "year",
+      "values": {
+        "form_snippet": "year.html",
+        "display_snippet": "date.html"
+
+      }
     },
     {
       "preset_name": "datetime",
