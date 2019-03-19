@@ -1,7 +1,9 @@
 {% extends 'package/new_package_form.html' %}
 
 {% block stages %}
+{% if dataset_type != "dataset" %}
 <input type="hidden" name="_ckan_phase" value="" />
+{% endif %}
 {% endblock %}
 
 {% block errors %}
@@ -57,8 +59,11 @@
   {%- if 'resource_fields' not in schema -%}
     <!-- force controller to skip resource-editing step for this type -->
     <input type="hidden" name="_ckan_phase" value="" />
-  {%- endif -%}
+    {%- endif -%}
 
+    {%if dataset_type != "dataset" %}
+    <input type="hidden" name="_ckan_phase" value="" />
+    {% endif %}
 {% endblock %}
 
 {% block metadata_fields %}

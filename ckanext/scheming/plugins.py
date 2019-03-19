@@ -191,7 +191,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
     def read_template(self):
         return 'scheming/package/read.html'
-
+    
     def resource_template(self):
         return 'scheming/package/resource_read.html'
 
@@ -204,8 +204,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
-    def after_create(self, context, pkg_dict):
-        toolkit.h.redirect_to('/dataset/'+pkg_dict['name'])
 
     def validate(self, context, data_dict, schema, action):
         """
