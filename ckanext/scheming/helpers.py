@@ -35,8 +35,8 @@ def get_missing_resources(pkg, schema):
     defined in the package schema e.g a HIVE package should contain ART
     data, ANC data and SVY data.
     """
-    pkg_res = dict((r['resource_type'], r) for r in pkg['resources'])
-    scm_res = dict((r['resource_type'], r) for r in schema['resources'])
+    pkg_res = dict((r['resource_type'], r) for r in pkg.get('resources', []))
+    scm_res = dict((r['resource_type'], r) for r in schema.get('resources', []))
 
     all(scm_res.pop(k, None) for k in pkg_res)
 
