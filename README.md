@@ -23,14 +23,14 @@ Set the schemas you want to use with configuration options:
 ckan.plugins = scheming_datasets
 
 #   module-path:file to schemas being used
-scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
-                           ckanext.spatialx:spatialxy_schema.json
-#   will try to load "spatialx_schema.json" and "spatialxy_schema.json"
+scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.yaml
+                           ckanext.spatialx:spatialxy_schema.yaml
+#   will try to load "spatialx_schema.yaml" and "spatialxy_schema.yaml"
 #   as dataset schemas
 #
 #   URLs may also be used, e.g:
 #
-# scheming.dataset_schemas = http://example.com/spatialx_schema.json
+# scheming.dataset_schemas = http://example.com/spatialx_schema.yaml
 
 #   Preset files may be included as well. The default preset setting is:
 scheming.presets = ckanext.scheming:presets.json
@@ -43,11 +43,11 @@ scheming.dataset_fallback = false
 Example dataset schemas
 -----------------------
 
-* [default dataset schema](ckanext/scheming/ckan_dataset.json)
-* [camel photos schema](ckanext/scheming/camel_photos.json)
+* [default dataset schema](ckanext/scheming/ckan_dataset.yaml)
+* [camel photos schema](ckanext/scheming/camel_photos.yaml)
 
 These schemas are included in ckanext-scheming and may be enabled
-with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.json`
+with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.yaml`
 
 These schemas use [presets](#preset) defined in
 [presets.json](ckanext/scheming/presets.json).
@@ -59,8 +59,8 @@ Schema Keys
 
 ### `scheming_version`
 
-Set to `1`. Future versions of ckanext-scheming may use a larger
-number to indicate a change to the description JSON format.
+Set to `2`. Future versions of ckanext-scheming may use a larger
+number to indicate a change to the description format.
 
 
 ### `dataset_type`
@@ -120,23 +120,16 @@ it will appear in the dataset editing form.
 This label may be a string or an object providing multiple
 language versions:
 
-```json
-{
-  "label": {
-    "en": "Title",
-    "fr": "Titre"
-  },
-  "...": "..."
-}
+```yaml
+label:
+  en: Title
+  fr: Titre
 ```
 
 When using a plain string translations will be provided with gettext:
 
-```json
-{
-  "label": "Title",
-  "...": "..."
-}
+```yaml
+label: Title
 ```
 
 
@@ -163,18 +156,13 @@ List elements include `label`s for human-readable text for
 each element (may be multiple languages like a [field label](#label))
 and `value`s that will be stored in the dataset or resource:
 
-```json
-{
-  "preset": "select",
-  "choices": [
-    {
-      "value": "bactrian",
-      "label": "Bactrian Camel"
-    },
-    "..."
-  ],
-  "...": "..."
-}
+```yaml
+preset: select
+choices:
+- value: bactrian
+  label: Bactrian Camel
+- value: hybrid
+  label: Hybrid Camel
 ```
 
 ### `choices_helper`
@@ -186,16 +174,13 @@ the `choices` list above.
 You may register your own helper function or use the
 `scheming_datastore_choices` helper included in ckanext-scheming:
 
-```json
-{
-  "preset": "select",
-  "choices_helper": "scheming_datastore_choices",
-  "datastore_choices_resource": "countries-resource-id-or-alias",
-  "datastore_choices_columns": {
-    "value": "Country Code",
-    "label": "English Country Name"
-  }
-}
+```yaml
+preset: select
+choices_helper: scheming_datastore_choices
+datastore_choices_resource: countries-resource-id-or-alias
+datastore_choices_columns:
+  value: Country Code
+  label: English Country Name
 ```
 
 
