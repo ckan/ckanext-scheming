@@ -192,24 +192,24 @@ types.
 
 This extension includes the following presets:
 
-* `"title"` - title validation and large text form snippet
-* `"select"` - validation that choice is from [choices](#choices),
+* `preset: title` - title validation and large text form snippet
+* `preset: select` - validation that choice is from [choices](#choices),
   form select box and display snippet
-* `"multiple_checkbox"` - multiple choice from [choices](#choices)
+* `preset: multiple_checkbox` - multiple choice from [choices](#choices)
   rendered as checkboxes in the form
-* `"multiple_select"` - multiple choice from [choices](#choices)
+* `preset: multiple_select` - multiple choice from [choices](#choices)
   rendered as a multiple select box in the form
-* `"date"` - date validation and form snippet
-* `"datetime"` date and time validation and form snippet
-* `"dataset_slug"` - dataset slug validation and form snippet that
+* `preset: date` - date validation and form snippet
+* `preset: datetime` date and time validation and form snippet
+* `preset: dataset_slug` - dataset slug validation and form snippet that
   autofills the value from the title field
-* `"tag_string_autocomplete"` - tag string validation and form autocomplete
-* `"dataset_organization"` - organization validation and form select box
-* `"resource_url_upload"` - resource url validaton and link/upload form
+* `preset: tag_string_autocomplete` - tag string validation and form autocomplete
+* `preset: dataset_organization` - organization validation and form select box
+* `preset: resource_url_upload` - resource url validaton and link/upload form
   field
-* `"resource_format_autocomplete"` - resource format validation with
+* `preset: resource_format_autocomplete` - resource format validation with
   format guessing based on url and autocompleting form field
-* `"json_object"` - JSON based input. Only JSON objects are supported.
+* `preset: json_object` - JSON based input. Only JSON objects are supported.
   The input JSON will be loaded during output (eg when loading the dataset in
   a template or via the API).
 
@@ -231,31 +231,7 @@ This snippet is passed the `field` dict containing all the keys and
 values in this field record, including any additional ones
 you added to your that aren't handled by this extension.
 
-This extension includes the following form snippets:
-
-* [text.html](ckanext/scheming/templates/scheming/form_snippets/text.html) -
-  a simple text field for free-form text or numbers (default)
-* [large_text.html](ckanext/scheming/templates/scheming/form_snippets/large_text.html) -
-  a larger text field, typically used for the title
-* [date.html](ckanext/scheming/templates/scheming/form_snippets/date.html) -
-  a date widget with an html5 date picker
-* [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
-  the default name (URL) field
-* [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
-  a dataset license selection field
-* [markdown.html](ckanext/scheming/templates/scheming/form_snippets/markdown.html) -
-  a markdown field, often used for descriptions
-* [organization.html](ckanext/scheming/templates/scheming/form_snippets/organization.html) -
-  an organization selection field for datasets
-* [upload.html](ckanext/scheming/templates/scheming/form_snippets/upload.html) -
-  an upload field for resource files
-* [select.html](ckanext/scheming/templates/scheming/form_snippets/select.html) -
-  a select box
-* [multiple_checkbox.html](ckanext/scheming/templates/scheming/form_snippets/multiple_choice.html) -
-  a group of checkboxes
-* [multiple_select.html](ckanext/scheming/templates/scheming/form_snippets/multiple_select.html) -
-  a multiple select box
-
+The included form snippets may be found under [templates/scheming/form_snippets](ckanext/scheming/templates/scheming/form_snippets).
 
 ### `display_snippet`
 
@@ -270,20 +246,9 @@ This snippet is passed the `field` dict containing all the keys and
 values in this field record, including any additional ones
 you added to your that aren't handled by this extension.
 
-This extension includes the following display snippets:
+The included display snippets may be found under [templates/scheming/display_snippets](ckanext/scheming/templates/scheming/display_snippets).
 
-* [text.html](ckanext/scheming/templates/scheming/display_snippets/text.html) -
-  render as a normal text value (default)
-* [link.html](ckanext/scheming/templates/scheming/display_snippets/link.html) -
-  render as an external link to open in a new window
-* [email.html](ckanext/scheming/templates/scheming/display_snippets/email.html) -
-  render as a "mailto:" link
-* [select.html](ckanext/scheming/templates/scheming/display_snippets/select.html) -
-  show the label text for the choice selected
-* [multiple_choice.html](ckanext/scheming/templates/scheming/display_snippets/) -
-  show the label text for all choices selected
-
-If `null` is passed as value in `display_snippet`, it will remove the field from being displayed at the view page.
+If `display_snippet: null` is used the field will be removed from the view page.
 
 ### `select_size`
 
