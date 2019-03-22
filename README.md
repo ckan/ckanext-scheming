@@ -59,11 +59,23 @@ Schema Keys
 
 ### `scheming_version`
 
-Set to `2`. Future versions of ckanext-scheming may use a larger
+Use:
+
+```yaml
+scheming_version: 2
+```
+
+Future versions of ckanext-scheming may use a larger
 number to indicate a change to the description format.
 
 
-### `dataset_type`
+### `dataset_type` / `group_type`
+
+e.g.:
+
+```yaml
+dataset_type: camel-photos
+```
 
 This is the "type" field stored in the dataset.
 It is also used to set the URL for searching this type of dataset.
@@ -74,11 +86,31 @@ the `camel_photos.json` schema above would appear under `/camel-photos` instead.
 
 ### `about_url`
 
+e.g.:
+```yaml
+about_url: https://github.com/link-to-my-project
+```
+
 `about_url` is a Link to human-readable information about this schema.
 Its use is optional but highly recommended.
 
 
 ### `dataset_fields`, `resource_fields`
+
+e.g.:
+```yaml
+dataset_fields:
+
+- field_name: title
+  label: Title
+  preset: title
+
+- field_name: name
+  label: URL
+  preset: dataset_slug
+
+...
+```
 
 Fields are specified in the order you
 would like them to appear in the dataset and resource editing
@@ -135,7 +167,7 @@ label: Title
 
 ### `required`
 
-Set to `true` for fields that must be included. Set to `false` or
+Use `required: true` for fields that must be included. Set to `false` or
 don't include this key for fields that are optional.
 
 Setting to `true` will mark the field as required in the editing form
@@ -252,9 +284,13 @@ If `display_snippet: null` is used the field will be removed from the view page.
 
 ### `select_size`
 
-Set to the number of [choices](#choices) to display in select, multiple_select
-and multiple_check_box [form](#form_snippet) and [display](#display_snippet)
-snippets.
+e.g.
+```yaml
+select_size: 5
+```
+
+Set to the number of [choices](#choices) to display in the multiple_select
+[form](#form_snippet) snippets.
 
 
 ### `sorted_choices`
@@ -271,7 +307,8 @@ When a validator name is followed by parenthesis the function is called
 passing the comma-separated values within as string parameters
 and the result is used as the validator/converter.
 
-e.g. `"if_empty_same_as(name) unicode"` is the same as in a plugin specifying:
+e.g. `validators: if_empty_same_as(name) unicode` is the same as a plugin
+using the validators:
 
 ```python
 [get_validator('if_empty_same_as')("name"), unicode]
