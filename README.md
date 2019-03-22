@@ -59,19 +59,14 @@ Schema Keys
 
 ### `scheming_version`
 
-Use:
-
 ```yaml
 scheming_version: 2
 ```
 
-Future versions of ckanext-scheming may use a larger
-number to indicate a change to the description format.
+Use `scheming_version: 2` with ckanext-scheming version 2.0.0 or later.
 
 
 ### `dataset_type` / `group_type`
-
-e.g.:
 
 ```yaml
 dataset_type: camel-photos
@@ -86,7 +81,6 @@ the `camel_photos.json` schema above would appear under `/camel-photos` instead.
 
 ### `about_url`
 
-e.g.:
 ```yaml
 about_url: https://github.com/link-to-my-project
 ```
@@ -97,7 +91,6 @@ Its use is optional but highly recommended.
 
 ### `dataset_fields`, `resource_fields`
 
-e.g.:
 ```yaml
 dataset_fields:
 
@@ -284,7 +277,6 @@ If `display_snippet: null` is used the field will be removed from the view page.
 
 ### `select_size`
 
-e.g.
 ```yaml
 select_size: 5
 ```
@@ -307,8 +299,11 @@ When a validator name is followed by parenthesis the function is called
 passing the comma-separated values within as string parameters
 and the result is used as the validator/converter.
 
-e.g. `validators: if_empty_same_as(name) unicode` is the same as a plugin
-using the validators:
+```yaml
+validators: if_empty_same_as(name) unicode
+```
+
+is the same as a plugin using the validators:
 
 ```python
 [get_validator('if_empty_same_as')("name"), unicode]
