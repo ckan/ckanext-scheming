@@ -1,9 +1,9 @@
 ckanext-scheming
 ================
 
-This extension provides a way to configure and share
-CKAN schemas using a JSON schema description. Custom
-template snippets for editing and display are also supported.
+This CKAN extension provides a way to configure and share metadata schemas using a
+YAML or JSON schema description. Custom validation and template snippets for editing
+and display are supported.
 
 [![Travis](https://travis-ci.org/ckan/ckanext-scheming.svg?branch=master)](https://travis-ci.org/ckan/ckanext-scheming)
 [![Coverage](https://coveralls.io/repos/ckan/ckanext-scheming/badge.svg?branch=master&service=github)](https://coveralls.io/github/ckan/ckanext-scheming?branch=master)
@@ -11,7 +11,7 @@ template snippets for editing and display are also supported.
 Requirements
 ============
 
-This plugin is compatible with CKAN 2.3 or later.
+This plugin is compatible with CKAN 2.6 or later.
 
 
 Configuration
