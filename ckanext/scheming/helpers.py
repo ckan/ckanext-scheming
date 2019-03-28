@@ -25,6 +25,17 @@ def lang():
     from ckantoolkit import h
     return h.lang()
 
+def convert(text):
+    return int(text) if text.isdigit() else text
+
+@helper
+def scheming_natural_sort(l):
+    """
+    Sorts a list of tuples with strings "naturally". I.e 1,2...11 and not 1,11,2..
+    """
+ 
+    l.sort(key=lambda key: [convert(c) for c in re.split('([0-9]+)', key[0])])
+    return l
 
 @helper
 def get_missing_resources(pkg, schema):
@@ -35,12 +46,14 @@ def get_missing_resources(pkg, schema):
     defined in the package schema e.g a HIVE package should contain ART
     data, ANC data and SVY data.
     """
-    pkg_res = dict((r['resource_type'], r) for r in pkg.get('resources', []))
-    scm_res = dict((r['resource_type'], r) for r in schema.get('resources', []))
+    pkg_res = [r['resource_type'] for r in pkg.get('resources', [])]
 
-    all(scm_res.pop(k, None) for k in pkg_res)
+    ret = []
+    for r in schema.get('resources', []):
+        if r['resource_type'] not in pkg_res:
+            ret.append(r)
 
-    return list(scm_res.values())
+    return ret
 
 
 @helper
