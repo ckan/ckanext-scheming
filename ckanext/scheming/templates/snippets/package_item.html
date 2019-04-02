@@ -1,0 +1,9 @@
+{% ckan_extends %}
+
+{% block heading_private %}
+  {%- set schema = h.scheming_get_dataset_schema(package.type) -%}
+  <span class="dataset-type label label-default">
+    {{ _(schema.name) }}
+  </span>
+  {{ super() }}
+{% endblock %}
