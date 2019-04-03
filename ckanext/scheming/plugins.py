@@ -16,7 +16,7 @@ try:
 except ImportError:  # CKAN <= 2.5
     core_helper_functions = None
 
-from ckantoolkit import (
+from ckan.plugins.toolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
     DefaultOrganizationForm,
@@ -74,7 +74,6 @@ class _SchemingMixin(object):
         _SchemingMixin._validators_loaded = True
 
         validators = dict(validation.all_validators)
-
         return validators
 
     def _add_template_directory(self, config):
@@ -210,12 +209,14 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         Validate and convert for package_create, package_update and
         package_show actions.
         """
+
+      
         thing, action_type = action.split('_')
         t = data_dict.get('type')
         if not t or t not in self._schemas:
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}
-
+        
         scheming_schema = self._expanded_schemas[t]
 
         if action_type == 'show':
@@ -234,9 +235,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 destination[f['field_name']] = get_validators(
                     f,
                     scheming_schema,
-                    f['field_name'] not in schema
+                    f['field_name'] not in destination
                 )
-
+                   
                 # Apply default field values before going through validation. This
                 # deals with fields that have form_snippet set to null, and fields
                 # that have defaults added after initial creation.

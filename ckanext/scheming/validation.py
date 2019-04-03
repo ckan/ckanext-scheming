@@ -42,6 +42,21 @@ def scheming_validator(fn):
     validator(fn)
     return fn
 
+@scheming_validator
+def scheming_shapefile(field, schema):
+    """
+    Verifies that the file uploaded is a zip-file with shapefiles
+
+    """
+
+    def shapefile_validator(key, data, errors, context):
+        raise ValidationError
+        value = data.get(key)
+        if ".zip" not in value:
+            errors[key].extend(
+                "Not a shapefile"
+            )
+    return shapefile_validator
 
 @scheming_validator
 def composite_form(field, schema):

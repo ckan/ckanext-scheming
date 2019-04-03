@@ -50,6 +50,16 @@
         "upload_clear": "clear_upload",
         "upload_label": "File"
       }
+    }, {
+      "preset_name": "resource_url_upload_shapefile",
+      "values": {
+        "validators": "ignore_missing unicode remove_whitespace scheming_shapefile",
+        "form_snippet": "upload.html",
+        "form_placeholder": "http://example.com/my-data.csv",
+        "upload_field": "upload",
+        "upload_clear": "clear_upload",
+        "upload_label": "File"
+      }
     },
     {
       "preset_name": "resource_format_autocomplete",
