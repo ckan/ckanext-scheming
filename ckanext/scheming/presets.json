@@ -144,6 +144,12 @@
       "values": {
         "form_snippet": "hidden_fields.html"
       }
+    },
+    {
+      "preset_name": "country_list",
+      "values": {
+        "form_snippet": "country_select.html"
+      }
     }
   ]
 }

@@ -1,10 +1,7 @@
 {% import 'macros/form.html' as form %}
 
-{%- set options =[{"text": "","value":""}]  %}
+{%- set options = h.scheming_country_list() %}
 
-{% for i in range(2019, 1980, -1) %} 
-  {% do options.append({"text": i|string, "value":i|string}) %}
-{% endfor %}
 {% call form.select(
     field.field_name,
     id='field-' + field.field_name,

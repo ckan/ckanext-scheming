@@ -3,6 +3,7 @@ import datetime
 import pytz
 import json
 import logging
+import pycountry
 
 from jinja2 import Environment
 from ckantoolkit import config, _
@@ -27,6 +28,19 @@ def lang():
 
 def convert(text):
     return int(text) if text.isdigit() else text
+
+@helper
+def scheming_country_list():
+    """
+    Sorts a list of tuples with strings "naturally". I.e 1,2...11 and not 1,11,2..
+    """
+    countries = [{"text": "", "value": ""}]
+    for country in pycountry.countries:
+        countries.append({"text": country.name,
+                          "value": country.name
+        })
+    
+    return countries
 
 @helper
 def scheming_natural_sort(l):
