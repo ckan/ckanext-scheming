@@ -485,6 +485,7 @@ def _expand_schemas(schemas):
             schema[grouping] = [
                 _expand(schema, field)
                 for field in schema[grouping]
+                if 'field_name' in field
             ]
 
             for field in schema[grouping]:
