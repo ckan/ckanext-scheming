@@ -119,7 +119,15 @@
         "form_snippet": "json.html",
         "display_snippet": "json.html"
       }
+    },
+    {
+      "preset_name": "multiple_text",
+      "values": {
+        "form_snippet": "multiple_text.html",
+        "display_snippet": "multiple_text.html",
+        "validators": "scheming_multiple_text",
+        "output_validators": "scheming_multiple_text_output"
+      }
     }
-
   ]
 }

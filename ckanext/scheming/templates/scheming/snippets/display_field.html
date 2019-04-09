@@ -1,11 +1,11 @@
 {#- master snippet for all scheming display fields -#}
 {#- render the field the user requested, or use a default field -#}
-{%- if field.subfields %}
+{%- if field.repeating_subfields or field.simple_subfields %}
     {% set group_data = h.scheming_subfield_load(data[field.field_name]) %}
 
     {% for group in group_data %}
     <dl class="scheming-subfield-list">
-      {%- for subfield in field.subfields %}
+      {%- for subfield in field.repeating_subfields or field.simple_subfields %}
         {% if group[subfield.field_name] %}
           <dt class="dataset-label">
             {{ h.scheming_language_text(subfield.label) }}

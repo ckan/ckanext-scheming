@@ -1,4 +1,4 @@
-this.ckan.module('scheming-subfields', function (jQuery, _) {
+this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
     return {
         initialize: function() {
             var container = this,

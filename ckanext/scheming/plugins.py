@@ -418,7 +418,7 @@ def _field_validators(f, schema, convert_extras):
 
     # If this field contains children, we need a special validator to handle
     # them.
-    if 'subfields' in f:
+    if 'repeating_subfields' in f or 'simple_subfields' in f:
         validators = [validation.scheming_subfields(f, schema)] + validators
 
     return validators
@@ -443,7 +443,7 @@ def _field_create_validators(f, schema, convert_extras):
 
     # If this field contains children, we need a special validator to handle
     # them.
-    if 'subfields' in f:
+    if 'repeating_subfields' in f or 'simple_subfields' in f:
         validators = [validation.scheming_subfields(f, schema)] + validators
 
     return validators
@@ -488,10 +488,15 @@ def _expand_schemas(schemas):
             ]
 
             for field in schema[grouping]:
-                if 'subfields' in field:
-                    field['subfields'] = [
+                if 'repeating_subfields' in field:
+                    field['repeating_subfields'] = [
                         _expand(schema, subfield)
-                        for subfield in field['subfields']
+                        for subfield in field['repeating_subfields']
+                    ]
+                elif 'simple_subfields' in field:
+                    field['simple_subfields'] = [
+                        _expand(schema, subfield)
+                        for subfield in field['simple_subfields']
                     ]
 
         out[name] = schema

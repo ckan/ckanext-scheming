@@ -1,10 +1,10 @@
-{% resource 'scheming/scheming-subfields.js' %}
+{% resource 'scheming/scheming-repeating-subfields.js' %}
 
 {#- master snippet for all scheming form fields -#}
 {#- render the field the user requested, or use a default field -#}
 {%- if field.subfields %}
   {# A complex field with sub-fields, which can optionally be repeatable. #}
-  <fieldset class="scheming-fieldset" {% if field.repeatable %}data-module="scheming-subfields"{% endif %}>
+  <fieldset class="scheming-fieldset" {% if field.repeating_subfields %}data-module="scheming-repeating-subfields"{% endif %}>
     <legend>
       {{ _(field.label) }}
     </legend>
