@@ -1,0 +1,17 @@
+{% import 'macros/form.html' as form %}
+
+{%- set values = data.get(field.field_name, [])
+    + [''] * field.get('form_blanks', 3) -%}
+{%- for element in values -%}
+  {{ form.input(
+    field.field_name + '-' ~ loop.index,
+    id='field-' + field.field_name + '-' ~ loop.index,
+    label=h.scheming_language_text(field.label) + ' ' ~ loop.index,
+    placeholder=h.scheming_language_text(field.form_placeholder),
+    value=element,
+    error=errors[field.field_name],
+    classes=['control-medium'],
+    attrs=field.form_attrs if 'form_attrs' in field else {},
+    is_required=h.scheming_field_required(field)
+    ) }}
+{%- endfor -%}
