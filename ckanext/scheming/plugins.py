@@ -419,7 +419,7 @@ def _field_validators(f, schema, convert_extras):
     # If this field contains children, we need a special validator to handle
     # them.
     if 'subfields' in f:
-        validators = [validation.composite_form(f, schema)] + validators
+        validators = [validation.scheming_subfields(f, schema)] + validators
 
     return validators
 
@@ -444,7 +444,7 @@ def _field_create_validators(f, schema, convert_extras):
     # If this field contains children, we need a special validator to handle
     # them.
     if 'subfields' in f:
-        validators = [validation.composite_form(f, schema)] + validators
+        validators = [validation.scheming_subfields(f, schema)] + validators
 
     return validators
 

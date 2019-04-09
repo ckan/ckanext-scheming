@@ -1,4 +1,4 @@
-this.ckan.module('composite-repeating', function (jQuery, _) {
+this.ckan.module('scheming-subfields', function (jQuery, _) {
     return {
         initialize: function() {
             var container = this,
@@ -21,7 +21,7 @@ this.ckan.module('composite-repeating', function (jQuery, _) {
 
         add_group: function() {
             var $this = $(this.el),
-                $last = $this.find('.composite-subfield-group').last(),
+                $last = $this.find('.scheming-subfield-group').last(),
                 $copy = $last.clone();
 
 
@@ -46,7 +46,7 @@ this.ckan.module('composite-repeating', function (jQuery, _) {
 
         remove_group: function() {
             var $this = $(this.el),
-                $groups = $this.find('.composite-subfield-group'),
+                $groups = $this.find('.scheming-subfield-group'),
                 $last = $groups.last(),
                 count = $groups.length;
 

@@ -1,10 +1,10 @@
-{% resource 'scheming/composite-repeating.js' %}
+{% resource 'scheming/scheming-subfields.js' %}
 
 {#- master snippet for all scheming form fields -#}
 {#- render the field the user requested, or use a default field -#}
 {%- if field.subfields %}
   {# A complex field with sub-fields, which can optionally be repeatable. #}
-  <fieldset class="composite-fieldset" {% if field.repeatable %}data-module="composite-repeating"{% endif %}>
+  <fieldset class="scheming-fieldset" {% if field.repeatable %}data-module="scheming-subfields"{% endif %}>
     <legend>
       {{ _(field.label) }}
     </legend>
@@ -15,7 +15,7 @@
     </div>
     {% endif %}
 
-    {% set group_data = h.scheming_composite_load(data[field.field_name]) %}
+    {% set group_data = h.scheming_subfield_load(data[field.field_name]) %}
     {% set group_count = group_data|length|default(field.form_blanks, True)|default(1) %}
 
     {# Even fields not marked as repeatable are still treated as a repeating
@@ -26,7 +26,7 @@
       {% else %}
         {% set group_payload = {} %}
       {% endif -%}
-      <div class="composite-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
+      <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
       {% for subfield in field.subfields %}
         {% set sf, payload = h.scheming_massage_subfield(
           field,

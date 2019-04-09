@@ -44,13 +44,13 @@ def scheming_validator(fn):
 
 
 @scheming_validator
-def composite_form(field, schema):
+def scheming_subfields(field, schema):
     """
-    A special validator used to collect and pack composite & repeating fields.
+    A special validator used to collect and pack subfields.
     """
     from ckanext.scheming.plugins import _field_create_validators
 
-    def composite_validator(key, data, errors, context):
+    def subfields_validator(key, data, errors, context):
         # If the field is coming from the API the value will be set directly.
         value = data.get(key)
         if not value:
@@ -79,7 +79,7 @@ def composite_form(field, schema):
             value = json.loads(value)
 
         if not isinstance(value, list):
-            # We treat all composite fields as repeatable when processing, even
+            # We treat all subfields as repeatable when processing, even
             # when they aren't defined that way in the schema.
             value = [value]
 
@@ -122,23 +122,14 @@ def composite_form(field, schema):
                     entry[k] = entry_as_data[(k,)]
 
         # It would be preferable to just always store as a list, but some plugins
-        # such as ckanext-restricted make assumptions on how ckanext-composite
-        # stored its values.
+        # such as ckanext-restricted make assumptions on how values are stored.
 
         if field.get('repeatable', False):
             data[key] = json.dumps(value)
         elif value:
             data[key] = json.dumps(value[0])
 
-    return composite_validator
-
-
-@scheming_validator
-def composite_display(field, schema):
-    def composite_display(key, data, errors, context):
-        pass
-
-    return composite_display
+    return subfields_validator
 
 
 @scheming_validator

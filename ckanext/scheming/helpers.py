@@ -416,7 +416,7 @@ def scheming_massage_subfield(field, subfield, index, data):
 
 
 @helper
-def scheming_composite_load(value):
+def scheming_subfield_load(value):
     if value:
         value = json.loads(value)
         return [value] if isinstance(value, dict) else value

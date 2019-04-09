@@ -1,10 +1,10 @@
 {#- master snippet for all scheming display fields -#}
 {#- render the field the user requested, or use a default field -#}
 {%- if field.subfields %}
-    {% set group_data = h.scheming_composite_load(data[field.field_name]) %}
+    {% set group_data = h.scheming_subfield_load(data[field.field_name]) %}
 
     {% for group in group_data %}
-    <dl class="composite-repeating-list">
+    <dl class="scheming-subfield-list">
       {%- for subfield in field.subfields %}
         {% if group[subfield.field_name] %}
           <dt class="dataset-label">
