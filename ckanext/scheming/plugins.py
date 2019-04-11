@@ -16,13 +16,14 @@ try:
 except ImportError:  # CKAN <= 2.5
     core_helper_functions = None
 
+from navl_validate import validate as navl_validate
+    
 from ckan.plugins.toolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
     DefaultOrganizationForm,
     get_validator,
     get_converter,
-    navl_validate,
     add_template_directory,
     add_resource
 )
@@ -167,6 +168,7 @@ class _GroupOrganizationMixin(object):
                 f['field_name'] not in schema
             )
 
+        
         return navl_validate(data_dict, schema, context)
 
 
@@ -178,12 +180,12 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.IActions)
     p.implements(p.IValidators)
     p.implements(p.IPackageController, inherit=True)
-
+    
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
 
-
+    
     @classmethod
     def _store_instance(cls, self):
         SchemingDatasetsPlugin.instance = self
@@ -226,6 +228,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         else:
             get_validators = _field_validators
 
+
         fg = (
             (scheming_schema['dataset_fields'], schema),
             (scheming_schema['resource_fields'], schema['resources'])
@@ -252,7 +255,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                         )
                     elif default:
                         data_dict[f['field_name']] = default
-
+            
+        # Setting up schemas for resource types
+        if "resources" in scheming_schema:
+            schema["resource_schemas"] = {}
+            for resource_type in scheming_schema["resource_schemas"]:
+                schema["resource_schemas"][resource_type] = dict(schema["resources"])
+                for f in scheming_schema["resource_schemas"][resource_type]["resource_fields"]:
+                    schema["resource_schemas"][resource_type][f['field_name']] = get_validators(
+                        f,
+                        scheming_schema,
+                        f['field_name'] not in schema["resources"]
+                    )
         return navl_validate(data_dict, schema, context)
 
     def get_actions(self):
