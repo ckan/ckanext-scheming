@@ -26,30 +26,34 @@ def lang():
     from ckantoolkit import h
     return h.lang()
 
+
 def convert(text):
     return int(text) if text.isdigit() else text
+
 
 @helper
 def scheming_country_list():
     """
-    Sorts a list of tuples with strings "naturally". I.e 1,2...11 and not 1,11,2..
+    Returns a list of all countries taken from pycountry
     """
     countries = [{"text": "", "value": ""}]
     for country in pycountry.countries:
-        countries.append({"text": country.name,
-                          "value": country.name
+        countries.append({
+            "text": country.name,
+            "value": country.name
         })
-    
-    return countries
+    return sorted(countries, key=lambda k: k['value'])
+
 
 @helper
 def scheming_natural_sort(l):
     """
     Sorts a list of tuples with strings "naturally". I.e 1,2...11 and not 1,11,2..
     """
- 
+
     l.sort(key=lambda key: [convert(c) for c in re.split('([0-9]+)', key[0])])
     return l
+
 
 @helper
 def get_missing_resources(pkg, schema):
