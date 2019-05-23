@@ -3,14 +3,11 @@
 import os
 import inspect
 import logging
-
-import yaml
 import ckan.plugins as p
 from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 from ckan.common import c
 from collections import OrderedDict
-import ckan.lib.helpers as h
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
@@ -26,7 +23,6 @@ from ckan.plugins.toolkit import (
     add_template_directory,
     add_resource
 )
-import ckan.plugins.toolkit as toolkit
 from ckanext.scheming import helpers, validation, logic, loader
 from ckanext.scheming.errors import SchemingException
 
@@ -190,7 +186,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
     def read_template(self):
         return 'scheming/package/read.html'
-    
+
     def resource_template(self):
         return 'scheming/package/resource_read.html'
 
@@ -210,13 +206,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         package_show actions.
         """
 
-      
+
         thing, action_type = action.split('_')
         t = data_dict.get('type')
         if not t or t not in self._schemas:
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}
-        
+
         scheming_schema = self._expanded_schemas[t]
 
         if action_type == 'show':
@@ -237,7 +233,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     scheming_schema,
                     f['field_name'] not in destination
                 )
-                   
+
                 # Apply default field values before going through validation. This
                 # deals with fields that have form_snippet set to null, and fields
                 # that have defaults added after initial creation.
