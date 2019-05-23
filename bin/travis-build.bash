@@ -47,6 +47,7 @@ paster db init -c test-core.ini
 cd -
 
 echo "Installing ckanext-scheming and its requirements..."
+pip install -r requirements.txt
 pip install -r test-requirements.txt
 python setup.py develop
 

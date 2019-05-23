@@ -23,6 +23,7 @@ not_empty = get_validator('not_empty')
 
 all_validators = {}
 
+
 def validator(fn):
     """
     collect helper functions into ckanext.scheming.all_helpers dict
@@ -373,7 +374,7 @@ def restricted_json(field, schema):
             "level": extra.get("restricted_level", ""),
             "allowed_users": extra.get("restricted_allowed_users", ""),
             "allowed_organisations": extra.get("restricted_allowed_orgs", "")
-            }
+        }
         data[key] = json.dumps(value)
     return validator
 

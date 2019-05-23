@@ -8,12 +8,7 @@ python:
     - "2.7"
 env:
     - CKANVERSION=master
-    - CKANVERSION=2.4
-    - CKANVERSION=2.5
-    - CKANVERSION=2.6
-    - CKANVERSION=2.7
     - CKANVERSION=2.8
-
 install:
     - bash bin/travis-build.bash
 services:
@@ -24,3 +19,19 @@ before_install:
     - pip install codecov
 after_success:
     - codecov
+
+# additional jobs
+matrix:
+  include:
+    - name: "Flake8 on Python 3.7"
+      dist: xenial    # required for Python 3.7
+      cache: pip
+      install: pip install flake8
+      script:
+        - flake8 --version
+        - flake8 . --count --max-complexity=12 --max-line-length=127 --statistics --exclude ckan,{{ project }}
+      python: 3.7
+      # overwrite matrix
+      env:
+        - FLAKE8=true
+        - CKANVERSION=master
