@@ -12,7 +12,6 @@ try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
     core_helper_functions = None
-
 from ckan.plugins.toolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
@@ -116,8 +115,6 @@ class _SchemingMixin(object):
             self.SCHEMA_TYPE_FIELD
         )
 
-
-
         self._expanded_schemas = _expand_schemas(self._schemas)
 
     def is_fallback(self):
@@ -179,7 +176,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
 
-
     @classmethod
     def _store_instance(cls, self):
         SchemingDatasetsPlugin.instance = self
@@ -199,13 +195,11 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
-
     def validate(self, context, data_dict, schema, action):
         """
         Validate and convert for package_create, package_update and
         package_show actions.
         """
-
 
         thing, action_type = action.split('_')
         t = data_dict.get('type')
@@ -506,7 +500,7 @@ def _expand_schemas(schemas):
                 for field in resource["resource_fields"]
             ]
             # Resource-specific fields with the same name override
-            expanded_fields = list( v for v in (OrderedDict(
+            expanded_fields = list(v for v in (OrderedDict(
                 (x['field_name'], x)
                 for x in expanded_fields
             ).values()))

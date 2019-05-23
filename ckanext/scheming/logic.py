@@ -4,7 +4,8 @@ from ckanext.scheming.helpers import (
     scheming_dataset_schemas, scheming_get_dataset_schema,
     scheming_group_schemas, scheming_get_group_schema,
     scheming_organization_schemas, scheming_get_organization_schema,
-    )
+)
+
 
 @side_effect_free
 def scheming_dataset_schema_list(context, data_dict):
@@ -12,6 +13,7 @@ def scheming_dataset_schema_list(context, data_dict):
     Return a list of dataset types customized with the scheming extension
     '''
     return list(scheming_dataset_schemas())
+
 
 @side_effect_free
 def scheming_dataset_schema_show(context, data_dict):
@@ -28,12 +30,14 @@ def scheming_dataset_schema_show(context, data_dict):
         raise ObjectNotFound()
     return s
 
+
 @side_effect_free
 def scheming_group_schema_list(context, data_dict):
     '''
     Return a list of group types customized with the scheming extension
     '''
     return list(scheming_group_schemas())
+
 
 @side_effect_free
 def scheming_group_schema_show(context, data_dict):
@@ -58,6 +62,7 @@ def scheming_organization_schema_list(context, data_dict):
     '''
     return list(scheming_organization_schemas())
 
+
 @side_effect_free
 def scheming_organization_schema_show(context, data_dict):
     '''
@@ -72,8 +77,3 @@ def scheming_organization_schema_show(context, data_dict):
     if s is None:
         raise ObjectNotFound()
     return s
-
-
-
-
-
