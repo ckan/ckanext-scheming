@@ -78,6 +78,10 @@ class TestGetPreset(object):
             u'dataset_slug',
             u'dataset_organization',
             u'json_object',
+            u'hidden_value',
+            u'resource_url_upload_shapefile',
+            u'country_list',
+            u'year'
         )), sorted(presets.iterkeys()))
 
     def test_scheming_get_preset(self):

@@ -1,10 +1,8 @@
 import json
 import ckantoolkit
-
+import logging
 from nose import SkipTest
 from nose.tools import assert_true, assert_in, assert_equals
-
-
 from ckantoolkit.tests.factories import Sysadmin, Dataset
 from ckantoolkit.tests.helpers import (
     FunctionalTestBase, submit_and_follow, call_action
@@ -88,10 +86,15 @@ class TestDatasetFormNew(FunctionalTestBase):
     def test_resource_form_includes_custom_fields(self):
         app = self._get_test_app()
         env, response = _get_package_new_page_as_sysadmin(app)
+        logging.warning(response.forms)
         form = response.forms['dataset-edit']
         form['name'] = 'resource-includes-custom'
-
+        logging.warning(form)
         response = submit_and_follow(app, form, env, 'save')
+        logging.warning(response)
+        logging.warning(response.forms)
+        logging.warning(response.forms.get(0))
+        logging.warning(response.forms.get(1))
         form = response.forms['resource-edit']
         assert_true('camels_in_photo' in form.fields)
 

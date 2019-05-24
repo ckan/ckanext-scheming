@@ -148,14 +148,14 @@ class TestLicenseFormSnippet(object):
     def test_license_choices_visible(self):
         html = render_form_snippet(
             'license.html',
-            extra_args={'licenses': [('Aaa', 'aa'), ('Bbb', 'bb')]})
+            extra_args={'licenses': [('aa', 'Aaa'), ('bb', 'Bbb')]})
         assert_in('<option value="aa">Aaa</option>', html)
         assert_in('<option value="bb">Bbb</option>', html)
 
     def test_license_sorted_by_default(self):
         html = render_form_snippet(
             'license.html',
-            extra_args={'licenses': [('Zzz', 'zz'), ('Bbb', 'bb')]})
+            extra_args={'licenses': [('zz', 'Zzz'), ('bb', 'Bbb')]})
         assert_in('<option value="bb">', html)
         first, rest = html.split('<option value="bb">', 1)
         assert_in('<option value="zz">', rest)
@@ -164,7 +164,7 @@ class TestLicenseFormSnippet(object):
         html = render_form_snippet(
             'license.html',
             sorted_choices=False,
-            extra_args={'licenses': [('Zzz', 'zz'), ('Bbb', 'bb')]})
+            extra_args={'licenses': [('zz', 'Zzz'), ('bb', 'Bbb')]})
         assert_in('<option value="zz">', html)
         first, rest = html.split('<option value="zz">', 1)
         assert_in('<option value="bb">', rest)
@@ -173,7 +173,7 @@ class TestLicenseFormSnippet(object):
         html = render_form_snippet(
             'license.html',
             form_include_blank_choice=True,
-            extra_args={'licenses': [('Aaa', 'aa'), ('Bbb', 'bb')]})
+            extra_args={'licenses': [('aa', 'Aaa'), ('bb', 'Bbb')]})
         assert_in('<option value=""></option>', html)
 
 
@@ -184,10 +184,7 @@ class TestJSONFormSnippet(object):
             field_name='a_json_field',
             data={'a_json_field': {'a': '1', 'b': '2'}},
         )
-        expected = '''{
-          "a": "1",
-          "b": "2"
-        }'''.replace('"', '&#34;')   # Ask webhelpers
+        expected = '{\n  "a": "1", \n  "b": "2"\n}'.replace('"', '&#34;')   # Ask webhelpers
 
         assert_in(expected, html)
 
