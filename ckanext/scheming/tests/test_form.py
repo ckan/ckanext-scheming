@@ -86,10 +86,12 @@ class TestDatasetFormNew(FunctionalTestBase):
     def test_resource_form_includes_custom_fields(self):
         app = self._get_test_app()
         env, response = _get_package_new_page_as_sysadmin(app)
+        logging.warning(response)
         logging.warning(response.forms)
         form = response.forms['dataset-edit']
         form['name'] = 'resource-includes-custom'
         logging.warning(form)
+        logging.warning("\n========================\n")
         response = submit_and_follow(app, form, env, 'save')
         logging.warning(response)
         logging.warning(response.forms)
