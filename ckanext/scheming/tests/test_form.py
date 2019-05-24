@@ -110,7 +110,7 @@ class TestOrganizationFormNew(FunctionalTestBase):
         app = self._get_test_app()
         env, response = _get_organization_new_page_as_sysadmin(app)
         # Commenting until ckan/ckan#4208 is fixed
-        #assert_true('packages?id=' not in response.body)
+        assert_true('packages?id=' not in response.body)
         assert_true('/organization/' in response.body)
 
 
@@ -131,7 +131,7 @@ class TestGroupFormNew(FunctionalTestBase):
         app = self._get_test_app()
         env, response = _get_group_new_page_as_sysadmin(app)
         # Commenting until ckan/ckan#4208 is fixed
-        #assert_true('packages?id=' not in response.body)
+        assert_true('packages?id=' not in response.body)
         assert_true('/group/' in response.body)
 
 

@@ -48,11 +48,10 @@ def scheming_validator(fn):
 def scheming_shapefile(field, schema):
     """
     Verifies that the file uploaded is a zip-file with shapefiles
-
     """
 
     def shapefile_validator(key, data, errors, context):
-        raise ValidationError
+        raise TypeError
         value = data.get(key)
         if ".zip" not in value:
             errors[key].extend(
@@ -93,6 +92,7 @@ def composite_form(field, schema):
 
             # ... then turn it back into an ordered list.
             value = [v for k, v in sorted(values.iteritems())]
+
         elif isinstance(value, basestring):
             value = json.loads(value)
 
