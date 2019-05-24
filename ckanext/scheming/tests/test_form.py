@@ -15,6 +15,7 @@ def _get_package_new_page_as_sysadmin(app):
     response = app.get(
         url='/test-schema/new',
         extra_environ=env,
+        dataset_type="dataset"
     )
     return env, response
 
