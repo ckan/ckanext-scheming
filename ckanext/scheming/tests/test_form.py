@@ -14,8 +14,7 @@ def _get_package_new_page_as_sysadmin(app):
     env = {'REMOTE_USER': user['name'].encode('ascii')}
     response = app.get(
         url='/test-schema/new',
-        extra_environ=env,
-        dataset_type="dataset"
+        extra_environ=env
     )
     return env, response
 

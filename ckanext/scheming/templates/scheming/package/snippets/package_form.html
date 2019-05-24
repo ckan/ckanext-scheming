@@ -1,7 +1,7 @@
 {% extends 'package/new_package_form.html' %}
 
 {% block stages %}
-{% if dataset_type != "dataset" %}
+{% if dataset_type not in ("dataset", "test-schema") %}
 <input type="hidden" name="_ckan_phase" value="" />
 {% endif %}
 {% endblock %}
@@ -61,7 +61,7 @@
     <input type="hidden" name="_ckan_phase" value="" />
     {%- endif -%}
 
-    {%if dataset_type != "dataset" %}
+    {% if dataset_type not in ("dataset", "test-schema") %}
     <input type="hidden" name="_ckan_phase" value="" />
     {% endif %}
 {% endblock %}
