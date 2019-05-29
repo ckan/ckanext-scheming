@@ -30,4 +30,11 @@ setup(
     [paste.paster_command]
     scheming=ckanext.scheming.commands:SchemingCommand
     """,
+    message_extractors={
+        'ckanext': [
+            ('**.py', 'python', None),
+            ('scheming/templates/**.html', 'ckan', None),
+            ('**.js', 'javascript', None)
+        ]
+    },
 )

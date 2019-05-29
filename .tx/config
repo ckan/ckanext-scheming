@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[ytp.ckanext-scheming]
+file_filter = ckanext/scheming/i18n/<lang>/LC_MESSAGES/ckanext-scheming.po
+source_file = ckanext/scheming/i18n/ckanext-scheming.pot
+source_lang = en
+type = PO
