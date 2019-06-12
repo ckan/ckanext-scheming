@@ -22,6 +22,8 @@ from ckantoolkit import (
     add_template_directory,
 )
 
+from ckan.lib.plugins import DefaultTranslation
+
 from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 
@@ -162,6 +164,9 @@ class _SchemingMixin(object):
     def is_fallback(self):
         return self._is_fallback
 
+    def i18n_domain(self):
+        return 'ckanext-scheming'
+
 
 class _GroupOrganizationMixin(object):
     """
@@ -206,12 +211,13 @@ class _GroupOrganizationMixin(object):
 
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
-                             _SchemingMixin):
+                             _SchemingMixin, DefaultTranslation):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.ITranslation)
 
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
@@ -280,12 +286,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
-                           DefaultGroupForm, _SchemingMixin):
+                           DefaultGroupForm, _SchemingMixin, DefaultTranslation):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.ITranslation)
 
     SCHEMA_OPTION = 'scheming.group_schemas'
     FALLBACK_OPTION = 'scheming.group_fallback'
@@ -310,12 +317,13 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
 
 class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
-                                  DefaultOrganizationForm, _SchemingMixin):
+                                  DefaultOrganizationForm, _SchemingMixin, DefaultTranslation):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.ITranslation)
 
     SCHEMA_OPTION = 'scheming.organization_schemas'
     FALLBACK_OPTION = 'scheming.organization_fallback'
