@@ -183,7 +183,7 @@ If a choices list is not provided you must provide a `choices_helper`
 function that will return a list of choices in the same format as
 the `choices` list above.
 
-You may register your own helper function or use the
+You may [register your own helper function](https://docs.ckan.org/en/2.8/theming/templates.html#adding-your-own-template-helper-functions) or use the
 `scheming_datastore_choices` helper included in ckanext-scheming:
 
 ```json
