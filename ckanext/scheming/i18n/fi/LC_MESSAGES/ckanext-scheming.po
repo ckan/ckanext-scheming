@@ -88,7 +88,7 @@ msgstr "Haluatko varmasti poistaa tämän ryhmän?"
 #: ckanext/scheming/templates/scheming/group/group_form.html:21
 #: ckanext/scheming/templates/scheming/organization/group_form.html:27
 msgid "Delete"
-msgstr ""
+msgstr "Poista"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:25
 msgid "Save Group"
