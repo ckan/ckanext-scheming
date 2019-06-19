@@ -305,6 +305,19 @@ def validators_from_string(s, field, schema):
     return out
 
 
+def validators_from_dict(d, field, schema):
+
+    out = {}
+    for key, value in d.iteritems():
+        out[key] = []
+        parts = value.split()
+        for p in parts:
+            v = get_validator_or_converter(p)
+            out[key].append(v)
+
+    return out
+
+
 def get_validator_or_converter(name):
     """
     Get a validator or converter by name

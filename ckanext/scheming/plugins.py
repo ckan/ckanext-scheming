@@ -30,6 +30,7 @@ from ckanext.scheming import loader
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import (
     validators_from_string,
+    validators_from_dict,
     scheming_choices,
     scheming_required,
     scheming_multiple_choice,
@@ -413,8 +414,11 @@ def _field_output_validators(f, schema, convert_extras,
     else:
         validators = [ignore_missing]
     if 'output_validators' in f:
-        validators += validators_from_string(
-            f['output_validators'], f, schema)
+        if isinstance(f['output_validators'], dict):
+            validators = validators_from_dict(f['output_validators'], f, schema)
+        else:
+            validators += validators_from_string(
+                f['output_validators'], f, schema)
     return validators
 
 
@@ -424,7 +428,10 @@ def _field_validators(f, schema, convert_extras):
     """
     validators = []
     if 'validators' in f:
-        validators = validators_from_string(f['validators'], f, schema)
+        if isinstance(f['validators'], dict):
+            validators = validators_from_dict(f['validators'], f, schema)
+        else:
+            validators = validators_from_string(f['validators'], f, schema)
     elif helpers.scheming_field_required(f):
         validators = [not_empty, unicode]
     else:
