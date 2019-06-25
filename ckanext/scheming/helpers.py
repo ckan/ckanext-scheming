@@ -30,6 +30,7 @@ def lang():
 def convert(text):
     return int(text) if text.isdigit() else text
 
+
 @helper
 def scheming_resource_view_get_fields(resource):
     '''Returns sorted list of text and time fields of a datastore resource.'''
@@ -41,13 +42,14 @@ def scheming_resource_view_get_fields(resource):
         'resource_id': resource['id'],
         'limit': 0
     }
-    try: 
+    try:
         result = get_action('datastore_search')({}, data)
     except NotFound:
         return []
     fields = [field['id'] for field in result.get('fields', [])]
 
     return sorted(fields)
+
 
 @helper
 def scheming_country_list():
