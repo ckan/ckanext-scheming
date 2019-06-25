@@ -8,7 +8,7 @@ from jinja2 import Environment
 from ckantoolkit import config, _
 
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
-
+from ckan.plugins.toolkit import get_action
 all_helpers = {}
 
 
@@ -30,6 +30,24 @@ def lang():
 def convert(text):
     return int(text) if text.isdigit() else text
 
+@helper
+def scheming_resource_view_get_fields(resource):
+    '''Returns sorted list of text and time fields of a datastore resource.'''
+
+    if not resource.get('datastore_active'):
+        return []
+
+    data = {
+        'resource_id': resource['id'],
+        'limit': 0
+    }
+    try: 
+        result = get_action('datastore_search')({}, data)
+    except NotFound:
+        return []
+    fields = [field['id'] for field in result.get('fields', [])]
+
+    return sorted(fields)
 
 @helper
 def scheming_country_list():
