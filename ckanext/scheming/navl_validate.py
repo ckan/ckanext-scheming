@@ -25,10 +25,8 @@ from ckan.lib.navl.dictization_functions import (
     flatten_dict,
     unflatten,
     MissingNullEncoder
-    
 )
 
-from ckan.common import _
 
 def make_full_schema(data, schema):
     '''make schema by getting all valid combinations and making sure that all
@@ -41,17 +39,17 @@ def make_full_schema(data, schema):
         sub_schema = schema
         for key in combination[::2]:
             sub_schema = sub_schema[key]
-        if key == "resources" and "resource_schemas" in schema:
-            resource_type = data.get(combination + ("resource_type", ))
-            if resource_type:
-                sub_schema = schema["resource_schemas"][resource_type]
+            if key == "resources" and "resource_schemas" in schema:
+                resource_type = data.get(combination + ("resource_type", ))
+                if resource_type:
+                    sub_schema = schema["resource_schemas"][resource_type]
 
-        
         for key, value in sub_schema.iteritems():
             if isinstance(value, list):
                 full_schema[combination + (key,)] = value
 
     return full_schema
+
 
 def validate(data, schema, context=None):
     '''Validate an unflattened nested dict against a schema.'''

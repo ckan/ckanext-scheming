@@ -11,7 +11,7 @@ from collections import OrderedDict
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
-    core_helper_functions = None 
+    core_helper_functions = None
 from navl_validate import validate as navl_validate
 from ckan.plugins.toolkit import (
     DefaultDatasetForm,
@@ -160,7 +160,6 @@ class _GroupOrganizationMixin(object):
                 f['field_name'] not in schema
             )
 
-        
         return navl_validate(data_dict, schema, context)
 
 
@@ -172,7 +171,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.IActions)
     p.implements(p.IValidators)
     p.implements(p.IPackageController, inherit=True)
-    
+
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
@@ -244,7 +243,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                         )
                     elif default:
                         data_dict[f['field_name']] = default
-            
+
         # Setting up schemas for resource types
         if "resources" in scheming_schema:
             schema["resource_schemas"] = {}
@@ -523,3 +522,13 @@ def _expand_schemas(schemas):
             )[resource["resource_type"]] = resource
         out[name] = schema
     return out
+
+    def after_create(self, context, pkg_dict):
+        logging.warning("-----------AFTER CREATE-----------")
+        logging.warning(context)
+        logging.warning(pkg_dict)
+
+    def after_update(self, context, pkg_dict):
+        logging.warning("-----------AFTER UPDATE-----------")
+        logging.warning(context)
+        logging.warning(pkg_dict)
