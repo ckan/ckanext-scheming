@@ -23,6 +23,7 @@ not_empty = get_validator('not_empty')
 
 all_validators = {}
 
+
 def validator(fn):
     """
     collect helper functions into ckanext.scheming.all_helpers dict
@@ -42,21 +43,22 @@ def scheming_validator(fn):
     validator(fn)
     return fn
 
+
 @scheming_validator
 def scheming_shapefile(field, schema):
     """
     Verifies that the file uploaded is a zip-file with shapefiles
-
     """
 
     def shapefile_validator(key, data, errors, context):
-        raise ValidationError
+        raise TypeError
         value = data.get(key)
         if ".zip" not in value:
             errors[key].extend(
                 "Not a shapefile"
             )
     return shapefile_validator
+
 
 @scheming_validator
 def composite_form(field, schema):
@@ -90,6 +92,7 @@ def composite_form(field, schema):
 
             # ... then turn it back into an ordered list.
             value = [v for k, v in sorted(values.iteritems())]
+
         elif isinstance(value, basestring):
             value = json.loads(value)
 
@@ -360,6 +363,19 @@ def scheming_isodatetime_tz(field, schema):
 
         data[key] = date
 
+    return validator
+
+
+@scheming_validator
+def restricted_json(field, schema):
+    def validator(key, data, errors, context):
+        extra = data.get(key[:-1] + ('__extras',), {})
+        value = {
+            "level": extra.get("restricted_level", ""),
+            "allowed_users": extra.get("restricted_allowed_users", ""),
+            "allowed_organisations": extra.get("restricted_allowed_orgs", "")
+        }
+        data[key] = json.dumps(value)
     return validator
 
 

@@ -3,21 +3,16 @@
 import os
 import inspect
 import logging
-
-import yaml
 import ckan.plugins as p
 from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 from ckan.common import c
 from collections import OrderedDict
-import ckan.lib.helpers as h
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
-    core_helper_functions = None
-
+    core_helper_functions = None 
 from navl_validate import validate as navl_validate
-    
 from ckan.plugins.toolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
@@ -27,7 +22,6 @@ from ckan.plugins.toolkit import (
     add_template_directory,
     add_resource
 )
-import ckan.plugins.toolkit as toolkit
 from ckanext.scheming import helpers, validation, logic, loader
 from ckanext.scheming.errors import SchemingException
 
@@ -121,8 +115,6 @@ class _SchemingMixin(object):
             self.SCHEMA_TYPE_FIELD
         )
 
-
-
         self._expanded_schemas = _expand_schemas(self._schemas)
 
     def is_fallback(self):
@@ -185,14 +177,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
 
-    
     @classmethod
     def _store_instance(cls, self):
         SchemingDatasetsPlugin.instance = self
 
     def read_template(self):
         return 'scheming/package/read.html'
-    
+
     def resource_template(self):
         return 'scheming/package/resource_read.html'
 
@@ -205,20 +196,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
-
     def validate(self, context, data_dict, schema, action):
         """
         Validate and convert for package_create, package_update and
         package_show actions.
         """
 
-      
         thing, action_type = action.split('_')
         t = data_dict.get('type')
         if not t or t not in self._schemas:
             return data_dict, {'type': [
                 "Unsupported dataset type: {t}".format(t=t)]}
-        
+
         scheming_schema = self._expanded_schemas[t]
 
         if action_type == 'show':
@@ -240,7 +229,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     scheming_schema,
                     f['field_name'] not in destination
                 )
-                   
+
                 # Apply default field values before going through validation. This
                 # deals with fields that have form_snippet set to null, and fields
                 # that have defaults added after initial creation.
@@ -524,7 +513,7 @@ def _expand_schemas(schemas):
                 for field in resource["resource_fields"]
             ]
             # Resource-specific fields with the same name override
-            expanded_fields = list( v for v in (OrderedDict(
+            expanded_fields = list(v for v in (OrderedDict(
                 (x['field_name'], x)
                 for x in expanded_fields
             ).values()))

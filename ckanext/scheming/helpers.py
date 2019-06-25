@@ -2,7 +2,6 @@ import re
 import datetime
 import pytz
 import json
-import logging
 import pycountry
 
 from jinja2 import Environment
@@ -11,6 +10,7 @@ from ckantoolkit import config, _
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
 from ckan.plugins.toolkit import get_action
 all_helpers = {}
+
 
 def helper(fn):
     """
@@ -26,9 +26,9 @@ def lang():
     from ckantoolkit import h
     return h.lang()
 
+
 def convert(text):
     return int(text) if text.isdigit() else text
-
 
 @helper
 def scheming_resource_view_get_fields(resource):
@@ -49,29 +49,29 @@ def scheming_resource_view_get_fields(resource):
 
     return sorted(fields)
 
-
-
 @helper
 def scheming_country_list():
     """
-    Sorts a list of tuples with strings "naturally". I.e 1,2...11 and not 1,11,2..
+    Returns a list of all countries taken from pycountry
     """
     countries = [{"text": "", "value": ""}]
     for country in pycountry.countries:
-        countries.append({"text": country.name,
-                          "value": country.name
+        countries.append({
+            "text": country.name,
+            "value": country.name
         })
-    
-    return countries
+    return sorted(countries, key=lambda k: k['value'])
+
 
 @helper
 def scheming_natural_sort(l):
     """
     Sorts a list of tuples with strings "naturally". I.e 1,2...11 and not 1,11,2..
     """
- 
+
     l.sort(key=lambda key: [convert(c) for c in re.split('([0-9]+)', key[0])])
     return l
+
 
 @helper
 def get_missing_resources(pkg, schema):
@@ -356,11 +356,11 @@ def date_tz_str_to_datetime(date_str):
     tz_split = re.split('([Z+-])', split[1])
 
     date = split[0] + 'T' + tz_split[0]
-    time_tuple = re.split('[^\d]+', date, maxsplit=5)
+    time_tuple = re.split(r'[^\d]+', date, maxsplit=5)
 
     # Extract seconds and microseconds
     if len(time_tuple) >= 6:
-        m = re.match('(?P<seconds>\d{2})(\.(?P<microseconds>\d{3,6}))?$',
+        m = re.match(r'(?P<seconds>\d{2})(\.(?P<microseconds>\d{3,6}))?$',
                      time_tuple[5])
         if not m:
             raise ValueError('Unable to parse %s as seconds.microseconds' %
@@ -374,7 +374,7 @@ def date_tz_str_to_datetime(date_str):
     # Apply the timezone offset
     if len(tz_split) > 1 and not tz_split[1] == 'Z':
         tz = tz_split[2]
-        tz_tuple = re.split('[^\d]+', tz)
+        tz_tuple = re.split(r'[^\d]+', tz)
 
         if tz_tuple[0] == '':
             raise ValueError('Unable to parse timezone')
@@ -488,6 +488,7 @@ def scheming_composite_load(value):
         value = json.loads(value)
         return [value] if isinstance(value, dict) else value
     return []
+
 
 @helper
 def scheming_non_empty_fields(field_list, pkg_dict, exclude):

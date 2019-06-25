@@ -1,10 +1,8 @@
 import json
 import ckantoolkit
-
+import logging
 from nose import SkipTest
 from nose.tools import assert_true, assert_in, assert_equals
-
-
 from ckantoolkit.tests.factories import Sysadmin, Dataset
 from ckantoolkit.tests.helpers import (
     FunctionalTestBase, submit_and_follow, call_action
@@ -16,7 +14,7 @@ def _get_package_new_page_as_sysadmin(app):
     env = {'REMOTE_USER': user['name'].encode('ascii')}
     response = app.get(
         url='/test-schema/new',
-        extra_environ=env,
+        extra_environ=env
     )
     return env, response
 
@@ -88,10 +86,17 @@ class TestDatasetFormNew(FunctionalTestBase):
     def test_resource_form_includes_custom_fields(self):
         app = self._get_test_app()
         env, response = _get_package_new_page_as_sysadmin(app)
+        logging.warning(response)
+        logging.warning(response.forms)
         form = response.forms['dataset-edit']
         form['name'] = 'resource-includes-custom'
-
+        logging.warning(form)
+        logging.warning("\n========================\n")
         response = submit_and_follow(app, form, env, 'save')
+        logging.warning(response)
+        logging.warning(response.forms)
+        logging.warning(response.forms.get(0))
+        logging.warning(response.forms.get(1))
         form = response.forms['resource-edit']
         assert_true('camels_in_photo' in form.fields)
 
@@ -110,7 +115,7 @@ class TestOrganizationFormNew(FunctionalTestBase):
         app = self._get_test_app()
         env, response = _get_organization_new_page_as_sysadmin(app)
         # Commenting until ckan/ckan#4208 is fixed
-        #assert_true('packages?id=' not in response.body)
+        assert_true('packages?id=' not in response.body)
         assert_true('/organization/' in response.body)
 
 
@@ -131,7 +136,7 @@ class TestGroupFormNew(FunctionalTestBase):
         app = self._get_test_app()
         env, response = _get_group_new_page_as_sysadmin(app)
         # Commenting until ckan/ckan#4208 is fixed
-        #assert_true('packages?id=' not in response.body)
+        assert_true('packages?id=' not in response.body)
         assert_true('/group/' in response.body)
 
 

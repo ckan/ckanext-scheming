@@ -1,6 +1,7 @@
 from nose.tools import assert_raises
 from ckanapi import LocalCKAN, NotFound
 
+
 class TestDatasetSchemaLists(object):
     def test_dataset_schema_list(self):
         lc = LocalCKAN('visitor')
@@ -14,7 +15,8 @@ class TestDatasetSchemaLists(object):
 
     def test_dataset_schema_not_found(self):
         lc = LocalCKAN('visitor')
-        assert_raises(NotFound,
+        assert_raises(
+            NotFound,
             lc.action.scheming_dataset_schema_show,
-            type='ernie')
-
+            type='ernie'
+        )
