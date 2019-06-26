@@ -5,6 +5,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
 # 
 # Translators:
+# Meeri Hakala <meeri.hakala@vrk.fi>, 2019
 # Zharktas <jari-pekka.voutilainen@gofore.com>, 2019
 # 
 #, fuzzy
@@ -39,11 +40,11 @@ msgstr ""
 #: ckanext/scheming/validation.py:116 ckanext/scheming/validation.py:182
 #: ckanext/scheming/validation.py:211
 msgid "Date format incorrect"
-msgstr ""
+msgstr "Päivämäärän muoto väärä"
 
 #: ckanext/scheming/validation.py:117
 msgid "Time format incorrect"
-msgstr ""
+msgstr "Ajan muoto väärä"
 
 #: ckanext/scheming/validation.py:150
 msgid "Date is required when a time is provided"
@@ -67,19 +68,19 @@ msgstr ""
 
 #: ckanext/scheming/templates/scheming/form_snippets/_organization_select.html:21
 msgid "No organization"
-msgstr ""
+msgstr "Ei organisaatiota"
 
 #: ckanext/scheming/templates/scheming/form_snippets/organization.html:25
 msgid "Visibility"
-msgstr ""
+msgstr "Näkyvyys"
 
 #: ckanext/scheming/templates/scheming/form_snippets/organization.html:28
 msgid "Private"
-msgstr ""
+msgstr "Yksityinen"
 
 #: ckanext/scheming/templates/scheming/form_snippets/organization.html:28
 msgid "Public"
-msgstr ""
+msgstr "Julkinen"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:20
 msgid "Are you sure you want to delete this Group?"
@@ -92,7 +93,7 @@ msgstr "Poista"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:25
 msgid "Save Group"
-msgstr ""
+msgstr "Tallenna ryhmä"
 
 #: ckanext/scheming/templates/scheming/organization/group_form.html:26
 msgid "Are you sure you want to delete this Organization?"
@@ -100,23 +101,23 @@ msgstr "Haluatko varmasti poistaa tämän organisaation?"
 
 #: ckanext/scheming/templates/scheming/organization/group_form.html:31
 msgid "Save Organization"
-msgstr ""
+msgstr "Tallenna organisaatio"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:13
 msgid "Additional Information"
-msgstr ""
+msgstr "Lisätietoa"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:17
 msgid "Field"
-msgstr ""
+msgstr "Kenttä"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:18
 msgid "Value"
-msgstr ""
+msgstr "Arvo"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:24
 msgid "Last updated"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:25
 #: ckanext/scheming/templates/scheming/package/resource_read.html:31
@@ -126,20 +127,20 @@ msgstr ""
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:30
 msgid "Created"
-msgstr ""
+msgstr "Luotu"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:36
 msgid "Format"
-msgstr ""
+msgstr "Muoto"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:42
 msgid "License"
-msgstr ""
+msgstr "Lisenssi"
 
 #: ckanext/scheming/templates/scheming/package/snippets/additional_info.html:29
 msgid "State"
-msgstr ""
+msgstr "Tila"
 
 #: ckanext/scheming/templates/scheming/snippets/errors.html:6
 msgid "The form contains invalid entries:"
-msgstr ""
+msgstr "Lomake sisältää virheellisiä syötteitä"
