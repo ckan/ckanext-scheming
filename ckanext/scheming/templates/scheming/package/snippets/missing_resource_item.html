@@ -25,7 +25,6 @@
 
   {% block resource_item_explore %}
     {% set validator_schema = res.resource_fields | selectattr('field_name', 'equalto', 'validator_schema') | map(attribute='field_value') | list %}
-    {{validator_schema}}
     {% if not url_is_edit %}
       {% if validator_schema[0] is defined %}
         <div class="dropdown btn-group">
