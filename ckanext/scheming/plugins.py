@@ -195,16 +195,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
-    def after_create(self, context, pkg_dict):
-        logging.warning("-----------AFTER CREATE-----------")
-        logging.warning(context)
-        logging.warning(pkg_dict)
-
-    def after_update(self, context, pkg_dict):
-        logging.warning("-----------AFTER UPDATE-----------")
-        logging.warning(context)
-        logging.warning(pkg_dict)
-
     def validate(self, context, data_dict, schema, action):
         """
         Validate and convert for package_create, package_update and

@@ -1,6 +1,5 @@
 {# shallow copy errors so we can remove processed keys #}
 {%- set unprocessed = errors.copy() -%}
-
 {% block errors_list %}
 <div class="error-explanation alert alert-error">
   <p>{{ _('The form contains invalid entries:') }}</p>
@@ -29,7 +28,7 @@
       {%- endfor -%}
 
       {%- for key, errors in h.scheming_natural_sort(unprocessed.items())  -%}
-        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors }}</li>
+        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors[0] |safe }}</li>
       {%- endfor -%}
     {% endblock %}
   </ul>
