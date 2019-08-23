@@ -28,7 +28,7 @@
       {%- endfor -%}
 
       {%- for key, errors in h.scheming_natural_sort(unprocessed.items())  -%}
-        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors[0] |safe }}</li>
+        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors |safe }}</li>
       {%- endfor -%}
     {% endblock %}
   </ul>
