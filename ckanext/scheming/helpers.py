@@ -267,6 +267,27 @@ def scheming_get_dataset_schema(dataset_type, expanded=True):
 
 
 @helper
+def get_resource_field(dataset_type, resource_type, field_name):
+    """
+    Return the field for a particular resource type in a particular package type.
+    """
+    try:
+        schema = scheming_get_dataset_schema(dataset_type)
+        resource = filter(
+            lambda x: x.get('resource_type') == resource_type,
+            schema.get('resources', [])
+        )[0]
+        fields = resource.get('resource_fields') + schema.get('resource_fields', [])
+        field = filter(
+            lambda x: x.get('field_name') == field_name,
+            fields
+        )[0]
+        return field
+    except IndexError:
+        return {}
+
+
+@helper
 def scheming_group_schemas(expanded=True):
     """
     Return the dict of group schemas. Or if scheming_groups
