@@ -2,7 +2,6 @@ import json
 import datetime
 from collections import defaultdict
 import itertools
-
 import pytz
 import ckan.lib.helpers as h
 from ckan.lib.navl.dictization_functions import convert
