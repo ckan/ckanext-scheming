@@ -35,35 +35,46 @@
     {% endif %}
     {% endif %}
 
-  {%- for group in schema.resource_fields|groupby('display_group') -%}
-    <h3 class="page-heading">
-      {{ _(group.grouper) }}
-    </h3>
-    {%- for field in group.list -%}
-      {%- if field.form_snippet is not none -%}
-        {%- if field.field_name not in data %}
-          {# Set the field default value before rendering but only if
-          it doesn't already exist in data which would mean the form
-          has been submitted. #}
-          {% if field.default_jinja2 %}
-            {% do data.__setitem__(
-              field.field_name,
-              h.scheming_render_from_string(field.default_jinja2)) %}
-          {% elif field.default %}
-            {% do data.__setitem__(field.field_name, field.default) %}
-          {% endif %}
-        {% endif -%}
-        {%- snippet 'scheming/snippets/form_field.html',
-          field=field,
-          data=data,
-          errors=errors,
-          licenses=c.licenses,
-          entity_type='dataset',
-          object_type=dataset_type,
-          resource_type=resource_type
-        -%}
-      {%- endif -%}
-    {%- endfor -%}
+  {# Order fields by the groups in display_group_order. #}
+  {# Add any remaining groups will be added randomly. Defaults to 'General' first.#}
+  {%- set groups = dict(schema.resource_fields|groupby('display_group')) -%}
+  {%- set group_order = schema.get('display_group_order', ['General']) -%}
+  {%- set drawn_groups = [] -%}
+
+  {%- for group_name in group_order + groups.keys() -%}
+    {%- set group = groups.get(group_name)-%}
+    {%- if group and group_name not in drawn_groups -%}
+      <h3 class="page-heading form-group">
+        {{ _(group_name) }}
+      </h3>
+      {%- for field in group -%}
+        {%- if field.form_snippet is not none -%}
+          {%- if field.field_name not in data %}
+            {# Set the field default value before rendering but only if
+            it doesn't already exist in data which would mean the form
+            has been submitted. #}
+            {% if field.default_jinja2 %}
+              {% do data.__setitem__(
+                field.field_name,
+                h.scheming_render_from_string(field.default_jinja2)) %}
+            {% elif field.default %}
+              {% do data.__setitem__(field.field_name, field.default) %}
+            {% endif %}
+          {% endif -%}
+          {%- snippet 'scheming/snippets/form_field.html',
+            field=field,
+            data=data,
+            errors=errors,
+            licenses=c.licenses,
+            entity_type='dataset',
+            object_type=dataset_type,
+            resource_type=resource_type
+          -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {# Don't draw groups twice #}
+      {%- set drawn_groups = drawn_groups + [group_name] -%}
+    {%- endif -%}
   {%- endfor -%}
 
   {%- if 'resource_fields' not in schema -%}
