@@ -48,7 +48,7 @@ scheming.dataset_fallback = false
 ```
 
 ## Different Types of Schemas
-With this plugin, you can customize the group, organization, and dataset entities in CKAN. Defining a schema will modify the form, the data saved to the database, create separate indexes, generate urls for each type indicated by the `type` field in each schema.
+With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly in **CKAN 2.8+ only** as is indicated throughout the examples.
 
 **Creating custom group or organization types is only supported in CKAN 2.8, instructions for that are below**
 
