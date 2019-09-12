@@ -20,13 +20,21 @@ Configuration
 Set the schemas you want to use with configuration options:
 
 ```ini
-ckan.plugins = scheming_datasets
+
+# Each of the plugins is optional depending on your use
+ckan.plugins = scheming_datasets scheming_groups scheming_organizations
 
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.json
                            ckanext.spatialx:spatialxy_schema.json
 #   will try to load "spatialx_schema.json" and "spatialxy_schema.json"
 #   as dataset schemas
+
+#   For group and organization schemas (replace myplugin with your custom plugin)
+scheming.group_schemas = ckanext.scheming:group_with_bookface.json
+                         ckanext.myplugin:/etc/ckan/default/group_with_custom_fields.json
+scheming.organization_schemas = ckanext.scheming:org_with_dept_id.json
+                                ckanext.myplugin:org_with_custom_fields.json
 #
 #   URLs may also be used, e.g:
 #
@@ -39,9 +47,28 @@ scheming.presets = ckanext.scheming:presets.json
 scheming.dataset_fallback = false
 ```
 
+## Different Types of Schemas
+With this plugin, you can customize the group, organization, and dataset entities in CKAN. Defining a schema will modify the form, the data saved to the database, create separate indexes, generate urls for each type indicated by the `type` field in each schema.
 
-Example dataset schemas
------------------------
+**Creating custom group or organization types is only supported in CKAN 2.8, instructions for that are below**
+
+
+Top-level Schema Keys (Common among dataset, group, and organization schemas)
+-------------------------------------------------------------------------------------
+
+### `scheming_version`
+
+Set to `1`. Future versions of ckanext-scheming may use a larger
+number to indicate a change to the description JSON format.
+
+### `about_url`
+
+`about_url` is a Link to human-readable information about this schema.
+Its use is optional but highly recommended.
+
+
+Example Schemas - Datasets
+-------------------------------
 
 * [default dataset schema](ckanext/scheming/ckan_dataset.json)
 * [camel photos schema](ckanext/scheming/camel_photos.json)
@@ -53,15 +80,8 @@ These schemas use [presets](#preset) defined in
 [presets.json](ckanext/scheming/presets.json).
 
 
-Schema Keys
------------
-
-
-### `scheming_version`
-
-Set to `1`. Future versions of ckanext-scheming may use a larger
-number to indicate a change to the description JSON format.
-
+Schema Keys - Datasets
+-------------------------------
 
 ### `dataset_type`
 
@@ -71,13 +91,6 @@ It is also used to set the URL for searching this type of dataset.
 Normal datasets would be available under the URL `/dataset`, but datasets with
 the `camel_photos.json` schema above would appear under `/camel-photos` instead.
 
-
-### `about_url`
-
-`about_url` is a Link to human-readable information about this schema.
-Its use is optional but highly recommended.
-
-
 ### `dataset_fields`, `resource_fields`
 
 Fields are specified in the order you
@@ -86,6 +99,38 @@ pages.
 
 Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset.
+
+
+Example Schemas - Group
+---------------------------
+
+* [Default group schema with field modifications](ckanext/scheming/group_with_bookface.json)
+* [Group with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_group_with_status.json)
+
+Example Schemas - Organization
+------------------------------------------
+
+* [Default organization schema with field modifications](ckanext/scheming/org_with_dept_id.json)
+* [Organization with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_org_with_address.json)
+
+Schema Keys - Groups / Organization
+--------------------------------------
+
+### `group_type`
+Examples:
+* `"group_type": "group"` used for modifying the default group schema
+* `"group_type": "theme"` an example of defining a custom group type, as seen in the above examples **(CKAN 2.8+ only)**
+
+### `organization_type`
+Examples:
+* `"organization_type": "organization"` used for modifying the default organization schema
+* `"organization_type": "organization_type": "publisher"` an example of defining a custom organization type, as seen in the above examples **(CKAN 2.8+ only)**
+
+### `fields`
+The `dataset_fields` and `resource_fields` schema properties don't exist in group or organization schemas. Instead, they just have a `fields` property.
+
+###  URLs
+Like `dataset_type`, a `group_type` of `group` allows you to customize the default group schema under the URL `/group`, such as the modified schema in group_with_bookface.json, but a schema with a custom type **(CKAN 2.8+ only)** such as `custom_group_with_status.json` schema above would appear under `/theme` instead, because its `group_type` field is set to "theme".
 
 
 Field Keys
