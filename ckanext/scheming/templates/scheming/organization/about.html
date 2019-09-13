@@ -1,10 +1,19 @@
 {% extends "organization/about.html" %}
 
 {% block primary_content_inner %}
+<h2> {{ c.group_dict['title'] }} </h2>
+<p> {{ h.scheming_language_text(c.group_dict['description_translated']) }} </p>
+<br/>
 <dl>
-{% for f in c.scheming_fields %}
-<dt>{{ h.scheming_language_text(f.label) }}:</dt>
-<dd>{{ c.group_dict[f.field_name] or ("&nbsp;"|safe) }}</dd>
+{% for f in c.scheming_fields if f.field_name not in ('title','description_translated','name', 'image_url') %}
+    <dt>{{ h.scheming_language_text(f.label) }}:</dt>
+    {% if f.field_name == 'do_website' %}
+        <dd><a href="{{ c.group_dict[f.field_name] or ('&nbsp;'|safe) }}" target="_blank">{{ c.group_dict[f.field_name] or ("&nbsp;"|safe) }}</a></dd>
+    {% elif f.field_name == 'do_email' %}
+        <dd><a href="mailto:{{ c.group_dict[f.field_name] or ('&nbsp;'|safe) }}">{{ c.group_dict[f.field_name] or ("&nbsp;"|safe) }}</a></dd>
+    {% else %}
+        <dd>{{ c.group_dict[f.field_name] or ("&nbsp;"|safe) }}</dd>
+    {% endif %}
 {% endfor %}
 </dl>
 {% endblock %}
