@@ -1,1 +1,9 @@
-{% extends 'scheming/display_snippets/text.html' %}
+{% set date = data.get(field.field_name) %}
+
+{% if date %}
+    {% set parts = data.get(field.field_name).split('T') %}
+    {% set date = parts[0] %}
+    {% set time = parts[1] %}
+    {{ date }} {{ time }}
+{% endif %}
+
