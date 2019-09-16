@@ -3,8 +3,7 @@
 {%- set exclude_fields = [
     'name',
     'description',
-    'url',
-    'format',
+    'url'
     ] -%}
 {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
 
@@ -29,12 +28,6 @@
           <tr>
             <th scope="row">{{ _('Created') }}</th>
             <td>{{ h.render_datetime(res.created) or _('unknown') }}</td>
-          </tr>
-        {%- endblock -%}
-        {%- block resource_format -%}
-          <tr>
-            <th scope="row">{{ _('Format') }}</th>
-            <td>{{ res.mimetype_inner or res.mimetype or res.format or _('unknown') }}</td>
           </tr>
         {%- endblock -%}
         {%- block resource_license -%}
