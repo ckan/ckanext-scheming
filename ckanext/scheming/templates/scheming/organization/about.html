@@ -2,7 +2,7 @@
 
 {% block primary_content_inner %}
 <h2> {{ c.group_dict['title'] }} </h2>
-<p> {{ h.scheming_language_text(c.group_dict['description_translated']) }} </p>
+<p> {{ h.benap_field_translated_fallback(c.group_dict['description_translated']) }} </p>
 <br/>
 <dl>
 {% for f in c.scheming_fields if f.field_name not in ('title','description_translated','name', 'image_url') %}
