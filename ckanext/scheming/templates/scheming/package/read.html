@@ -3,6 +3,10 @@
 {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
 
 {% block package_notes %}
+    <p>
+        {{ h.render_markdown(h.scheming_language_text(pkg['notes_translated']) or
+        h.benap_scheming_language_text_fallback(pkg['notes_translated'], pkg['language'])) }}
+    </p>
   {%- if not dataset_type -%}
     <p>
     dataset_type not passed to template. your version of CKAN
