@@ -1,30 +1,89 @@
 {% extends 'package/snippets/resource_form.html' %}
 
 {% block errors %}
-  {%- if errors -%}
-    {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
-    {%- snippet 'scheming/snippets/errors.html',
-      errors=errors, fields=schema.resource_fields,
-      entity_type='dataset', object_type=dataset_type -%}
-  {%- endif -%}
+ {%- if error_summary -%}
+  {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+  {%- snippet 'scheming/snippets/errors.html',
+     errors=error_summary, fields=schema.resource_fields,
+     entity_type='dataset', object_type=dataset_type -%}
+ {%- endif -%}
 {% endblock %}
 
 {% block basic_fields %}
+{% if request.GET is defined %}
+  {% set resource_type = request.GET["resource_type"] %}
+{% else %}
+  {% set resource_type = request.args.get("resource_type") %}
+{% endif %}
+{% if not resource_type and "resource_type" in data %}
+  {% set resource_type = data["resource_type"] %}
+{% endif %}
   {%- if not dataset_type -%}
     <p>
     dataset_type not passed to template. your version of CKAN
     might not be compatible with ckanext-scheming
     </p>
   {%- endif -%}
-  {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
-  {%- for field in schema.resource_fields -%}
-    {%- if field.form_snippet is not none -%}
-      {%- snippet 'scheming/snippets/form_field.html',
-        field=field, data=data, errors=errors,
-	entity_type='dataset', object_type=dataset_type -%}
+    {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+    {% if resource_type %}
+
+    {% if resource_type in schema.get("resource_schemas") %}
+    {%- set schema = schema.resource_schemas[resource_type] -%}
+    <h2>{{schema["name"] }} </h2>
+    {% else %}
+    Resource Type does not exists
+    {% endif %}
+    {% endif %}
+
+  {# Order fields by the groups in display_group_order. #}
+  {# Add any remaining groups will be added randomly. Defaults to 'General' first.#}
+  {%- set groups = dict(schema.resource_fields|groupby('display_group')) -%}
+  {%- set group_order = schema.get('display_group_order', ['General']) -%}
+  {%- set drawn_groups = [] -%}
+
+  {%- for group_name in group_order + groups.keys() -%}
+    {%- set group = groups.get(group_name)-%}
+    {%- if group and group_name not in drawn_groups -%}
+      <h3 class="page-heading form-group">
+        {{ _(group_name) }}
+      </h3>
+      {%- for field in group -%}
+        {%- if field.form_snippet is not none -%}
+          {%- if field.field_name not in data %}
+            {# Set the field default value before rendering but only if
+            it doesn't already exist in data which would mean the form
+            has been submitted. #}
+            {% if field.default_jinja2 %}
+              {% do data.__setitem__(
+                field.field_name,
+                h.scheming_render_from_string(field.default_jinja2)) %}
+            {% elif field.default %}
+              {% do data.__setitem__(field.field_name, field.default) %}
+            {% endif %}
+          {% endif -%}
+          {%- snippet 'scheming/snippets/form_field.html',
+            field=field,
+            data=data,
+            errors=errors,
+            licenses=c.licenses,
+            entity_type='dataset',
+            object_type=dataset_type,
+            resource_type=resource_type
+          -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {# Don't draw groups twice #}
+      {%- set drawn_groups = drawn_groups + [group_name] -%}
     {%- endif -%}
   {%- endfor -%}
+
+  {%- if 'resource_fields' not in schema -%}
+    <!-- force controller to skip resource-editing step for this type -->
+    <input type="hidden" name="_ckan_phase" value="" />
+  {%- endif -%}
+
 {% endblock %}
+
 
 {% block metadata_fields %}
 {% endblock %}

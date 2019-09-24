@@ -1,21 +1,50 @@
 {#- master snippet for all scheming display fields -#}
 {#- render the field the user requested, or use a default field -#}
+{%- if field.subfields %}
+    {% set group_data = h.scheming_composite_load(data[field.field_name]) %}
 
-{%- set display_snippet = field.display_snippet -%}
+    {% for group in group_data %}
+    <dl class="composite-repeating-list">
+      {%- for subfield in field.subfields %}
+        {% if group[subfield.field_name] %}
+          <dt class="dataset-label">
+            {{ h.scheming_language_text(subfield.label) }}
+          </dt>
+          <dd>
+          {%- snippet 'scheming/snippets/display_field.html',
+            field=subfield,
+            data=group,
+            errors=errors,
+            entity_type=entity_type,
+            object_type=object_type
+          -%}
+          </dd>
+        {% endif %}
+      {% endfor -%}
+    </dl>
+    {% endfor %}
+{% else %}
+  {%- set display_snippet = field.display_snippet -%}
 
-{%- if not display_snippet -%}
-  {%- if h.scheming_field_choices(field) -%}
-    {%- set display_snippet = 'select.html' -%}
-  {%- else -%}
-    {%- set display_snippet = 'text.html' -%}
+  {%- if not display_snippet -%}
+    {%- if h.scheming_field_choices(field) -%}
+      {%- set display_snippet = 'select.html' -%}
+    {%- else -%}
+      {%- set display_snippet = 'text.html' -%}
+    {%- endif -%}
   {%- endif -%}
-{%- endif -%}
 
-{%- if '/' not in display_snippet -%}
-  {%- set display_snippet = 'scheming/display_snippets/' + display_snippet -%}
-{%- endif -%}
+  {%- if '/' not in display_snippet -%}
+    {%- set display_snippet = 'scheming/display_snippets/' + display_snippet -%}
+  {%- endif -%}
 
-{%- if field.field_name in data -%}
-  {%- snippet display_snippet, field=field, data=data, errors=errors,
-    entity_type=entity_type, object_type=object_type -%}
-{%- endif -%}
+  {%- if field.field_name in data -%}
+    {%- snippet display_snippet,
+      field=field,
+      data=data,
+      errors=errors,
+      entity_type=entity_type,
+      object_type=object_type 
+    -%}
+  {%- endif -%}
+{% endif -%}

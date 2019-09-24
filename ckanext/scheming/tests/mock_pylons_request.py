@@ -2,13 +2,16 @@ from contextlib import contextmanager
 
 import pylons
 
+
 class FakeSession(object):
     last_accessed = None
+
 
 class FakeRequest(object):
     def __init__(self):
         self.environ = {}
         self.params = {}
+
 
 @contextmanager
 def mock_pylons_request():

@@ -1,6 +1,5 @@
 {# shallow copy errors so we can remove processed keys #}
 {%- set unprocessed = errors.copy() -%}
-
 {% block errors_list %}
 <div class="error-explanation alert alert-error">
   <p>{{ _('The form contains invalid entries:') }}</p>
@@ -24,12 +23,12 @@
           {%- set errors = unprocessed.pop(field.field_name) -%}
           <li data-field-label="{{ field.field_name }}">{{
             h.scheming_language_text(field.label) }}:
-            {{ errors[0] }}</li>
+            {{ errors }}</li>
         {%- endif -%}
       {%- endfor -%}
 
-      {%- for key, errors in unprocessed.items() | sort -%}
-        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors[0] }}</li>
+      {%- for key, errors in h.scheming_natural_sort(unprocessed.items())  -%}
+        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors |safe }}</li>
       {%- endfor -%}
     {% endblock %}
   </ul>

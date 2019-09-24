@@ -78,6 +78,10 @@ class TestGetPreset(object):
             u'dataset_slug',
             u'dataset_organization',
             u'json_object',
+            u'hidden_value',
+            u'resource_url_upload_shapefile',
+            u'country_list',
+            u'year'
         )), sorted(presets.iterkeys()))
 
     def test_scheming_get_preset(self):
@@ -97,15 +101,6 @@ class TestDatastoreChoices(object):
         LocalCKAN.return_value = lc
         assert_equals(scheming_datastore_choices(
             {'datastore_choices_resource': 'not-found'}), [])
-        lc.action.datastore_search.assert_called_once()
-
-    @patch('ckanext.scheming.helpers.LocalCKAN')
-    def test_no_choices_on_not_authorized(self, LocalCKAN):
-        lc = Mock()
-        lc.action.datastore_search.side_effect = NotFound()
-        LocalCKAN.return_value = lc
-        assert_equals(scheming_datastore_choices(
-            {'datastore_choices_resource': 'not-allowed'}), [])
         lc.action.datastore_search.assert_called_once()
 
     @patch('ckanext.scheming.helpers.LocalCKAN')

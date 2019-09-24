@@ -14,10 +14,13 @@ from ckantoolkit import get_validator
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
 
+
 class TestGetValidatorOrConverter(object):
     def test_missing(self):
-        assert_raises(SchemingException,
-            get_validator_or_converter, 'not_a_real_validator_name')
+        assert_raises(
+            SchemingException,
+            get_validator_or_converter, 'not_a_real_validator_name'
+        )
 
     def test_validator_name(self):
         assert get_validator_or_converter('not_empty')
@@ -39,7 +42,8 @@ class TestChoices(FunctionalTestBase):
         except ValidationError as e:
             assert_equals(
                 e.error_dict['category'],
-                    ['Value must be one of: bactrian; hybrid; f2hybrid; snowwhite; black (not \'rocker\')']
+                ['Value must be one of: bactrian; hybrid; '
+                 'f2hybrid; snowwhite; black (not \'rocker\')']
             )
         else:
             raise AssertionError('ValidationError not raised')
@@ -50,7 +54,7 @@ class TestChoices(FunctionalTestBase):
             type='test-schema',
             name='fred_choices2',
             category='f2hybrid',
-            )
+        )
         assert_equals(d['category'], 'f2hybrid')
 
 
@@ -435,12 +439,12 @@ class TestDateTimesTZ(object):
 
     def test_date_field_datetime_convert_to_utc(self):
         lc = LocalCKAN()
-        d = lc.action.package_create(
+        lc.action.package_create(
             type='test-schema',
             name='fred_datetime_tz11',
             a_relevant_datetime_tz=datetime.datetime(
                 2014, 1, 1, 12, 35, tzinfo=pytz.timezone('America/New_York')
-            ),
+            )
         )
 
     def test_datetime_field_rejects_invalid_separate_date(self):
