@@ -7,6 +7,9 @@ import logging
 
 import ckan.plugins as p
 from ckan.common import c
+
+from ckanext.scheming.lib.uploader import OrganizationUploader
+
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
@@ -45,8 +48,8 @@ from ckanext.scheming.logic import (
     scheming_group_schema_list,
     scheming_group_schema_show,
     scheming_organization_schema_list,
-    scheming_organization_schema_show
-)
+    scheming_organization_schema_show,
+    scheming_organization_show)
 from ckanext.scheming.converters import (
     convert_from_extras_group,
     convert_to_json_if_date,
@@ -105,7 +108,7 @@ class _SchemingMixin(object):
             'scheming_datetime_to_tz': helpers.scheming_datetime_to_tz,
             'scheming_datastore_choices': helpers.scheming_datastore_choices,
             'scheming_display_json_value': helpers.scheming_display_json_value,
-            }
+        }
 
     def get_validators(self):
         if _SchemingMixin._validators_loaded:
@@ -122,7 +125,7 @@ class _SchemingMixin(object):
             'scheming_isodatetime_tz': scheming_isodatetime_tz,
             'scheming_valid_json_object': scheming_valid_json_object,
             'scheming_load_json': scheming_load_json,
-            }
+        }
 
     def _add_template_directory(self, config):
         if _SchemingMixin._template_dir_added:
@@ -316,6 +319,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.IUploader)
 
     SCHEMA_OPTION = 'scheming.organization_schemas'
     FALLBACK_OPTION = 'scheming.organization_fallback'
@@ -342,7 +346,28 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
                 scheming_organization_schema_list,
             'scheming_organization_schema_show':
                 scheming_organization_schema_show,
+            'organization_show':
+                scheming_organization_show,
         }
+
+    def setup_template_variables(self, context, data_dict):
+        image_url = data_dict.get('image_url', '')
+        url_type = data_dict.get('url_type', 'upload' if not image_url.startswith(('http', 'https')) else None)
+        temp_vars = super(SchemingOrganizationsPlugin, self).setup_template_variables(
+            context, data_dict)
+        temp_vars = temp_vars if temp_vars else {}
+        url_type = temp_vars.get('url_type', url_type)
+        temp_vars['url_type'] = url_type
+        data_dict['url_type'] = url_type
+        return temp_vars
+
+    def get_uploader(self, upload_to, old_filename):
+        if upload_to == "group":
+            return OrganizationUploader(upload_to, old_filename)
+        return None
+
+    def get_resource_uploader(self, data_dict):
+        return None
 
 
 def _load_schemas(schemas, type_field):
