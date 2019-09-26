@@ -17,3 +17,7 @@
 {% endfor %}
 </dl>
 {% endblock %}
+
+{% block secondary_content %}
+  {% snippet 'scheming/snippets/organization.html', organization=c.group_dict, show_nums=true, group_type=c.group_type %}
+{% endblock %}
