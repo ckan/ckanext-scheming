@@ -25,3 +25,12 @@
   {% snippet "scheming/package/snippets/additional_info.html",
     pkg_dict=pkg, dataset_type=dataset_type, schema=schema %}
 {% endblock %}
+
+{% block package_tags %}
+    {% if pkg.tags %}
+        <section class="tags">
+            <h3>{{ _('Transportation modes covered') }}</h3>
+                {% snippet 'snippets/tag_list.html', tags=pkg.tags, _class='tag-list well' %}
+        </section>
+    {% endif %}
+{% endblock %}
