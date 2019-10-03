@@ -12,8 +12,8 @@
 {% block basic_fields %}
   {%- if not dataset_type -%}
     <p>
-    dataset_type not passed to template. your version of CKAN
-    might not be compatible with ckanext-scheming
+    {{ _('dataset_type not passed to template. your version of CKAN
+    might not be compatible with ckanext-scheming')}}
     </p>
   {%- endif -%}
   {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}

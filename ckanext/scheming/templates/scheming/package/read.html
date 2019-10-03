@@ -9,8 +9,8 @@
     </p>
   {%- if not dataset_type -%}
     <p>
-    dataset_type not passed to template. your version of CKAN
-    might not be compatible with ckanext-scheming
+    {{ _('dataset_type not passed to template. your version of CKAN
+    might not be compatible with ckanext-scheming') }}
     </p>
   {%- endif -%}
   {% if h.scheming_field_by_name(schema.dataset_fields, 'notes') and
