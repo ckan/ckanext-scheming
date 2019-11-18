@@ -14,7 +14,7 @@ setup(
     Originally developed for the Government of Canada's custom metadata schema, part of
     https://github.com/open-data/ckanext-canada
     """,
-    classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords='',
     author='Ian Ward',
     author_email='ian@excess.org',

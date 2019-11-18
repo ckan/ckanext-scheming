@@ -5,7 +5,7 @@
 {% endmacro %}
 
 {%- call form.input_block(
-    "field-{{ field.field_name }}",
+    "field-" + field.field_name,
     label=h.scheming_language_text(field.label),
     classes=['control-full'],
     error=errors[field.field_name],
@@ -21,7 +21,7 @@
     {%- set choices = choices|sort(case_sensitive=false, attribute=1) -%}
   {%- endif -%}
   <select multiple
-      size="{{ ([field.get('select_size', 10), field.choices|length]|sort)[0] }}"
+      size="{{ field.get('select_size', field.choices|length) }}"
       style="display: block"
       id="field-{{ field.field_name }}"
       name="{{ field.field_name }}"
