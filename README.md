@@ -95,7 +95,7 @@ Field Keys
 ### `field_name`
 
 The `field_name` value is the name of an existing CKAN dataset or resource
-field or a new new extra field. Existing dataset
+field or a new extra field. Existing dataset
 field names include:
 
 * `name` - the URI for the dataset
