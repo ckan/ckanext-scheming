@@ -372,7 +372,7 @@ def restricted_json(field, schema):
         value = {
             "level": extra.get("restricted_level", ""),
             "allowed_users": extra.get("restricted_allowed_users", ""),
-            "allowed_organisations": extra.get("restricted_allowed_orgs", "")
+            "allowed_organizations": extra.get("restricted_allowed_orgs", "")
         }
         data[key] = json.dumps(value)
     return validator
