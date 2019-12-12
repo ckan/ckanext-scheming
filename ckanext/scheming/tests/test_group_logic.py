@@ -1,3 +1,4 @@
+from builtins import object
 from nose.tools import assert_raises, assert_equals
 from ckanapi import LocalCKAN, NotFound
 

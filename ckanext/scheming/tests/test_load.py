@@ -1,3 +1,4 @@
+from builtins import object
 from nose.tools import assert_equals, assert_raises
 
 from ckanext.scheming.plugins import _load_schema

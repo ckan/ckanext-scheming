@@ -1,3 +1,4 @@
+from builtins import object
 from nose.tools import assert_in, assert_not_in
 from ckan.lib.base import render_snippet
 from jinja2 import Markup

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import click
 
 from ckan.cli import error_shout, click_config_option

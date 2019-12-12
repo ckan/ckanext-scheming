@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from builtins import object
 from nose.tools import assert_equals
 from mock import patch, Mock
 
@@ -78,7 +79,7 @@ class TestGetPreset(object):
             u'dataset_slug',
             u'dataset_organization',
             u'json_object',
-        )), sorted(presets.iterkeys()))
+        )), sorted(presets.keys()))
 
     def test_scheming_get_preset(self):
         preset = scheming_get_preset(u'date')
@@ -86,7 +87,7 @@ class TestGetPreset(object):
             (u'display_snippet', u'date.html'),
             (u'form_snippet', u'date.html'),
             (u'validators', u'scheming_required isodate convert_to_json_if_date')
-        )), sorted(preset.iteritems()))
+        )), sorted(preset.items()))
 
 
 class TestDatastoreChoices(object):

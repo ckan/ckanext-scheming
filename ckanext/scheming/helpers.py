@@ -1,3 +1,5 @@
+from builtins import map
+from past.builtins import basestring
 import re
 import datetime
 import pytz
@@ -275,7 +277,7 @@ def date_tz_str_to_datetime(date_str):
         microseconds = int(m.groupdict(0).get('microseconds'))
         time_tuple = time_tuple[:5] + [seconds, microseconds]
 
-    final_date = datetime.datetime(*map(int, time_tuple))
+    final_date = datetime.datetime(*list(map(int, time_tuple)))
 
     # Apply the timezone offset
     if len(tz_split) > 1 and not tz_split[1] == 'Z':
