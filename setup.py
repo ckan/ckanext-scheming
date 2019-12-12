@@ -37,5 +37,8 @@ setup(
 
     [paste.paster_command]
     scheming=ckanext.scheming.commands:SchemingCommand
+    [console_scripts]
+    ckanext-scheming = ckanext.scheming.cli:scheming
+
     """,
 )
