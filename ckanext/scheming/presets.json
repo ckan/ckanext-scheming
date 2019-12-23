@@ -51,6 +51,14 @@
       }
     },
     {
+      "preset_name": "organization_url_upload",
+      "values": {
+        "validators": "ignore_missing unicode remove_whitespace",
+        "form_snippet": "organization_upload.html",
+        "form_placeholder": "http://example.com/my-data.csv"
+      }
+    },
+    {
       "preset_name": "resource_format_autocomplete",
       "values": {
         "validators": "if_empty_guess_format ignore_missing clean_format unicode",
