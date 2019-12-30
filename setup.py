@@ -32,5 +32,14 @@ setup(
     scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
     scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
     scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
+    [babel.extractors]
+    ckan = ckan.lib.extract:extract_ckan
     """,
+    message_extractors={
+        'ckanext': [
+            ('**.py', 'python', None),
+            ('**.js', 'javascript', None),
+            ('**/templates/**.html', 'ckan', None),
+        ],
+    }
 )
