@@ -14,6 +14,7 @@ from ckan.lib.navl.dictization_functions import (
     missing
 )
 import copy
+from ckantoolkit import _
 
 
 def augment_data(data, schema):
@@ -51,8 +52,8 @@ def augment_data(data, schema):
         if initial_tuple in [initial_key[:len(initial_tuple)]
                              for initial_key in flattened_schema]:
             if data[key] != []:
-                raise DataError('Only lists of dicts can be placed against '
-                                'subschema %s, not %s' %
+                raise DataError(_('Only lists of dicts can be placed against '
+                                'subschema %s, not %s') %
                                 (key, type(data[key])))
 
         if key[:-1] in key_combinations:

@@ -8,6 +8,7 @@ from paste.reloader import watch_file
 from paste.deploy.converters import asbool
 from ckan.common import c
 from collections import OrderedDict
+from ckantoolkit import _
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
@@ -144,7 +145,7 @@ class _GroupOrganizationMixin(object):
         thing, action_type = action.split('_')
         t = data_dict.get('type')
         if not t or t not in self._schemas:
-            return data_dict, {'type': "Unsupported {thing} type: {t}".format(
+            return data_dict, {'type': _("Unsupported {thing} type: {t}").format(
                 thing=thing, t=t)}
         scheming_schema = self._expanded_schemas[t]
         scheming_fields = scheming_schema['fields']
@@ -205,7 +206,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         t = data_dict.get('type')
         if not t or t not in self._schemas:
             return data_dict, {'type': [
-                "Unsupported dataset type: {t}".format(t=t)]}
+                _("Unsupported dataset type: {t}").format(t=t)]}
 
         scheming_schema = self._expanded_schemas[t]
 
@@ -373,7 +374,7 @@ def _load_schema_url(url):
         res = urllib2.urlopen(url)
         tables = res.read()
     except urllib2.URLError:
-        raise SchemingException("Could not load %s" % url)
+        raise SchemingException(_("Could not load %s") % url)
 
     return loader.loads(tables, url)
 
