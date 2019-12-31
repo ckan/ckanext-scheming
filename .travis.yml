@@ -5,7 +5,6 @@ sudo: required
 python:
 - '2.7'
 env:
-- CKANVERSION=master
 - CKANVERSION=2.8
 install:
 - bash bin/travis-build.bash
@@ -17,20 +16,6 @@ before_install:
 - pip install codecov
 after_success:
 - codecov
-matrix:
-  include:
-  - name: Flake8 on Python 2.7
-    dist: xenial
-    cache: pip
-    install: pip install flake8
-    script:
-    - flake8 --version
-    - flake8 . --count --max-line-length=127 --statistics --exclude
-      ckan,{{ project }}
-    python: 2.7
-    env:
-    - FLAKE8=true
-    - CKANVERSION=master
 notifications:
   slack:
     rooms:
