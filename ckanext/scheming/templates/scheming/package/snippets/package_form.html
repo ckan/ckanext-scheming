@@ -71,6 +71,14 @@
 {% endblock %}
 
 {% block save_button %}
-  <button class="btn btn-primary" type="submit" name="save">{% block save_button_text %}{{ _('Create Data Package') }}{% endblock %}</button>
+  <button class="btn btn-primary" type="submit" name="save">
+    {% block save_button_text %}
+    {% if data.name %}
+      {{ _('Update Data Package') }}
+    {% else %}
+      {{ _('Create Data Package') }}
+    {% endif %}
+    {% endblock %}
+  </button>
 {% endblock %}
 {{ form.required_message() }}
