@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
+import sys
 import inspect
 import logging
 import ckan.plugins as p
@@ -268,6 +269,18 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             'scheming_dataset_schema_show': logic.scheming_dataset_schema_show,
         }
 
+    def i18n_domain(self):
+        '''
+        Change the gettext domain handled by this plugin.
+        This python module is called "scheming_datasets" meaning that the
+        DefaultTranslation object's implementation of this function expects the
+        domain to be ckanext-scheming_datasets.  But the domain we're using is
+        ckanext-scheming.
+        '''
+        domain = 'ckanext-scheming'
+        log.debug("Domain: {}".format(domain))
+        return domain
+
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
                            DefaultGroupForm, _SchemingMixin, DefaultTranslation):
@@ -336,6 +349,18 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
             'scheming_organization_schema_show':
                 logic.scheming_organization_schema_show,
         }
+
+    def i18n_domain(self):
+        '''
+        Change the gettext domain handled by this plugin.
+        This python module is called "scheming_datasets" meaning that the
+        DefaultTranslation object's implementation of this function expects the
+        domain to be ckanext-scheming_datasets.  But the domain we're using is
+        ckanext-scheming.
+        '''
+        domain = 'ckanext-scheming'
+        log.debug("Domain: {}".format(domain))
+        return domain
 
 
 def _load_schemas(schemas, type_field):
