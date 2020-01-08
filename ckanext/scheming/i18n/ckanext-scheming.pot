@@ -1,15 +1,15 @@
 # Translations template for ckanext-scheming.
-# Copyright (C) 2019 ORGANIZATION
+# Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the ckanext-scheming
 # project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-scheming 1.2.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-12-30 13:09+0000\n"
+"POT-Creation-Date: 2020-01-07 17:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,31 +26,32 @@ msgstr ""
 msgid "Geographic data formatted for the Naomi model."
 msgstr ""
 
-#: ckanext/scheming/navl_validate.py:55
-#, python-format
-msgid "Only lists of dicts can be placed against subschema %s, not %s"
+#: ckanext/scheming/navl_validate.py:56
+msgid "Only lists of dicts can be placed against subschema {}, not {}"
 msgstr ""
 
-#: ckanext/scheming/plugins.py:148
+#: ckanext/scheming/plugins.py:149
 msgid "Unsupported {thing} type: {t}"
 msgstr ""
 
-#: ckanext/scheming/plugins.py:209
+#: ckanext/scheming/plugins.py:211
 msgid "Unsupported dataset type: {t}"
 msgstr ""
 
-#: ckanext/scheming/plugins.py:377
-#, python-format
-msgid "Could not load %s"
+#: ckanext/scheming/plugins.py:382
+msgid "Could not load {url}"
 msgstr ""
 
-#: ckanext/scheming/validation.py:176 ckanext/scheming/validation.py:239
-#, python-format
-msgid "unexpected choice \"%s\""
+#: ckanext/scheming/validation.py:176
+msgid "unexpected choice \"{value}\""
 msgstr ""
 
 #: ckanext/scheming/validation.py:221
 msgid "expecting list of strings"
+msgstr ""
+
+#: ckanext/scheming/validation.py:239
+msgid "unexpected choice \"{element}\""
 msgstr ""
 
 #: ckanext/scheming/validation.py:249
@@ -188,6 +189,16 @@ msgstr ""
 
 #: ckanext/scheming/templates/scheming/package/snippets/package_form.html:79
 msgid "Create Data Package"
+msgstr ""
+
+#: ckanext/scheming/templates/scheming/package/snippets/resource_form.html:23
+msgid ""
+"dataset_type not passed to template. your version of CKAN might not be "
+"compatible with ckanext-scheming"
+msgstr ""
+
+#: ckanext/scheming/templates/scheming/package/snippets/resource_form.html:33
+msgid "Resource Type does not exist"
 msgstr ""
 
 #: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:14

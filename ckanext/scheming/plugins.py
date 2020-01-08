@@ -9,6 +9,7 @@ from paste.deploy.converters import asbool
 from ckan.common import c
 from collections import OrderedDict
 from ckantoolkit import _
+from ckan.lib.plugins import DefaultTranslation
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
@@ -165,13 +166,14 @@ class _GroupOrganizationMixin(object):
 
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
-                             _SchemingMixin):
+                             _SchemingMixin, DefaultTranslation):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
     p.implements(p.IPackageController, inherit=True)
+    p.implements(p.ITranslation)
 
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
@@ -268,12 +270,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
-                           DefaultGroupForm, _SchemingMixin):
+                           DefaultGroupForm, _SchemingMixin, DefaultTranslation):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.ITranslation)
 
     SCHEMA_OPTION = 'scheming.group_schemas'
     FALLBACK_OPTION = 'scheming.group_fallback'
@@ -298,12 +301,14 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
 
 class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
-                                  DefaultOrganizationForm, _SchemingMixin):
+                                  DefaultOrganizationForm, _SchemingMixin,
+                                  DefaultTranslation):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.ITranslation)
 
     SCHEMA_OPTION = 'scheming.organization_schemas'
     FALLBACK_OPTION = 'scheming.organization_fallback'
@@ -374,7 +379,7 @@ def _load_schema_url(url):
         res = urllib2.urlopen(url)
         tables = res.read()
     except urllib2.URLError:
-        raise SchemingException(_("Could not load %s") % url)
+        raise SchemingException(_("Could not load {url}").format(url))
 
     return loader.loads(tables, url)
 

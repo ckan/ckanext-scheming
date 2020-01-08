@@ -173,7 +173,7 @@ def scheming_choices(field, schema):
         for choice in choices:
             if value == choice['value']:
                 return value
-        raise Invalid(_('unexpected choice "%s"') % value)
+        raise Invalid(_('unexpected choice "{value}"').format(value))
 
     return validator
 
@@ -236,7 +236,7 @@ def scheming_multiple_choice(field, schema):
             if element in choice_values:
                 selected.add(element)
                 continue
-            errors[key].append(_('unexpected choice "%s"') % element)
+            errors[key].append(_('unexpected choice "{element}"').format(element))
 
         if not errors[key]:
             data[key] = json.dumps([
