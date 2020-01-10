@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from builtins import map
 from past.builtins import basestring
 import re
 import datetime
 import pytz
 import json
+import six
 
 from ckantoolkit import config, _
 
@@ -51,7 +54,7 @@ def scheming_language_text(text, prefer_lang=None):
         return v
 
     if isinstance(text, str):
-        text = text.decode('utf-8')
+        text = six.ensure_text(text)
     t = _(text)
     return t
 
