@@ -1,0 +1,226 @@
+# French translations for ckanext-scheming.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the ckanext-scheming
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-scheming 1.2.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-01-07 17:22+0000\n"
+"PO-Revision-Date: 2019-12-30 13:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ckanext/scheming/helpers.py:116
+msgid "Naomi Geographic Data Input"
+msgstr "Saisie des données géographiques dans Naomi"
+
+#: ckanext/scheming/helpers.py:117
+msgid "Geographic data formatted for the Naomi model."
+msgstr "Données géographiques formatées pour le modèle Naomi."
+
+#: ckanext/scheming/navl_validate.py:56
+msgid "Only lists of dicts can be placed against subschema {}, not {}"
+msgstr "Seules les listes de dicts peuvent être placées dans le subschema {}, pas {}"
+
+#: ckanext/scheming/plugins.py:149
+msgid "Unsupported {thing} type: {t}"
+msgstr "Type de {thing} non compatible : {t}"
+
+#: ckanext/scheming/plugins.py:211
+msgid "Unsupported dataset type: {t}"
+msgstr "Type de jeu de données non compatible : {t}"
+
+#: ckanext/scheming/plugins.py:382
+msgid "Could not load {url}"
+msgstr "Impossible de charger {url}"
+
+#: ckanext/scheming/validation.py:176
+msgid "unexpected choice \"{value}\""
+msgstr "choix inattendu \"{value}\""
+
+#: ckanext/scheming/validation.py:221
+msgid "expecting list of strings"
+msgstr "En attente de la liste de chaînes"
+
+#: ckanext/scheming/validation.py:239
+msgid "unexpected choice \"{element}\""
+msgstr "choix inattendu \"{element}\""
+
+#: ckanext/scheming/validation.py:249
+msgid "Select at least one"
+msgstr "Sélectionner au moins un élément"
+
+#: ckanext/scheming/validation.py:255 ckanext/scheming/validation.py:321
+#: ckanext/scheming/validation.py:350
+msgid "Date format incorrect"
+msgstr "Format de la date erroné"
+
+#: ckanext/scheming/validation.py:256
+msgid "Time format incorrect"
+msgstr "Format de l’heure erroné"
+
+#: ckanext/scheming/validation.py:289
+msgid "Date is required when a time is provided"
+msgstr "La date est requise quand une heure est fournie"
+
+#: ckanext/scheming/validation.py:398
+msgid "Unsupported value for JSON field: {}"
+msgstr "Valeur non compatible pour le champ JSON : {}"
+
+#: ckanext/scheming/validation.py:403
+msgid "Invalid JSON string: {}"
+msgstr "Chaîne JSON non valide : {}"
+
+#: ckanext/scheming/validation.py:409
+msgid "Invalid JSON object: {}"
+msgstr "Objet JSON non valide : {}"
+
+#: ckanext/scheming/validation.py:412
+msgid "Unsupported type for JSON field: {}"
+msgstr "Type non compatible pour le champ JSON : {}"
+
+#: ckanext/scheming/templates/scheming/form_snippets/_organization_select.html:21
+msgid "No organization"
+msgstr "Aucune organisation"
+
+#: ckanext/scheming/templates/scheming/form_snippets/organization.html:25
+msgid "Visibility"
+msgstr "Visibilité"
+
+#: ckanext/scheming/templates/scheming/form_snippets/organization.html:29
+msgid "Private"
+msgstr "Privé"
+
+#: ckanext/scheming/templates/scheming/form_snippets/organization.html:29
+msgid "Public"
+msgstr "Public"
+
+#: ckanext/scheming/templates/scheming/group/group_form.html:20
+msgid "Are you sure you want to delete this Group?"
+msgstr "Voulez-vous supprimer ce groupe ?"
+
+#: ckanext/scheming/templates/scheming/group/group_form.html:21
+#: ckanext/scheming/templates/scheming/organization/group_form.html:22
+msgid "Delete"
+msgstr "Supprimer"
+
+#: ckanext/scheming/templates/scheming/group/group_form.html:25
+msgid "Save Group"
+msgstr "Enregistrer le groupe"
+
+#: ckanext/scheming/templates/scheming/organization/group_form.html:21
+msgid "Are you sure you want to delete this Organization?"
+msgstr "Voulez-vous supprimer cette organisation ?"
+
+#: ckanext/scheming/templates/scheming/organization/group_form.html:26
+msgid "Save Organization"
+msgstr "Enregistrer l’organisation"
+
+#: ckanext/scheming/templates/scheming/package/resource_read.html:13
+msgid "Additional Information"
+msgstr "Autres informations"
+
+#: ckanext/scheming/templates/scheming/package/resource_read.html:18
+msgid "Last updated"
+msgstr "Dernière mise à jour"
+
+#: ckanext/scheming/templates/scheming/package/resource_read.html:19
+#: ckanext/scheming/templates/scheming/package/resource_read.html:25
+#: ckanext/scheming/templates/scheming/package/resource_read.html:31
+msgid "unknown"
+msgstr "inconnu"
+
+#: ckanext/scheming/templates/scheming/package/resource_read.html:24
+msgid "Created"
+msgstr "Création"
+
+#: ckanext/scheming/templates/scheming/package/resource_read.html:30
+msgid "Format"
+msgstr "Format"
+
+#: ckanext/scheming/templates/scheming/package/resource_read.html:36
+msgid "License"
+msgstr "Licence"
+
+#: ckanext/scheming/templates/scheming/package/snippets/additional_info.html:29
+msgid "State"
+msgstr "État"
+
+#: ckanext/scheming/templates/scheming/package/snippets/autogenerated_resource_item.html:12
+msgid "Autogenerated Resource"
+msgstr "Ressource générée automatiquement"
+
+#: ckanext/scheming/templates/scheming/package/snippets/autogenerated_resource_item.html:29
+msgid "Download"
+msgstr "Téléchargement"
+
+#: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:13
+#: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:14
+msgid "Missing resource"
+msgstr "Ressource manquante"
+
+#: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:33
+msgid "Add Data"
+msgstr "Ajouter des données"
+
+#: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:40
+msgid "Upload Resource"
+msgstr "Transférer la ressource"
+
+#: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:46
+msgid "Download Data Template"
+msgstr "Télécharger le modèle de données"
+
+#: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:56
+msgid "Upload a Resource"
+msgstr "Transférer une ressource"
+
+#: ckanext/scheming/templates/scheming/package/snippets/package_form.html:77
+msgid "Update Data Package"
+msgstr "Mettre à jour l’ensemble de données"
+
+#: ckanext/scheming/templates/scheming/package/snippets/package_form.html:79
+msgid "Create Data Package"
+msgstr "Créer un ensemble de données"
+
+#: ckanext/scheming/templates/scheming/package/snippets/resource_form.html:23
+msgid ""
+"dataset_type not passed to template. your version of CKAN might not be "
+"compatible with ckanext-scheming"
+msgstr ""
+"dataset_type non converti selon le modèle. Il est possible que votre version de CKAN ne soit pas compatible avec ckanext-scheming"
+
+#: ckanext/scheming/templates/scheming/package/snippets/resource_form.html:33
+msgid "Resource Type does not exist"
+msgstr "Le type de ressource n’existe pas"
+
+#: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:14
+msgid "Data and Resources"
+msgstr "Données et ressources"
+
+#: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:32
+msgid "Autogenerated Resources"
+msgstr "Ressources générées automatiquement"
+
+#: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:46
+msgid "Missing Resources"
+msgstr "Ressources manquantes"
+
+#: ckanext/scheming/templates/scheming/snippets/errors.html:5
+msgid "The form contains invalid entries:"
+msgstr "Le formulaire contient des entrées non valides :"
+
+#~ msgid "unexpected choice \"{element}\""
+#~ msgstr ""
+
+#~ msgid "unexpected choice \"%s\""
+#~ msgstr ""
