@@ -10,8 +10,8 @@
   <a class="heading"
      href="/dataset/new_resource/{{pkg.name}}?resource_type={{res.resource_type}}" title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}
-    <span class="description"> ({{ _('Missing resource') }})</span>
-    <span class="format-label">{{ _('Missing resource') }}</span>
+    <span class="description"> ({{_('Missing resource')}})</span>
+    <span class="format-label">{{_('Missing resource')}}</span>
   </a>
   {% endblock %}
 
