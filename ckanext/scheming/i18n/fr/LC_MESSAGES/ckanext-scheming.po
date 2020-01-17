@@ -21,209 +21,206 @@ msgstr ""
 
 #: ckanext/scheming/helpers.py:116
 msgid "Naomi Geographic Data Input"
-msgstr "Untranslated French"
+msgstr "Saisie des données géographiques dans Naomi"
 
 #: ckanext/scheming/helpers.py:117
 msgid "Geographic data formatted for the Naomi model."
-msgstr "Untranslated French"
+msgstr "Données géographiques formatées pour le modèle Naomi."
 
 #: ckanext/scheming/navl_validate.py:56
-#, fuzzy
 msgid "Only lists of dicts can be placed against subschema {}, not {}"
-msgstr "Untranslated French"
+msgstr "Seules les listes de dicts peuvent être placées dans le subschema {}, pas {}"
 
 #: ckanext/scheming/plugins.py:149
 msgid "Unsupported {thing} type: {t}"
-msgstr "Untranslated French"
+msgstr "Type de {thing} non compatible : {t}"
 
 #: ckanext/scheming/plugins.py:211
 msgid "Unsupported dataset type: {t}"
-msgstr "Untranslated French"
+msgstr "Type de jeu de données non compatible : {t}"
 
 #: ckanext/scheming/plugins.py:382
 msgid "Could not load {url}"
-msgstr "Untranslated French"
+msgstr "Impossible de charger {url}"
 
 #: ckanext/scheming/validation.py:176
-#, fuzzy
 msgid "unexpected choice \"{value}\""
-msgstr "Untranslated French"
+msgstr "choix inattendu \"{value}\""
 
 #: ckanext/scheming/validation.py:221
 msgid "expecting list of strings"
-msgstr "Untranslated French"
+msgstr "En attente de la liste de chaînes"
 
 #: ckanext/scheming/validation.py:239
-#, fuzzy
 msgid "unexpected choice \"{element}\""
-msgstr "Untranslated French"
+msgstr "choix inattendu \"{element}\""
 
 #: ckanext/scheming/validation.py:249
 msgid "Select at least one"
-msgstr "Untranslated French"
+msgstr "Sélectionner au moins un élément"
 
 #: ckanext/scheming/validation.py:255 ckanext/scheming/validation.py:321
 #: ckanext/scheming/validation.py:350
 msgid "Date format incorrect"
-msgstr "Untranslated French"
+msgstr "Format de la date erroné"
 
 #: ckanext/scheming/validation.py:256
 msgid "Time format incorrect"
-msgstr "Untranslated French"
+msgstr "Format de l’heure erroné"
 
 #: ckanext/scheming/validation.py:289
 msgid "Date is required when a time is provided"
-msgstr "Untranslated French"
+msgstr "La date est requise quand une heure est fournie"
 
 #: ckanext/scheming/validation.py:398
 msgid "Unsupported value for JSON field: {}"
-msgstr "Untranslated French"
+msgstr "Valeur non compatible pour le champ JSON : {}"
 
 #: ckanext/scheming/validation.py:403
 msgid "Invalid JSON string: {}"
-msgstr "Untranslated French"
+msgstr "Chaîne JSON non valide : {}"
 
 #: ckanext/scheming/validation.py:409
 msgid "Invalid JSON object: {}"
-msgstr "Untranslated French"
+msgstr "Objet JSON non valide : {}"
 
 #: ckanext/scheming/validation.py:412
 msgid "Unsupported type for JSON field: {}"
-msgstr "Untranslated French"
+msgstr "Type non compatible pour le champ JSON : {}"
 
 #: ckanext/scheming/templates/scheming/form_snippets/_organization_select.html:21
 msgid "No organization"
-msgstr "Untranslated French"
+msgstr "Aucune organisation"
 
 #: ckanext/scheming/templates/scheming/form_snippets/organization.html:25
 msgid "Visibility"
-msgstr "Untranslated French"
+msgstr "Visibilité"
 
 #: ckanext/scheming/templates/scheming/form_snippets/organization.html:29
 msgid "Private"
-msgstr "Untranslated French"
+msgstr "Privé"
 
 #: ckanext/scheming/templates/scheming/form_snippets/organization.html:29
 msgid "Public"
-msgstr "Untranslated French"
+msgstr "Public"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:20
 msgid "Are you sure you want to delete this Group?"
-msgstr "Untranslated French"
+msgstr "Voulez-vous supprimer ce groupe ?"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:21
 #: ckanext/scheming/templates/scheming/organization/group_form.html:22
 msgid "Delete"
-msgstr "Untranslated French"
+msgstr "Supprimer"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:25
 msgid "Save Group"
-msgstr "Untranslated French"
+msgstr "Enregistrer le groupe"
 
 #: ckanext/scheming/templates/scheming/organization/group_form.html:21
 msgid "Are you sure you want to delete this Organization?"
-msgstr "Untranslated French"
+msgstr "Voulez-vous supprimer cette organisation ?"
 
 #: ckanext/scheming/templates/scheming/organization/group_form.html:26
 msgid "Save Organization"
-msgstr "Untranslated French"
+msgstr "Enregistrer l’organisation"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:13
 msgid "Additional Information"
-msgstr "Untranslated French"
+msgstr "Autres informations"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:18
 msgid "Last updated"
-msgstr "Untranslated French"
+msgstr "Dernière mise à jour"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:19
 #: ckanext/scheming/templates/scheming/package/resource_read.html:25
 #: ckanext/scheming/templates/scheming/package/resource_read.html:31
 msgid "unknown"
-msgstr "Untranslated French"
+msgstr "inconnu"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:24
 msgid "Created"
-msgstr "Untranslated French"
+msgstr "Création"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:30
 msgid "Format"
-msgstr "Untranslated French"
+msgstr "Format"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:36
 msgid "License"
-msgstr "Untranslated French"
+msgstr "Licence"
 
 #: ckanext/scheming/templates/scheming/package/snippets/additional_info.html:29
 msgid "State"
-msgstr "Untranslated French"
+msgstr "État"
 
 #: ckanext/scheming/templates/scheming/package/snippets/autogenerated_resource_item.html:12
 msgid "Autogenerated Resource"
-msgstr "Untranslated French"
+msgstr "Ressource générée automatiquement"
 
 #: ckanext/scheming/templates/scheming/package/snippets/autogenerated_resource_item.html:29
 msgid "Download"
-msgstr "Untranslated French"
+msgstr "Téléchargement"
 
 #: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:13
 #: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:14
 msgid "Missing resource"
-msgstr "Untranslated French"
+msgstr "Ressource manquante"
 
 #: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:33
 msgid "Add Data"
-msgstr "Untranslated French"
+msgstr "Ajouter des données"
 
 #: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:40
 msgid "Upload Resource"
-msgstr "Untranslated French"
+msgstr "Transférer la ressource"
 
 #: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:46
 msgid "Download Data Template"
-msgstr "Untranslated French"
+msgstr "Télécharger le modèle de données"
 
 #: ckanext/scheming/templates/scheming/package/snippets/missing_resource_item.html:56
 msgid "Upload a Resource"
-msgstr "Untranslated French"
+msgstr "Transférer une ressource"
 
 #: ckanext/scheming/templates/scheming/package/snippets/package_form.html:77
 msgid "Update Data Package"
-msgstr "Untranslated French"
+msgstr "Mettre à jour l’ensemble de données"
 
 #: ckanext/scheming/templates/scheming/package/snippets/package_form.html:79
 msgid "Create Data Package"
-msgstr "Untranslated French"
+msgstr "Créer un ensemble de données"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resource_form.html:23
 msgid ""
 "dataset_type not passed to template. your version of CKAN might not be "
 "compatible with ckanext-scheming"
-msgstr "Untranslated French"
+msgstr ""
+"dataset_type non converti selon le modèle. Il est possible que votre version de CKAN ne soit pas compatible avec ckanext-scheming"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resource_form.html:33
 msgid "Resource Type does not exist"
-msgstr "Untranslated French"
+msgstr "Le type de ressource n’existe pas"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:14
 msgid "Data and Resources"
-msgstr "Untranslated French"
+msgstr "Données et ressources"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:32
 msgid "Autogenerated Resources"
-msgstr "Untranslated French"
+msgstr "Ressources générées automatiquement"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:46
 msgid "Missing Resources"
-msgstr "Untranslated French"
+msgstr "Ressources manquantes"
 
 #: ckanext/scheming/templates/scheming/snippets/errors.html:5
 msgid "The form contains invalid entries:"
-msgstr "Untranslated French"
+msgstr "Le formulaire contient des entrées non valides :"
 
 #~ msgid "unexpected choice \"{element}\""
-#~ msgstr "Untranslated French"
+#~ msgstr ""
 
 #~ msgid "unexpected choice \"%s\""
-#~ msgstr "Untranslated French"
-
+#~ msgstr ""
