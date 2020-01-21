@@ -53,8 +53,8 @@ def scheming_language_text(text, prefer_lang=None):
         l, v = sorted(text.items())[0]
         return v
 
-    if isinstance(text, str):
-        text = six.ensure_text(text)
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
     t = _(text)
     return t
 
