@@ -21,7 +21,7 @@ fi
 
 python setup.py develop
 
-if [ -f requirements-py2.txt ]
+if [ -f requirements-py2.txt ] && [ $CKANVERSION != 'master' ]
 then
     pip install -r requirements-py2.txt
 else
