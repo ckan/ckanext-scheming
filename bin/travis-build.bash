@@ -41,7 +41,12 @@ sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
 
 echo "Initialising the database..."
 cd ckan
-paster db init -c test-core.ini
+if [ $CKANVERSION == 'master' ]
+then
+    ckan -c test-core.ini db init
+else
+    paster db init -c test-core.ini
+fi
 cd -
 
 echo "Installing ckanext-scheming and its requirements..."
