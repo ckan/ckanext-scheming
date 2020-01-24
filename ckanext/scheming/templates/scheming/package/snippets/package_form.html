@@ -1,7 +1,7 @@
 {% extends 'package/new_package_form.html' %}
 
 {% if licenses is not defined %}
-    {% set licenses = c.licenses %}
+    {% set licenses = h.license_options(data.get('license_id')) %}
 {% endif %}
 
 {% block errors %}
