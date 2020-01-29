@@ -4,29 +4,35 @@
 not used as a form_snippet directly #}
 
 {% macro _organization() %}
-  {% set existing_org = data.owner_org or data.group_id %}
-  {% call form.input_block('field-organizations',
-    label=h.scheming_language_text(field.label),
-    error=errors[field.field_name],
-    is_required=org_required,
-    classes=['form-group', 'control-medium'],
-    extra_html=caller() if caller,
-    ) %}
-    <div {{
-      form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
-    <select id="field-organizations" name="owner_org" {{ form.attributes(
-        field.get('form_select_attrs', {'data-module':'autocomplete'})) }}>
-      {% if not org_required or field.get('form_include_blank_choice', false) %}
-        <option value="">{% if not org_required
-          %}{{ _('No organization') }}{% endif %}</option>
-      {% endif %}
-      {% for organization in organizations_available %}
-        {% set selected_org = existing_org == organization.id %}
-        {{ organization_option_tag(organization, selected_org) }}
-      {% endfor %}
-    </select>
-    </div>
-  {% endcall %}
+  {% if organizations_available|length == 1 %}
+  <div class='hidden'>
+  {% endif %}
+    {% set existing_org = data.owner_org or data.group_id %}
+    {% call form.input_block('field-organizations',
+      label=h.scheming_language_text(field.label),
+      error=errors[field.field_name],
+      is_required=org_required,
+      classes=['form-group', 'control-medium'],
+      extra_html=caller() if caller,
+      ) %}
+      <div {{
+        form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
+      <select id="field-organizations" name="owner_org" {{ form.attributes(
+          field.get('form_select_attrs', {'data-module':'autocomplete'})) }}>
+        {% if not org_required or field.get('form_include_blank_choice', false) %}
+          <option value="">{% if not org_required
+            %}{{ _('No organization') }}{% endif %}</option>
+        {% endif %}
+        {% for organization in organizations_available %}
+          {% set selected_org = existing_org == organization.id %}
+          {{ organization_option_tag(organization, selected_org) }}
+        {% endfor %}
+      </select>
+      </div>
+    {% endcall %}
+  {% if organizations_available|length == 1 %}
+  </div>
+  {% endif %}    
 {% endmacro %}
 
 {% call _organization() %}
