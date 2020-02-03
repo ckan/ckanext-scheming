@@ -265,11 +265,11 @@ def date_tz_str_to_datetime(date_str):
     tz_split = re.split('([Z+-])', split[1])
 
     date = split[0] + 'T' + tz_split[0]
-    time_tuple = re.split('[^\d]+', date, maxsplit=5)
+    time_tuple = re.split(r'[^\d]+', date, maxsplit=5)
 
     # Extract seconds and microseconds
     if len(time_tuple) >= 6:
-        m = re.match('(?P<seconds>\d{2})(\.(?P<microseconds>\d{3,6}))?$',
+        m = re.match(r'(?P<seconds>\d{2})(\.(?P<microseconds>\d{3,6}))?$',
                      time_tuple[5])
         if not m:
             raise ValueError('Unable to parse %s as seconds.microseconds' %
@@ -283,7 +283,7 @@ def date_tz_str_to_datetime(date_str):
     # Apply the timezone offset
     if len(tz_split) > 1 and not tz_split[1] == 'Z':
         tz = tz_split[2]
-        tz_tuple = re.split('[^\d]+', tz)
+        tz_tuple = re.split(r'[^\d]+', tz)
 
         if tz_tuple[0] == '':
             raise ValueError('Unable to parse timezone')
