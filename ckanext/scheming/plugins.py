@@ -404,7 +404,7 @@ def _load_schema_url(url):
         res = urllib2.urlopen(url)
         tables = res.read()
     except urllib2.URLError:
-        raise SchemingException(_("Could not load {url}").format(url))
+        raise SchemingException(_("Could not load {url}").format(url=url))
 
     return loader.loads(tables, url)
 
