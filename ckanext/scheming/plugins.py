@@ -429,12 +429,13 @@ def _field_validators(f, schema, convert_extras):
     Return the validators for a scheming field f
     """
     validators = []
+    unicode_safe = get_validator('unicode_safe')
     if 'validators' in f:
         validators = validators_from_string(f['validators'], f, schema)
     elif helpers.scheming_field_required(f):
-        validators = [not_empty, get_validator('unicode_safe')]
+        validators = [not_empty, unicode_safe]
     else:
-        validators = [ignore_missing, str]
+        validators = [ignore_missing, unicode_safe]
 
     if convert_extras:
         validators = validators + [convert_to_extras]
