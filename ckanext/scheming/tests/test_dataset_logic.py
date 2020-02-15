@@ -1,4 +1,3 @@
-from builtins import object
 from nose.tools import assert_raises
 from ckanapi import LocalCKAN, NotFound
 
@@ -18,4 +17,3 @@ class TestDatasetSchemaLists(object):
         assert_raises(NotFound,
             lc.action.scheming_dataset_schema_show,
             type='ernie')
-

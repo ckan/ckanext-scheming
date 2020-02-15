@@ -1,4 +1,3 @@
-from builtins import object
 from nose.tools import assert_in, assert_not_in
 from ckan.lib.base import render_snippet
 from jinja2 import Markup
@@ -184,7 +183,7 @@ class TestJSONFormSnippet(object):
             data={'a_json_field': {'a': '1', 'b': '2'}},
         )
         expected = '''{
-  "a": "1", 
+  "a": "1",
   "b": "2"
 }'''.replace('"', '&#34;')   # Ask webhelpers
 

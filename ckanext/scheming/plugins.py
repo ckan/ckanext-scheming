@@ -3,7 +3,6 @@
 
 from future import standard_library
 standard_library.install_aliases()
-from builtins import object
 import os
 import inspect
 import logging
@@ -219,12 +218,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
-
-    if p.toolkit.check_ckan_version('2.9'):
-        p.implements(p.IClick)
-        def get_commands(self):
-            from ckanext.scheming.cli import scheming
-            return [scheming]
 
     @classmethod
     def _store_instance(cls, self):

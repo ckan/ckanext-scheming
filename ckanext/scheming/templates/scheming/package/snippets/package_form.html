@@ -1,9 +1,5 @@
 {% extends 'package/new_package_form.html' %}
 
-{% if licenses is not defined %}
-    {% set licenses = h.license_options(data.get('license_id')) %}
-{% endif %}
-
 {% block errors %}
   {%- if errors -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
@@ -24,7 +20,7 @@
   {%- for field in schema.dataset_fields -%}
     {%- if field.form_snippet is not none -%}
       {%- snippet 'scheming/snippets/form_field.html',
-        field=field, data=data, errors=errors, licenses=licenses,
+        field=field, data=data, errors=errors, licenses=c.licenses,
         entity_type='dataset', object_type=dataset_type -%}
     {%- endif -%}
   {%- endfor -%}

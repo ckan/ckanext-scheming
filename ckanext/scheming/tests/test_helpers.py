@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from builtins import object
 from nose.tools import assert_equals
 from mock import patch, Mock
 

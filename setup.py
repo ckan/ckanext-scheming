@@ -35,8 +35,5 @@ setup(
     scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
     scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
 
-    [paste.paster_command]
-    scheming=ckanext.scheming.commands:SchemingCommand
-
     """,
 )
