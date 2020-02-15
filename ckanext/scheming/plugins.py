@@ -432,7 +432,7 @@ def _field_validators(f, schema, convert_extras):
     if 'validators' in f:
         validators = validators_from_string(f['validators'], f, schema)
     elif helpers.scheming_field_required(f):
-        validators = [not_empty, str]
+        validators = [not_empty, get_validator('unicode_safe')]
     else:
         validators = [ignore_missing, str]
 

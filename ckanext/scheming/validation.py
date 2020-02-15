@@ -1,8 +1,10 @@
-from past.builtins import basestring
 import json
 import datetime
 import pytz
 import re
+
+import six
+
 import ckan.lib.helpers as h
 import ckanext.scheming.helpers as sh
 
@@ -82,7 +84,7 @@ def scheming_multiple_choice(field, schema):
 
         value = data[key]
         if value is not missing:
-            if isinstance(value, basestring):
+            if isinstance(value, six.string_types):
                 value = [value]
             elif not isinstance(value, list):
                 errors[key].append(_('expecting list of strings'))
@@ -237,7 +239,7 @@ def scheming_valid_json_object(value, context):
     """
     if not value:
         return
-    elif isinstance(value, basestring):
+    elif isinstance(value, six.string_types):
         try:
             loaded = json.loads(value)
 
@@ -264,7 +266,7 @@ def scheming_valid_json_object(value, context):
 
 
 def scheming_load_json(value, context):
-    if isinstance(value, basestring):
+    if isinstance(value, six.string_types):
         try:
             return json.loads(value)
         except ValueError:
@@ -311,7 +313,7 @@ def get_validator_or_converter(name):
     Get a validator or converter by name
     """
     if name == 'unicode':
-        return str
+        return six.text_type
     try:
         v = get_validator(name)
         return v

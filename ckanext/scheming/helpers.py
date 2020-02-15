@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from builtins import map
-from past.builtins import basestring
 import re
 import datetime
 import pytz
@@ -280,7 +278,7 @@ def date_tz_str_to_datetime(date_str):
         microseconds = int(m.groupdict(0).get('microseconds'))
         time_tuple = time_tuple[:5] + [seconds, microseconds]
 
-    final_date = datetime.datetime(*list(map(int, time_tuple)))
+    final_date = datetime.datetime(*(int(x) for x in time_tuple))
 
     # Apply the timezone offset
     if len(tz_split) > 1 and not tz_split[1] == 'Z':
@@ -311,7 +309,7 @@ def scheming_datetime_to_UTC(date):
 
 
 def scheming_datetime_to_tz(date, tz):
-    if isinstance(tz, basestring):
+    if isinstance(tz, six.string_types):
         tz = pytz.timezone(tz)
 
     # Make date naive before returning
