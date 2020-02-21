@@ -9,7 +9,7 @@
 {%- for c in h.scheming_field_choices(field) -%}
   {%- if not form_restrict_choices_to or c.value in form_restrict_choices_to -%}
     {%- do options.append({
-      'value': c.value,
+      'value': c.value|string,
       'text': h.scheming_language_text(c.label) }) -%}
   {%- endif -%}
 {%- endfor -%}

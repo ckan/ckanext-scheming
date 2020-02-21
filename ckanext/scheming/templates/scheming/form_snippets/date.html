@@ -5,7 +5,7 @@
     label=h.scheming_language_text(field.label),
     placeholder=h.scheming_language_text(field.form_placeholder),
     type='date',
-    value=data.get(field.field_name, '').split()[0],
+    value=(data.get(field.field_name) or '').split()[0],
     error=errors[field.field_name],
     classes=['control-medium'],
     attrs=dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
