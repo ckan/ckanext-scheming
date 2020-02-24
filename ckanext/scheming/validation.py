@@ -23,9 +23,9 @@ not_empty = get_validator('not_empty')
 
 all_validators = {}
 
-def validator(fn):
+def register_validator(fn):
     """
-    collect helper functions into ckanext.scheming.all_helpers dict
+    collect validator functions into ckanext.scheming.all_helpers dict
     """
     all_validators[fn.__name__] = fn
     return fn
@@ -39,11 +39,11 @@ def scheming_validator(fn):
     and complete schema to produce the actual validator for each field.
     """
     fn.is_a_scheming_validator = True
-    validator(fn)
     return fn
 
 
 @scheming_validator
+@register_validator
 def scheming_subfields(field, schema):
     """
     A special validator used to collect and pack subfields.
@@ -133,6 +133,7 @@ def scheming_subfields(field, schema):
 
 
 @scheming_validator
+@register_validator
 def scheming_choices(field, schema):
     """
     Require that one of the field choices values is passed.
@@ -153,6 +154,7 @@ def scheming_choices(field, schema):
 
 
 @scheming_validator
+@register_validator
 def scheming_required(field, schema):
     """
     not_empty if field['required'] else ignore_missing
@@ -163,6 +165,7 @@ def scheming_required(field, schema):
 
 
 @scheming_validator
+@register_validator
 def scheming_multiple_choice(field, schema):
     """
     Accept zero or more values from a list of choices and convert
@@ -280,6 +283,7 @@ def validate_date_inputs(field, key, data, extras, errors, context):
 
 
 @scheming_validator
+@register_validator
 def scheming_isodatetime(field, schema):
     def validator(key, data, errors, context):
         value = data[key]
@@ -309,6 +313,7 @@ def scheming_isodatetime(field, schema):
 
 
 @scheming_validator
+@register_validator
 def scheming_isodatetime_tz(field, schema):
     def validator(key, data, errors, context):
         value = data[key]
@@ -339,7 +344,7 @@ def scheming_isodatetime_tz(field, schema):
     return validator
 
 
-@validator
+@register_validator
 def scheming_valid_json_object(value, context):
     """Store a JSON object as a serialized JSON string
 
@@ -374,7 +379,7 @@ def scheming_valid_json_object(value, context):
         )
 
 
-@validator
+@register_validator
 def scheming_load_json(value, context):
     if isinstance(value, basestring):
         try:
@@ -384,7 +389,7 @@ def scheming_load_json(value, context):
     return value
 
 
-@validator
+@register_validator
 def scheming_multiple_choice_output(value):
     """
     return stored json as a proper list
@@ -456,7 +461,7 @@ def convert_from_extras_group(key, data, errors, context):
     remove_from_extras(data, data_key[1])
 
 
-@validator
+@register_validator
 def convert_to_json_if_date(date, context):
     if isinstance(date, datetime.datetime):
         return date.date().isoformat()
@@ -466,7 +471,7 @@ def convert_to_json_if_date(date, context):
         return date
 
 
-@validator
+@register_validator
 def convert_to_json_if_datetime(date, context):
     if isinstance(date, datetime.datetime):
         return date.isoformat()
@@ -474,7 +479,7 @@ def convert_to_json_if_datetime(date, context):
     return date
 
 
-@validator
+@register_validator
 def scheming_multiple_text(key, data, errors, context):
     """
     Accept repeating text input in the following forms
@@ -549,7 +554,7 @@ def scheming_multiple_text(key, data, errors, context):
     data[key] = json.dumps(out)
 
 
-@validator
+@register_validator
 def repeating_text_output(value):
     """
     Return stored json representation as a list, if
