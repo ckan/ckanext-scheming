@@ -21,6 +21,8 @@ fi
 
 python setup.py develop
 
+pip install psycopg2==2.7.7  # workaround travis 10 psycopg2 incompatibility
+
 if [ -f requirements-py2.txt ]
 then
     pip install -r requirements-py2.txt
