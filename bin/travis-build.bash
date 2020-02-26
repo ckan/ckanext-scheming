@@ -23,10 +23,12 @@ python setup.py develop
 
 if [ -f requirements-py2.txt ]
 then
-    pip install -r requirements-py2.txt
+    grep -v psycopg2 < requirements-py2.txt > reqs.txt
 else
-    pip install -r requirements.txt
+    grep -v psycopg2 < requirements.txt > reqs.txt
 fi
+pip install psycopg2==2.7.7  # workaround travis 10 psycopg2 incompatibility
+pip install -r reqs.txt
 pip install -r dev-requirements.txt
 cd -
 
