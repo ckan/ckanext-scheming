@@ -1,9 +1,9 @@
 # the new trusty images of Travis cause build errors with psycopg2, see https://github.com/travis-ci/travis-ci/issues/8897
 dist: trusty
-group: deprecated-2017Q4
+group: deprecated-2017q4
 
+os: linux
 language: python
-sudo: required
 python:
     - "2.7"
 env:
@@ -15,7 +15,7 @@ env:
 install:
     - bash bin/travis-build.bash
 services:
-    - redis-server
+    - redis
     - postgresql
 script: sh bin/travis-run.sh
 before_install:
