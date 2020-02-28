@@ -72,6 +72,7 @@ class TestGetPreset(object):
             u'resource_format_autocomplete',
             u'multiple_select',
             u'multiple_checkbox',
+            u'multiple_text',
             u'date',
             u'datetime',
             u'datetime_tz',
