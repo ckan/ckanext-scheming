@@ -3,6 +3,7 @@
 import os
 import inspect
 import logging
+from functools import wraps
 
 import yaml
 import ckan.plugins as p
@@ -37,6 +38,29 @@ DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
 log = logging.getLogger(__name__)
 
+def run_once_for_caller(var_name, rval_fn):
+    """
+    return passed value if this method has been called more than once
+    from the same function, e.g. load_plugin_helpers, get_validator
+
+    This lets us have multiple scheming plugins active without repeating
+    helpers, validators, template dirs and to be compatible with versions
+    of ckan that don't support overwriting helpers/validators
+    """
+    import inspect
+
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            caller = inspect.currentframe().f_back
+            if var_name in caller.f_locals:
+                return rval_fn()
+            # inject local varible into caller to track separate calls (reloading)
+            caller.f_locals[var_name] = None
+            return fn(*args, **kwargs)
+        return wrapper
+    return decorator
+
 
 class _SchemingMixin(object):
     """
@@ -47,38 +71,21 @@ class _SchemingMixin(object):
     """
     instance = None
     _presets = None
-    _helpers_loaded = False
-    _template_dir_added = False
-    _validators_loaded = False
     _is_fallback = False
     _schema_urls = tuple()
     _schemas = tuple()
     _expanded_schemas = tuple()
 
+    @run_once_for_caller('_scheming_get_helpers', dict)
     def get_helpers(self):
-        if core_helper_functions is None:
-            if _SchemingMixin._helpers_loaded:
-                return {}
-            _SchemingMixin._helpers_loaded = True
-        elif 'scheming_language_text' in core_helper_functions:
-            return {}
-        _SchemingMixin._helpers_loaded = True
-
         return dict(helpers.all_helpers)
 
+    @run_once_for_caller('_scheming_get_validators', dict)
     def get_validators(self):
-        if _SchemingMixin._validators_loaded:
-            return {}
-        _SchemingMixin._validators_loaded = True
+        return dict(validation.all_validators)
 
-        validators = dict(validation.all_validators)
-
-        return validators
-
+    @run_once_for_caller('_scheming_add_template_directory', lambda: None)
     def _add_template_directory(self, config):
-        if _SchemingMixin._template_dir_added:
-            return
-        _SchemingMixin._template_dir_added = True
         add_template_directory(config, 'templates')
         add_resource('fanstatic', 'scheming')
 
