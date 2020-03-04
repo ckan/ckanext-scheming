@@ -460,7 +460,7 @@ def _expand(schema, field):
     """
     If scheming field f includes a preset value return a new field
     based on the preset with values from f overriding any values in the
-    preset. Applies default values to fields that are expected to always exist.
+    preset.
 
     raises SchemingException if the preset given is not found.
     """
@@ -469,11 +469,6 @@ def _expand(schema, field):
         if preset not in _SchemingMixin._presets:
             raise SchemingException('preset \'{}\' not defined'.format(preset))
         field = dict(_SchemingMixin._presets[preset], **field)
-
-    field.setdefault('display_group', schema.get(
-        'display_group_default',
-        u'General'
-    ))
 
     return field
 
@@ -492,7 +487,6 @@ def _expand_schemas(schemas):
             schema[grouping] = [
                 _expand(schema, field)
                 for field in schema[grouping]
-                if 'field_name' in field
             ]
 
             for field in schema[grouping]:

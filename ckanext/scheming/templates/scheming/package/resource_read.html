@@ -41,7 +41,7 @@
     </table>
 
     {% block resource_fields %}
-      {%- for group in schema.resource_fields|groupby('display_group') -%}
+      {%- for group in schema.resource_fields -%}
         {%- set group_fields = h.scheming_non_empty_fields(group.list|list, res, exclude_fields) -%}
         {% if group_fields %}
           <div class="additional-info">

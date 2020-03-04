@@ -18,7 +18,7 @@
   {%- endif -%}
 
   {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
-  {%- for group in schema.resource_fields|groupby('display_group') -%}
+  {%- for group in schema.resource_fields -%}
     <h3 class="page-heading">
       {{ _(group.grouper) }}
     </h3>
