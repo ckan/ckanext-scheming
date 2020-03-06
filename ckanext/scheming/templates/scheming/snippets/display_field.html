@@ -1,9 +1,8 @@
 {#- master snippet for all scheming display fields -#}
 {#- render the field the user requested, or use a default field -#}
 {%- if field.repeating_subfields or field.simple_subfields %}
-    {% set group_data = h.scheming_subfield_load(data[field.field_name]) %}
+    {% set fields = h.scheming_subfield_load(data[field.field_name]) %}
 
-    {% for group in group_data %}
     <dl class="scheming-subfield-list">
       {%- for subfield in field.repeating_subfields or field.simple_subfields %}
         {% if group[subfield.field_name] %}
@@ -22,7 +21,6 @@
         {% endif %}
       {% endfor -%}
     </dl>
-    {% endfor %}
 {% else %}
   {%- set display_snippet = field.display_snippet -%}
 

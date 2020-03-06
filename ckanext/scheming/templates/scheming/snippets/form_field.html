@@ -2,13 +2,13 @@
 
 {#- master snippet for all scheming form fields -#}
 {#- render the field the user requested, or use a default field -#}
-{%- if field.subfields %}
+{%- if field.repeating_subfields %}
   {# A complex field with sub-fields, which can optionally be repeatable. #}
   <fieldset class="scheming-fieldset" {% if field.repeating_subfields %}data-module="scheming-repeating-subfields"{% endif %}>
     <legend>
-      {{ _(field.label) }}
+      {{ h.scheming_language_text(field.label) }}
     </legend>
-    {% set help_text = h.scheming_language_text(field.help_text)%}
+    {% set help_text = h.scheming_language_text(field.help_text) %}
     {% if help_text %}
     <div class="info-block">
        {{ help_text }}
@@ -27,7 +27,7 @@
         {% set group_payload = {} %}
       {% endif -%}
       <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
-      {% for subfield in field.subfields %}
+      {% for subfield in field.repeating_subfields %}
         {% set sf, payload = h.scheming_massage_subfield(
           field,
           subfield,
