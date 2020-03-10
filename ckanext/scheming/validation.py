@@ -60,19 +60,19 @@ def scheming_subfields(field, schema):
             #   (<field name>,)
             # and if we're working on a resource it'll be:
             #   ('resources', <resource #>, <field name>)
-            prefix = key[-1] + '-'
-            _extras = data.get(key[:-1] + ('__extras',), {})
+            _junk = data.get(key[:-1] + ('__junk',), {})
 
             # Group our unrolled fields by their index.
             values = defaultdict(dict)
-            for k in _extras.keys():
-                if k.startswith(prefix):
-                    name = k[len(prefix):]
-                    index, name = name.split('-', 1)
+            for k in _junk.keys():
+                if k[0] == key[0]:
+                    name = k[2]
+                    index = k[1]
                     # Always pop, we don't want handled values to remain in
                     # __extras or they'll end up on the model.
-                    values[int(index)][name] = _extras.pop(k)
+                    values[index][name] = _junk.pop(k)
 
+            import pdb; pdb.set_trace()
             # ... then turn it back into an ordered list.
             value = [v for k, v in sorted(values.iteritems())]
         elif isinstance(value, basestring):
