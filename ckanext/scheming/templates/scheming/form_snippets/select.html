@@ -16,13 +16,18 @@
 {%- if field.get('sorted_choices') -%}
   {%- set options = options|sort(case_sensitive=false, attribute='text') -%}
 {%- endif -%}
+{%- if data[field.field_name] -%}
+  {%- set option_selected = data[field.field_name]|string -%}
+{%- else -%}
+  {%- set option_selected = None -%}
+{%- endif -%}
 
 {% call form.select(
     field.field_name,
     id='field-' + field.field_name,
     label=h.scheming_language_text(field.label),
     options=options,
-    selected=data[field.field_name],
+    selected=option_selected,
     error=errors[field.field_name],
     classes=['control-medium'],
     attrs=dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
