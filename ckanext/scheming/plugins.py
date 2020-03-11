@@ -226,32 +226,17 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             get_validators = _field_validators
 
         fg = (
-            (scheming_schema['dataset_fields'], schema),
-            (scheming_schema['resource_fields'], schema['resources'])
+            (scheming_schema['dataset_fields'], schema, True),
+            (scheming_schema['resource_fields'], schema['resources'], False)
         )
 
-        for field_list, destination in fg:
+        for field_list, destination, convert_extras in fg:
             for f in field_list:
                 destination[f['field_name']] = get_validators(
                     f,
                     scheming_schema,
-                    f['field_name'] not in schema
+                    convert_extras and f['field_name'] not in schema
                 )
-
-                # Apply default field values before going through validation. This
-                # deals with fields that have form_snippet set to null, and fields
-                # that have defaults added after initial creation.
-                if data_dict.get(f['field_name']) is None:
-                    default_jinja2 = f.get('default_jinja2')
-                    default = f.get('default')
-                    if default_jinja2:
-                        data_dict[f['field_name']] = (
-                            helpers.scheming_render_from_string(
-                                source=default_jinja2
-                            )
-                        )
-                    elif default:
-                        data_dict[f['field_name']] = default
 
         return navl_validate(data_dict, schema, context)
 
@@ -425,8 +410,11 @@ def _field_validators(f, schema, convert_extras):
 
     # If this field contains children, we need a special validator to handle
     # them.
-    if 'repeating_subfields' in f or 'simple_subfields' in f:
-        validators = [validation.scheming_subfields(f, schema)] + validators
+    if 'repeating_subfields' in f:
+        validators = {
+            sf['field_name']: _field_validators(sf, schema, False)
+            for sf in f['repeating_subfields']
+        }
 
     return validators
 

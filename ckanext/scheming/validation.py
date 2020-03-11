@@ -72,7 +72,6 @@ def scheming_subfields(field, schema):
                     # __extras or they'll end up on the model.
                     values[index][name] = _junk.pop(k)
 
-            import pdb; pdb.set_trace()
             # ... then turn it back into an ordered list.
             value = [v for k, v in sorted(values.iteritems())]
         elif isinstance(value, basestring):
