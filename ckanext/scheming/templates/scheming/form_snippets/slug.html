@@ -16,7 +16,8 @@
 {%- set attrs = {
     'data-module': 'slug-preview-slug',
     'data-module-prefix': domain,
-    'data-module-placeholder': module_placeholder } -%}
+    'data-module-placeholder': module_placeholder,
+    "class": "form-control" } -%}
 
 {{ form.prepend(
     field.field_name,
