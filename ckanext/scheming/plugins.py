@@ -9,7 +9,8 @@ import yaml
 import ckan.plugins as p
 from paste.reloader import watch_file
 from paste.deploy.converters import asbool
-from ckan.common import c
+from ckan.common import c, json
+from ckan.lib.navl.dictization_functions import unflatten, flatten_schema
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
@@ -230,13 +231,35 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             (scheming_schema['resource_fields'], schema['resources'], False)
         )
 
+        composite_convert_fields = []
         for field_list, destination, convert_extras in fg:
             for f in field_list:
+                convert_this = convert_extras and f['field_name'] not in schema
                 destination[f['field_name']] = get_validators(
                     f,
                     scheming_schema,
-                    convert_extras and f['field_name'] not in schema
+                    convert_this
                 )
+                if convert_this and 'repeating_subfields' in f:
+                    composite_convert_fields.append(f['field_name'])
+
+        def composite_convert_to(key, data, errors, context):
+            unflat = unflatten(data)
+            for f in composite_convert_fields:
+                data[(f,)] = json.dumps(unflat[f])
+                convert_to_extras((f,), data, errors, context)
+                del data[(f,)]
+
+        def composite_convert_from(key, data, errors, context):
+            for f in composite_convert_fields:
+                convert_from_extras((f,), data, errors, context)
+                flatten_schema({f: json.loads(data[(f,)])}, data)
+
+        if composite_convert_fields:
+            if action_type == 'show':
+                schema = dict(schema, __before=[composite_convert_from])
+            else:
+                schema = dict(schema, __after=[composite_convert_to])
 
         return navl_validate(data_dict, schema, context)
 
@@ -380,7 +403,12 @@ def _field_output_validators(f, schema, convert_extras,
     """
     Return the output validators for a scheming field f
     """
-    if convert_extras:
+    if 'repeating_subfields' in f:
+        validators = {
+            sf['field_name']: _field_output_validators(sf, schema, False)
+            for sf in f['repeating_subfields']
+        }
+    elif convert_extras:
         validators = [convert_from_extras_type, ignore_missing]
     else:
         validators = [ignore_missing]
