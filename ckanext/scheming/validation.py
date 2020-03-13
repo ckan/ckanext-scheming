@@ -519,7 +519,6 @@ def convert_to_json_if_datetime(date, context):
 @scheming_validator
 def unique_combination(field, schema):
     def validator(key, data, errors, context):
-        logging.warning(data)
         all_unique_comb_field_dicts = list(filter(
             lambda x: 'unique_combination' in x.get('validators', ''),
             schema['dataset_fields']
@@ -529,9 +528,13 @@ def unique_combination(field, schema):
         zipped_fields = zip(field_names, field_values)
         queries = ["{}:\"{}\"".format(f[0], f[1]) for f in zipped_fields]
         query_string = " AND ".join(queries)
-        pkg_id = data.get((u'id',), data.get(('__extras',), {}).get('pkg_name', 'noname'))
-        query_string = "{} AND NOT id:\"{}\"".format(query_string, pkg_id)
-        logging.warning(query_string)
+        package = context.get('package')
+        if package:
+            package_id = package.id
+        else:
+            package_id = data.get(key[:-1] + ('id',))
+        if package_id:
+            query_string = "{} AND NOT id:\"{}\"".format(query_string, package_id)
         results = t.get_action('package_search')({}, {'q': query_string})
         if results.get('count'):
             errors[key].append(
@@ -540,23 +543,20 @@ def unique_combination(field, schema):
                 )
             )
             errors[('name',)] = []
+
     return validator
 
 
 @scheming_validator
 def auto_create_valid_name(field, schema):
     def validator(key, data, errors, context):
-        logging.warning("AUTO CREATE VALID NAME")
-        logging.warning('package_name_errors {}'.format(errors[key]))
         counter = 1
         while True:
             package_name_errors = copy.deepcopy(errors)
             package_name_validator(key, data, package_name_errors, context)
-            logging.warning('package_name_errors {}'.format(package_name_errors[key]))
             if package_name_errors[key] == errors[key]:
                 break
             else:
                 data[key] = "{}-{}".format(data[key], counter)
-                logging.warning('Updated name to {}'.format(data[key]))
                 counter = counter + 1
     return validator
