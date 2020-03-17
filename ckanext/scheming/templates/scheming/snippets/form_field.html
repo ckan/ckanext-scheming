@@ -4,22 +4,10 @@
 {#- render the field the user requested, or use a default field -#}
 {%- if field.repeating_subfields %}
   {# A complex field with sub-fields, which can optionally be repeatable. #}
-  <fieldset class="scheming-fieldset" {% if field.repeating_subfields %}data-module="scheming-repeating-subfields"{% endif %}>
-    <legend>
-      {{ h.scheming_language_text(field.label) }}
-    </legend>
-    {% set help_text = h.scheming_language_text(field.help_text) %}
-    {% if help_text %}
-    <div class="info-block">
-       {{ help_text }}
-    </div>
-    {% endif %}
-
-    {% set group_data = h.scheming_subfield_load(data[field.field_name]) %}
+  <fieldset class="scheming-fieldset" data-module="scheming-repeating-subfields">
+    {% set group_data = data[field.field_name] %}
     {% set group_count = group_data|length|default(field.form_blanks, True)|default(1) %}
 
-    {# Even fields not marked as repeatable are still treated as a repeating
-    list of 1 to simplify things. #}
     {% for index in range(group_count) %}
       {%- if group_data %}
         {% set group_payload = group_data[index] %}
@@ -27,25 +15,37 @@
         {% set group_payload = {} %}
       {% endif -%}
       <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
-      {% for subfield in field.repeating_subfields %}
-        {% set sf, payload = h.scheming_massage_subfield(
-          field,
-          subfield,
-          index,
-          group_payload)
-        %}
+        <div class="panel panel-default">
+          <header class="panel-heading">
+            {{ h.scheming_language_text(field.label) }}
+          </header>
+          <div class="panel-body">
+          {% for subfield in field.repeating_subfields %}
+            {% set sf, payload = h.scheming_massage_subfield(
+              field,
+              subfield,
+              index,
+              group_payload)
+            %}
 
-        {%- snippet 'scheming/snippets/form_field.html',
-          field=sf,
-          data=payload,
-          errors=errors,
-          licenses=licenses,
-          entity_type=entity_type,
-          object_type=object_type
-        -%}
-      {% endfor %}
+            {%- snippet 'scheming/snippets/form_field.html',
+              field=sf,
+              data=payload,
+              errors=errors,
+              licenses=licenses,
+              entity_type=entity_type,
+              object_type=object_type
+            -%}
+          {% endfor %}
+        </div>
       </div>
     {% endfor %}
+    {% set help_text = h.scheming_language_text(field.help_text) %}
+    {% if help_text %}
+      <div class="info-block">
+        {{ help_text }}
+      </div>
+    {% endif %}
   </fieldset>
 {%- else -%}
   {# A simple field. #}

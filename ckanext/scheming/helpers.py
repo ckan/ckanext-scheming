@@ -416,13 +416,6 @@ def scheming_massage_subfield(field, subfield, index, data):
 
 
 @helper
-def scheming_subfield_load(value):
-    if value:
-        value = json.loads(value)
-        return [value] if isinstance(value, dict) else value
-    return []
-
-@helper
 def scheming_non_empty_fields(field_list, pkg_dict, exclude):
     r = []
     for field in field_list:

@@ -1,7 +1,7 @@
 {#- master snippet for all scheming display fields -#}
 {#- render the field the user requested, or use a default field -#}
 {%- if field.repeating_subfields or field.simple_subfields %}
-    {% set fields = h.scheming_subfield_load(data[field.field_name]) %}
+    {% set fields = data[field.field_name] %}
 
     <dl class="scheming-subfield-list">
       {%- for subfield in field.repeating_subfields or field.simple_subfields %}
