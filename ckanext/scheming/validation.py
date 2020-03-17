@@ -560,3 +560,33 @@ def auto_create_valid_name(field, schema):
                 data[key] = "{}-{}".format(data[key], counter)
                 counter = counter + 1
     return validator
+
+@scheming_validator
+def autogenerate(field, schema):
+    import pydevd_pycharm
+    template = field[u'template']
+    template_args = field[u'template_args']
+    template_formatters = field.get(u'template_formatters', dict())
+    formatters = {
+        "lower": __lower
+    }
+    f_list = []
+    for f in template_formatters:
+        if f in formatters.keys():
+            f_list.append(formatters[f])
+    pydevd_pycharm.settrace('172.17.0.1', port=4321, stdoutToServer=True, stderrToServer=True, suspend=False)
+
+    def validator(key, data, errors, context):
+        str_args = []
+        for t_arg in template_args:
+            str_args.append(data[(t_arg,)])
+        auto_text = template.format(*str_args)
+        for f in f_list:
+            auto_text = f(auto_text)
+        data[key] = auto_text
+
+        pass
+    return validator
+
+def __lower(input):
+    return input.lower()
