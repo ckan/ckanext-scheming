@@ -534,3 +534,16 @@ def get_date():
     Returns the current date.
     """
     return datetime.datetime.now()
+
+
+@helper
+def get_user(user_id):
+    """
+    Returns the user object for a given user_id.
+    """
+    try:
+        result = get_action('user_show')({}, {'id': user_id})
+        return result
+    except Exception as e:
+        logging.exception(e)
+        return {}
