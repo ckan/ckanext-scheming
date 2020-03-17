@@ -563,7 +563,6 @@ def auto_create_valid_name(field, schema):
 
 @scheming_validator
 def autogenerate(field, schema):
-    import pydevd_pycharm
     template = field[u'template']
     template_args = field[u'template_args']
     template_formatters = field.get(u'template_formatters', dict())
@@ -574,7 +573,6 @@ def autogenerate(field, schema):
     for f in template_formatters:
         if f in formatters.keys():
             f_list.append(formatters[f])
-    pydevd_pycharm.settrace('172.17.0.1', port=4321, stdoutToServer=True, stderrToServer=True, suspend=False)
 
     def validator(key, data, errors, context):
         str_args = []
