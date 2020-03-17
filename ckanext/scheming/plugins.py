@@ -52,7 +52,7 @@ class _SchemingMixin(object):
     _validators_loaded = False
     _is_fallback = False
     _schema_urls = tuple()
-    _schemas = tuple()
+    _schemas = dict()
     _expanded_schemas = tuple()
 
     def get_helpers(self):
@@ -112,11 +112,24 @@ class _SchemingMixin(object):
 
         self._is_fallback = asbool(config.get(self.FALLBACK_OPTION, False))
 
-        self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
-        self._schemas = _load_schemas(
-            self._schema_urls,
-            self.SCHEMA_TYPE_FIELD
-        )
+        if config.get(self.SCHEMA_OPTION):
+            self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
+            self._schemas = _load_schemas(
+                self._schema_urls,
+                self.SCHEMA_TYPE_FIELD
+            )
+
+        # This loads all the schemas from a given directory
+        if config.get(self.SCHEMA_DIRECTORY_OPTION):
+            directory_schemas = _load_schemas_directory(
+                config.get(self.SCHEMA_DIRECTORY_OPTION),
+                self.SCHEMA_TYPE_FIELD,
+                self.SCHEMA_DIRECTORY_OPTION
+            )
+
+            for k, v in directory_schemas.items():
+                if not self._schemas.get(k):
+                    self._schemas[k] = v
 
         self._expanded_schemas = _expand_schemas(self._schemas)
 
@@ -176,6 +189,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITranslation)
 
+    SCHEMA_DIRECTORY_OPTION = 'scheming.dataset_schemas_directory'
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
@@ -292,6 +306,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     p.implements(p.ITranslation)
 
     SCHEMA_OPTION = 'scheming.group_schemas'
+    SCHEMA_DIRECTORY_OPTION = 'scheming.group_schemas_directory'
     FALLBACK_OPTION = 'scheming.group_fallback'
     SCHEMA_TYPE_FIELD = 'group_type'
     UNSPECIFIED_GROUP_TYPE = 'group'
@@ -324,6 +339,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     p.implements(p.ITranslation)
 
     SCHEMA_OPTION = 'scheming.organization_schemas'
+    SCHEMA_DIRECTORY_OPTION = 'scheming.organization_schemas_directory'
     FALLBACK_OPTION = 'scheming.organization_fallback'
     SCHEMA_TYPE_FIELD = 'organization_type'
     UNSPECIFIED_GROUP_TYPE = 'organization'
@@ -371,6 +387,29 @@ def _load_schemas(schemas, type_field):
     return out
 
 
+def _load_schemas_directory(schema_directory_path, type_field, config_field):
+    if not os.path.isdir(schema_directory_path):
+        raise ValueError(
+            '{} not a valid path'.format(config_field)
+        )
+    schema_paths = _files_from_directory(schema_directory_path)
+    out = {}
+    for file_path in schema_paths:
+        with open(file_path) as schema_file:
+            schema = loader.load(schema_file)
+            out[schema[type_field]] = schema
+    return out
+
+
+def _files_from_directory(path, extension='.json'):
+    listed_files = []
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            if extension in file:
+                listed_files.append(os.path.join(root, file))
+    return listed_files
+
+
 def _load_schema(url):
     schema = _load_schema_module_path(url)
     if not schema:
@@ -404,7 +443,7 @@ def _load_schema_url(url):
         res = urllib2.urlopen(url)
         tables = res.read()
     except urllib2.URLError:
-        raise SchemingException(_("Could not load {url}").format(url=url))
+        raise SchemingException("Could not load {url}".format(url=url))
 
     return loader.loads(tables, url)
 
