@@ -21,14 +21,22 @@
 
         {%- if field.field_name in unprocessed -%}
           {%- set errors = unprocessed.pop(field.field_name) -%}
-          <li data-field-label="{{ field.field_name }}">{{
-            h.scheming_language_text(field.label) }}:
-            {{ errors }}</li>
+          {%- for error in errors -%}
+            <li data-field-label="{{ field.field_name }}">{{
+              h.scheming_language_text(field.label) }}:
+              {{ error }}</li>
+          {%- endfor -%}
         {%- endif -%}
       {%- endfor -%}
 
       {%- for key, errors in h.scheming_natural_sort(unprocessed.items())  -%}
-        <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors |safe }}</li>
+        {%- if errors is string %}
+          <li data-field-label="{{ key }}">{{ _(key) }}: {{ errors |safe }}</li>
+        {% else %}
+          {%- for error in errors -%}
+            <li data-field-label="{{ key }}">{{ _(key) }}: {{ error |safe }}</li>
+          {%- endfor -%}
+        {% endif %}
       {%- endfor -%}
     {% endblock %}
   </ul>

@@ -526,3 +526,11 @@ def scheming_non_empty_fields(field_list, pkg_dict, exclude):
         if pkg_dict.get(field['field_name']):
             r.append(field)
     return r
+
+
+@helper
+def get_date():
+    """
+    Returns the current date.
+    """
+    return datetime.datetime.now()

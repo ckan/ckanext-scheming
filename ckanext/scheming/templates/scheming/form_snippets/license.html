@@ -26,7 +26,7 @@
     options=options,
     selected=data.get(field.field_name, field.get('default', 'notspecified')),
     error=errors[field.field_name],
-    classes=['control-medium'],
+    classes=field.get('classes', ['control-medium']),
     attrs=field.form_attrs if 'form_attrs' in field else {
       "data-module": "autocomplete"
     },
