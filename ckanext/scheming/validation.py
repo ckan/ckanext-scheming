@@ -528,6 +528,11 @@ def unique_combination(field, schema):
         zipped_fields = zip(field_names, field_values)
         queries = ["{}:\"{}\"".format(f[0], f[1]) for f in zipped_fields]
         query_string = " AND ".join(queries)
+
+        # Ensure uniqueness is only scoped to an organization
+        if data.get(('owner_org',)):
+            query_string += " AND owner_org:{}".format(data[('owner_org',)])
+
         package = context.get('package')
         if package:
             package_id = package.id
@@ -535,6 +540,7 @@ def unique_combination(field, schema):
             package_id = data.get(key[:-1] + ('id',))
         if package_id:
             query_string = "{} AND NOT id:\"{}\"".format(query_string, package_id)
+
         results = t.get_action('package_search')({}, {'q': query_string})
         if results.get('count'):
             errors[key].append(
@@ -560,6 +566,7 @@ def auto_create_valid_name(field, schema):
                 data[key] = "{}-{}".format(data[key], counter)
                 counter = counter + 1
     return validator
+
 
 @scheming_validator
 def autogenerate(field, schema):
