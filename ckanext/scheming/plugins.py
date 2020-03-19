@@ -250,14 +250,15 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 convert_to_extras((f,), data, errors, context)
                 del data[(f,)]
 
-        def composite_convert_from(key, data, errors, context):
-            for f in composite_convert_fields:
-                convert_from_extras((f,), data, errors, context)
-                flatten_schema({f: json.loads(data[(f,)])}, data)
-
         if composite_convert_fields:
             if action_type == 'show':
-                schema = dict(schema, __before=[composite_convert_from])
+                for ex in data_dict['extras']:
+                    if ex['key'] in composite_convert_fields:
+                        data_dict[ex['key']] = json.loads(ex['value'])
+                data_dict['extras'] = [
+                    ex for ex in data_dict['extras']
+                    if ex['key'] not in composite_convert_fields
+                ]
             else:
                 schema = dict(schema, __after=[composite_convert_to])
 
