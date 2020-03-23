@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from future import standard_library
-standard_library.install_aliases()
 import os
 import inspect
 import logging
@@ -385,7 +383,7 @@ def _load_schema_module_path(url):
 
 
 def _load_schema_url(url):
-    import urllib.request, urllib.error, urllib.parse
+    from six.moves import urllib
     try:
         res = urllib.request.urlopen(url)
         tables = res.read()
