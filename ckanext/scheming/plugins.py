@@ -250,8 +250,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 convert_to_extras((f,), data, errors, context)
                 del data[(f,)]
 
-        if composite_convert_fields:
-            if action_type == 'show':
+        if action_type == 'show':
+            if composite_convert_fields:
                 for ex in data_dict['extras']:
                     if ex['key'] in composite_convert_fields:
                         data_dict[ex['key']] = json.loads(ex['value'])
@@ -259,7 +259,24 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     ex for ex in data_dict['extras']
                     if ex['key'] not in composite_convert_fields
                 ]
-            else:
+        else:
+            dataset_composite = {
+                f['field_name']
+                for f in scheming_schema['dataset_fields']
+                if 'repeating_subfields' in f
+            }
+            if dataset_composite:
+                expand_form_composite(data_dict, dataset_composite)
+            resource_composite = {
+                f['field_name']
+                for f in scheming_schema['resource_fields']
+                if 'repeating_subfields' in f
+            }
+            if resource_composite:
+                for res in data_dict['resources']:
+                    expand_form_composite(res, resource_composite)
+            # convert composite package fields to extras so they are stored
+            if composite_convert_fields:
                 schema = dict(schema, __after=[composite_convert_to])
 
         return navl_validate(data_dict, schema, context)
@@ -272,6 +289,33 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             'scheming_dataset_schema_list': logic.scheming_dataset_schema_list,
             'scheming_dataset_schema_show': logic.scheming_dataset_schema_show,
         }
+
+
+def expand_form_composite(data, fieldnames):
+    """
+    when submitting dataset/resource form composite fields look like
+    "field-0-subfield..." convert these to lists of dicts
+    """
+    # if "field" exists, don't look for "field-0-subfield"
+    fieldnames -= set(data)
+    if not fieldnames:
+        return
+    for key in sorted(data):
+        if '-' not in key:
+            continue
+        parts = key.split('-')
+        if parts[0] not in fieldnames:
+            continue
+        comp = data.setdefault(parts[0], [])
+        try:
+            try:
+                comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
+            except IndexError:
+                comp.append({})
+                comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
+        except (IndexError, ValueError):
+            pass  # best-effort only
+
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
