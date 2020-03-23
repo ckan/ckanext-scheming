@@ -5,6 +5,8 @@ import os
 import inspect
 import logging
 
+import six
+
 import ckan.plugins as p
 from ckan.common import c
 try:
@@ -427,13 +429,12 @@ def _field_validators(f, schema, convert_extras):
     Return the validators for a scheming field f
     """
     validators = []
-    unicode_safe = get_validator('unicode_safe')
     if 'validators' in f:
         validators = validators_from_string(f['validators'], f, schema)
     elif helpers.scheming_field_required(f):
-        validators = [not_empty, unicode_safe]
+        validators = [not_empty, six.text_type]
     else:
-        validators = [ignore_missing, unicode_safe]
+        validators = [ignore_missing, six.text_type]
 
     if convert_extras:
         validators = validators + [convert_to_extras]

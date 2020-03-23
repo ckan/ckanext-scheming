@@ -1,4 +1,5 @@
-#!/bin/sh -e
+#!/bin/bash
+set -e
 
 if [ $CKANVERSION == 'master' ]
 then
