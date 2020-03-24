@@ -5,7 +5,7 @@ language: python
 python:
     - "2.7"
 env:
-#    - CKANVERSION=master
+    - CKANVERSION=master
     - CKANVERSION=2.6
     - CKANVERSION=2.7
     - CKANVERSION=2.8
