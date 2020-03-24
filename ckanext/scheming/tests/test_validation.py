@@ -43,9 +43,14 @@ class TestChoices(object):
             )
         except ValidationError as e:
             if check_ckan_version("2.9"):
-                expected = (
-                    "Value must be one of ['bactrian', 'hybrid', 'f2hybrid', "
-                    "'snowwhite', 'black']"
+                expected = "Value must be one of {}".format(
+                    [
+                        u"bactrian",
+                        u"hybrid",
+                        u"f2hybrid",
+                        u"snowwhite",
+                        u"black",
+                    ]
                 )
             else:
                 expected = (
