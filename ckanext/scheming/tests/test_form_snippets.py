@@ -233,3 +233,22 @@ class TestJSONFormSnippet(object):
         expected = """{"a": "1", "b": "2"}""".replace('"', "&#34;")
 
         assert expected in html
+
+    def test_json_value_is_empty_with_no_value(self):
+        html = render_form_snippet(
+            "json.html", field_name="a_json_field", data={"a_json_field": ""}
+        )
+        expected = "></textarea>"
+
+        assert expected in html
+
+    def test_json_value_is_displayed_correctly_if_string(self):
+        value = '{"a": 1, "b": 2}'
+        html = render_form_snippet(
+            "json.html",
+            field_name="a_json_field",
+            data={"a_json_field": value},
+        )
+        expected = value.replace('"', "&#34;")
+
+        assert expected in html
