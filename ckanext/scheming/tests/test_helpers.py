@@ -204,10 +204,13 @@ class TestJSONHelpers(object):
     def test_display_json_value_keys_are_sorted(self):
 
         value = {"c": "d", "a": "b"}
+        if six.PY3:
+            expected = '{\n    "a": "b",\n    "c": "d"\n}'
+        else:
+            expected = '{\n    "a": "b", \n    "c": "d"\n}'
 
         assert (
-            scheming_display_json_value(value, indent=4)
-            == '{\n    "a": "b", \n    "c": "d"\n}'
+            scheming_display_json_value(value, indent=4) == expected
         )
 
     def test_display_json_value_json_error(self):
