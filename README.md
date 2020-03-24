@@ -379,7 +379,7 @@ Running the Tests
 
 To run the tests on CKAN >= 2.9, do:
 
-    pytest --ckan-ini=test.ini ckanext/dcat/tests
+    pytest --ckan-ini=test.ini ckanext/scheming/tests
 
 
 To run the tests on CKAN <= 2.8, do:

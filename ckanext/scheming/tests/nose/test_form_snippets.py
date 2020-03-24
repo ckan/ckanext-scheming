@@ -1,3 +1,4 @@
+import six
 from nose.tools import assert_in, assert_not_in
 from ckan.lib.base import render_snippet
 from jinja2 import Markup
@@ -182,13 +183,17 @@ class TestJSONFormSnippet(object):
             field_name='a_json_field',
             data={'a_json_field': {'a': '1', 'b': '2'}},
         )
-        # It may seem unexpected, but JSONEncoder adds whitespace
-        # after comma for better readability. A lot if editors/IDE
-        # strips leading whitespace in a line so it's better to
-        # explicitly write expected result using escape sequence.
-        expected = '''{
-  "a": "1", \n  "b": "2"
-}'''.replace('"', '&#34;')   # Ask webhelpers
+        # It may seem unexpected, but JSONEncoder in Py2 adds
+        # whitespace after comma for better readability. A lot if
+        # editors/IDE strips leading whitespace in a line so it's
+        # better to explicitly write expected result using escape
+        # sequence.
+        if six.PY3:
+            expected = """{\n  "a": "1",\n  "b": "2"\n}"""
+        else:
+            expected = """{\n  "a": "1", \n  "b": "2"\n}"""
+
+        expected = expected.replace('"', '&#34;')   # Ask webhelpers
 
         assert_in(expected, html)
 

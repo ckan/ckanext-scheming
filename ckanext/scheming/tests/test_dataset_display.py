@@ -1,112 +1,117 @@
-from nose.tools import assert_true, assert_in
-
+import pytest
+import six
 from ckantoolkit.tests.factories import Sysadmin, Dataset
-from ckantoolkit.tests.helpers import FunctionalTestBase, submit_and_follow
 
 
-class TestDatasetDisplay(FunctionalTestBase):
-    def test_dataset_displays_custom_fields(self):
+@pytest.mark.usefixtures("clean_db")
+class TestDatasetDisplay(object):
+    def test_dataset_displays_custom_fields(self, app):
         user = Sysadmin()
         Dataset(
             user=user,
-            type='test-schema',
-            name='set-one',
+            type="test-schema",
+            name="set-one",
             humps=3,
-            resources=[{
-                'url':"http://example.com/camel.txt",
-                'camels_in_photo': 2}])
+            resources=[
+                {"url": "http://example.com/camel.txt", "camels_in_photo": 2}
+            ],
+        )
 
-        app = self._get_test_app()
-        response = app.get(url='/dataset/set-one')
-        assert_true('Humps' in response.body)
+        response = app.get("/dataset/set-one")
+        assert "Humps" in response.body
 
-    def test_resource_displays_custom_fields(self):
+    def test_resource_displays_custom_fields(self, app):
         user = Sysadmin()
         d = Dataset(
             user=user,
-            type='test-schema',
-            name='set-two',
+            type="test-schema",
+            name="set-two",
             humps=3,
-            resources=[{
-                'url':"http://example.com/camel.txt",
-                'camels_in_photo': 2,
-                'date': '2015-01-01'}])
+            resources=[
+                {
+                    "url": "http://example.com/camel.txt",
+                    "camels_in_photo": 2,
+                    "date": "2015-01-01",
+                }
+            ],
+        )
 
-        app = self._get_test_app()
-        response = app.get(url='/dataset/set-two/resource/' +
-            d['resources'][0]['id'])
-        assert_true('Camels in Photo' in response.body)
-        assert_true('Date' in response.body)
+        response = app.get(
+            "/dataset/set-two/resource/" + d["resources"][0]["id"]
+        )
+        assert "Camels in Photo" in response.body
+        assert "Date" in response.body
 
-    def test_choice_field_shows_labels(self):
+    def test_choice_field_shows_labels(self, app):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
-            type='test-schema',
-            name='with-choice',
-            category='hybrid',
-            )
-        app = self._get_test_app()
-        response = app.get(url='/dataset/with-choice')
-        assert_true('Hybrid Camel' in response.body)
+            type="test-schema",
+            name="with-choice",
+            category="hybrid",
+        )
+        response = app.get("/dataset/with-choice")
+        assert "Hybrid Camel" in response.body
 
-    def test_notes_field_displayed(self):
+    def test_notes_field_displayed(self, app):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
-            type='dataset',
-            name='plain-jane',
-            notes='# styled notes',
-            )
-        app = self._get_test_app()
-        response = app.get(url='/dataset/plain-jane')
-        assert_true('<h1>styled notes' in response.body)
+            type="dataset",
+            name="plain-jane",
+            notes="# styled notes",
+        )
 
-    def test_choice_field_shows_list_if_multiple_options(self):
+        response = app.get("/dataset/plain-jane")
+        assert "<h1>styled notes" in response.body
+
+    def test_choice_field_shows_list_if_multiple_options(self, app):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
-            type='test-schema',
-            name='with-multiple-choice-n',
-            personality=['friendly', 'spits'],
-            )
-        app = self._get_test_app()
-        response = app.get(url='/dataset/with-multiple-choice-n')
+            type="test-schema",
+            name="with-multiple-choice-n",
+            personality=["friendly", "spits"],
+        )
 
-        assert_true('<ul><li>Often friendly</li><li>Tends to spit</li></ul>'
-                    in response.body)
+        response = app.get("/dataset/with-multiple-choice-n")
 
-    def test_choice_field_does_not_show_list_if_one_options(self):
+        assert (
+            "<ul><li>Often friendly</li><li>Tends to spit</li></ul>"
+            in response.body
+        )
+
+    def test_choice_field_does_not_show_list_if_one_options(self, app):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
-            type='test-schema',
-            name='with-multiple-choice-one',
-            personality=['friendly'],
-            )
-        app = self._get_test_app()
-        response = app.get(url='/dataset/with-multiple-choice-one')
+            type="test-schema",
+            name="with-multiple-choice-one",
+            personality=["friendly"],
+        )
 
-        assert_true('Often friendly'
-                    in response.body)
-        assert_true('<ul><li>Often friendly</li></ul>'
-                    not in response.body)
+        response = app.get("/dataset/with-multiple-choice-one")
 
-    def test_json_field_displayed(self):
+        assert "Often friendly" in response.body
+        assert "<ul><li>Often friendly</li></ul>" not in response.body
+
+    def test_json_field_displayed(self, app):
         user = Sysadmin()
-        d = Dataset(
+        Dataset(
             user=user,
-            type='test-schema',
-            name='plain-json',
-            a_json_field={'a': '1', 'b': '2'},
-            )
-        app = self._get_test_app()
-        response = app.get(url='/dataset/plain-json')
+            type="test-schema",
+            name="plain-json",
+            a_json_field={"a": "1", "b": "2"},
+        )
+        response = app.get("/dataset/plain-json")
 
-        expected = '''{
-  "a": "1", 
-  "b": "2"
-}'''.replace('"', '&#34;')   # Ask webhelpers
+        if six.PY3:
+            expected = """{\n  "a": "1",\n  "b": "2"\n}"""
+        else:
+            expected = """{\n  "a": "1", \n  "b": "2"\n}"""
+        expected = expected.replace(
+            '"', "&#34;"
+        )  # Ask webhelpers
 
-        assert_in(expected, response.body)
-        assert_in('Example JSON', response.body)
+        assert expected in response.body
+        assert "Example JSON" in response.body

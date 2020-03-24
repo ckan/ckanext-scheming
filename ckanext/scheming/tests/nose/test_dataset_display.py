@@ -1,3 +1,4 @@
+import six
 from nose.tools import assert_true, assert_in
 
 from ckantoolkit.tests.factories import Sysadmin, Dataset
@@ -103,10 +104,12 @@ class TestDatasetDisplay(FunctionalTestBase):
         app = self._get_test_app()
         response = app.get(url='/dataset/plain-json')
 
-        expected = '''{
-  "a": "1", 
-  "b": "2"
-}'''.replace('"', '&#34;')   # Ask webhelpers
+        if six.PY3:
+            expected = """{\n  "a": "1",\n  "b": "2"\n}"""
+        else:
+            expected = """{\n  "a": "1", \n  "b": "2"\n}"""
+
+        expected = expected.replace('"', '&#34;')   # Ask webhelpers
 
         assert_in(expected, response.body)
         assert_in('Example JSON', response.body)
