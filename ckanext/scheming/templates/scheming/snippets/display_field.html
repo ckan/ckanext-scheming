@@ -5,20 +5,18 @@
 
     <dl class="scheming-subfield-list">
       {%- for subfield in field.repeating_subfields or field.simple_subfields %}
-        {% if group[subfield.field_name] %}
-          <dt class="dataset-label">
-            {{ h.scheming_language_text(subfield.label) }}
-          </dt>
-          <dd>
-          {%- snippet 'scheming/snippets/display_field.html',
-            field=subfield,
-            data=group,
-            errors=errors,
-            entity_type=entity_type,
-            object_type=object_type
-          -%}
-          </dd>
-        {% endif %}
+        <dt class="dataset-label">
+          {{ h.scheming_language_text(subfield.label) }}
+        </dt>
+        <dd>
+        {%- snippet 'scheming/snippets/display_field.html',
+          field=subfield,
+          data=group,
+          errors=errors,
+          entity_type=entity_type,
+          object_type=object_type
+        -%}
+        </dd>
       {% endfor -%}
     </dl>
 {% else %}
