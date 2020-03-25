@@ -395,24 +395,31 @@ def scheming_render_from_string(source, **kwargs):
 
 
 @helper
-def scheming_massage_subfield(field, subfield, index, data):
-    # Subfield & data are re-used, we must not modify the original!
-    sf = subfield.copy()
-    data = data.copy()
+def scheming_flatten_subfield(subfield, data):
+    """
+    Return flattened_data that converts all nested data for this subfield
+    into {field_name}-{index}-{subfield_name} values at the top level,
+    so that it matches the names of form fields submitted.
 
-    new_field_name = '{field_name}-{index}-{subfield_name}'.format(
-        field_name=field['field_name'],
-        index=index,
-        subfield_name=subfield['field_name']
-    )
+    If data already contains flattened subfields (e.g. rendering values
+    after a validation error) then they are returned as-is.
+    """
+    flat = dict(data)
 
-    field_data = data.pop(sf['field_name'], None)
-    if field_data is not None:
-        data[new_field_name] = field_data
+    if subfield['field_name'] not in data:
+        return flat
 
-    sf['field_name'] = new_field_name
+    for i, record in enumerate(data[subfield['field_name']]):
+        for sff in subfield['repeating_subfields']:
+            if sff['field_name'] in record:
+                new_field_name = '{field_name}-{index}-{subfield_name}'.format(
+                    field_name=subfield['field_name'],
+                    index=i,
+                    subfield_name=sff['field_name']
+                )
+                flat[new_field_name] = record[sff['field_name']]
 
-    return sf, data
+    return flat
 
 
 @helper

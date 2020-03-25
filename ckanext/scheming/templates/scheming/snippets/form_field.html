@@ -4,6 +4,7 @@
 {#- render the field the user requested, or use a default field -#}
 {%- if field.repeating_subfields %}
   {# A complex field with sub-fields, which can optionally be repeatable. #}
+  {% set flat = h.scheming_flatten_subfield(field, data) %}
   <fieldset class="scheming-fieldset" data-module="scheming-repeating-subfields">
     {% set group_data = data[field.field_name] %}
     {% set group_count = group_data|length|default(field.form_blanks, True)|default(1) %}
@@ -14,6 +15,7 @@
       {% else %}
         {% set group_payload = {} %}
       {% endif -%}
+      {% set gnum = loop.index0 %}
       <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
         <div class="panel panel-default">
           <header class="panel-heading">
@@ -21,16 +23,13 @@
           </header>
           <div class="panel-body">
           {% for subfield in field.repeating_subfields %}
-            {% set sf, payload = h.scheming_massage_subfield(
-              field,
+            {% set sf = dict(
               subfield,
-              index,
-              group_payload)
+              field_name=field.field_name ~ '-' ~ gnum ~ '-' ~ subfield.field_name)
             %}
-
             {%- snippet 'scheming/snippets/form_field.html',
               field=sf,
-              data=payload,
+              data=flat,
               errors=errors,
               licenses=licenses,
               entity_type=entity_type,
