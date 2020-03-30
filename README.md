@@ -429,15 +429,21 @@ Display help text inline if set to `true`. Default is `false`.
 Running the Tests
 =================
 
-To run the tests, do:
 
-```nosetests --ckan --nologcapture --with-pylons=test.ini```
+To run the tests on CKAN >= 2.9, do:
+
+    pytest --ckan-ini=test.ini ckanext/scheming/tests
+
+
+To run the tests on CKAN <= 2.8, do:
+
+```nosetests --ckan --nologcapture --with-pylons=test.ini ckanext/scheming/tests/nose```
 
 and
 
-```nosetests --ckan --nologcapture --with-pylons=test_subclass.ini ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form:TestDatasetFormNew ckanext.scheming.tests.test_dataset_logic```
+```nosetests --ckan --nologcapture --with-pylons=test_subclass.ini ckanext.scheming.tests.nose.test_dataset_display ckanext.scheming.tests.nose.test_form:TestDatasetFormNew ckanext.scheming.tests.nose.test_dataset_logic```
 
 To run the tests and produce a coverage report, first make sure you have
 coverage installed in your virtualenv (``pip install coverage``) then run:
 
-```nosetests --ckan --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.scheming --cover-inclusive --cover-erase --cover-tests```
+```nosetests --ckan --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.scheming.tests.nose --cover-inclusive --cover-erase --cover-tests```

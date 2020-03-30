@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import re
 import datetime
 import pytz
 import json
+import six
 
 from ckantoolkit import config, _
 
@@ -48,7 +51,7 @@ def scheming_language_text(text, prefer_lang=None):
         l, v = sorted(text.items())[0]
         return v
 
-    if isinstance(text, str):
+    if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
     t = _(text)
     return t
@@ -275,7 +278,7 @@ def date_tz_str_to_datetime(date_str):
         microseconds = int(m.groupdict(0).get('microseconds'))
         time_tuple = time_tuple[:5] + [seconds, microseconds]
 
-    final_date = datetime.datetime(*map(int, time_tuple))
+    final_date = datetime.datetime(*(int(x) for x in time_tuple))
 
     # Apply the timezone offset
     if len(tz_split) > 1 and not tz_split[1] == 'Z':
@@ -306,7 +309,7 @@ def scheming_datetime_to_UTC(date):
 
 
 def scheming_datetime_to_tz(date, tz):
-    if isinstance(tz, basestring):
+    if isinstance(tz, six.string_types):
         tz = pytz.timezone(tz)
 
     # Make date naive before returning
@@ -338,7 +341,7 @@ def scheming_display_json_value(value, indent=2):
         serialized.
     :rtype: string
     """
-    if isinstance(value, basestring):
+    if isinstance(value, six.string_types):
         return value
     try:
         return json.dumps(value, indent=indent, sort_keys=True)

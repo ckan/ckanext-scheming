@@ -7,6 +7,13 @@ echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
 sudo apt-get install solr-jetty
 
+if python -c 'import sys;exit(sys.version_info < (3,))'
+then
+    PYTHONVERSION=3
+else
+    PYTHONVERSION=2
+fi
+
 echo "Installing CKAN and its Python dependencies..."
 git clone https://github.com/ckan/ckan
 cd ckan
@@ -21,7 +28,7 @@ fi
 
 python setup.py develop
 
-if [ -f requirements-py2.txt ]
+if [ -f requirements-py2.txt ] && [ $PYTHONVERSION = 2 ]
 then
     grep -v psycopg2 < requirements-py2.txt > reqs.txt
 else
@@ -43,7 +50,12 @@ sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
 
 echo "Initialising the database..."
 cd ckan
-paster db init -c test-core.ini
+if [ $CKANVERSION \< '2.9' ]
+then
+    paster db init -c test-core.ini
+else
+    ckan -c test-core.ini db init
+fi
 cd -
 
 echo "Installing ckanext-scheming and its requirements..."
