@@ -1,24 +1,25 @@
 {#- master snippet for all scheming display fields -#}
 {#- render the field the user requested, or use a default field -#}
-{%- if field.repeating_subfields or field.simple_subfields %}
-    {% set fields = data[field.field_name] %}
+{%- if field.repeating_subfields %}
+  {% set fields = data[field.field_name] %}
 
+  {% for field_data in fields %}
     <dl class="scheming-subfield-list">
-      {%- for subfield in field.repeating_subfields or field.simple_subfields %}
+      {% for subfield in field.repeating_subfields %}
         <dt class="dataset-label">
           {{ h.scheming_language_text(subfield.label) }}
         </dt>
         <dd>
         {%- snippet 'scheming/snippets/display_field.html',
           field=subfield,
-          data=group,
-          errors=errors,
+          data=field_data,
           entity_type=entity_type,
           object_type=object_type
         -%}
         </dd>
-      {% endfor -%}
+      {% endfor %}
     </dl>
+  {% endfor %}
 {% else %}
   {%- set display_snippet = field.display_snippet -%}
 
