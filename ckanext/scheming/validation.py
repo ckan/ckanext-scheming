@@ -526,7 +526,7 @@ def scheming_multiple_text(key, data, errors, context):
                     element = element.decode('utf-8')
                 except UnicodeDecodeError:
                     errors[key]. append(_('invalid encoding for "%s" value')
-                                        % lang)
+                                        % element)
                     continue
             out.append(element)
 
