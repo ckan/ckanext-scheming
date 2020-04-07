@@ -28,7 +28,8 @@ setup(
         'pyyaml',
         'ckanapi',
         'ckantoolkit>=0.0.2',
-        'pytz'
+        'pytz',
+        'six',
     ],
     entry_points=\
     """

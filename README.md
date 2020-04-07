@@ -14,19 +14,40 @@ Requirements
 This plugin is compatible with CKAN 2.6 or later.
 
 
+Installation
+============
+
+You can install the extension with the following shell commands:
+
+```sh
+cd $CKAN_VENV/src/
+
+pip install -e "git+https://github.com/ckan/ckanext-scheming.git#egg=ckanext-scheming"
+pip install -r ckanext-scheming/requirements.txt
+```
+
+
 Configuration
 =============
 
 Set the schemas you want to use with configuration options:
 
 ```ini
-ckan.plugins = scheming_datasets
+
+# Each of the plugins is optional depending on your use
+ckan.plugins = scheming_datasets scheming_groups scheming_organizations
 
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.yaml
                            ckanext.spatialx:spatialxy_schema.yaml
 #   will try to load "spatialx_schema.yaml" and "spatialxy_schema.yaml"
 #   as dataset schemas
+
+#   For group and organization schemas (replace myplugin with your custom plugin)
+scheming.group_schemas = ckanext.scheming:group_with_bookface.json
+                         ckanext.myplugin:/etc/ckan/default/group_with_custom_fields.json
+scheming.organization_schemas = ckanext.scheming:org_with_dept_id.json
+                                ckanext.myplugin:org_with_custom_fields.json
 #
 #   URLs may also be used, e.g:
 #
@@ -39,9 +60,26 @@ scheming.presets = ckanext.scheming:presets.json
 scheming.dataset_fallback = false
 ```
 
+## Different Types of Schemas
+With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly in **CKAN 2.8+ only** as is indicated throughout the examples.
 
-Example dataset schemas
------------------------
+**Creating custom group or organization types is only supported in CKAN 2.8, instructions for that are below**
+
+
+-------------------------------------------------------------------------------------
+### Top-level Schema Keys (Common among dataset, group, and organization schemas)
+#### `scheming_version`
+
+Set to `1`. Future versions of ckanext-scheming may use a larger
+number to indicate a change to the description JSON format.
+
+#### `about_url`
+
+`about_url` is a Link to human-readable information about this schema.
+Its use is optional but highly recommended.
+
+-------------------------------
+### Example Schemas - Datasets
 
 * [default dataset schema](ckanext/scheming/ckan_dataset.yaml)
 * [camel photos schema](ckanext/scheming/camel_photos.yaml)
@@ -53,11 +91,7 @@ These schemas use [presets](#preset) defined in
 [presets.json](ckanext/scheming/presets.json).
 
 
-Schema Keys
------------
-
-
-### `scheming_version`
+### Schema Keys - Datasets
 
 ```yaml
 scheming_version: 2
@@ -66,7 +100,7 @@ scheming_version: 2
 Use `scheming_version: 2` with ckanext-scheming version 2.0.0 or later.
 
 
-### `dataset_type` / `group_type`
+#### `dataset_type` / `group_type`
 
 ```yaml
 dataset_type: camel-photos
@@ -79,7 +113,7 @@ Normal datasets would be available under the URL `/dataset`, but datasets with
 the `camel_photos.json` schema above would appear under `/camel-photos` instead.
 
 
-### `about_url`
+#### `about_url`
 
 ```yaml
 about_url: https://github.com/link-to-my-project
@@ -89,7 +123,7 @@ about_url: https://github.com/link-to-my-project
 Its use is optional but highly recommended.
 
 
-### `dataset_fields`, `resource_fields`
+#### `dataset_fields`, `resource_fields`
 
 ```yaml
 dataset_fields:
@@ -112,12 +146,41 @@ pages.
 Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset.
 
+---------------------------
+### Example Schemas - Group
 
-Field Keys
-----------
+* [Default group schema with field modifications](ckanext/scheming/group_with_bookface.json)
+* [Group with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_group_with_status.json)
 
 
-### `field_name`
+### Example Schemas - Organization
+
+* [Default organization schema with field modifications](ckanext/scheming/org_with_dept_id.json)
+* [Organization with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_org_with_address.json)
+
+
+### Schema Keys - Groups / Organization
+
+#### `group_type`
+Examples:
+* `"group_type": "group"` used for modifying the default group schema
+* `"group_type": "theme"` an example of defining a custom group type, as seen in the above examples **(CKAN 2.8+ only)**
+
+#### `organization_type`
+Examples:
+* `"organization_type": "organization"` used for modifying the default organization schema
+* `"organization_type": "organization_type": "publisher"` an example of defining a custom organization type, as seen in the above examples **(CKAN 2.8+ only)**
+
+#### `fields`
+The `dataset_fields` and `resource_fields` schema properties don't exist in group or organization schemas. Instead, they just have a `fields` property.
+
+#### URLs
+Like `dataset_type`, a `group_type` of `group` allows you to customize the default group schema under the URL `/group`, such as the modified schema in group_with_bookface.json, but a schema with a custom type **(CKAN 2.8+ only)** such as `custom_group_with_status.json` schema above would appear under `/theme` instead, because its `group_type` field is set to "theme".
+
+
+----------------
+### Field Keys
+#### `field_name`
 
 The `field_name` value is the name of an existing CKAN dataset or resource
 field or a new extra field. Existing dataset
@@ -138,7 +201,7 @@ New field names should follow the current lowercase_with_underscores
 This value is available to the form snippet as `field.field_name`.
 
 
-### `label`
+#### `label`
 
 The `label` value is a human-readable label for this field as
 it will appear in the dataset editing form.
@@ -158,7 +221,7 @@ label: Title
 ```
 
 
-### `required`
+#### `required`
 
 Use `required: true` for fields that must be included. Set to `false` or
 don't include this key for fields that are optional.
@@ -173,7 +236,7 @@ setting for this field and apply either the `not_empty` or `ignore_missing`
 validator.
 
 
-### `choices`
+#### `choices`
 
 The `choices` list may be provided for
 select and multiple choice fields.
@@ -190,7 +253,7 @@ choices:
   label: Hybrid Camel
 ```
 
-### `choices_helper`
+#### `choices_helper`
 
 If a choices list is not provided you must provide a `choices_helper`
 function that will return a list of choices in the same format as
@@ -209,7 +272,7 @@ datastore_choices_columns:
 ```
 
 
-### `preset`
+#### `preset`
 
 A `preset` specifies a set of default values for these field keys. They
 are used to define validation and snippets for common field
@@ -243,7 +306,7 @@ You may add your own presets by adding them to the `scheming.presets`
 configuration setting.
 
 
-### `form_snippet`
+#### `form_snippet`
 
 The `form_snippet` value is the name of the snippet template to
 use for this field in the dataset or resource editing form.
@@ -258,7 +321,7 @@ you added to your that aren't handled by this extension.
 
 The included form snippets may be found under [templates/scheming/form_snippets](ckanext/scheming/templates/scheming/form_snippets).
 
-### `display_snippet`
+#### `display_snippet`
 
 The `display_snippet` value is the name of the snippet template to
 use for this field in the dataset, resource, group or organization view page.
@@ -275,7 +338,7 @@ The included display snippets may be found under [templates/scheming/display_sni
 
 If `display_snippet: null` is used the field will be removed from the view page.
 
-### `select_size`
+#### `select_size`
 
 ```yaml
 select_size: 5
@@ -285,13 +348,13 @@ Set to the number of [choices](#choices) to display in the multiple_select
 [form](#form_snippet) snippets.
 
 
-### `sorted_choices`
+#### `sorted_choices`
 
 Set to `"true"` to sort [choices](#choices) alphabetically in [form](#form_snippet)
 and [display](#display_snippet) snippets.
 
 
-### `validators`
+#### `validators`
 
 The `validators` value is a space-separated string of validator and
 converter functions to use for this field when creating or updating data.
@@ -329,7 +392,7 @@ validator and use its return value for validation of the field.
 CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html)
 lists available validators ready to be used.
 
-### `output_validators`
+#### `output_validators`
 
 The `output_validators` value is like `validators` but used when
 retrieving values from the database instead of when saving them.
@@ -339,34 +402,41 @@ sent to the user.
 This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
 
-### `create_validators`
+#### `create_validators`
 
 The `create_validators` value if present overrides `validators` during
 create only.
 
-### `help_text`
+#### `help_text`
 
 Only if this key is supplied, its value will be shown as inline help text,
 Help text must be plain text, no markdown or HTML are allowed.
 Help text may be provided in multiple languages like [label fields](#label).
 
-### `help_inline`
+#### `help_inline`
 
 Display help text inline if set to `true`. Default is `false`.
+
 
 
 Running the Tests
 =================
 
-To run the tests, do:
 
-```nosetests --ckan --nologcapture --with-pylons=test.ini```
+To run the tests on CKAN >= 2.9, do:
+
+    pytest --ckan-ini=test.ini ckanext/scheming/tests
+
+
+To run the tests on CKAN <= 2.8, do:
+
+```nosetests --ckan --nologcapture --with-pylons=test.ini ckanext/scheming/tests/nose```
 
 and
 
-```nosetests --ckan --nologcapture --with-pylons=test_subclass.ini ckanext.scheming.tests.test_dataset_display ckanext.scheming.tests.test_form:TestDatasetFormNew ckanext.scheming.tests.test_dataset_logic```
+```nosetests --ckan --nologcapture --with-pylons=test_subclass.ini ckanext.scheming.tests.nose.test_dataset_display ckanext.scheming.tests.nose.test_form:TestDatasetFormNew ckanext.scheming.tests.nose.test_dataset_logic```
 
 To run the tests and produce a coverage report, first make sure you have
 coverage installed in your virtualenv (``pip install coverage``) then run:
 
-```nosetests --ckan --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.scheming --cover-inclusive --cover-erase --cover-tests```
+```nosetests --ckan --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.scheming.tests.nose --cover-inclusive --cover-erase --cover-tests```

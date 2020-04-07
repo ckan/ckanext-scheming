@@ -1,33 +1,22 @@
-from nose.tools import assert_true
-
+import pytest
 from ckantoolkit.tests.factories import Sysadmin, Organization, Group
-from ckantoolkit.tests.helpers import FunctionalTestBase
 
 
-class TestOrganizationDisplay(FunctionalTestBase):
-    def test_organization_displays_custom_fields(self):
+@pytest.mark.usefixtures("clean_db")
+class TestOrganizationDisplay(object):
+    def test_organization_displays_custom_fields(self, app):
         user = Sysadmin()
-        Organization(
-            user=user,
-            name='org-one',
-            department_id='3008',
-            )
+        Organization(user=user, name="org-one", department_id="3008")
 
-        app = self._get_test_app()
-        response = app.get(url='/organization/about/org-one')
-        assert_true('Department ID' in response.body)
+        response = app.get("/organization/about/org-one")
+        assert "Department ID" in response.body
 
 
-class TestGroupDisplay(FunctionalTestBase):
-    def test_group_displays_custom_fields(self):
+@pytest.mark.usefixtures("clean_db")
+class TestGroupDisplay(object):
+    def test_group_displays_custom_fields(self, app):
         user = Sysadmin()
-        Group(
-            user=user,
-            name='group-one',
-            bookface='theoneandonly',
-            )
+        Group(user=user, name="group-one", bookface="theoneandonly")
 
-        app = self._get_test_app()
-        response = app.get(url='/group/about/group-one')
-        assert_true('Bookface' in response.body)
-
+        response = app.get("/group/about/group-one")
+        assert "Bookface" in response.body

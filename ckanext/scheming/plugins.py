@@ -5,10 +5,15 @@ import inspect
 import logging
 from functools import wraps
 
+import six
 import yaml
 import ckan.plugins as p
-from paste.reloader import watch_file
-from paste.deploy.converters import asbool
+
+try:
+    from paste.reloader import watch_file
+except ImportError:
+    watch_file = None
+
 from ckan.common import c, json
 from ckan.lib.navl.dictization_functions import unflatten, flatten_schema
 try:
@@ -119,7 +124,9 @@ class _SchemingMixin(object):
         self._add_template_directory(config)
         self._load_presets(config)
 
-        self._is_fallback = asbool(config.get(self.FALLBACK_OPTION, False))
+        self._is_fallback = p.toolkit.asbool(
+            config.get(self.FALLBACK_OPTION, False)
+        )
 
         self._schema_urls = config.get(self.SCHEMA_OPTION, "").split()
         self._schemas = _load_schemas(
@@ -414,17 +421,18 @@ def _load_schema_module_path(url):
 
     p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(p):
-        watch_file(p)
+        if watch_file:
+            watch_file(p)
         with open(p) as schema_file:
             return loader.load(schema_file)
 
 
 def _load_schema_url(url):
-    import urllib2
+    from six.moves import urllib
     try:
-        res = urllib2.urlopen(url)
+        res = urllib.request.urlopen(url)
         tables = res.read()
-    except urllib2.URLError:
+    except urllib.error.URLError:
         raise SchemingException("Could not load %s" % url)
 
     return loader.loads(tables, url)
@@ -539,7 +547,7 @@ def _expand_schemas(schemas):
     Return a new dict of schemas with all field presets expanded.
     """
     out = {}
-    for name, original in schemas.iteritems():
+    for name, original in schemas.items():
         schema = dict(original)
         for grouping in ('fields', 'dataset_fields', 'resource_fields'):
             if grouping not in schema:

@@ -4,6 +4,8 @@ from collections import defaultdict
 import itertools
 
 import pytz
+import six
+
 import ckan.lib.helpers as h
 from ckan.lib.navl.dictization_functions import convert
 from ckantoolkit import (
@@ -73,7 +75,7 @@ def scheming_subfields(field, schema):
                     values[index][name] = _junk.pop(k)
 
             # ... then turn it back into an ordered list.
-            value = [v for k, v in sorted(values.iteritems())]
+            value = [v for k, v in sorted(values.items())]
         elif isinstance(value, basestring):
             value = json.loads(value)
 
@@ -89,7 +91,7 @@ def scheming_subfields(field, schema):
                 # names, else you risk trampling values from the top-level
                 # schema. Some validators like require_when_published require
                 # other top-level fields.
-                entry_as_data = {(k,): v for k, v in entry.iteritems()}
+                entry_as_data = {(k,): v for k, v in entry.items()}
                 entry_as_data.update(data)
 
                 entry_errors = defaultdict(list)
@@ -191,7 +193,7 @@ def scheming_multiple_choice(field, schema):
 
         value = data[key]
         if value is not missing:
-            if isinstance(value, basestring):
+            if isinstance(value, six.string_types):
                 value = [value]
             elif not isinstance(value, list):
                 errors[key].append(_('expecting list of strings'))
@@ -255,7 +257,7 @@ def validate_date_inputs(field, key, data, extras, errors, context):
         try:
             value_full = value
             date = h.date_str_to_datetime(value)
-        except (TypeError, ValueError):
+        except (TypeError, ValueError) as e:
             errors[date_key].append(date_error)
 
     time_key, value = get_input('time')
@@ -267,7 +269,7 @@ def validate_date_inputs(field, key, data, extras, errors, context):
             try:
                 value_full += ' ' + value
                 date = h.date_str_to_datetime(value_full)
-            except (TypeError, ValueError):
+            except (TypeError, ValueError) as e:
                 errors[time_key].append(time_error)
 
     tz_key, value = get_input('tz')
@@ -294,7 +296,7 @@ def scheming_isodatetime(field, schema):
             else:
                 try:
                     date = h.date_str_to_datetime(value)
-                except (TypeError, ValueError):
+                except (TypeError, ValueError) as e:
                     raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))
@@ -324,7 +326,7 @@ def scheming_isodatetime_tz(field, schema):
             else:
                 try:
                     date = sh.date_tz_str_to_datetime(value)
-                except (TypeError, ValueError):
+                except (TypeError, ValueError) as e:
                     raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))
@@ -354,7 +356,7 @@ def scheming_valid_json_object(value, context):
     """
     if not value:
         return
-    elif isinstance(value, basestring):
+    elif isinstance(value, six.string_types):
         try:
             loaded = json.loads(value)
 
@@ -380,7 +382,7 @@ def scheming_valid_json_object(value, context):
 
 @register_validator
 def scheming_load_json(value, context):
-    if isinstance(value, basestring):
+    if isinstance(value, six.string_types):
         try:
             return json.loads(value)
         except ValueError:
@@ -428,7 +430,7 @@ def get_validator_or_converter(name):
     Get a validator or converter by name
     """
     if name == 'unicode':
-        return unicode
+        return six.text_type
     try:
         v = get_validator(name)
         return v
@@ -442,14 +444,14 @@ def convert_from_extras_group(key, data, errors, context):
 
     def remove_from_extras(data, key):
         to_remove = []
-        for data_key, data_value in data.iteritems():
+        for data_key, data_value in data.items():
             if (data_key[0] == 'extras'
                     and data_key[1] == key):
                 to_remove.append(data_key)
         for item in to_remove:
             del data[item]
 
-    for data_key, data_value in data.iteritems():
+    for data_key, data_value in data.items():
         if (data_key[0] == 'extras'
             and 'key' in data_value
                 and data_value['key'] == key[-1]):
@@ -537,7 +539,7 @@ def scheming_multiple_text(key, data, errors, context):
     prefix = key[-1] + '-'
     extras = data.get(key[:-1] + ('__extras',), {})
 
-    for name, text in extras.iteritems():
+    for name, text in extras.items():
         if not name.startswith(prefix):
             continue
         if not text:

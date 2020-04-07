@@ -1,11 +1,11 @@
 {% import 'macros/form.html' as form %}
-
+{% set value = data[field.field_name] %}
 {% call form.textarea(
     field.field_name,
     id='field-' + field.field_name,
     label=h.scheming_language_text(field.label),
     placeholder=h.scheming_language_text(field.form_placeholder),
-    value=h.scheming_display_json_value(data[field.field_name], indent=field.get('indent', 2)),
+    value=h.scheming_display_json_value(value, indent=field.get('indent', 2)) if value else None,
     error=errors[field.field_name],
     attrs=dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
     is_required=h.scheming_field_required(field),
