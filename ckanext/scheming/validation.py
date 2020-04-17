@@ -569,29 +569,15 @@ def auto_create_valid_name(field, schema):
     return validator
 
 
-def comma_swap_formatter(arg_value):
-    """
-    Swaps the parts of a string around a single comma.
-    Use to format e.g. "Tanzania, Republic of" as "Republic of Tanzania"
-    """
-    if arg_value.count(',') == 1:
-        parts = arg_value.split(',')
-        stripped_parts = map(lambda x: x.strip(), parts)
-        reversed_parts = reversed(stripped_parts)
-        joined_parts = " ".join(reversed_parts)
-        arg_value = joined_parts
-    return arg_value
-
-
 @scheming_validator
 def autogenerate(field, schema):
     template = field[u'template']
     template_args = field[u'template_args']
     template_formatters = field.get(u'template_formatters', dict())
     formatters = {
-        "lower": __lower,
+        "lower": __lower_formatter,
         "slugify": slugify.slugify,
-        "comma_swap": comma_swap_formatter
+        "comma_swap": __comma_swap_formatter
     }
     f_list = []
     for f in template_formatters:
@@ -610,5 +596,21 @@ def autogenerate(field, schema):
         pass
     return validator
 
-def __lower(input):
+
+def __lower_formatter(input):
     return input.lower()
+
+
+def __comma_swap_formatter(input):
+    """
+    Swaps the parts of a string around a single comma.
+    Use to format e.g. "Tanzania, Republic of" as "Republic of Tanzania"
+    """
+    if input.count(',') == 1:
+        parts = input.split(',')
+        stripped_parts = map(lambda x: x.strip(), parts)
+        reversed_parts = reversed(stripped_parts)
+        joined_parts = " ".join(reversed_parts)
+        return joined_parts
+    else:
+        return input
