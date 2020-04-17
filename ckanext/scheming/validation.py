@@ -18,6 +18,7 @@ import ckanext.scheming.helpers as sh
 from ckanext.scheming.errors import SchemingException
 from ckan.logic.validators import package_name_validator
 import logging
+import slugify
 
 OneOf = get_validator('OneOf')
 ignore_missing = get_validator('ignore_missing')
@@ -574,7 +575,8 @@ def autogenerate(field, schema):
     template_args = field[u'template_args']
     template_formatters = field.get(u'template_formatters', dict())
     formatters = {
-        "lower": __lower
+        "lower": __lower,
+        "slugify": slugify.slugify
     }
     f_list = []
     for f in template_formatters:
