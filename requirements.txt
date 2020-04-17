@@ -3,3 +3,4 @@ ckanapi
 ckantoolkit >= 0.0.2
 pytz
 pycountry
+python-slugify==4.0.0

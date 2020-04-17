@@ -18,6 +18,7 @@ import ckanext.scheming.helpers as sh
 from ckanext.scheming.errors import SchemingException
 from ckan.logic.validators import package_name_validator
 import logging
+import slugify
 
 OneOf = get_validator('OneOf')
 ignore_missing = get_validator('ignore_missing')
@@ -568,13 +569,29 @@ def auto_create_valid_name(field, schema):
     return validator
 
 
+def comma_swap_formatter(arg_value):
+    """
+    Swaps the parts of a string around a single comma.
+    Use to format e.g. "Tanzania, Republic of" as "Republic of Tanzania"
+    """
+    if arg_value.count(',') == 1:
+        parts = arg_value.split(',')
+        stripped_parts = map(lambda x: x.strip(), parts)
+        reversed_parts = reversed(stripped_parts)
+        joined_parts = " ".join(reversed_parts)
+        arg_value = joined_parts
+    return arg_value
+
+
 @scheming_validator
 def autogenerate(field, schema):
     template = field[u'template']
     template_args = field[u'template_args']
     template_formatters = field.get(u'template_formatters', dict())
     formatters = {
-        "lower": __lower
+        "lower": __lower,
+        "slugify": slugify.slugify,
+        "comma_swap": comma_swap_formatter
     }
     f_list = []
     for f in template_formatters:
@@ -584,12 +601,12 @@ def autogenerate(field, schema):
     def validator(key, data, errors, context):
         str_args = []
         for t_arg in template_args:
-            str_args.append(data[(t_arg,)])
+            arg_value = data[(t_arg,)]
+            for f in f_list:
+                arg_value = f(arg_value)
+            str_args.append(arg_value)
         auto_text = template.format(*str_args)
-        for f in f_list:
-            auto_text = f(auto_text)
         data[key] = auto_text
-
         pass
     return validator
 
