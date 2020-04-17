@@ -576,11 +576,12 @@ def comma_swap_formatter(arg_value):
     """
     if arg_value.count(',') == 1:
         parts = arg_value.split(',')
-        stripped_parts = map(lambda x: x.strip(), parts)
+        stripped_parts = map(str.strip(), parts)
         reversed_parts = reversed(stripped_parts)
         joined_parts = " ".join(reversed_parts)
-        arg_value = joined_parts
-    return arg_value
+        return joined_parts
+    else:
+        return arg_value
 
 
 @scheming_validator
