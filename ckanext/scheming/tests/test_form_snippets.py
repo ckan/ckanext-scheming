@@ -3,17 +3,26 @@ import pytest
 from ckan.lib.base import render_snippet
 from jinja2 import Markup
 
+try:
+    from ckanext.scheming.tests.mock_pylons_request import mock_pylons_request
+except ImportError:
+    from contextlib import contextmanager
+    @contextmanager
+    def mock_pylons_request():
+        yield
+
 
 def render_form_snippet(name, data=None, extra_args=None, **kwargs):
     field = {"field_name": "test", "label": "Test"}
     field.update(kwargs)
-    return render_snippet(
-        "scheming/form_snippets/" + name,
-        field=field,
-        data=data or {},
-        errors=None,
-        **(extra_args or {})
-    )
+    with mock_pylons_request():
+        return render_snippet(
+            "scheming/form_snippets/" + name,
+            field=field,
+            data=data or {},
+            errors=None,
+            **(extra_args or {})
+        )
 
 
 @pytest.mark.usefixtures("with_request_context")
