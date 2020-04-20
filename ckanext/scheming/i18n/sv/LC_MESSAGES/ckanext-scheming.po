@@ -3,11 +3,11 @@
 # This file is distributed under the same license as the ckanext-scheming
 # project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
-# 
+#
 # Translators:
 # Zharktas <jari-pekka.voutilainen@gofore.com>, 2019
-# 
-#, fuzzy
+#
+# , fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-scheming 1.1.0\n"
@@ -39,11 +39,11 @@ msgstr ""
 #: ckanext/scheming/validation.py:116 ckanext/scheming/validation.py:182
 #: ckanext/scheming/validation.py:211
 msgid "Date format incorrect"
-msgstr "Datumets format är felaktigt"
+msgstr "Felaktigt datumformat"
 
 #: ckanext/scheming/validation.py:117
 msgid "Time format incorrect"
-msgstr ""
+msgstr "Felaktigt tidsformat"
 
 #: ckanext/scheming/validation.py:150
 msgid "Date is required when a time is provided"
@@ -67,7 +67,7 @@ msgstr ""
 
 #: ckanext/scheming/templates/scheming/form_snippets/_organization_select.html:21
 msgid "No organization"
-msgstr "Ingen organisation"
+msgstr "Organisation saknas"
 
 #: ckanext/scheming/templates/scheming/form_snippets/organization.html:25
 msgid "Visibility"
@@ -83,7 +83,7 @@ msgstr "Offentlig"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:20
 msgid "Are you sure you want to delete this Group?"
-msgstr "Vill du verkligen radera denna kategori?"
+msgstr "Vill du verkligen radera denna grupp?"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:21
 #: ckanext/scheming/templates/scheming/organization/group_form.html:27
@@ -92,19 +92,19 @@ msgstr "Radera"
 
 #: ckanext/scheming/templates/scheming/group/group_form.html:25
 msgid "Save Group"
-msgstr "Spara kategori"
+msgstr "Spara grupp"
 
 #: ckanext/scheming/templates/scheming/organization/group_form.html:26
 msgid "Are you sure you want to delete this Organization?"
-msgstr ""
+msgstr "Vill du verkligen radera denna organisation?"
 
 #: ckanext/scheming/templates/scheming/organization/group_form.html:31
 msgid "Save Organization"
-msgstr "Spara organisationen"
+msgstr "Spara organisation"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:13
 msgid "Additional Information"
-msgstr "Ytterligare information"
+msgstr "Mer information"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:17
 msgid "Field"
@@ -116,7 +116,7 @@ msgstr "Värde"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:24
 msgid "Last updated"
-msgstr "Senast uppdaterad"
+msgstr "Senast uppdaterat"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:25
 #: ckanext/scheming/templates/scheming/package/resource_read.html:31
@@ -126,7 +126,7 @@ msgstr "okänd"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:30
 msgid "Created"
-msgstr "Skapad"
+msgstr "Skapat"
 
 #: ckanext/scheming/templates/scheming/package/resource_read.html:36
 msgid "Format"
@@ -138,8 +138,9 @@ msgstr "Licens"
 
 #: ckanext/scheming/templates/scheming/package/snippets/additional_info.html:29
 msgid "State"
-msgstr "Tillstånd"
+msgstr "Status"
 
 #: ckanext/scheming/templates/scheming/snippets/errors.html:6
 msgid "The form contains invalid entries:"
 msgstr "Formuläret innehåller ogiltiga poster:"
+
