@@ -239,7 +239,11 @@ class TestJSONResourceForm(object):
 
         env, response = _get_resource_new_page_as_sysadmin(app, dataset["id"])
 
-        url = '/dataset/new_resource/' + dataset["id"]
+        url = ckantoolkit.h.url_for(
+            "test-schema_resource.new", id=dataset["id"]
+        )
+        if not url.startswith('/'):  # ckan < 2.9
+            url = '/dataset/new_resource/' + dataset["id"]
 
         value = {"a": 1, "b": 2}
         json_value = json.dumps(value)
@@ -278,7 +282,17 @@ class TestJSONResourceForm(object):
         assert form.select_one(
             "textarea[name=a_resource_json_field]"
         ).text == json.dumps(value, indent=2)
-        url = '/dataset/' + dataset["id"] + '/resource_edit/' + dataset["resources"][0]["id"]
+
+        url = ckantoolkit.h.url_for(
+            "test-schema_resource.edit",
+            id=dataset["id"],
+            resource_id=dataset["resources"][0]["id"],
+        )
+        if not url.startswith('/'):  # ckan < 2.9
+            url = '/dataset/{ds}/resource_edit/{rs}'.format(
+                ds=dataset["id"],
+                rs=dataset["resources"][0]["id"]
+            )
 
         value = {"a": 1, "b": 2, "c": 3}
         json_value = json.dumps(value)

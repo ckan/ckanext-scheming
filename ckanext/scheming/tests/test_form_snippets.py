@@ -3,13 +3,15 @@ import pytest
 from ckan.lib.base import render_snippet
 from jinja2 import Markup
 
-try:
-    from ckanext.scheming.tests.mock_pylons_request import mock_pylons_request
-except ImportError:
+import ckantoolkit
+
+if ckantoolkit.check_ckan_version(min_version='2.9.0'):
     from contextlib import contextmanager
     @contextmanager
     def mock_pylons_request():
         yield
+else:
+    from ckanext.scheming.tests.mock_pylons_request import mock_pylons_request
 
 
 def render_form_snippet(name, data=None, extra_args=None, **kwargs):
