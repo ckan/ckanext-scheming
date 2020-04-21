@@ -11,7 +11,7 @@ from ckantoolkit.tests.helpers import call_action
 @pytest.fixture
 def sysadmin_env():
     user = Sysadmin()
-    return {"REMOTE_USER": user["name"]}
+    return {"REMOTE_USER": user["name"].encode("ascii")}
 
 
 def _get_package_new_page_as_sysadmin(app):
@@ -80,7 +80,7 @@ class TestDatasetFormNew(object):
     def test_resource_form_includes_custom_fields(self, app, sysadmin_env):
         dataset = Dataset(type="test-schema", name="resource-includes-custom")
         response = app.get(
-            ckantoolkit.h.url_for("resource.new", id=dataset["id"]),
+            '/dataset/new_resource/' + dataset["id"],
             extra_environ=sysadmin_env,
         )
         form = BeautifulSoup(response.body).select_one("#resource-edit")
@@ -184,13 +184,11 @@ class TestJSONDatasetForm(object):
         data["name"] = "json_dataset_1"
         data["a_json_field"] = json_value
 
-        url = ckantoolkit.h.url_for("test-schema.new")
-        app.post(
-            url,
-            environ_overrides=sysadmin_env,
-            data=data,
-            follow_redirects=False,
-        )
+        url = '/test-schema/new'
+        try:
+            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
 
         dataset = call_action("package_show", id="json_dataset_1")
         assert dataset["a_json_field"] == value
@@ -216,8 +214,11 @@ class TestJSONDatasetForm(object):
             "name": dataset["name"],
         }
 
-        url = ckantoolkit.h.url_for("test-schema.edit", id=dataset["id"])
-        app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        url = '/dataset/edit/' + dataset["id"]
+        try:
+            app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=env)
 
         dataset = call_action("package_show", id=dataset["id"])
 
@@ -241,6 +242,8 @@ class TestJSONResourceForm(object):
         url = ckantoolkit.h.url_for(
             "test-schema_resource.new", id=dataset["id"]
         )
+        if not url.startswith('/'):  # ckan < 2.9
+            url = '/dataset/new_resource/' + dataset["id"]
 
         value = {"a": 1, "b": 2}
         json_value = json.dumps(value)
@@ -252,7 +255,10 @@ class TestJSONResourceForm(object):
             "a_resource_json_field": json_value,
             "name": dataset["name"],
         }
-        app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        try:
+            app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=env)
         dataset = call_action("package_show", id=dataset["id"])
 
         assert dataset["resources"][0]["a_resource_json_field"] == value
@@ -276,11 +282,17 @@ class TestJSONResourceForm(object):
         assert form.select_one(
             "textarea[name=a_resource_json_field]"
         ).text == json.dumps(value, indent=2)
+
         url = ckantoolkit.h.url_for(
             "test-schema_resource.edit",
             id=dataset["id"],
             resource_id=dataset["resources"][0]["id"],
         )
+        if not url.startswith('/'):  # ckan < 2.9
+            url = '/dataset/{ds}/resource_edit/{rs}'.format(
+                ds=dataset["id"],
+                rs=dataset["resources"][0]["id"]
+            )
 
         value = {"a": 1, "b": 2, "c": 3}
         json_value = json.dumps(value)
@@ -291,7 +303,10 @@ class TestJSONResourceForm(object):
             "a_resource_json_field": json_value,
             "name": dataset["name"],
         }
-        app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        try:
+            app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=env)
 
         dataset = call_action("package_show", id=dataset["id"])
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
 pytest_plugins = [
-    u'ckan.tests.pytest_ckan.ckan_setup',
-    u'ckan.tests.pytest_ckan.fixtures',
+    u'ckanext.scheming.tests.ckan_setup',
+    u'ckanext.scheming.tests.fixtures',
 ]
