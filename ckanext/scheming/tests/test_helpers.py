@@ -69,6 +69,7 @@ class TestGetPreset(object):
                 u"tag_string_autocomplete",
                 u"select",
                 u"resource_url_upload",
+                u"organization_url_upload",
                 u"resource_format_autocomplete",
                 u"multiple_select",
                 u"multiple_checkbox",
