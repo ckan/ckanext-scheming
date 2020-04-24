@@ -274,6 +274,8 @@ This extension includes the following presets:
 * `"dataset_organization"` - organization validation and form select box
 * `"resource_url_upload"` - resource url validaton and link/upload form
   field
+  * `"organization_url_upload"` - organization url validaton and link/upload form
+  field
 * `"resource_format_autocomplete"` - resource format validation with
   format guessing based on url and autocompleting form field
 * `"json_object"` - JSON based input. Only JSON objects are supported.
@@ -316,6 +318,8 @@ This extension includes the following form snippets:
   an organization selection field for datasets
 * [upload.html](ckanext/scheming/templates/scheming/form_snippets/upload.html) -
   an upload field for resource files
+  * [organization_upload.html](ckanext/scheming/templates/scheming/form_snippets/organization_upload.html) -
+  an upload field for organization logo files
 * [select.html](ckanext/scheming/templates/scheming/form_snippets/select.html) -
   a select box
 * [multiple_checkbox.html](ckanext/scheming/templates/scheming/form_snippets/multiple_choice.html) -
