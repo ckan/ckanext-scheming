@@ -86,7 +86,6 @@ class TestDatasetFormNew(object):
         form = BeautifulSoup(response.body).select_one("#resource-edit")
         assert form.select("input[name=camels_in_photo]")
 
-    @pytest.mark.ckan_config("scheming.dataset_schemas", "ckanext.scheming:ckan_dataset.json")
     def test_dataset_form_includes_licenses(self, app, sysadmin_env):
         """Starting from CKAN v2.9, licenses are not available as template
         variable and we are extendisn
@@ -97,7 +96,6 @@ class TestDatasetFormNew(object):
         page = BeautifulSoup(response.body)
         licenses = page.select('#field-license_id option')
         assert licenses
-
 
 @pytest.mark.usefixtures("clean_db")
 class TestOrganizationFormNew(object):
