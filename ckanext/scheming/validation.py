@@ -527,12 +527,12 @@ def unique_combination(field, schema):
         field_names = [x['field_name'] for x in all_unique_comb_field_dicts]
         field_values = [data.get((x,)) for x in field_names]
         zipped_fields = zip(field_names, field_values)
-        queries = ["{}:\"{}\"".format(f[0], f[1]) for f in zipped_fields]
-        query_string = " AND ".join(queries)
+        queries = [u"{}:\"{}\"".format(f[0], f[1]) for f in zipped_fields]
+        query_string = u" AND ".join(queries)
 
         # Ensure uniqueness is only scoped to an organization
         if data.get(('owner_org',)):
-            query_string += " AND owner_org:{}".format(data[('owner_org',)])
+            query_string += u" AND owner_org:{}".format(data[('owner_org',)])
 
         package = context.get('package')
         if package:
@@ -540,7 +540,7 @@ def unique_combination(field, schema):
         else:
             package_id = data.get(key[:-1] + ('id',))
         if package_id:
-            query_string = "{} AND NOT id:\"{}\"".format(query_string, package_id)
+            query_string = u"{} AND NOT id:\"{}\"".format(query_string, package_id)
 
         results = t.get_action('package_search')({}, {'q': query_string})
         if results.get('count'):
