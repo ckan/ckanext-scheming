@@ -2,57 +2,32 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
     return {
         initialize: function() {
             var container = this,
-                $add = $('<a href="#" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>');
-                $remove = $('<a href="#" class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i></a>');
+                $this = $(this.el),
+                $template = $this.children('div[name="repeating-template"]'),
+                template = $template.html(),
+                $add = $this.children('a[name="repeating-add"]'),
+                $remove = $this.children('a[name="repeating-remove"]');
+            $template.remove();
 
             $add.on('click', function(e) {
-                container.add_group();
+                var $last = $this.find('.scheming-subfield-group').last(),
+                    group = $last.data('groupIndex') + 1,
+                    $copy = $(
+                        template.replace(/{repeating-index}/g, group)
+                        .replace(/{repeating-index1}/g, group + 1));
+                $copy.insertAfter($last);
                 e.preventDefault();
             });
 
             $remove.on('click', function(e) {
-                container.remove_group();
+                var $groups = $this.find('.scheming-subfield-group'),
+                    $last = $groups.last(),
+                    count = $groups.length;
+                if(count !== 1) {
+                    $last.remove();
+                }
                 e.preventDefault();
             });
-
-            $(this.el).append($add);
-            $(this.el).append($remove);
-        },
-
-        add_group: function() {
-            var $this = $(this.el),
-                $last = $this.find('.scheming-subfield-group').last(),
-                $copy = $last.clone();
-
-
-            var group = parseInt($copy.data('groupIndex'), 10) + 1,
-                field = $copy.data('field');
-
-            $copy.attr('data-group-index', group);
-
-            function replace_index(index, string) {
-                return string.replace(new RegExp('(^' + field + '-)([0-9]+)'), '$1' + group);
-            };
-
-            /* Find and increment the field name IDs */
-            $copy.find('*[name^="' + field + '-"]')
-                .attr('name', replace_index)
-                .attr('id', replace_index);
-
-            $copy.find(':input').val('');
-
-            $copy.insertAfter($last);
-        },
-
-        remove_group: function() {
-            var $this = $(this.el),
-                $groups = $this.find('.scheming-subfield-group'),
-                $last = $groups.last(),
-                count = $groups.length;
-
-            if(count !== 1) {
-                $last.remove();
-            }
         }
     };
 });

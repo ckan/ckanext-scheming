@@ -1,5 +1,31 @@
 {% resource 'scheming/scheming-repeating-subfields.js' %}
 
+{% macro repeating_panel(index, index1) %}
+  <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
+    <div class="panel panel-primary">
+      <header class="panel-heading">
+        {{ h.scheming_language_text(field.label) }} {{ index1 }}
+      </header>
+      <div class="panel-body">
+        {% for subfield in field.repeating_subfields %}
+          {% set sf = dict(
+            subfield,
+            field_name=field.field_name ~ '-' ~ index ~ '-' ~ subfield.field_name)
+          %}
+          {%- snippet 'scheming/snippets/form_field.html',
+            field=sf,
+            data=flat,
+            errors=errors,
+            licenses=licenses,
+            entity_type=entity_type,
+            object_type=object_type
+          -%}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
 {#- master snippet for all scheming form fields -#}
 {#- render the field the user requested, or use a default field -#}
 {%- if field.repeating_subfields %}
@@ -10,41 +36,18 @@
     {% set group_count = group_data|length|default(field.form_blanks, True)|default(1) %}
 
     {% for index in range(group_count) %}
-      {%- if group_data %}
-        {% set group_payload = group_data[index] %}
-      {% else %}
-        {% set group_payload = {} %}
-      {% endif -%}
-      {% set gnum = loop.index0 %}
-      <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
-        <div class="panel panel-primary">
-          <header class="panel-heading">
-            {{ h.scheming_language_text(field.label) }}
-          </header>
-          <div class="panel-body">
-          {% for subfield in field.repeating_subfields %}
-            {% set sf = dict(
-              subfield,
-              field_name=field.field_name ~ '-' ~ gnum ~ '-' ~ subfield.field_name)
-            %}
-            {%- snippet 'scheming/snippets/form_field.html',
-              field=sf,
-              data=flat,
-              errors=errors,
-              licenses=licenses,
-              entity_type=entity_type,
-              object_type=object_type
-            -%}
-          {% endfor %}
-        </div>
-      </div>
+      {{ repeating_panel(index, index + 1) }}
     {% endfor %}
     {% set help_text = h.scheming_language_text(field.help_text) %}
     {% if help_text %}
-      <div class="info-block">
+      <div class="info-block mrgn-bttm-md">
         {{ help_text }}
       </div>
     {% endif %}
+    <a href="#" name="repeating-remove" class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i> {{ 'Remove' }}</a>
+    <a href="#" name="repeating-add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'Add' }}</a>
+
+    <div name="repeating-template" style="display:none">{{ repeating_panel('{repeating-index}', '{repeating-index1}') }}</div>
   </fieldset>
 {%- else -%}
   {# A simple field. #}
