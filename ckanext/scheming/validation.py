@@ -229,6 +229,32 @@ def scheming_isodatetime_tz(field, schema):
     return validator
 
 
+@scheming_validator
+def scheming_do_not_change_if_missing(field, schema):
+    """
+    Do not change a value if key is missing.
+    Default behavior during package_update is to remove value.
+    """
+    def validator(key, data, errors, context):
+        package = context.get('package')
+        if package:
+            original = package.extras.get(key[0], '')
+        value = data.get(key[0], '')
+
+        # May require separate validator for read_only fields
+        # that are set programatically elsewhere. In which case
+        # there may not be a need to compare values, just revert
+        # to original always, not just when empty.
+        # if original != value:
+        #    data[key] = original
+
+        if not value:
+            # silently replace with the old value when none is sent
+            data[key] = original
+
+    return validator
+
+
 def scheming_valid_json_object(value, context):
     """Store a JSON object as a serialized JSON string
 
