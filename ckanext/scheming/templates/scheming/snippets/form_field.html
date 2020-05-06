@@ -38,14 +38,15 @@
     {% for index in range(group_count) %}
       {{ repeating_panel(index, index + 1) }}
     {% endfor %}
+    <a href="#" name="repeating-remove" class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i> {{ 'Remove' }}</a>
+    <a href="#" name="repeating-add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'Add' }}</a>
+
     {% set help_text = h.scheming_language_text(field.help_text) %}
     {% if help_text %}
-      <div class="info-block mrgn-bttm-md">
+      <div class="info-block mrgn-tp-md">
         {{ help_text }}
       </div>
     {% endif %}
-    <a href="#" name="repeating-remove" class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i> {{ 'Remove' }}</a>
-    <a href="#" name="repeating-add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'Add' }}</a>
 
     <div name="repeating-template" style="display:none">{{ repeating_panel('{repeating-index}', '{repeating-index1}') }}</div>
   </fieldset>
