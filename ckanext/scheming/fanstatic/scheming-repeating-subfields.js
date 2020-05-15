@@ -3,7 +3,7 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
         initialize: function() {
             var container = this,
                 $this = $(this.el),
-                $template = $this.children('template[name="repeating-template"]'),
+                $template = $this.children('div[name="repeating-template"]'),
                 template = $template.html(),
                 $add = $this.children('a[name="repeating-add"]'),
                 $remove = $this.children('a[name="repeating-remove"]');
