@@ -48,7 +48,7 @@
       </div>
     {% endif %}
 
-    <div name="repeating-template" style="display:none">{{ repeating_panel('{repeating-index}', '{repeating-index1}') }}</div>
+    <template name="repeating-template">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</template>
   </fieldset>
 {%- else -%}
   {# A simple field. #}

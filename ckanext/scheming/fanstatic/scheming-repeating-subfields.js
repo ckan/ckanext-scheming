@@ -3,7 +3,7 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
         initialize: function() {
             var container = this,
                 $this = $(this.el),
-                $template = $this.children('div[name="repeating-template"]'),
+                $template = $this.children('template[name="repeating-template"]'),
                 template = $template.html(),
                 $add = $this.children('a[name="repeating-add"]'),
                 $remove = $this.children('a[name="repeating-remove"]');
@@ -13,8 +13,8 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                 var $last = $this.find('.scheming-subfield-group').last(),
                     group = $last.data('groupIndex') + 1,
                     $copy = $(
-                        template.replace(/{repeating-index}/g, group)
-                        .replace(/{repeating-index1}/g, group + 1));
+                        template.replace(/REPEATING-INDEX0/g, group)
+                        .replace(/REPEATING-INDEX1/g, group + 1));
                 $copy.insertAfter($last);
                 e.preventDefault();
             });
