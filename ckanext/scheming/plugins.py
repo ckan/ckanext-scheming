@@ -29,7 +29,8 @@ from ckantoolkit import (
     get_converter,
     navl_validate,
     add_template_directory,
-    add_resource
+    add_resource,
+    missing,
 )
 
 from ckanext.scheming import helpers, validation, logic, loader
@@ -253,7 +254,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         def composite_convert_to(key, data, errors, context):
             unflat = unflatten(data)
             for f in composite_convert_fields:
-                data[(f,)] = json.dumps(unflat[f])
+                data[(f,)] = json.dumps(unflat[f], default=lambda x:None if x == missing else x)
                 convert_to_extras((f,), data, errors, context)
                 del data[(f,)]
 
