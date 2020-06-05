@@ -423,7 +423,23 @@ def scheming_flatten_subfield(subfield, data):
                     subfield_name=sff['field_name']
                 )
                 flat[new_field_name] = record[sff['field_name']]
+    return flat
 
+
+@helper
+def scheming_flatten_errors(subfield, data):
+    flat = dict(data)
+
+    if subfield['field_name'] not in data:
+        return flat
+
+    for i, record in enumerate(data[subfield['field_name']]):
+        prefix = '{field_name}-{index}-'.format(
+            field_name=subfield['field_name'],
+            index=i,
+        )
+        for k in record:
+            flat[prefix + k] = record[k]
     return flat
 
 

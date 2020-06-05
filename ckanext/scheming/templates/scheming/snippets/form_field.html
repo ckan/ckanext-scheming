@@ -15,7 +15,7 @@
           {%- snippet 'scheming/snippets/form_field.html',
             field=sf,
             data=flat,
-            errors=errors,
+            errors=flaterr,
             licenses=licenses,
             entity_type=entity_type,
             object_type=object_type
@@ -31,6 +31,7 @@
 {%- if field.repeating_subfields %}
   {# A complex field with sub-fields, which can optionally be repeatable. #}
   {% set flat = h.scheming_flatten_subfield(field, data) %}
+  {% set flaterr = h.scheming_flatten_errors(field, errors) %}
   <fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields">
     {% set group_data = data[field.field_name] %}
     {% set group_count = group_data|length|default(field.form_blanks, True)|default(1) %}
