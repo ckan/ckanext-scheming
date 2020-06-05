@@ -415,25 +415,6 @@ def scheming_flatten_subfield(subfield, data):
         return flat
 
     for i, record in enumerate(data[subfield['field_name']]):
-        for sff in subfield['repeating_subfields']:
-            if sff['field_name'] in record:
-                new_field_name = '{field_name}-{index}-{subfield_name}'.format(
-                    field_name=subfield['field_name'],
-                    index=i,
-                    subfield_name=sff['field_name']
-                )
-                flat[new_field_name] = record[sff['field_name']]
-    return flat
-
-
-@helper
-def scheming_flatten_errors(subfield, data):
-    flat = dict(data)
-
-    if subfield['field_name'] not in data:
-        return flat
-
-    for i, record in enumerate(data[subfield['field_name']]):
         prefix = '{field_name}-{index}-'.format(
             field_name=subfield['field_name'],
             index=i,
