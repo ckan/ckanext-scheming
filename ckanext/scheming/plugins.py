@@ -14,6 +14,7 @@ try:
 except ImportError:
     watch_file = None
 
+import ckan.model as model
 from ckan.common import c, json
 from ckan.lib.navl.dictization_functions import unflatten, flatten_schema
 try:
@@ -297,6 +298,15 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             'scheming_dataset_schema_list': logic.scheming_dataset_schema_list,
             'scheming_dataset_schema_show': logic.scheming_dataset_schema_show,
         }
+
+    def setup_template_variables(self, context, data_dict):
+        super(SchemingDatasetsPlugin, self).setup_template_variables(
+            context, data_dict)
+        # do not override licenses if they were already added by some
+        # other extension. We just want to make sure, that licenses
+        # are not empty.
+        if not hasattr(c, 'licenses'):
+            c.licenses = [('', '')] + model.Package.get_license_options()
 
 
 def expand_form_composite(data, fieldnames):
