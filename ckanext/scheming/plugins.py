@@ -258,11 +258,11 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             get_validators = _field_validators
 
         for f in scheming_schema['dataset_fields']:
-            schema[f['field_name']] = get_validators(
-                f,
-                scheming_schema,
-                f['field_name'] not in schema
-            )
+            in_schema = f['field_name'] in schema
+            in_data = f['field_name'] in data_dict
+            validators = get_validators(f, scheming_schema, not in_schema)
+            if in_schema and in_data:
+                schema[f['field_name']] = validators
 
         resource_schema = schema['resources']
         for f in scheming_schema.get('resource_fields', []):
