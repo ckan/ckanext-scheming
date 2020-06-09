@@ -33,6 +33,13 @@
   {% set flat = h.scheming_flatten_subfield(field, data) %}
   {% set flaterr = h.scheming_flatten_subfield(field, errors) %}
   <fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields">
+    {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
+    {% if alert_warning %}
+      <section class="alert alert-warning">
+        {{ alert_warning|safe }}
+      </section>
+    {% endif %}
+
     {% set group_data = data[field.field_name] %}
     {% set group_count = group_data|length|default(field.form_blanks, True)|default(1) %}
 
