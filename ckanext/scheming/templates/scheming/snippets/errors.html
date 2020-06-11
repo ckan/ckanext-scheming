@@ -47,7 +47,7 @@
                       {%- if sf.field_name in se_unprocessed -%}
                         <li data-field-label="{{ field.field_name }}-{{ loop.index }}-{{ sf.field_name }}">{{
                           h.scheming_language_text(sf.label) }}:
-                          {{ se_unprocessed[sf.field_name] }}</li>
+                          {{ se_unprocessed[sf.field_name][0] }}</li>
                       {%- endif -%}
                     {%- endfor -%}
                   </ul>

@@ -255,6 +255,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         def composite_convert_to(key, data, errors, context):
             unflat = unflatten(data)
             for f in composite_convert_fields:
+                if f not in unflat:
+                    continue
                 data[(f,)] = json.dumps(unflat[f], default=lambda x:None if x == missing else x)
                 convert_to_extras((f,), data, errors, context)
                 del data[(f,)]
