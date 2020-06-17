@@ -1,6 +1,6 @@
 {% extends "package/snippets/additional_info.html" %}
 
-{%- set exclude_fields = [
+{%- set exclude_fields = exclude_fields | default([
     'id',
     'title',
     'name',
@@ -8,7 +8,7 @@
     'tag_string',
     'license_id',
     'owner_org',
-    ] -%}
+    ]) -%}
 
 {% block package_additional_info %}
   {%- for field in schema.dataset_fields -%}
