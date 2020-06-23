@@ -102,6 +102,11 @@
       "field_name": "format",
       "label": "Format",
       "preset": "resource_format_autocomplete"
+    },
+    {
+      "field_name": "size",
+      "label": "Size",
+      "display_snippet": "size.html"
     }
   ]
 }
