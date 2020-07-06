@@ -47,8 +47,7 @@
         "form_placeholder": "http://example.com/my-data.csv",
         "upload_field": "upload",
         "upload_clear": "clear_upload",
-        "upload_label": "File",
-        "upload_name": "name"
+        "upload_label": "File"
       }
     },
     {
