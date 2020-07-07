@@ -9,6 +9,12 @@
 {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
 
 {% block resource_additional_information_inner %}
+  {% if res.datastore_active %}
+    {% block resource_data_dictionary %}
+      {{ super() }}
+    {% endblock %}
+  {% endif %}
+
   <div class="module-content">
     <h2>{{ _('Additional Information') }}</h2>
     <table class="table table-striped table-bordered table-condensed" data-module="table-toggle-more">

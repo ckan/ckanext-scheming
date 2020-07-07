@@ -169,7 +169,7 @@ Examples:
 #### `organization_type`
 Examples:
 * `"organization_type": "organization"` used for modifying the default organization schema
-* `"organization_type": "organization_type": "publisher"` an example of defining a custom organization type, as seen in the above examples **(CKAN 2.8+ only)**
+* `"organization_type": "publisher"` an example of defining a custom organization type, as seen in the above examples **(CKAN 2.8+ only)**
 
 #### `fields`
 The `dataset_fields` and `resource_fields` schema properties don't exist in group or organization schemas. Instead, they just have a `fields` property.
