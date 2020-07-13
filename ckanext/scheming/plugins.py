@@ -283,7 +283,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 for f in scheming_schema['resource_fields']
                 if 'repeating_subfields' in f
             }
-            if resource_composite:
+            if resource_composite and 'resources' in data_dict:
                 for res in data_dict['resources']:
                     expand_form_composite(res, resource_composite)
             # convert composite package fields to extras so they are stored
@@ -330,9 +330,11 @@ def expand_form_composite(data, fieldnames):
         try:
             try:
                 comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
+                del data[key]
             except IndexError:
                 comp.append({})
                 comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
+                del data[key]
         except (IndexError, ValueError):
             pass  # best-effort only
 
@@ -402,6 +404,28 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
             'scheming_organization_schema_show':
                 logic.scheming_organization_schema_show,
         }
+
+
+class SchemingNerfIndexPlugin(p.SingletonPlugin):
+    """
+    json.dump repeating dataset fields in before_index to prevent failures
+    on unmodified solr schema. It's better to customize your solr schema
+    and before_index processing than to use this plugin.
+    """
+    p.implements(p.IPackageController, inherit=True)
+
+    def before_index(self, data_dict):
+        schemas = SchemingDatasetsPlugin.instance._expanded_schemas
+        if data_dict['type'] not in schemas:
+            return data_dict
+
+        for df in schemas[data_dict['type']]['dataset_fields']:
+            if d['field_name'] not in data_dict:
+                continue
+            if 'repeating_subfields' in df:
+                data_dict[d['field_name']] = json.dumps(data_dict[d['field_name']])
+
+        return data_dict
 
 
 def _load_schemas(schemas, type_field):
@@ -532,8 +556,11 @@ def _field_create_validators(f, schema, convert_extras):
 
     # If this field contains children, we need a special validator to handle
     # them.
-    if 'repeating_subfields' in f or 'simple_subfields' in f:
-        validators = [validation.scheming_subfields(f, schema)] + validators
+    if 'repeating_subfields' in f:
+        validators = {
+            sf['field_name']: _field_create_validators(sf, schema, False)
+            for sf in f['repeating_subfields']
+        }
 
     return validators
 

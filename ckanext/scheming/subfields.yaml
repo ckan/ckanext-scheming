@@ -32,25 +32,9 @@ dataset_fields:
   form_snippet: license.html
   help_text: License definitions and additional information can be found at http://opendefinition.org/
 
-- section_label: Additional Information
-
-- field_name: frequency
-  label: Frequency
-  preset: select
-  choices:
-  - Irregular
-  - Daily
-  - Weekly
-  - Monthly
-  - Quarterly
-  - Semiannual
-  - Annual
-  - Decennial
-  - Other
-
 - field_name: citation
   label: Citation
-  simple_subfields:
+  repeating_subfields:
   - field_name: originator
     label: Originator
     preset: multiple_text
@@ -65,7 +49,6 @@ dataset_fields:
 
 - field_name: contact_address
   label: Contact Address
-  form_blanks: 1
   repeating_subfields:
   - field_name: address
     label: Address
@@ -85,8 +68,6 @@ resource_fields:
   label: URL
   preset: resource_url_upload
 
-- section_label: Info
-
 - field_name: name
   label: Title
   form_placeholder: Descriptive name of the resource.
@@ -96,8 +77,37 @@ resource_fields:
   form_snippet: markdown.html
   form_placeholder: Summary explanation of file contents, purpose, origination, methods and usage guidance.
 
-# end section without starting a new one
-- section_label: null
+- field_name: schedule
+  label: Schedule
+  repeating_subfields:
+  - field_name: impact
+    label: Impact
+    preset: select
+    choices:
+    - label: All
+      value: A
+    - label: Partial
+      value: P
+    - label: Corrections
+      value: C
+  - field_name: frequency
+    label: Frequency
+    preset: select
+    choices:
+    - label: Daily
+      value: 1d
+    - label: Weekly
+      value: 7d
+    - label: Monthly
+      value: 1m
+    - label: Quarterly
+      value: 3m
+    - label: Semiannual
+      value: 6m
+    - label: Annual
+      value: 1y
+    - label: Decennial
+      value: 10y
 
 - field_name: format
   label: Format
