@@ -28,7 +28,7 @@ fi
 
 if [ -f requirement-setuptools.txt ]
 then
-    pip install -r requirement-setuptools.txt
+    #pip install -r requirement-setuptools.txt
 fi
 python setup.py develop
 
