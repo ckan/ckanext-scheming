@@ -24,6 +24,7 @@ else
     CKAN_TAG=$(git tag | grep ^ckan-$CKANVERSION | sort --version-sort | tail -n 1)
     git checkout $CKAN_TAG
     echo "CKAN version: ${CKAN_TAG#ckan-}"
+    pip install -r requirement-setuptools.txt
 fi
 
 if [ -f requirement-setuptools.txt ] && [ $CKANVERSION \< '2.9' ]
