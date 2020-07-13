@@ -26,9 +26,9 @@ else
     echo "CKAN version: ${CKAN_TAG#ckan-}"
 fi
 
-if [ -f requirement-setuptools.txt ]
+if [ -f requirement-setuptools.txt -a $CKANVERSION \< '2.9' ]
 then
-    echo #pip install -r requirement-setuptools.txt
+    pip install -r requirement-setuptools.txt
 fi
 python setup.py develop
 
