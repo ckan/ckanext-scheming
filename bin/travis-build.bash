@@ -35,9 +35,9 @@ python setup.py develop
 
 if [ -f requirements-py2.txt ] && [ $PYTHONVERSION = 2 ]
 then
-    grep -v psycopg2 < requirements-py2.txt > reqs.txt
+    cat requirements-py2.txt > reqs.txt
 else
-    grep -v psycopg2 < requirements.txt > reqs.txt
+    cat requirements.txt > reqs.txt
 fi
 pip install -r reqs.txt
 pip install -r dev-requirements.txt
