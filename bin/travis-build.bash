@@ -44,7 +44,7 @@ pip install -r reqs.txt
 pip install -r dev-requirements.txt
 if [ $CKANVERSION \> '2.9' ]
 then
-    pip install factory-boy==2.12.0
+    pip install -U `grep factory-boy dev-requirements.txt`  # need this one upgrade from dev-requirements.txt
 fi
 cd -
 
