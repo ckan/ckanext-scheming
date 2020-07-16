@@ -39,7 +39,6 @@ then
 else
     grep -v psycopg2 < requirements.txt > reqs.txt
 fi
-pip install psycopg2==2.7.7  # workaround travis 10 psycopg2 incompatibility
 pip install -r reqs.txt
 pip install -r dev-requirements.txt
 if [ $CKANVERSION \> '2.9' ] || [ $CKANVERSION == 'master' ]
