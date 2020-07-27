@@ -228,13 +228,22 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         scheming_schema = self._expanded_schemas[t]
 
+        before = scheming_schema.get('before_validators')
+        after = scheming_schema.get('after_validators')
         if action_type == 'show':
             get_validators = _field_output_validators
+            before = after = None
         elif action_type == 'create':
             get_validators = _field_create_validators
         else:
             get_validators = _field_validators
 
+        if before:
+            schema['__before'] = validators_from_string(
+                before, None, scheming_schema)
+        if after:
+            schema['__after'] = validators_from_string(
+                after, None, scheming_schema)
         fg = (
             (scheming_schema['dataset_fields'], schema, True),
             (scheming_schema['resource_fields'], schema['resources'], False)
@@ -288,7 +297,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     expand_form_composite(res, resource_composite)
             # convert composite package fields to extras so they are stored
             if composite_convert_fields:
-                schema = dict(schema, __after=[composite_convert_to])
+                schema = dict(
+                    schema,
+                    __after=schema.get('__after', []) + [composite_convert_to])
 
         return navl_validate(data_dict, schema, context)
 
