@@ -1,0 +1,179 @@
+version: 2
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test_ckan_2_6
+      - test_ckan_2_7
+      - test_ckan_2_8
+      - test_ckan_2_9_python_2
+      - test_ckan_2_9_python_3
+      - test_ckan_master
+
+jobs:
+  test_ckan_2_6:
+    docker:
+      - image: python:2-stretch
+        <<: *ckan_env
+      - <<: *pg_image
+    steps:
+      - checkout
+      - environment:
+          CKAN_TAG: ckan-2.6.9
+        <<: *install_deps
+      - <<: *init_environment
+      - <<: *run_tests
+      - store_test_results:
+          path: ~/junit
+
+  test_ckan_2_7:
+    docker:
+      - image: python:2-stretch
+        <<: *ckan_env
+      - <<: *pg_image
+    steps:
+      - checkout
+      - environment:
+          CKAN_TAG: ckan-2.7.8
+        <<: *install_deps
+      - <<: *init_environment
+      - <<: *run_tests
+      - store_test_results:
+          path: ~/junit
+
+  test_ckan_2_8:
+    docker:
+      - image: python:2-stretch
+        <<: *ckan_env
+      - <<: *pg_image
+      - <<: *redis_image
+    steps:
+      - checkout
+      - environment:
+          CKAN_TAG: ckan-2.8.5
+        <<: *install_deps
+      - <<: *init_environment
+      - <<: *run_tests
+      - store_test_results:
+          path: ~/junit
+
+  test_ckan_2_9_python_2:
+    docker:
+      - image: python:2-stretch
+        <<: *ckan_env
+      - <<: *pg_image
+      - <<: *redis_image
+    steps:
+      - checkout
+      - environment:
+          CKAN_TAG: ckan-2.9.0
+        <<: *install_deps
+      - <<: *init_environment
+      - <<: *run_tests
+      - store_test_results:
+          path: ~/junit
+
+  test_ckan_2_9_python_3:
+    docker:
+      - image: python:3-stretch
+        <<: *ckan_env
+      - <<: *pg_image
+      - <<: *redis_image
+    steps:
+      - checkout
+      - environment:
+          CKAN_TAG: ckan-2.9.0
+        <<: *install_deps
+      - <<: *init_environment
+      - <<: *run_tests
+      - store_test_results:
+          path: ~/junit
+
+  test_ckan_master:
+    docker:
+      - image: python:3-stretch
+        <<: *ckan_env
+      - <<: *pg_image
+      - <<: *redis_image
+    steps:
+      - checkout
+      - environment:
+          CKAN_TAG: master
+        <<: *install_deps
+      - <<: *init_environment
+      - <<: *run_tests
+      - store_test_results:
+          path: ~/junit
+      - run: coveralls
+
+defaults:
+  install_deps: &install_deps
+    run: |
+      echo "Installing the packages that CKAN requires…"
+      apt update -qq
+      apt install -y postgresql-client solr-jetty openjdk-8-jdk
+
+      echo "Cloning CKAN…"
+      git clone https://github.com/ckan/ckan
+      cd ckan
+      git checkout ${CKAN_TAG}
+
+      echo "Installing CKAN Python dependencies…"
+      pip install -r requirement-setuptools.txt
+      if [ -f requirements-py2.txt ] && python -c 'import sys;exit(sys.version_info<(3,))' then
+        pip install -r requirements-py2.txt
+      else
+        pip install -r requirements.txt
+      fi
+      pip install -r dev-requirements.txt
+      python setup.py develop
+      pip check
+
+      echo "Installing ckanext-scheming dependencies…"
+      cd ..
+      pip install -r requirements.txt
+      pip install -r test-requirements.txt
+      python setup.py develop
+
+  init_environemnt: &init_environment
+    run: |
+      echo "Preparing SOLR…"
+      cp ~/project/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
+      service jetty9 restart || true  # erroring out but does seem to work
+
+      echo "Creating CKAN DB…"
+      psql --host=ckan-postgres --username=ckan --command="CREATE USER ${CKAN_POSTGRES_USER} WITH PASSWORD '${CKAN_POSTGRES_PWD}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+      createdb --encoding=utf-8 --host=ckan-postgres --username=ckan --owner=${CKAN_POSTGRES_USER} ${CKAN_POSTGRES_DB}
+
+      # Database Initialization
+      ckan -c ckan/test-core-circle-ci.ini db init || paster db init -c ckan/test-core-circle-ci.ini
+
+  run_tests: &run_tests
+    run: |
+      mkdir -p ~/junit
+      pytest --ckan-ini=test.ini --cov=ckanext.scheming ckanext/scheming/tests
+      pytest --ckan-ini=test_subclass.ini ckanext/scheming/tests/test_dataset_display.py ckanext/scheming/tests/test_form.py::TestDatasetFormNew ckanext/scheming/tests/test_dataset_logic.py
+
+  ckan_env: &ckan_env
+    environment:
+      CKAN_DATASTORE_POSTGRES_DB: datastore_test
+      CKAN_DATASTORE_POSTGRES_READ_USER: datastore_read
+      CKAN_DATASTORE_POSTGRES_READ_PWD: pass
+      CKAN_DATASTORE_POSTGRES_WRITE_USER: datastore_write
+      CKAN_DATASTORE_POSTGRES_WRITE_PWD: pass
+      CKAN_POSTGRES_DB: ckan_test
+      CKAN_POSTGRES_USER: ckan_default
+      CKAN_POSTGRES_PWD: pass
+      PGPASSWORD: ckan
+      PYTEST_COMMON_OPTIONS: -v --ckan-ini=test-core-circle-ci.ini --cov=ckanext --junitxml=/root/junit/junit.xml
+
+  pg_image: &pg_image
+    image: postgres:10
+    environment:
+      POSTGRES_USER: ckan
+      POSTGRES_PASSWORD: ckan
+    name: ckan-postgres
+
+  redis_image: &redis_image
+    image: redis:3
+    name: ckan-redis
