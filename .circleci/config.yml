@@ -23,10 +23,12 @@ defaults:
       git checkout ${CKAN_TAG}
 
       echo "Installing CKAN Python dependencies…"
-      pip install -r requirement-setuptools.txt
-      if [ -f requirements-py2.txt ] && python -c 'import sys;exit(sys.version_info<(3,))'
-        then pip install -r requirements.txt
-        else pip install -r requirements-py2.txt
+      if [ -f requirement-setuptools.txt ]
+        then pip install -r requirement-setuptools.txt
+      fi
+      if [ -f requirements-py2.txt ] && python -c 'import sys;exit(sys.version_info>=(3,))'
+        then pip install -r requirements-py2.txt
+        else pip install -r requirements.txt
       fi
       pip install -r dev-requirements.txt
       python setup.py develop
