@@ -185,6 +185,9 @@ class _SchemingMixin(object):
     def i18n_domain(self):
         return 'ckanext-scheming'
 
+    def i18n_directory(self):
+        return os.path.join(os.path.dirname(ckanext.scheming.__file__), 'i18n')
+
 
 class _GroupOrganizationMixin(object):
     """
