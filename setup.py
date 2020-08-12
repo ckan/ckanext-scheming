@@ -1,16 +1,22 @@
 from setuptools import setup, find_packages
 
-version = '1.1.0'
+version = '2.0.0'
 
 setup(
     name='ckanext-scheming',
     version=version,
     description="Easy, sharable custom CKAN schemas",
     long_description="""
+    This CKAN extension provides a way to configure and share metadata schemas using a
+    YAML or JSON schema description. Custom validation and template snippets for editing
+    and display are supported.
+
+    Originally developed for the Government of Canada's custom metadata schema, part of
+    https://github.com/open-data/ckanext-canada
     """,
     classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords='',
-    author='Government of Canada',
+    author='Ian Ward',
     author_email='ian@excess.org',
     url='https://github.com/ckan/ckanext-scheming',
     license='MIT',
@@ -27,8 +33,6 @@ setup(
     scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
     scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
 
-    [paste.paster_command]
-    scheming=ckanext.scheming.commands:SchemingCommand
     """,
     message_extractors={
         'ckanext': [

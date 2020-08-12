@@ -1,5 +1,10 @@
 {% import 'macros/form.html' as form %}
-{%- if not c.group_type -%}
+{% if group_type is not defined %}
+    {% set group_type = c.group_type %}
+{% endif %}
+
+
+{%- if not group_type -%}
     <p>
         group_type not passed to template. your version of CKAN
         might not be compatible with ckanext-scheming
@@ -11,12 +16,12 @@
     {{ form.errors(error_summary) }}
   {% endblock %}
 
-  {%- set schema = h.scheming_get_organization_schema(c.group_type) -%}
+  {%- set schema = h.scheming_get_organization_schema(group_type) -%}
     {%- for field in schema['fields'] -%}
         {%- if field.form_snippet is not none -%}
           {%- snippet 'scheming/snippets/form_field.html',
           field=field, data=data, errors=errors, licenses=licenses,
-          entity_type='organization', object_type=c.group_type -%}
+          entity_type='organization', object_type=group_type -%}
         {%- endif -%}
     {%- endfor -%}
 
