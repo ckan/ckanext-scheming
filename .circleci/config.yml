@@ -12,36 +12,38 @@ workflows:
 
 jobs:
   test_ckan_2_6:
+    environment:
+      CKAN_TAG: ckan-2.6.9
     docker:
       - image: python:2-stretch
         <<: *ckan_env
       - <<: *pg_image
     steps:
       - checkout
-      - environment:
-          CKAN_TAG: ckan-2.6.9
-        <<: *install_deps
+      - <<: *install_deps
       - <<: *init_environment
       - <<: *run_tests
       - store_test_results:
           path: ~/junit
 
   test_ckan_2_7:
+    environment:
+      CKAN_TAG: ckan-2.7.8
     docker:
       - image: python:2-stretch
         <<: *ckan_env
       - <<: *pg_image
     steps:
       - checkout
-      - environment:
-          CKAN_TAG: ckan-2.7.8
-        <<: *install_deps
+      - <<: *install_deps
       - <<: *init_environment
       - <<: *run_tests
       - store_test_results:
           path: ~/junit
 
   test_ckan_2_8:
+    environment:
+      CKAN_TAG: ckan-2.8.5
     docker:
       - image: python:2-stretch
         <<: *ckan_env
@@ -49,15 +51,15 @@ jobs:
       - <<: *redis_image
     steps:
       - checkout
-      - environment:
-          CKAN_TAG: ckan-2.8.5
-        <<: *install_deps
+      - <<: *install_deps
       - <<: *init_environment
       - <<: *run_tests
       - store_test_results:
           path: ~/junit
 
   test_ckan_2_9_python_2:
+    environment:
+      CKAN_TAG: ckan-2.9.0
     docker:
       - image: python:2-stretch
         <<: *ckan_env
@@ -65,15 +67,15 @@ jobs:
       - <<: *redis_image
     steps:
       - checkout
-      - environment:
-          CKAN_TAG: ckan-2.9.0
-        <<: *install_deps
+      - <<: *install_deps
       - <<: *init_environment
       - <<: *run_tests
       - store_test_results:
           path: ~/junit
 
   test_ckan_2_9_python_3:
+    environment:
+      CKAN_TAG: ckan-2.9.0
     docker:
       - image: python:3-stretch
         <<: *ckan_env
@@ -81,15 +83,15 @@ jobs:
       - <<: *redis_image
     steps:
       - checkout
-      - environment:
-          CKAN_TAG: ckan-2.9.0
-        <<: *install_deps
+      - <<: *install_deps
       - <<: *init_environment
       - <<: *run_tests
       - store_test_results:
           path: ~/junit
 
   test_ckan_master:
+    environment:
+      CKAN_TAG: master
     docker:
       - image: python:3-stretch
         <<: *ckan_env
@@ -97,9 +99,7 @@ jobs:
       - <<: *redis_image
     steps:
       - checkout
-      - environment:
-          CKAN_TAG: master
-        <<: *install_deps
+      - <<: *install_deps
       - <<: *init_environment
       - <<: *run_tests
       - store_test_results:
