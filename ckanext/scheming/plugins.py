@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import sys
 
 import os
 import inspect
@@ -186,8 +187,8 @@ class _SchemingMixin(object):
         return 'ckanext-scheming'
 
     def i18n_directory(self):
-        return os.path.join(os.path.dirname(ckanext.scheming.__file__), 'i18n')
-
+        module = sys.modules["ckanext.scheming.plugins"]
+        return os.path.join(os.path.dirname(module.__file__), 'i18n')
 
 class _GroupOrganizationMixin(object):
     """
