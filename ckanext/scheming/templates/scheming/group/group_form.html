@@ -15,11 +15,7 @@
         {%- if field.form_snippet is not none -%}
           {%- snippet 'scheming/snippets/form_field.html',
           field=field, data=data, errors=errors, licenses=licenses,
-<<<<<<< HEAD
-          entity_type='group', object_type=c.group_type -%}
-=======
           entity_type='group', object_type=group_type -%}
->>>>>>> aa53d64369dc7304f525da8ec5cb11bbf445b24f
         {%- endif -%}
     {%- endfor -%}
 
