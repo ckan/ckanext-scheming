@@ -21,6 +21,7 @@
             object_type=object_type
           -%}
         {% endfor %}
+        <a href="javascript:;" id="remove{{ index }}" name="repeating-remove" class="btn btn-danger" data-toggle="modal" data-target="#mid-screen"><i class="fa fa-minus" aria-hidden="true"></i> {{ _('Remove') }}</a>
       </div>
     </div>
   </div>
@@ -46,7 +47,6 @@
     {% for index in range(group_count) %}
       {{ repeating_panel(index, index + 1) }}
     {% endfor %}
-    <a href="javascript:;" name="repeating-remove" class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i> {{ _('Remove') }}</a>
     <a href="javascript:;" name="repeating-add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}</a>
 
     {% set help_text = h.scheming_language_text(field.help_text) %}
@@ -58,6 +58,25 @@
 
     <div name="repeating-template" style="display:none">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</div>
   </fieldset>
+  <div class="modal" id="mid-screen" tabindex="-1" role="dialog" aria-labelledby="mid-screenLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="mid-screenLabel">Removal Confirmation</h5>
+        </div>
+        <div class="modal-body">
+          <p id="statusText"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button name="confirmRemoval" id="confirmRemoval" type="button" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<link rel="stylesheet" href="/bootstrap.min.css">
+<script type='text/javascript' src='/jquery.min.js'></script>
+<script type='text/javascript' src='/bootstrap.min.js'></script>
 {%- else -%}
   {# A simple field. #}
   {%- set form_snippet = field.form_snippet|default('text.html') -%}

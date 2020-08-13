@@ -6,7 +6,7 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                 $template = $this.children('div[name="repeating-template"]'),
                 template = $template.html(),
                 $add = $this.children('a[name="repeating-add"]'),
-                $remove = $this.children('a[name="repeating-remove"]');
+                $remove = $this.find('a[name="repeating-remove"]');
             $template.remove();
 
             $add.on('click', function(e) {
@@ -23,10 +23,17 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
 
             $remove.on('click', function(e) {
                 var $groups = $this.find('.scheming-subfield-group'),
-                    $last = $groups.last(),
+                    $curr = $(this).closest('.scheming-subfield-group'),
+                    index = $curr.data('groupIndex'),
+                    field = $curr.data('field'),
                     count = $groups.length;
                 if(count !== 1) {
-                    $last.remove();
+                    document.getElementById("statusText").innerHTML = "Are you sure you want to remove "+field+" "+(index+1)+"?";
+                    $("#confirmRemoval").on('click', function(e) {
+                        $curr.remove();
+                    });
+                }else{
+                    document.getElementById("statusText").innerHTML = "Can not remove, at least one "+field+" must be present";
                 }
                 e.preventDefault();
             });
