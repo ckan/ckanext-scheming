@@ -29,19 +29,13 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                 document.getElementById("statusText1").innerHTML = (index+1)+"?";
                 document.getElementById("statusText0").style.display = 'inline';
                 document.getElementById("statusText1").style.display = 'inline';
-                document.getElementById("statusText2").style.display = 'none';
-                //if(count !== 1){
-                    $("#confirmRemoval").on('click', function(e) {
-                        if(count ==1){
-                            $add.click();
-                            count +=1;
-                        }
-                        $curr.remove();
-                    });
-                // }else{
-                //     $add.click();
-                //     $curr.remove();
-                // }
+                $("#confirmRemoval").on('click', function(e) {
+                    if(count ==1){
+                        $add.click();
+                        count +=1;
+                    }
+                    $curr.remove();
+                });
 
                 e.preventDefault();
             });
