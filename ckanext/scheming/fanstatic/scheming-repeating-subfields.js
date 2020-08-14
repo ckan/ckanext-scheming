@@ -25,21 +25,24 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                 var $groups = $this.find('.scheming-subfield-group'),
                     $curr = $(this).closest('.scheming-subfield-group'),
                     index = $curr.data('groupIndex'),
-                    field = $curr.data('field'),
                     count = $groups.length;
-                if(count !== 1) {
-                    document.getElementById("statusText1").innerHTML = (index+1)+"?";
-                    document.getElementById("statusText0").style.display = 'inline';
-                    document.getElementById("statusText1").style.display = 'inline';
-                    document.getElementById("statusText2").style.display = 'none';
+                document.getElementById("statusText1").innerHTML = (index+1)+"?";
+                document.getElementById("statusText0").style.display = 'inline';
+                document.getElementById("statusText1").style.display = 'inline';
+                document.getElementById("statusText2").style.display = 'none';
+                //if(count !== 1){
                     $("#confirmRemoval").on('click', function(e) {
+                        if(count ==1){
+                            $add.click();
+                            count +=1;
+                        }
                         $curr.remove();
                     });
-                }else{
-                    document.getElementById("statusText0").style.display = 'none';
-                    document.getElementById("statusText1").style.display = 'none';
-                    document.getElementById("statusText2").style.display = 'inline';
-                }
+                // }else{
+                //     $add.click();
+                //     $curr.remove();
+                // }
+
                 e.preventDefault();
             });
         }
