@@ -28,12 +28,17 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                     field = $curr.data('field'),
                     count = $groups.length;
                 if(count !== 1) {
-                    document.getElementById("statusText").innerHTML = "Are you sure you want to remove "+field+" "+(index+1)+"?";
+                    document.getElementById("statusText1").innerHTML = (index+1)+"?";
+                    document.getElementById("statusText0").style.display = 'inline';
+                    document.getElementById("statusText1").style.display = 'inline';
+                    document.getElementById("statusText2").style.display = 'none';
                     $("#confirmRemoval").on('click', function(e) {
                         $curr.remove();
                     });
                 }else{
-                    document.getElementById("statusText").innerHTML = "Can not remove, at least one "+field+" must be present";
+                    document.getElementById("statusText0").style.display = 'none';
+                    document.getElementById("statusText1").style.display = 'none';
+                    document.getElementById("statusText2").style.display = 'inline';
                 }
                 e.preventDefault();
             });
