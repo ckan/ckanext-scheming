@@ -5,14 +5,9 @@
 
   {% for field_data in fields %}
     <div class="panel panel-default">
-      {% if loop.index == fields|length %}
         <header class="panel-heading">
           {{ h.scheming_language_text(field.label) }} {{ loop.index }}
         </header>
-      {%- else -%}
-        <details>
-          <summary class="panel-heading">{{ h.scheming_language_text(field.label) }} {{ loop.index }}</summary>
-      {%- endif -%}
       <div class="panel-body">
         <dl class="scheming-subfield-list">
           {% for subfield in field.repeating_subfields %}
@@ -30,9 +25,6 @@
           {% endfor %}
         </dl>
       </div>
-      {% if loop.index != fields|length %}
-        </details>
-      {%- endif -%}
     </div>
   {% endfor %}
 {% else %}
