@@ -3,6 +3,7 @@
 {%- if field.repeating_subfields %}
   {% set fields = data[field.field_name] %}
 
+{% block subfield_display %}
   {% for field_data in fields %}
     <div class="panel panel-default">
       <header class="panel-heading">
@@ -27,6 +28,7 @@
       </div>
     </div>
   {% endfor %}
+{% endblock %}
 {% else %}
   {%- set display_snippet = field.display_snippet -%}
 
