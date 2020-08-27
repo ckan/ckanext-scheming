@@ -1,3 +1,4 @@
+{% resource 'scheming/scheming-remove-subfields.js' %}
 {% resource 'scheming/scheming-repeating-subfields.js' %}
 
 {% macro repeating_panel(index, index1) %}
@@ -21,9 +22,26 @@
             object_type=object_type
           -%}
         {% endfor %}
-          {% block removal_popup_button %}
-            <a href="javascript:;" id="remove{{ index }}" name="repeating-remove" class="btn btn-danger" data-toggle="modal" data-target="#mid-screen"><i class="fa fa-minus" aria-hidden="true"></i> {{ _('Remove') }}</a>
-          {% endblock %}
+        {% block removal_popup%}
+          {% set locale = h.dump_json({'content': _('Are you sure you want to delete these fields?') }) %}
+          {% set template = [
+            '<div class="modal" id="mid-screen" tabindex="-1" role="dialog" aria-labelledby="mid-screenLabel" aria-hidden="true">',
+              '<div class="modal-dialog" role="document">',
+                '<div class="modal-content">',
+                  '<div class="modal-header">',
+                    '<h3 class="modal-title"></h3>',
+                  '</div>',
+                  '<div class="modal-body"></div>',
+                  '<div class="modal-footer">',
+                    '<button class="btn btn-cancel"></button>',
+                    '<button class="btn btn-primary"></button>',
+                  '</div>',
+                '</div>',
+              '</div>',
+            '</div>'
+            ]|join('\n') %}
+          <a class="btn btn-danger pull-left" name="repeating-remove" href="javascript:;" data-module="scheming-remove-subfields" data-module-i18n="{{ locale }}" data-module-template="{{ template }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+        {% endblock %}
       </div>
     </div>
   </div>
@@ -60,25 +78,6 @@
 
     <div name="repeating-template" style="display:none">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</div>
   </fieldset>
-
-{% block removal_popup %}
-  <div class="modal" id="mid-screen" tabindex="-1" role="dialog" aria-labelledby="mid-screenLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="mid-screenLabel">{{ _('Confirmation of Removal') }}</h5>
-        </div>
-        <div class="modal-body" style="text-align:center;">
-            <p id="statusText0">{{ _('Are you sure you want to remove') }} {{ h.scheming_language_text(field.label) }} </p><p id="statusText1"></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Cancel') }}</button>
-          <button name="confirmRemoval" id="confirmRemoval" type="button" class="btn btn-primary" data-dismiss="modal">{{ _('Confirm') }}</button>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endblock %}
 {%- else -%}
   {# A simple field. #}
   {%- set form_snippet = field.form_snippet|default('text.html') -%}
