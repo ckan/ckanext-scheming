@@ -6,9 +6,9 @@
 {% block subfield_display %}
   {% for field_data in fields %}
     <div class="panel panel-default">
-      <header class="panel-heading">
-        {{ h.scheming_language_text(field.label) }} {{ loop.index }}
-      </header>
+        <header class="panel-heading">
+          {{ h.scheming_language_text(field.label) }} {{ loop.index }}
+        </header>
       <div class="panel-body">
         <dl class="scheming-subfield-list">
           {% for subfield in field.repeating_subfields %}

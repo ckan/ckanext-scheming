@@ -1,3 +1,4 @@
+{% resource 'scheming/scheming-remove-subfields.js' %}
 {% resource 'scheming/scheming-repeating-subfields.js' %}
 
 {% macro repeating_panel(index, index1) %}
@@ -21,6 +22,26 @@
             object_type=object_type
           -%}
         {% endfor %}
+        {% block removal_popup%}
+          {% set locale = h.dump_json({'content': _('Are you sure you want to delete these fields?') }) %}
+          {% set template = [
+            '<div class="modal" id="mid-screen" tabindex="-1" role="dialog" aria-labelledby="mid-screenLabel" aria-hidden="true">',
+              '<div class="modal-dialog" role="document">',
+                '<div class="modal-content">',
+                  '<div class="modal-header">',
+                    '<h3 class="modal-title"></h3>',
+                  '</div>',
+                  '<div class="modal-body"></div>',
+                  '<div class="modal-footer">',
+                    '<button class="btn btn-cancel"></button>',
+                    '<button class="btn btn-primary"></button>',
+                  '</div>',
+                '</div>',
+              '</div>',
+            '</div>'
+            ]|join('\n') %}
+          <a class="btn btn-danger pull-left" name="repeating-remove" href="javascript:;" data-module="scheming-remove-subfields" data-module-i18n="{{ locale }}" data-module-template="{{ template }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+        {% endblock %}
       </div>
     </div>
   </div>
@@ -46,7 +67,6 @@
     {% for index in range(group_count) %}
       {{ repeating_panel(index, index + 1) }}
     {% endfor %}
-    <a href="javascript:;" name="repeating-remove" class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i> {{ _('Remove') }}</a>
     <a href="javascript:;" name="repeating-add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}</a>
 
     {% set help_text = h.scheming_language_text(field.help_text) %}
