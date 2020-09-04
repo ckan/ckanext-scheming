@@ -375,7 +375,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def about_template(self):
         return 'scheming/group/about.html'
 
-    def group_form(group_type=None):
+    def group_form(self, group_type=None):
         return 'scheming/group/group_form.html'
 
     def get_actions(self):
@@ -405,7 +405,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     def about_template(self):
         return 'scheming/organization/about.html'
 
-    def group_form(group_type=None):
+    def group_form(self, group_type=None):
         return 'scheming/organization/group_form.html'
 
     # use the correct controller (see ckan/ckan#2771)
