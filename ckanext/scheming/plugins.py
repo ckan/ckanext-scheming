@@ -331,13 +331,17 @@ def expand_form_composite(data, fieldnames):
     fieldnames -= set(data)
     if not fieldnames:
         return
+    indexes = {}
     for key in sorted(data):
         if '-' not in key:
             continue
         parts = key.split('-')
         if parts[0] not in fieldnames:
             continue
+        if parts[1] not in indexes:
+            indexes[parts[1]] = len(indexes)
         comp = data.setdefault(parts[0], [])
+        parts[1] = indexes[parts[1]]
         try:
             try:
                 comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
