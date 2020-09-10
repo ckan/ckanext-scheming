@@ -75,7 +75,7 @@ fi
 cd -
 
 echo "Installing ckanext-harvest and its requirements..."
-pip install -r pip-requirements.txt
+pip install -r requirements.txt
 pip install -r dev-requirements.txt
 
 python setup.py develop
