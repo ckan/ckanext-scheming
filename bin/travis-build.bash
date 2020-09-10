@@ -1,18 +1,16 @@
-    #nex!/bin/bash
+#!/bin/bash
 set -e
 
 echo "This is travis-build.bash..."
-
-echo "Installing the packages that CKAN requires..."
-sudo apt-get update -qq
-sudo apt-get install solr-jetty
-
-if python -c 'import sys;exit(sys.version_info < (3,))'
+echo "Targetting CKAN $CKANVERSION on Python $TRAVIS_PYTHON_VERSION"
+if [ $CKANVERSION == 'master' ]
 then
-    PYTHONVERSION=3
+    export CKAN_MINOR_VERSION=100
 else
-    PYTHONVERSION=2
+    export CKAN_MINOR_VERSION=${CKANVERSION##*.}
 fi
+
+export PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION%.*}
 
 echo "Installing CKAN and its Python dependencies..."
 git clone https://github.com/ckan/ckan
@@ -26,52 +24,64 @@ else
     echo "CKAN version: ${CKAN_TAG#ckan-}"
 fi
 
+echo "Installing the recommended setuptools requirement"
 if [ -f requirement-setuptools.txt ]
 then
     pip install -r requirement-setuptools.txt
 fi
+
 python setup.py develop
 
-if [ -f requirements-py2.txt ] && [ $PYTHONVERSION = 2 ]
+if (( $CKAN_MINOR_VERSION >= 9 )) && (( $PYTHON_MAJOR_VERSION == 2 ))
 then
-    grep -v psycopg2 < requirements-py2.txt > reqs.txt
+    pip install -r requirements-py2.txt
 else
-    grep -v psycopg2 < requirements.txt > reqs.txt
+    pip install -r requirements.txt
 fi
-pip install psycopg2==2.7.7  # workaround travis 10 psycopg2 incompatibility
-pip install -r reqs.txt
+
 pip install -r dev-requirements.txt
 cd -
 
 echo "Setting up Solr..."
-printf "NO_START=0\nJETTY_HOST=127.0.0.1\nJETTY_PORT=8983\nJAVA_HOME=$JAVA_HOME" | sudo tee /etc/default/jetty
-sudo cp ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
-sudo service jetty restart
+docker run --name ckan-solr -p 8983:8983 -d openknowledge/ckan-solr-dev:$CKANVERSION
+
+echo "Setting up Postgres..."
+export PG_VERSION="$(pg_lsclusters | grep online | awk '{print $1}')"
+export PG_PORT="$(pg_lsclusters | grep online | awk '{print $3}')"
+echo "Using Postgres $PGVERSION on port $PG_PORT"
+if [ $PG_PORT != "5432" ]
+then
+	echo "Using non-standard Postgres port, updating configuration..."
+	sed -i -e "s/postgresql:\/\/ckan_default:pass@localhost\/ckan_test/postgresql:\/\/ckan_default:pass@localhost:$PG_PORT\/ckan_test/" ckan/test-core.ini
+	sed -i -e "s/postgresql:\/\/ckan_default:pass@localhost\/datastore_test/postgresql:\/\/ckan_default:pass@localhost:$PG_PORT\/datastore_test/" ckan/test-core.ini
+	sed -i -e "s/postgresql:\/\/datastore_default:pass@localhost\/datastore_test/postgresql:\/\/datastore_default:pass@localhost:$PG_PORT\/datastore_test/" ckan/test-core.ini
+fi
+
 
 echo "Creating the PostgreSQL user and database..."
-sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
-sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
+sudo -u postgres psql -p $PG_PORT -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
+sudo -u postgres psql -p $PG_PORT -c "CREATE USER datastore_default WITH PASSWORD 'pass';"
+sudo -u postgres psql -p $PG_PORT -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
+sudo -u postgres psql -p $PG_PORT -c 'CREATE DATABASE datastore_test WITH OWNER ckan_default;'
 
 echo "Initialising the database..."
 cd ckan
-if [ $CKANVERSION \< '2.9' ]
+if (( $CKAN_MINOR_VERSION >= 9 ))
 then
-    paster db init -c test-core.ini
-else
     ckan -c test-core.ini db init
+else
+    paster db init -c test-core.ini
 fi
 cd -
 
-echo "Installing ckanext-scheming and its requirements..."
-pip install -r requirements.txt
-pip install -r test-requirements.txt
+echo "Installing ckanext-harvest and its requirements..."
+pip install -r pip-requirements.txt
+pip install -r dev-requirements.txt
+
 python setup.py develop
 
-echo "Updating solr_url to single core"
-sed -i -e 's/use = config:..\/ckan\/test-core.ini/use = config:..\/ckan\/test-core.ini\nsolr_url = http:\/\/127.0.0.1:8983\/solr/' test*.ini
 
-
-echo "Moving test.ini into a subdir..."
+echo "Moving test.ini into a subdir... (because the core ini file is referenced as ../ckan/test-core.ini)"
 mkdir subdir
 mv test.ini subdir
 mv test_subclass.ini subdir
