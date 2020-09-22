@@ -462,7 +462,7 @@ def _field_output_validators_group(f, schema, convert_extras):
 
 
 def _field_output_validators(f, schema, convert_extras,
-                             convert_from_extras_type=convert_from_extras):
+                             convert_from_extras_type=validation.convert_from_extras_nested):
     """
     Return the output validators for a scheming field f
     """

@@ -499,6 +499,32 @@ def convert_from_extras_group(key, data, errors, context):
     remove_from_extras(data, data_key[1])
 
 
+def convert_from_extras_nested(key, data, errors, context):
+    """Core converting from extras logic is failing for resource metadata changes.
+       This needs further investigation. """
+
+    def remove_from_extras(data, key):
+        to_remove = []
+        for data_key, data_value in data.iteritems():
+            if (data_key[0] == 'extras'
+                    and data_key[1] == key):
+                to_remove.append(data_key)
+        for item in to_remove:
+            del data[item]
+
+    for data_key, data_value in data.iteritems():
+        if (data_key[0] == 'extras'
+            and data_key[-1] == 'key'
+            and data_value == key[-1]
+                and key[0] != 'resources'):
+            data[key] = data[('extras', data_key[1], 'value')]
+            break
+    else:
+        return
+    remove_from_extras(data, data_key[1])
+
+
+
 @validator
 def convert_to_json_if_date(date, context):
     if isinstance(date, datetime.datetime):
