@@ -5,23 +5,13 @@ def convert_from_extras_group(key, data, errors, context):
     '''Converts values from extras, tailored for groups.'''
 
     def remove_from_extras(data, key):
-        for data_key in sorted(data):
-            if data_key[0] != 'extras' or data_key[1] < key:
-                continue
-            if data_key[1] == key:
-                del data[data_key]
-
-            # Following block required for unflattening extras with
-            # "gaps" created sometimes by `convert_from_extra`
-            # validator :
-            #
-            #   {
-            #     ('extras', 0, 'key'): 'x',
-            #     ('extras', 2, 'key): 'y'
-            #   }
-            if data_key[1] > key:
-                new_key = (data_key[0], data_key[1] - 1) + data_key[2:]
-                data[new_key] = data.pop(data_key)
+        to_remove = []
+        for data_key, data_value in data.items():
+            if (data_key[0] == 'extras'
+                    and data_key[1] == key):
+                to_remove.append(data_key)
+        for item in to_remove:
+            del data[item]
 
     for data_key, data_value in data.items():
         if (data_key[0] == 'extras'
