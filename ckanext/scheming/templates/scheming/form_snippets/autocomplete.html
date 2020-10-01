@@ -1,5 +1,7 @@
 {% import 'macros/form.html' as form %}
 
+{% resource 'scheming/autocomplete-without-creating-new-options.js' %}
+
 {% call form.input(
     field.field_name,
     id='field-' + field.field_name,
