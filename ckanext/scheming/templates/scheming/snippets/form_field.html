@@ -5,7 +5,9 @@
     <div class="panel panel-primary">
       <header class="panel-heading">
         {{ h.scheming_language_text(field.label) }} {{ index1 }}
+        {{ h.are_there_flash_messages() }}
       </header>
+      <p>MEME</p>
       <div class="panel-body">
         {% for subfield in field.repeating_subfields %}
           {% set sf = dict(
@@ -35,11 +37,9 @@
   {# A complex field with sub-fields, which can optionally be repeatable. #}
   {% set flat = h.scheming_flatten_subfield(field, data) %}
   {% set flaterr = h.scheming_flatten_subfield(field, errors) %}
-  {% block removal_text %}
-    {% set locale = h.dump_json({'content': _('These fields have been removed, click save below to update the record with your changes.') }) %}
 
+{% set locale = h.dump_json({'removal-text': _('These fields have been removed, click save below to update the record with your changes.') }) %}
 <fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields" data-module-i18n="{{ locale }}">
-  {% endblock %}
   {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
     {% if alert_warning %}
       <section class="alert alert-warning">

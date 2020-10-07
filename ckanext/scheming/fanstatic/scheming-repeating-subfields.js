@@ -1,11 +1,5 @@
 this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
     return {
-        options: {
-          /* Locale options can be overidden with data-module-i18n attribute */
-          i18n: {
-            content: _('These fields have been removed, click save below to update the record with your changes.')
-          }
-        },
         initialize: function() {
             var container = this,
                 $this = $(this.el),
@@ -32,14 +26,12 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
             $remove.on('click', function(e) {
                 var $groups = $this.find('.scheming-subfield-group'),
                     $curr = $(this).closest('.scheming-subfield-group'),
-                    $body = $curr.find('.panel-body'),
-                    index = $curr.data('groupIndex'),
-                    field = $curr.data('field');
+                    $body = $curr.find('.panel-body');
                 $count -=1;
                 if($count == 0){
                     $add.click();
                   }
-                $body.html(container.i18n('content'));
+                $body.html(container.i18n('removal-text'));
             });
         }
     };
