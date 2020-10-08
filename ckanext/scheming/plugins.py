@@ -218,13 +218,11 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         Validate and convert for package_create, package_update and
         package_show actions.
         """
-
         thing, action_type = action.split('_')
         t = data_dict.get('type')
         if not t or t not in self._schemas:
             return data_dict, {'type': [
                 _("Unsupported dataset type: {t}").format(t=t)]}
-
         scheming_schema = self._expanded_schemas[t]
 
         if action_type == 'show':
@@ -234,32 +232,17 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         else:
             get_validators = _field_validators
 
-        fg = (
-            (scheming_schema['dataset_fields'], schema),
-            (scheming_schema['resource_fields'], schema['resources'])
-        )
-        for field_list, destination in fg:
-            for f in field_list:
-                destination[f['field_name']] = get_validators(
-                    f,
-                    scheming_schema,
-                    f['field_name'] not in destination
-                )
+        for f in scheming_schema['dataset_fields']:
+            schema[f['field_name']] = get_validators(
+                f,
+                scheming_schema,
+                f['field_name'] not in schema
+            )
 
-                # Apply default field values before going through validation. This
-                # deals with fields that have form_snippet set to null, and fields
-                # that have defaults added after initial creation.
-                if data_dict.get(f['field_name']) is None:
-                    default_jinja2 = f.get('default_jinja2')
-                    default = f.get('default')
-                    if default_jinja2:
-                        data_dict[f['field_name']] = (
-                            helpers.scheming_render_from_string(
-                                source=default_jinja2
-                            )
-                        )
-                    elif default:
-                        data_dict[f['field_name']] = default
+        resource_schema = schema['resources']
+        for f in scheming_schema.get('resource_fields', []):
+            resource_schema[f['field_name']] = get_validators(
+                f, scheming_schema, False)
 
         # Setting up schemas for resource types
         if "resources" in scheming_schema:
@@ -272,6 +255,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                         scheming_schema,
                         f['field_name'] not in schema["resources"]
                     )
+
         return navl_validate(data_dict, schema, context)
 
     def get_actions(self):
@@ -462,7 +446,7 @@ def _field_output_validators_group(f, schema, convert_extras):
 
 
 def _field_output_validators(f, schema, convert_extras,
-                             convert_from_extras_type=validation.convert_from_extras_nested):
+                             convert_from_extras_type=convert_from_extras):
     """
     Return the output validators for a scheming field f
     """
