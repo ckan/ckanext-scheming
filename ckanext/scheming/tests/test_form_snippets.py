@@ -2,7 +2,7 @@ import six
 import pytest
 from ckan.lib.base import render_snippet
 from jinja2 import Markup
-
+import logging
 import ckantoolkit
 
 if ckantoolkit.check_ckan_version(min_version='2.9.0'):
@@ -199,6 +199,7 @@ class TestLicenseFormSnippet(object):
             sorted_choices=False,
             extra_args={"licenses": [("Zzz", "zz"), ("Bbb", "bb")]},
         )
+        logging.warning(html)
         assert '<option value="zz">' in html
         first, rest = html.split('<option value="zz">', 1)
         assert '<option value="bb">' in rest
