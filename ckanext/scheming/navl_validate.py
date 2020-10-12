@@ -37,11 +37,15 @@ def augment_data(data, schema):
     '''
     flattened_schema = flatten_schema(schema)
     key_combinations = get_all_key_combinations(data, flattened_schema)
+
     full_schema = make_full_schema(data, schema)
+
     new_data = copy.copy(data)
 
+    keys_to_remove = []
+    junk = {}
+    extras_keys = {}
     # fill junk and extras
-
     for key, value in new_data.items():
         if key in full_schema:
             continue
@@ -51,20 +55,24 @@ def augment_data(data, schema):
         if initial_tuple in [initial_key[:len(initial_tuple)]
                              for initial_key in flattened_schema]:
             if data[key] != []:
-                raise DataError(
-                    _('Only lists of dicts can be placed against '
-                      'subschema {}, not {}').format(key, type(data[key]))
-                )
-
+                raise DataError('Only lists of dicts can be placed against '
+                                'subschema %s, not %s' %
+                                (key, type(data[key])))
         if key[:-1] in key_combinations:
             extras_key = key[:-1] + ('__extras',)
-            extras = new_data.get(extras_key, {})
+            extras = extras_keys.get(extras_key, {})
             extras[key[-1]] = value
-            new_data[extras_key] = extras
+            extras_keys[extras_key] = extras
         else:
-            junk = new_data.get(("__junk",), {})
             junk[key] = value
-            new_data[("__junk",)] = junk
+        keys_to_remove.append(key)
+
+    if junk:
+        new_data[("__junk",)] = junk
+    for extra_key in extras_keys:
+        new_data[extra_key] = extras_keys[extra_key]
+
+    for key in keys_to_remove:
         new_data.pop(key)
 
     # add missing
