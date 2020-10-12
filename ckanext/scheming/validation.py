@@ -3,6 +3,7 @@ import datetime
 from collections import defaultdict
 import itertools
 import pytz
+import six
 import ckan.lib.helpers as h
 from ckan.lib.navl.dictization_functions import convert
 from ckantoolkit import (
@@ -17,7 +18,6 @@ import copy
 import ckanext.scheming.helpers as sh
 from ckanext.scheming.errors import SchemingException
 from ckan.logic.validators import package_name_validator
-import logging
 import slugify
 
 OneOf = get_validator('OneOf')
@@ -219,7 +219,7 @@ def scheming_multiple_choice(field, schema):
 
         value = data[key]
         if value is not missing:
-            if isinstance(value, basestring):
+            if isinstance(value, six.string_types):
                 value = [value]
             elif not isinstance(value, list):
                 errors[key].append(_('expecting list of strings'))
@@ -393,7 +393,7 @@ def scheming_valid_json_object(value, context):
     """
     if not value:
         return
-    elif isinstance(value, basestring):
+    elif isinstance(value, six.string_types):
         try:
             loaded = json.loads(value)
 
@@ -419,7 +419,7 @@ def scheming_valid_json_object(value, context):
 
 @validator
 def scheming_load_json(value, context):
-    if isinstance(value, basestring):
+    if isinstance(value, six.string_types):
         try:
             return json.loads(value)
         except ValueError:
@@ -467,54 +467,13 @@ def get_validator_or_converter(name):
     Get a validator or converter by name
     """
     if name == 'unicode':
-        return unicode
+        return six.text_type
     try:
         v = get_validator(name)
         return v
     except UnknownValidator:
         pass
     raise SchemingException('validator/converter not found: %r' % name)
-
-
-def convert_from_extras_group(key, data, errors, context):
-    """Converts values from extras, tailored for groups."""
-
-    def remove_from_extras(data, key):
-        to_remove = []
-        for data_key, data_value in data.iteritems():
-            if (data_key[0] == 'extras'
-                    and data_key[1] == key):
-                to_remove.append(data_key)
-        for item in to_remove:
-            del data[item]
-
-    for data_key, data_value in data.iteritems():
-        if (data_key[0] == 'extras'
-            and 'key' in data_value
-                and data_value['key'] == key[-1]):
-            data[key] = data_value['value']
-            break
-    else:
-        return
-    remove_from_extras(data, data_key[1])
-
-
-@validator
-def convert_to_json_if_date(date, context):
-    if isinstance(date, datetime.datetime):
-        return date.date().isoformat()
-    elif isinstance(date, datetime.date):
-        return date.isoformat()
-    else:
-        return date
-
-
-@validator
-def convert_to_json_if_datetime(date, context):
-    if isinstance(date, datetime.datetime):
-        return date.isoformat()
-
-    return date
 
 
 @scheming_validator

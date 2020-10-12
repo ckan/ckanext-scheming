@@ -54,3 +54,15 @@
 * added required fields markers for groups/orgs
 * allow hiding resource fields
 * other small fixes
+
+## 2.0.0
+
+2020-04-24
+
+* python 3 support (ckan 2.9+)
+* automated tests against 2.6, 2.7, 2.8 and master now using pytest
+* select_size option defaults to choices length
+* form_snippet=null to hide form fields for group/org forms
+* improved plugin reloading support
+* add support for group/org image uploads
+* other small fixes
