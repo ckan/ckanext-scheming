@@ -4,4 +4,4 @@ ckantoolkit==0.0.3
 pytz==2016.7
 pycountry==19.8.18
 python-slugify==4.0.0
-six
+six==1.15.0
