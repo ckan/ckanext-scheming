@@ -15,7 +15,7 @@ try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
     core_helper_functions = None
-from navl_validate import validate as navl_validate
+from ckanext.scheming.navl_validate import validate as navl_validate
 from ckan.plugins.toolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,

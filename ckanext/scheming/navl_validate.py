@@ -7,7 +7,6 @@ from ckan.lib.navl.dictization_functions import (
     flatten_schema,
     get_all_key_combinations,
     convert,
-    _remove_blank_keys,
     flatten_dict,
     unflatten,
     DataError,
@@ -104,6 +103,7 @@ def make_full_schema(data, schema):
 def validate(data, schema, context=None):
     '''Validate an unflattened nested dict against a schema.'''
     context = context or {}
+
     assert isinstance(data, dict)
 
     # store any empty lists in the data as they will get stripped out by
@@ -113,10 +113,9 @@ def validate(data, schema, context=None):
 
     # create a copy of the context which also includes the schema keys so
     # they can be used by the validators
-    validators_context = dict(context, schema_keys=schema.keys())
+    validators_context = dict(context, schema_keys=list(schema.keys()))
 
     flattened = flatten_dict(data)
-
     converted_data, errors = _validate(flattened, schema, validators_context)
     converted_data = unflatten(converted_data)
 
@@ -127,20 +126,12 @@ def validate(data, schema, context=None):
             if key not in converted_data:
                 converted_data[key] = []
 
-    errors_unflattened = unflatten(errors)
-
     # remove validators that passed
-    dicts_to_process = [errors_unflattened]
-    while dicts_to_process:
-        dict_to_process = dicts_to_process.pop()
-        for key, value in dict_to_process.items():
-            if not value:
-                dict_to_process.pop(key)
-                continue
-            if isinstance(value[0], dict):
-                dicts_to_process.extend(value)
+    for key in list(errors.keys()):
+        if not errors[key]:
+            del errors[key]
 
-    _remove_blank_keys(errors_unflattened)
+    errors_unflattened = unflatten(errors)
 
     return converted_data, errors_unflattened
 
