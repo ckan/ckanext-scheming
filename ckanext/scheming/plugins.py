@@ -118,7 +118,18 @@ class _SchemingMixin(object):
             'scheming_datetime_to_tz': helpers.scheming_datetime_to_tz,
             'scheming_datastore_choices': helpers.scheming_datastore_choices,
             'scheming_display_json_value': helpers.scheming_display_json_value,
-            }
+            'scheming_non_empty_fields': helpers.scheming_non_empty_fields,
+
+            # Below are Fjelltopp custom helpers.
+            # We should explore whether these belong in ckanext-unaids.
+            'get_missing_resources': helpers.get_missing_resources,
+            'get_user': helpers.get_user,
+            'get_date': helpers.get_date,
+            'get_resource_field': helpers.get_resource_field,
+            'scheming_resource_view_get_fields': helpers.scheming_resource_view_get_fields,
+            'scheming_country_list': helpers.scheming_country_list,
+            'scheming_natural_sort': helpers.scheming_natural_sort
+        }
 
     @run_once_for_caller('_scheming_get_validators', dict)
     def get_validators(self):
