@@ -20,7 +20,6 @@ ignore_missing = get_validator("ignore_missing")
 not_empty = get_validator("not_empty")
 
 
-
 class TestGetValidatorOrConverter(object):
     def test_missing(self):
         with pytest.raises(SchemingException):

@@ -66,6 +66,7 @@ def run_once_for_caller(var_name, rval_fn):
     import inspect
 
     def decorator(fn):
+
         @wraps(fn)
         def wrapper(*args, **kwargs):
             caller = inspect.currentframe().f_back
@@ -74,7 +75,9 @@ def run_once_for_caller(var_name, rval_fn):
             # inject local varible into caller to track separate calls (reloading)
             caller.f_locals[var_name] = None
             return fn(*args, **kwargs)
+
         return wrapper
+
     return decorator
 
 

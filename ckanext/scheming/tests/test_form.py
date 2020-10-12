@@ -96,6 +96,7 @@ class TestDatasetFormNew(object):
         licenses = page.select('#field-license_id option')
         assert licenses
 
+
 @pytest.mark.usefixtures("clean_db")
 class TestOrganizationFormNew(object):
     def test_organization_form_includes_custom_field(self, app):

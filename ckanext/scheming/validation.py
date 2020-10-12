@@ -96,7 +96,7 @@ def composite_form(field, schema):
             # ... then turn it back into an ordered list.
             value = [v for k, v in sorted(values.iteritems())]
 
-        elif isinstance(value, basestring):
+        elif isinstance(value, six.string_types):
             value = json.loads(value)
 
         if not isinstance(value, list):

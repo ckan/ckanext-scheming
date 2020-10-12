@@ -7,6 +7,7 @@ import ckantoolkit
 
 if ckantoolkit.check_ckan_version(min_version='2.9.0'):
     from contextlib import contextmanager
+
     @contextmanager
     def mock_pylons_request():
         yield
