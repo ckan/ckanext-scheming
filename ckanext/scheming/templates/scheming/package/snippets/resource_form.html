@@ -40,7 +40,7 @@
   {%- set group_order = schema.get('display_group_order', ['General']) -%}
   {%- set drawn_groups = [] -%}
 
-  {%- for group_name in group_order + groups.keys() -%}
+  {%- for group_name in group_order + groups.keys()|list -%}
     {%- set group = groups.get(group_name)-%}
     {%- if group and group_name not in drawn_groups -%}
       <h3 class="page-heading form-group">
