@@ -71,6 +71,7 @@ class TestGetPreset(object):
                 u'resource_url_upload',
                 u'resource_format_autocomplete',
                 u'multiple_select',
+                u'organization_url_upload',
                 u'multiple_checkbox',
                 u'date',
                 u'datetime',
