@@ -94,7 +94,7 @@ def composite_form(field, schema):
                     values[int(index)][name] = _extras.pop(k)
 
             # ... then turn it back into an ordered list.
-            value = [v for k, v in sorted(values.iteritems())]
+            value = [v for k, v in sorted(values.items())]
 
         elif isinstance(value, six.string_types):
             value = json.loads(value)
@@ -111,7 +111,7 @@ def composite_form(field, schema):
                 # names, else you risk trampling values from the top-level
                 # schema. Some validators like require_when_published require
                 # other top-level fields.
-                entry_as_data = {(k,): v for k, v in entry.iteritems()}
+                entry_as_data = {(k,): v for k, v in entry.items()}
                 entry_as_data.update(data)
 
                 entry_errors = defaultdict(list)

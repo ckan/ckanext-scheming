@@ -93,7 +93,7 @@ def make_full_schema(data, schema):
                 if schema["resource_schemas"].get(resource_type):
                     sub_schema = schema["resource_schemas"][resource_type]
 
-        for key, value in sub_schema.iteritems():
+        for key, value in sub_schema.items():
             if isinstance(value, list):
                 full_schema[combination + (key,)] = value
 
