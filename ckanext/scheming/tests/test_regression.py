@@ -7,6 +7,7 @@ import ckan.tests.helpers as helpers
 import logging
 from pprint import pformat
 
+log = logging.getLogger(__name__)
 
 class TestRegression(helpers.FunctionalTestBase):
 
@@ -29,8 +30,7 @@ class TestRegression(helpers.FunctionalTestBase):
             camels_in_photo="3"
         )
         response = call_action('package_show', {}, id=dataset['id'])
-
-        logging.warning("Updated package is stored as:")
-        logging.warning(pformat(response))
+        log.debug("Updated package is stored as:")
+        log.debug(pformat(response))
         # Assert updating 2nd resource did not affect the 1st resource
         assert response['resources'][0]['camels_in_photo'] == resource1_camels
