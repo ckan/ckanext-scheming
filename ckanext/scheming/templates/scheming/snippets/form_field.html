@@ -1,4 +1,3 @@
-{% resource 'scheming/scheming-remove-subfields.js' %}
 {% resource 'scheming/scheming-repeating-subfields.js' %}
 
 {% macro repeating_panel(index, index1) %}
@@ -22,25 +21,8 @@
             object_type=object_type
           -%}
         {% endfor %}
-        {% block removal_popup%}
-          {% set locale = h.dump_json({'content': _('Are you sure you want to delete these fields?') }) %}
-          {% set template = [
-            '<div class="modal" id="mid-screen" tabindex="-1" role="dialog" aria-labelledby="mid-screenLabel" aria-hidden="true">',
-              '<div class="modal-dialog" role="document">',
-                '<div class="modal-content">',
-                  '<div class="modal-header">',
-                    '<h3 class="modal-title"></h3>',
-                  '</div>',
-                  '<div class="modal-body"></div>',
-                  '<div class="modal-footer">',
-                    '<button class="btn btn-cancel"></button>',
-                    '<button class="btn btn-primary"></button>',
-                  '</div>',
-                '</div>',
-              '</div>',
-            '</div>'
-            ]|join('\n') %}
-          <a class="btn btn-danger pull-left" name="repeating-remove" href="javascript:;" data-module="scheming-remove-subfields" data-module-i18n="{{ locale }}" data-module-template="{{ template }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+        {% block field_removal_button%}
+          <a class="btn btn-danger pull-left" name="repeating-remove" href="javascript:;">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
         {% endblock %}
       </div>
     </div>
@@ -53,8 +35,10 @@
   {# A complex field with sub-fields, which can optionally be repeatable. #}
   {% set flat = h.scheming_flatten_subfield(field, data) %}
   {% set flaterr = h.scheming_flatten_subfield(field, errors) %}
-  <fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields">
-    {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
+
+{% set locale = h.dump_json({'removal-text': _('These fields have been removed, click save below to update the record with your changes.') }) %}
+<fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields" data-module-i18n="{{ locale }}">
+  {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
     {% if alert_warning %}
       <section class="alert alert-warning">
         {{ alert_warning|safe }}
