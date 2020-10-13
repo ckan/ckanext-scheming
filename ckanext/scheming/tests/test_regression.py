@@ -8,7 +8,7 @@ import logging
 from pprint import pformat
 
 
-class RegressionTests(helpers.FunctionalTestBase):
+class TestRegression(helpers.FunctionalTestBase):
 
     def test_individual_resource_access(self):
         dataset = factories.Dataset(type="test-schema")
