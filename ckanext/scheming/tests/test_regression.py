@@ -9,12 +9,13 @@ from pprint import pformat
 
 log = logging.getLogger(__name__)
 
+
 class TestRegression(helpers.FunctionalTestBase):
 
     def test_updating_second_resource_not_affects_first_resource(self):
-        resource1_expected_camels = "1"
+        resource1_expected_camels = 1
         dataset = factories.Dataset(type="test-schema")
-        resource1 = factories.Resource(
+        factories.Resource(
             package_id=dataset['id'],
             camels_in_photo=resource1_expected_camels
         )
@@ -22,7 +23,6 @@ class TestRegression(helpers.FunctionalTestBase):
             package_id=dataset['id'],
             camels_in_photo="2"
         )
-
         call_action(
             'resource_update',
             {},
@@ -32,5 +32,4 @@ class TestRegression(helpers.FunctionalTestBase):
         response = call_action('package_show', {}, id=dataset['id'])
         log.debug("Updated package is stored as:")
         log.debug(pformat(response))
-
         assert response['resources'][0]['camels_in_photo'] == resource1_expected_camels
