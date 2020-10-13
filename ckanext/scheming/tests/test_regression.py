@@ -12,18 +12,18 @@ log = logging.getLogger(__name__)
 class TestRegression(helpers.FunctionalTestBase):
 
     def test_individual_resource_access(self):
+        resource1_expected_camels = "1"
         dataset = factories.Dataset(type="test-schema")
         resource1 = factories.Resource(
             package_id=dataset['id'],
-            camels_in_photo="1"
+            camels_in_photo=resource1_expected_camels
         )
         resource2 = factories.Resource(
             package_id=dataset['id'],
             camels_in_photo="2"
         )
-        resource1_camels = resource1['camels_in_photo']
 
-        response = call_action(
+        call_action(
             'resource_update',
             {},
             id=resource2['id'],
@@ -33,4 +33,4 @@ class TestRegression(helpers.FunctionalTestBase):
         log.debug("Updated package is stored as:")
         log.debug(pformat(response))
         # Assert updating 2nd resource did not affect the 1st resource
-        assert response['resources'][0]['camels_in_photo'] == resource1_camels
+        assert response['resources'][0]['camels_in_photo'] == resource1_expected_camels
