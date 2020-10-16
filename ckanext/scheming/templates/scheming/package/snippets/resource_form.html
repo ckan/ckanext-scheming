@@ -42,6 +42,7 @@
 
   {%- for group_name in group_order + groups.keys() -%}
     {%- set group = groups.get(group_name)-%}
+
     {%- if group and group_name not in drawn_groups -%}
       <h3 class="page-heading form-group">
         {{ _(group_name) }}
@@ -73,7 +74,7 @@
         {%- endif -%}
       {%- endfor -%}
       {# Don't draw groups twice #}
-      {%- set drawn_groups = drawn_groups + [group_name] -%}
+      {%- do drawn_groups.append(group_name) -%}
     {%- endif -%}
   {%- endfor -%}
 
