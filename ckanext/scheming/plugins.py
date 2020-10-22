@@ -38,6 +38,12 @@ from ckanext.scheming.validation import (
     scheming_valid_json_object,
     scheming_load_json,
 )
+from ckanext.scheming.unaids_validators import (
+    autogenerate,
+    unique_combination,
+    auto_create_valid_name,
+    shapefile_validator
+)
 from ckanext.scheming.converters import (
     convert_from_extras_group,
     convert_to_json_if_date,
@@ -147,6 +153,10 @@ class _SchemingMixin(object):
             'scheming_isodatetime_tz': scheming_isodatetime_tz,
             'scheming_valid_json_object': scheming_valid_json_object,
             'scheming_load_json': scheming_load_json,
+            'autogenerate': autogenerate,
+            'unique_combination': unique_combination,
+            'auto_create_valid_name': auto_create_valid_name,
+            'shapefile_validator': shapefile_validator
             }
 
     @run_once_for_caller('_scheming_add_template_directory', lambda: None)
