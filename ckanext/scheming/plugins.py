@@ -38,17 +38,18 @@ from ckanext.scheming.validation import (
     scheming_valid_json_object,
     scheming_load_json,
 )
+from ckanext.scheming.converters import (
+    convert_from_extras_group,
+    convert_to_json_if_date,
+    convert_to_json_if_datetime
+)
 from ckanext.scheming.unaids_validators import (
     autogenerate,
     unique_combination,
     auto_create_valid_name,
     shapefile_validator
 )
-from ckanext.scheming.converters import (
-    convert_from_extras_group,
-    convert_to_json_if_date,
-    convert_to_json_if_datetime
-)
+from ckanext.scheming import unaids_helpers
 
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
@@ -129,15 +130,13 @@ class _SchemingMixin(object):
             'scheming_display_json_value': helpers.scheming_display_json_value,
             'scheming_non_empty_fields': helpers.scheming_non_empty_fields,
 
-            # Below are Fjelltopp custom helpers.
-            # We should explore whether these belong in ckanext-unaids.
-            'get_missing_resources': helpers.get_missing_resources,
-            'get_user': helpers.get_user,
-            'get_date': helpers.get_date,
-            'get_resource_field': helpers.get_resource_field,
-            'scheming_resource_view_get_fields': helpers.scheming_resource_view_get_fields,
-            'scheming_country_list': helpers.scheming_country_list,
-            'scheming_natural_sort': helpers.scheming_natural_sort
+            'get_missing_resources': unaids_helpers.get_missing_resources,
+            'get_user': unaids_helpers.get_user,
+            'get_date': unaids_helpers.get_date,
+            'get_resource_field': unaids_helpers.get_resource_field,
+            'scheming_resource_view_get_fields': unaids_helpers.scheming_resource_view_get_fields,
+            'scheming_country_list': unaids_helpers.scheming_country_list,
+            'scheming_natural_sort': unaids_helpers.scheming_natural_sort
         }
 
     @run_once_for_caller('_scheming_get_validators', dict)
