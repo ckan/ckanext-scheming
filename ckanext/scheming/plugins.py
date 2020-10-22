@@ -43,12 +43,7 @@ from ckanext.scheming.converters import (
     convert_to_json_if_date,
     convert_to_json_if_datetime
 )
-from ckanext.scheming.unaids_validators import (
-    autogenerate,
-    unique_combination,
-    auto_create_valid_name,
-    shapefile_validator
-)
+from ckanext.scheming import unaids_validators
 from ckanext.scheming import unaids_helpers
 
 ignore_missing = get_validator('ignore_missing')
@@ -116,10 +111,8 @@ class _SchemingMixin(object):
             'scheming_get_dataset_schema': helpers.scheming_get_dataset_schema,
             'scheming_group_schemas': helpers.scheming_group_schemas,
             'scheming_get_group_schema': helpers.scheming_get_group_schema,
-            'scheming_organization_schemas':
-                helpers.scheming_organization_schemas,
-            'scheming_get_organization_schema':
-                helpers.scheming_get_organization_schema,
+            'scheming_organization_schemas': helpers.scheming_organization_schemas,
+            'scheming_get_organization_schema': helpers.scheming_get_organization_schema,
             'scheming_field_by_name': helpers.scheming_field_by_name,
             'scheming_get_presets': helpers.scheming_get_presets,
             'scheming_get_preset': helpers.scheming_get_preset,
@@ -152,11 +145,12 @@ class _SchemingMixin(object):
             'scheming_isodatetime_tz': scheming_isodatetime_tz,
             'scheming_valid_json_object': scheming_valid_json_object,
             'scheming_load_json': scheming_load_json,
-            'autogenerate': autogenerate,
-            'unique_combination': unique_combination,
-            'auto_create_valid_name': auto_create_valid_name,
-            'shapefile_validator': shapefile_validator
-            }
+
+            'autogenerate': unaids_validators.autogenerate,
+            'unique_combination': unaids_validators.unique_combination,
+            'auto_create_valid_name': unaids_validators.auto_create_valid_name,
+            'scheming_shapefile': unaids_validators.scheming_shapefile
+        }
 
     @run_once_for_caller('_scheming_add_template_directory', lambda: None)
     def _add_template_directory(self, config):
