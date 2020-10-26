@@ -331,7 +331,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     schema["resource_schemas"][resource_type][f['field_name']] = get_validators(
                         f,
                         scheming_schema,
-                        f['field_name'] not in schema["resources"]
+                        False
                     )
 
         return navl_validate(data_dict, schema, context)
