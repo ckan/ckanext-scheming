@@ -2,10 +2,9 @@
 
 {% if request.GET is defined %}
   {% set resource_type = request.GET["resource_type"] %}
-{% else %}
+{% elif request.args is defined %}
   {% set resource_type = request.args.get("resource_type") %}
-{% endif %}
-{% if not resource_type and "resource_type" in data %}
+{% elif "resource_type" in data %}
   {% set resource_type = data["resource_type"] %}
 {% endif %}
 
