@@ -21,37 +21,13 @@
   {% block resource_item_explore %}
     {% set validator_schema = res.resource_fields | selectattr('field_name', 'equalto', 'schema') | map(attribute='field_value') | list %}
     {% if not url_is_edit %}
-      {% if validator_schema[0] is defined %}
-        <div class="dropdown btn-group">
-          <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-share"></i>
-            {{ _('Add Data') }}
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/dataset/new_resource/{{pkg.name}}?resource_type={{res.resource_type}}">
-                  <i class="fa fa-share"></i>
-                  {{ _('Upload Resource') }}
-              </a>
-            </li>
-            <li>
-              <a href="/validation/template/{{validator_schema[0]}}">
-                  <i class="fa fa-arrow-circle-o-down"></i>
-                  {{ _('Download Data Template') }}
-              </a>
-            </li>
-          </ul>
-        </div>
-      {% else %}
-        <div class="dropdown btn-group">
-          <a href="/dataset/new_resource/{{pkg.name}}?resource_type={{res.resource_type}}"
-             class="btn btn-primary">
-            <i class="fa fa-share"></i>
-            {{ _('Add Data') }}
-          </a>
-        </div>
-      {% endif %}
+    <div class="dropdown btn-group">
+      <a href="/dataset/new_resource/{{pkg.name}}?resource_type={{res.resource_type}}"
+         class="btn btn-primary">
+        <i class="fa fa-share"></i>
+        {{ _('Add Data') }}
+      </a>
+    </div>
     {% endif %}
   {% endblock %}
 {% endif %}
