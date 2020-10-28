@@ -1,11 +1,11 @@
 {% import 'macros/form.html' as form %}
-
+{% set default = data.get(field.field_name) or field.get('default', '') %}
 {% call form.input(
     field.field_name,
     id='field-' + field.field_name,
     label=h.scheming_language_text(field.label),
     placeholder=h.scheming_language_text(field.form_placeholder),
-    value=data[field.field_name],
+    value=default,
     error=errors[field.field_name],
     classes=field.classes if 'classes' in field else ['control-medium'],
     attrs=field.get('form_attrs', {}),
