@@ -4,9 +4,12 @@
   {% set resource_type = request.GET["resource_type"] %}
 {% elif request.args is defined %}
   {% set resource_type = request.args.get("resource_type") %}
-{% elif "resource_type" in data %}
+{% endif %}
+
+{% if not resource_type and "resource_type" in data %}
   {% set resource_type = data["resource_type"] %}
 {% endif %}
+
 
 {% block errors %}
  {%- if error_summary -%}
@@ -18,17 +21,18 @@
 {% endblock %}
 
 {% block basic_fields %}
-
   {%- if not dataset_type -%}
     <p>
     {{_('dataset_type not passed to template. your version of CKAN might not be compatible with ckanext-scheming')}}
     </p>
   {%- endif -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+
     {% if resource_type %}
 
     {% if resource_type in schema.get("resource_schemas") %}
     {%- set schema = schema.resource_schemas[resource_type] -%}
+
     <h2>{{_(schema["name"])}} </h2>
     {% else %}
     {{_('Resource Type does not exist')}}
