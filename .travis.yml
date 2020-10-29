@@ -39,31 +39,21 @@ jobs:
     - stage: Tests
       python: "2.7"
       env: CKANVERSION=2.9
-      services:
-          - redis
-          - docker
       addons:
-        postgresql: "12.4"
+        postgresql: '12'
         apt:
-          sources:
-            - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main'
           packages:
-            - postgresql-12.4
+            - postgresql-12
+            - postgresql-client-12
 
     - python: "3.6"
       env: CKANVERSION=2.9
       addons:
-        postgresql: "12.4"
+        postgresql: '12'
         apt:
-          sources:
-            - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main'
           packages:
-            - postgresql-12.4
-
-      services:
-          - postgresql
-          - redis
-          - docker
+            - postgresql-12
+            - postgresql-client-12
 
     - python: "2.7"
       env: CKANVERSION=2.8
