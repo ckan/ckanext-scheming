@@ -1,5 +1,5 @@
 {% extends 'package/snippets/resource_form.html' %}
-
+{% set data = data or {} %}
 {% if request.GET is defined %}
   {% set resource_type = request.GET["resource_type"] %}
 {% elif request.args is defined %}
