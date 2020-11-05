@@ -13,12 +13,8 @@ from ckantoolkit import (
     Invalid,
     _
 )
-import ckantoolkit as t
-import copy
 import ckanext.scheming.helpers as sh
 from ckanext.scheming.errors import SchemingException
-from ckan.logic.validators import package_name_validator
-import slugify
 
 OneOf = get_validator('OneOf')
 ignore_missing = get_validator('ignore_missing')

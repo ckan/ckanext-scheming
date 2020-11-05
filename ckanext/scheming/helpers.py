@@ -69,13 +69,13 @@ def scheming_country_list():
 
 
 @helper
-def scheming_natural_sort(l):
+def scheming_natural_sort(list):
     """
     Sorts a list of tuples with strings "naturally". I.e 1,2...11 and not 1,11,2..
     """
 
-    l.sort(key=lambda key: [convert(c) for c in re.split('([0-9]+)', key[0])])
-    return l
+    list.sort(key=lambda key: [convert(c) for c in re.split('([0-9]+)', key[0])])
+    return list
 
 
 @helper
@@ -437,11 +437,11 @@ def scheming_datetime_to_tz(date, tz):
 
 @helper
 def scheming_get_timezones(field):
-    def to_options(l):
-        return [{'value': tz, 'text': tz} for tz in l]
+    def to_options(list):
+        return [{'value': tz, 'text': tz} for tz in list]
 
-    def validate_tz(l):
-        return [tz for tz in l if tz in pytz.all_timezones]
+    def validate_tz(list):
+        return [tz for tz in list if tz in pytz.all_timezones]
 
     timezones = field.get('timezones')
     if timezones == 'all':

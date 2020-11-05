@@ -122,6 +122,7 @@ class _SchemingMixin(object):
             'scheming_datastore_choices': helpers.scheming_datastore_choices,
             'scheming_display_json_value': helpers.scheming_display_json_value,
             'scheming_non_empty_fields': helpers.scheming_non_empty_fields,
+            'scheming_natural_sort': helpers.scheming_natural_sort,
 
             'get_missing_resources': unaids_helpers.get_missing_resources,
             'get_user': unaids_helpers.get_user,
@@ -129,7 +130,6 @@ class _SchemingMixin(object):
             'get_resource_field': unaids_helpers.get_resource_field,
             'scheming_resource_view_get_fields': unaids_helpers.scheming_resource_view_get_fields,
             'scheming_country_list': unaids_helpers.scheming_country_list,
-            'scheming_natural_sort': unaids_helpers.scheming_natural_sort
         }
 
     @run_once_for_caller('_scheming_get_validators', dict)

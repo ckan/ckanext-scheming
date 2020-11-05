@@ -13,7 +13,6 @@ from ckan.lib.navl.dictization_functions import (
     missing
 )
 import copy
-from ckantoolkit import _
 
 
 def augment_data(data, schema):

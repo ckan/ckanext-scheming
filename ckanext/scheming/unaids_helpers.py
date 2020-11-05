@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 import datetime
 import pycountry
 import logging
@@ -102,14 +101,3 @@ def get_resource_field(dataset_type, resource_type, field_name):
         return field
     except IndexError:
         return {}
-
-
-@helpers.helper
-def scheming_natural_sort(l):
-    """
-    Sorts a list of tuples with strings "naturally". I.e 1,2...11
-    and not 1,11,2..
-    """
-
-    l.sort(key=lambda key: [helpers.convert(c) for c in re.split('([0-9]+)', key[0])])
-    return l
