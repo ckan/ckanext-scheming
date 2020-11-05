@@ -3,14 +3,15 @@
 
 from ckan.tests.helpers import call_action
 from ckan.tests import factories
-import ckan.tests.helpers as helpers
 import logging
 from pprint import pformat
+import pytest
 
 log = logging.getLogger(__name__)
 
 
-class TestRegression(helpers.FunctionalTestBase):
+@pytest.mark.usefixtures('clean_db')
+class TestRegression(object):
 
     def test_updating_second_resource_not_affects_first_resource(self):
         resource1_expected_camels = 1

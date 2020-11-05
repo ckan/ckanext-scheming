@@ -24,12 +24,14 @@
       </tr>
     {%- endif -%}
   {%- endfor -%}
+  {%- set user = h.get_user(pkg_dict['creator_user_id']) -%}
+  {% if user %}
     <tr>
-      {%- set user = h.get_user(pkg_dict['creator_user_id']) -%}
       {%- set user_url = h.url_for('user.read', id=user['name']) -%}
       <th scope="row" class="dataset-label">{{ _("Uploaded By") }}</th>
       <td class="dataset-details"><a href={{user_url}}>{{user.get('display_name', '')}} ({{ user.get('name', '')}})</a></td>
     </tr>
+  {% endif %}
   {% if h.check_access('package_update',{'id':pkg_dict.id}) %}
     <tr>
       <th scope="row" class="dataset-label">{{ _("State") }}</th>

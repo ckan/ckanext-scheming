@@ -1,30 +1,91 @@
-dist: trusty
-group: deprecated-2017Q4
+os: linux
+dist: focal
 language: python
-sudo: required
-python:
-- '2.7'
-env:
-- CKANVERSION=2.8.2
-- CKANVERSION=2.8.5
-install:
-- bash bin/travis-build.bash
+
 services:
-- redis-server
-- postgresql
-script: sh bin/travis-run.sh
-before_install:
-- pip install codecov
-after_success:
-- codecov
-notifications:
-  slack:
-    if: branch IN (master, development)
-    rooms:
-      - secure: COh4wTRcy78oxXwNRBnw3bgygQ6VG2wcpD88ldmZsfpPfMIvjDKwvDBZjRyuUOWv4B3JpqUPTt/S22yI6yVX1WNQtneSoiR1XuRnrHa6zKllrYaC4EwlGX4nDPzqxgrV/FMhvS8HmYPKGGdtdS6zVtI0FN5nvQMWEerZVp4erX9prXyu8Gup5Nj3zfCpL4NyQGx4hGPbzA8828a9H5mcbs3Tsma5vJ5QBTonbKbJxD47mqSouykHB9+yZNxDiK64EnRoi/5YlMMIIA0o+5GFuKT7XLUmYe8ZGaV9KA+YFg/1/S1XfUs6os+8co/Xs+6BeGmcV3jm8CciHEmwy2Cewm5uzHxvN1omJZUTtic2OhOEQDpuWgNpN5U80FTMOL1G+co+oJC46bOSotzJ0fQrS/DvC5QbN391lSk7Fp6p4m5obqHDelI49ilkowyBiqujKtP7RW5IaJMSphjjR9hCSalTud4YFAkZKS1RjsMdKaP3uBpHTVrFmBkisf4y6iYpm+1DoH2ViJ7GBfTOgR4fc56L9J2Bd550fkY8ivn5t/vW8xAJmUyrTM+Jewxpq/KXE8rGV+SaVC98yOPfwLPg3Wk0PZNCQHOosTVgcpFik2XtB5nFfl3yvvdZHU1YX4AlSp44zYu6zxinXQ2GnWJBitn7MZM0d577ugGCq0VSg3o=
-    on_success: change
-    on_failure: always
-    on_pull_requests: false
-  email:
-    on_success: never
-    on_failure: never
+    - docker
+    - redis
+
+install: bash bin/travis-build.bash
+script: bash bin/travis-run.bash
+
+stages:
+  - Flake8
+  - Tests
+
+jobs:
+  include:
+    - stage: Flake8
+      python: 3.6
+      env: FLAKE8=True
+      install:
+        - pip install flake8==3.5.0
+        - pip install pycodestyle==2.3.0
+      script:
+        - flake8 --version
+        # stop the build if there are Python syntax errors or undefined names
+        - flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics --exclude ckan
+        # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide
+        - flake8 . --count --max-line-length=127 --statistics --exclude ckan --exit-zero
+
+    # - stage: Tests
+    #   python: "3.6"
+    #   env: CKANVERSION=master
+    #   services:
+    #       - postgresql
+    #       - redis
+    #       - docker
+
+    - stage: Tests
+      python: "2.7"
+      env: CKANVERSION=2.9
+      addons:
+        postgresql: '12'
+        apt:
+          packages:
+            - postgresql-12
+            - postgresql-client-12
+
+    - python: "3.6"
+      env: CKANVERSION=2.9
+      addons:
+        postgresql: '12'
+        apt:
+          packages:
+            - postgresql-12
+            - postgresql-client-12
+
+    - python: "2.7"
+      env: CKANVERSION=2.8
+      addons:
+        postgresql: '11'
+        apt:
+          sources:
+            - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main'
+          packages:
+            - postgresql-11
+
+    # - python: "2.7"
+    #   env: CKANVERSION=2.7
+    #   addons:
+    #     postgresql: '9.6'
+    #     apt:
+    #       sources:
+    #         - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main'
+    #       packages:
+    #         - postgresql-9.6
+    #
+    # - python: "2.7"
+    #   env: CKANVERSION=2.6
+    #   addons:
+    #     postgresql: '9.6'
+    #     apt:
+    #       sources:
+    #         - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main'
+    #       packages:
+    #         - postgresql-9.6
+
+
+cache:
+  directories:
+    - $HOME/.cache/pip
