@@ -5,6 +5,8 @@ import logging
 import ckanext.scheming.helpers as helpers
 from ckanapi import NotFound
 from ckan.plugins.toolkit import get_action
+import ckan.model as model
+from ckan.common import g
 
 
 @helpers.helper
@@ -20,11 +22,12 @@ def get_user(user_id):
     """
     Returns the user object for a given user_id.
     """
+    context = {'model': model, 'user': g.user}
     try:
-        result = get_action('user_show')({}, {'id': user_id})
+        result = get_action('user_show')(context, {'id': user_id})
         return result
-    except Exception as e:
-        logging.exception(e)
+    except Exception:
+        logging.warning("Failed to get user dict for user_id: {}".format(user_id))
         return {}
 
 
