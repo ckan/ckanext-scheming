@@ -35,16 +35,19 @@ Example:
 
 
 {% block other_resources_list %}
-{% set missing = h.get_missing_resources(pkg, schema) %}
+{% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
+{% if can_edit %}
+  {% set missing = h.get_missing_resources(pkg, schema) %}
   {% if missing %}
   <section id="dataset-resources" class="resources">
     <h3>{{ _('Missing Resources') }}</h3>
     <ul class="{% block missing_resource_list_class %}resource-list{% endblock %}">
-      {% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
+
       {% for resource in missing %}
         {% snippet 'scheming/package/snippets/missing_resource_item.html', pkg=pkg, res=resource, can_edit=can_edit %}
       {% endfor %}
     </ul>
   </section>
   {% endif %}
+{% endif %}
 {% endblock %}
