@@ -4,3 +4,6 @@ links/*
 build/*
 dist/*
 .eggs/*
+
+# Translations
+*.pot
