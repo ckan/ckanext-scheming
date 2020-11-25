@@ -359,6 +359,10 @@ This extension includes the following display snippets:
   show the label text for the choice selected
 * [multiple_choice.html](ckanext/scheming/templates/scheming/display_snippets/) -
   show the label text for all choices selected
+* [datetime_tz.html](ckanext/scheming/templates/scheming/display_snippets/datetime_tz.html) -
+  render as timezone aware datetime (%Y-%m-%d %H:%M %Z)
+* [json.html](ckanext/scheming/templates/scheming/display_snippets/json.html) -
+  render as pretty-printed JSON, sorted by key
 
 If `null` is passed as value in `display_snippet`, it will remove the field from being displayed at the view page.
 
