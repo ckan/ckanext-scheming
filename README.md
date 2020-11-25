@@ -267,7 +267,7 @@ This extension includes the following presets:
 * `"multiple_select"` - multiple choice from [choices](#choices)
   rendered as a multiple select box in the form
 * `"date"` - date validation and form snippet
-* `"datetime"` date and time validation and form snippet
+* `"datetime"` - date and time validation and form snippet
 * `"dataset_slug"` - dataset slug validation and form snippet that
   autofills the value from the title field
 * `"tag_string_autocomplete"` - tag string validation and form autocomplete
@@ -308,12 +308,18 @@ This extension includes the following form snippets:
   a larger text field, typically used for the title
 * [date.html](ckanext/scheming/templates/scheming/form_snippets/date.html) -
   a date widget with an html5 date picker
+  * [datetime.html](ckanext/scheming/templates/scheming/form_snippets/datetime.html) -
+  a datetime widget
+  * [datetime_tz.html](ckanext/scheming/templates/scheming/form_snippets/datetime.html) -
+  a timezone-aware datetime widget
 * [slug.html](ckanext/scheming/templates/scheming/form_snippets/slug.html) -
   the default name (URL) field
 * [license.html](ckanext/scheming/templates/scheming/form_snippets/license.html) -
   a dataset license selection field
 * [markdown.html](ckanext/scheming/templates/scheming/form_snippets/markdown.html) -
   a markdown field, often used for descriptions
+* [textarea.html](ckanext/scheming/templates/scheming/form_snippets/textarea.html) - 
+  a plain textarea, similar to markdown.html, but without markdown support
 * [organization.html](ckanext/scheming/templates/scheming/form_snippets/organization.html) -
   an organization selection field for datasets
 * [upload.html](ckanext/scheming/templates/scheming/form_snippets/upload.html) -
@@ -353,6 +359,10 @@ This extension includes the following display snippets:
   show the label text for the choice selected
 * [multiple_choice.html](ckanext/scheming/templates/scheming/display_snippets/) -
   show the label text for all choices selected
+* [datetime_tz.html](ckanext/scheming/templates/scheming/display_snippets/datetime_tz.html) -
+  render as timezone aware datetime (%Y-%m-%d %H:%M %Z)
+* [json.html](ckanext/scheming/templates/scheming/display_snippets/json.html) -
+  render as pretty-printed JSON, sorted by key
 
 If `null` is passed as value in `display_snippet`, it will remove the field from being displayed at the view page.
 
