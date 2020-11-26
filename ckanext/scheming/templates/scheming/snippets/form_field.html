@@ -3,13 +3,18 @@
 
 {%- set form_snippet = field.form_snippet -%}
 
-{%- if not form_snippet -%}
-  {%- set form_snippet = 'text.html' -%}
-{%- endif -%}
+{#- If explicitly marked as false in the schema, skip the field completely -#}
+{%- if not form_snippet is sameas false -%}
 
-{%- if '/' not in form_snippet -%}
-  {%- set form_snippet = 'scheming/form_snippets/' + form_snippet -%}
-{%- endif -%}
+  {%- if not form_snippet -%}
+    {%- set form_snippet = 'text.html' -%}
+  {%- endif -%}
 
-{%- snippet form_snippet, field=field, data=data, errors=errors,
-  licenses=licenses, entity_type=entity_type, object_type=object_type -%}
+  {%- if '/' not in form_snippet -%}
+    {%- set form_snippet = 'scheming/form_snippets/' + form_snippet -%}
+  {%- endif -%}
+
+  {%- snippet form_snippet, field=field, data=data, errors=errors,
+    licenses=licenses, entity_type=entity_type, object_type=object_type -%}
+
+{%- endif -%}
