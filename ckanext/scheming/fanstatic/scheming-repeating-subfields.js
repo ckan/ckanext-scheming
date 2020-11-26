@@ -6,7 +6,6 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                 $template = $this.children('div[name="repeating-template"]'),
                 template = $template.html(),
                 $add = $this.children('a[name="repeating-add"]'),
-                $remove = $this.find('a[name="repeating-remove"]'),
                 $count = $this.find('.scheming-subfield-group').length-1;
             $template.remove();
 
@@ -23,7 +22,7 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                 e.preventDefault();
             });
 
-            $remove.on('click', function(e) {
+            $(document).on('click', 'a[name="repeating-remove"]', function(e) {
                 var $groups = $this.find('.scheming-subfield-group'),
                     $curr = $(this).closest('.scheming-subfield-group'),
                     $body = $curr.find('.panel-body');
