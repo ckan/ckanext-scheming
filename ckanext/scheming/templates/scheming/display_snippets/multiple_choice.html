@@ -1,4 +1,4 @@
-{%- set values = data[field.field_name] -%}
+{%- set values = data[field.field_name].split(',') -%}
 {%- set labels = [] -%}
 
 {%- for choice in h.scheming_field_choices(field) -%}
