@@ -26,3 +26,18 @@ class TestAutoCreateValidName(object):
 
         updated_dataset2 = lc.action.package_update(**dataset2)
         assert updated_dataset2['name'] == updated_dataset2['name']
+
+    def test_handles_deleted_datasets(self):
+        lc = LocalCKAN()
+        lc.action.package_create(
+            type="auto-create-valid-name", year="2020", location="north-pole"
+        )
+        dataset2 = lc.action.package_create(
+            type="auto-create-valid-name", year="2020", location="north-pole"
+        )
+        lc.action.package_delete(id=dataset2['id'])
+
+        dataset3 = lc.action.package_create(
+            type="auto-create-valid-name", year="2020", location="north-pole"
+        )
+        assert dataset3['name'] == u'north-pole-autogenerate-2020-1'
