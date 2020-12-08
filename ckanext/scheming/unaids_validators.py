@@ -66,6 +66,9 @@ def unique_combination(field, schema):
 @scheming_validator
 def auto_create_valid_name(field, schema):
     def validator(key, data, errors, context):
+        if context.get('package'):
+            data[key] = context['package'].name
+            return
         counter = 1
         while True:
             package_name_errors = copy.deepcopy(errors)
