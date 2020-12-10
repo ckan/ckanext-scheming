@@ -97,8 +97,8 @@ def scheming_datastore_choices(field):
     "datastore_choices_limit": 1000 (default)
     "datastore_additional_choices": [
         {
-          "value": "bactrian",
-          "label": "Bactrian Camel"
+          "value": "none",
+          "label": "None"
         },
         "..."
       ]
