@@ -246,7 +246,18 @@ You may [register your own helper function](https://docs.ckan.org/en/2.8/theming
   "datastore_choices_columns": {
     "value": "Country Code",
     "label": "English Country Name"
-  }
+  },
+  "datastore_additional_choices": [
+    {
+      "value": "none",
+      "label": "None"
+    },
+    {
+      "value": "na",
+      "label": "N/A"
+    },
+    "..."
+  ]
 }
 ```
 
