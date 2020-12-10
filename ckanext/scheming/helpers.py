@@ -131,7 +131,7 @@ def scheming_datastore_choices(field):
     datastore_choices = [{'value': r[fields[0]], 'label': r[fields[1]]}
             for r in result['records']]
 
-    additional_choices = field.get('datastore_additional_choices')
+    additional_choices = field.get('datastore_additional_choices', [])
 
     return additional_choices + datastore_choices
 
