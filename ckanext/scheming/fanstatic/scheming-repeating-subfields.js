@@ -5,8 +5,7 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                 $this = $(this.el),
                 $template = $this.children('div[name="repeating-template"]'),
                 template = $template.html(),
-                $add = $this.children('a[name="repeating-add"]'),
-                $count = $this.find('.scheming-subfield-group').length-1;
+                $add = $this.find('a[name="repeating-add"]');
             $template.remove();
 
             $add.on('click', function(e) {
@@ -15,10 +14,9 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                     $copy = $(
                         template.replace(/REPEATING-INDEX0/g, group)
                         .replace(/REPEATING-INDEX1/g, group + 1));
-                $copy.insertAfter($last);
+                $copy.insertAfter($last).hide().show(100);
                 // hook for late init when required for rendering polyfills
                 $this.trigger('scheming.subfield-group-init');
-                $count+=1;
                 e.preventDefault();
             });
 
@@ -26,8 +24,9 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                 var $groups = $this.find('.scheming-subfield-group'),
                     $curr = $(this).closest('.scheming-subfield-group'),
                     $body = $curr.find('.panel-body');
-                $count -=1;
-                $body.html(container.i18n('removal-text'));
+                $body.hide(100, function() {
+                  $body.html(container.i18n('removal-text')).show(200);
+                });
             });
         }
     };
