@@ -36,8 +36,16 @@
   {% set flat = h.scheming_flatten_subfield(field, data) %}
   {% set flaterr = h.scheming_flatten_subfield(field, errors) %}
 
-{% set locale = h.dump_json({'removal-text': _('These fields have been removed, click save below to update the record with your changes.') }) %}
-<fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields" data-module-i18n="{{ locale }}">
+{% set locale = {} %}
+{% block removal_text %}
+  {% if 'id' in data %}
+    {% set non = locale.update({'removal-text': _('These fields have been removed, click update below to save your changes.')}) %}
+  {% else %}
+    {% set non = locale.update({'removal-text': _('These fields have been removed.')}) %}
+  {% endif %}
+{% endblock %}
+<fieldset name="scheming-repeating-subfields" class="scheming-fieldset"
+    data-module="scheming-repeating-subfields" data-module-i18n="{{h.dump_json(locale)}}">
   {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
     {% if alert_warning %}
       <section class="alert alert-warning">
@@ -51,14 +59,16 @@
     {% for index in range(group_count) %}
       {{ repeating_panel(index, index + 1) }}
     {% endfor %}
-    <a href="javascript:;" name="repeating-add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}</a>
+    <div class="form-group control-medium">
+      <a href="javascript:;" name="repeating-add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}</a>
 
-    {% set help_text = h.scheming_language_text(field.help_text) %}
-    {% if help_text %}
-      <div class="info-block mrgn-tp-md">
-        {{ help_text }}
-      </div>
-    {% endif %}
+      {% set help_text = h.scheming_language_text(field.help_text) %}
+      {% if help_text %}
+        <div class="info-block mrgn-tp-md">
+          {{ help_text }}
+        </div>
+      {% endif %}
+    </div>
 
     <div name="repeating-template" style="display:none">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</div>
   </fieldset>
