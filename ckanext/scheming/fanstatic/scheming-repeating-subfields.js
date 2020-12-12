@@ -27,9 +27,6 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
                     $curr = $(this).closest('.scheming-subfield-group'),
                     $body = $curr.find('.panel-body');
                 $count -=1;
-                if($count == 0){
-                    $add.click();
-                  }
                 $body.html(container.i18n('removal-text'));
             });
         }
