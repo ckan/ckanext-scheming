@@ -12,6 +12,6 @@
     error=errors[field.field_name],
     classes=['control-medium'],
     attrs=field.form_attrs if 'form_attrs' in field else {},
-    is_required=h.scheming_field_required(field)
+    is_required=h.scheming_field_required(field) and loop.index == 1,
     ) }}
 {%- endfor -%}
