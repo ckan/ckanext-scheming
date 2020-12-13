@@ -35,6 +35,7 @@
           {% else %}
             {{ _('These fields have been removed.') }}
           {% endif %}
+          <a class="btn btn-link" name="repeating-undo-remove" href="javascript:;">{% block undo_button_text %}{{ _('Undo') }}{% endblock %}</a>
         {% endblock %}
       </div>
     </div>

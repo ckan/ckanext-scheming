@@ -1,4 +1,4 @@
-this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
+this.ckan.module('scheming-repeating-subfields', function($, _) {
     return {
         initialize: function() {
             var container = this,
@@ -21,14 +21,30 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
             });
 
             $(document).on('click', 'a[name="repeating-remove"]', function(e) {
-                var $groups = $this.find('.scheming-subfield-group'),
-                    $curr = $(this).closest('.scheming-subfield-group'),
+                var $curr = $(this).closest('.scheming-subfield-group'),
                     $body = $curr.find('.panel-body.fields-content'),
                     $removed = $curr.find('.panel-body.fields-removed-notice');
                 $removed.show(100);
                 $body.hide(100, function() {
-                  $body.remove()
+                  if($body.html()) {
+                    $body.data('undo_html', $body.html());
+                    $body.html('')
+                  }
                 });
+                e.preventDefault();
+            });
+
+            $(document).on('click', 'a[name="repeating-undo-remove"]', function(e) {
+                var $curr = $(this).closest('.scheming-subfield-group'),
+                    $removed = $curr.find('.panel-body.fields-removed-notice'),
+                    $body = $curr.find('.panel-body.fields-content');
+                if($body.data('undo_html')) {
+                  $removed.hide(100);
+                  $body.html($body.data('undo_html')).show(100);
+                  $curr.data('undo_html', undefined);
+                  $this.trigger('scheming.subfield-group-init');
+                }
+                e.preventDefault();
             });
         }
     };
