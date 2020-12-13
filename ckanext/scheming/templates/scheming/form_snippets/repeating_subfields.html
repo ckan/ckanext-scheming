@@ -7,7 +7,7 @@
   <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
     <div class="panel panel-primary">
       <header class="panel-heading">
-        {{ h.scheming_language_text(field.label) }} {{ index1 }}
+        {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ index1 }}
       </header>
       <div class="panel-body fields-content">
         {% for subfield in field.repeating_subfields %}
@@ -46,7 +46,7 @@
 
 {% call form.input_block(
   'field-' + field.field_name,
-  h.scheming_language_text(field.repeating_label or field.label) or field.field_name,
+  h.scheming_language_text(field.label) or field.field_name,
   [],
   field.classes if 'classes' in field else ['control-medium'],
   dict({"class": "form-control"}, **(field.get('form_attrs', {}))),

@@ -1,56 +1,27 @@
 {#- master snippet for all scheming display fields -#}
 {#- render the field the user requested, or use a default field -#}
-{%- if field.repeating_subfields %}
-  {% set fields = data[field.field_name] %}
+{%- set display_snippet = field.display_snippet -%}
 
-{% block subfield_display %}
-  {% for field_data in fields %}
-    <div class="panel panel-default">
-        <header class="panel-heading">
-          {{ h.scheming_language_text(field.label) }} {{ loop.index }}
-        </header>
-      <div class="panel-body">
-        <dl class="scheming-subfield-list">
-          {% for subfield in field.repeating_subfields %}
-            <dt class="dataset-label">
-              {{ h.scheming_language_text(subfield.label) }}
-            </dt>
-            <dd>
-            {%- snippet 'scheming/snippets/display_field.html',
-              field=subfield,
-              data=field_data,
-              entity_type=entity_type,
-              object_type=object_type
-            -%}
-            </dd>
-          {% endfor %}
-        </dl>
-      </div>
-    </div>
-  {% endfor %}
-{% endblock %}
-{% else %}
-  {%- set display_snippet = field.display_snippet -%}
-
-  {%- if not display_snippet -%}
-    {%- if h.scheming_field_choices(field) -%}
-      {%- set display_snippet = 'select.html' -%}
-    {%- else -%}
-      {%- set display_snippet = 'text.html' -%}
-    {%- endif -%}
+{%- if not display_snippet -%}
+  {%- if field.repeating_subfields -%}
+    {%- set display_snippet = 'repeating_subfields.html' -%}
+  {%- elif h.scheming_field_choices(field) -%}
+    {%- set display_snippet = 'select.html' -%}
+  {%- else -%}
+    {%- set display_snippet = 'text.html' -%}
   {%- endif -%}
+{%- endif -%}
 
-  {%- if '/' not in display_snippet -%}
-    {%- set display_snippet = 'scheming/display_snippets/' + display_snippet -%}
-  {%- endif -%}
+{%- if '/' not in display_snippet -%}
+  {%- set display_snippet = 'scheming/display_snippets/' + display_snippet -%}
+{%- endif -%}
 
-  {%- if field.field_name in data -%}
-    {%- snippet display_snippet,
-      field=field,
-      data=data,
-      errors=errors,
-      entity_type=entity_type,
-      object_type=object_type 
-    -%}
-  {%- endif -%}
-{% endif -%}
+{%- if field.field_name in data -%}
+  {%- snippet display_snippet,
+    field=field,
+    data=data,
+    errors=errors,
+    entity_type=entity_type,
+    object_type=object_type
+  -%}
+{%- endif -%}
