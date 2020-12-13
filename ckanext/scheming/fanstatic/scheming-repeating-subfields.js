@@ -23,9 +23,11 @@ this.ckan.module('scheming-repeating-subfields', function (jQuery, _) {
             $(document).on('click', 'a[name="repeating-remove"]', function(e) {
                 var $groups = $this.find('.scheming-subfield-group'),
                     $curr = $(this).closest('.scheming-subfield-group'),
-                    $body = $curr.find('.panel-body');
+                    $body = $curr.find('.panel-body.fields-content'),
+                    $removed = $curr.find('.panel-body.fields-removed-notice');
+                $removed.show(100);
                 $body.hide(100, function() {
-                  $body.html(container.i18n('removal-text')).show(200);
+                  $body.remove()
                 });
             });
         }
