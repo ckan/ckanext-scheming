@@ -434,7 +434,7 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
         if data_dict['type'] not in schemas:
             return data_dict
 
-        for df in schemas[data_dict['type']]['dataset_fields']:
+        for d in schemas[data_dict['type']]['dataset_fields']:
             if d['field_name'] not in data_dict:
                 continue
             if 'repeating_subfields' in df:

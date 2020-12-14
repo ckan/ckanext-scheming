@@ -76,7 +76,7 @@ def scheming_subfields(field, schema):
 
             # ... then turn it back into an ordered list.
             value = [v for k, v in sorted(values.items())]
-        elif isinstance(value, basestring):
+        elif isinstance(value, six.string_types):
             value = json.loads(value)
 
         if not isinstance(value, list):
@@ -509,7 +509,7 @@ def scheming_multiple_text(key, data, errors, context):
     value = data[key]
     # 1. list of strings or 2. single string
     if value is not missing:
-        if isinstance(value, basestring):
+        if isinstance(value, six.string_types):
             value = [value]
         if not isinstance(value, list):
             errors[key].append(_('expecting list of strings'))
@@ -517,7 +517,7 @@ def scheming_multiple_text(key, data, errors, context):
 
         out = []
         for element in value:
-            if not isinstance(element, basestring):
+            if not isinstance(element, six.string_types):
                 errors[key].append(_('invalid type for repeating text: %r')
                                    % element)
                 continue
