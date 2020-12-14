@@ -23,7 +23,7 @@ this.ckan.module('scheming-repeating-subfields', function($, _) {
       $(document).on('click', 'a[name="repeating-remove"]', function(e) {
         var $curr = $(this).closest('.scheming-subfield-group');
         var $body = $curr.find('.panel-body.fields-content');
-        var $button = $curr.find('.remove-button');
+        var $button = $curr.find('.btn-repeating-remove');
         var $removed = $curr.find('.panel-body.fields-removed-notice');
         $button.hide();
         $removed.show(100);
@@ -39,7 +39,7 @@ this.ckan.module('scheming-repeating-subfields', function($, _) {
       $(document).on('click', 'a[name="repeating-undo-remove"]', function(e) {
         var $curr = $(this).closest('.scheming-subfield-group');
         var $removed = $curr.find('.panel-body.fields-removed-notice');
-        var $button = $curr.find('.remove-button');
+        var $button = $curr.find('.btn-repeating-remove');
         var $body = $curr.find('.panel-body.fields-content');
         if($body.data('undo_html')) {
           $removed.hide(100);

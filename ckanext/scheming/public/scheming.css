@@ -1,0 +1,13 @@
+header.panel-heading {
+  position: relative;
+}
+
+/* try to resemble .btn-remove-url style in resource form */
+.btn.btn-danger.btn-repeating-remove {
+  position: absolute;
+  margin-right: 0;
+  top: 9px;
+  right: 7px;
+  padding: 0 12px;
+  border-radius: 100px;
+}

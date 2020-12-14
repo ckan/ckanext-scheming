@@ -31,6 +31,7 @@ from ckantoolkit import (
     navl_validate,
     add_template_directory,
     add_resource,
+    add_public_directory,
     missing,
 )
 
@@ -95,7 +96,8 @@ class _SchemingMixin(object):
     @run_once_for_caller('_scheming_add_template_directory', lambda: None)
     def _add_template_directory(self, config):
         add_template_directory(config, 'templates')
-        add_resource('fanstatic', 'scheming')
+        add_resource('resource', 'scheming')
+        add_public_directory(config, 'public')
 
     @staticmethod
     def _load_presets(config):
@@ -437,7 +439,7 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
         for d in schemas[data_dict['type']]['dataset_fields']:
             if d['field_name'] not in data_dict:
                 continue
-            if 'repeating_subfields' in df:
+            if 'repeating_subfields' in d:
                 data_dict[d['field_name']] = json.dumps(data_dict[d['field_name']])
 
         return data_dict
