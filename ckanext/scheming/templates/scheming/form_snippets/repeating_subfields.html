@@ -5,9 +5,21 @@
 
 {% macro repeating_panel(index, index1) %}
   <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
-    <div class="panel panel-primary">
+    <div class="panel panel-default">
       <header class="panel-heading">
-        {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ index1 }}
+        <div class="row">
+          <div class="col-md-9">
+            {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ index1 }}
+          </div>
+          <div class="col-md-3">
+            <div class="pull-right">
+              {% block field_removal_button%}
+                <a class="btn btn-link btn-sm" name="repeating-remove" href="javascript:;"
+                  >{% block delete_button_text %}<i class="fa fa-remove " ></i>&nbsp;{{ _('Delete') }}{% endblock %}</a>
+              {% endblock %}
+            </div>
+          </div>
+        </div>
       </header>
       <div class="panel-body fields-content">
         {% for subfield in field.repeating_subfields %}
@@ -24,9 +36,6 @@
             object_type=object_type
           -%}
         {% endfor %}
-        {% block field_removal_button%}
-          <a class="btn btn-danger pull-left" name="repeating-remove" href="javascript:;">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
-        {% endblock %}
       </div>
       <div class="panel-body fields-removed-notice" style="display:none">
         {% block removal_text %}
@@ -35,7 +44,8 @@
           {% else %}
             {{ _('These fields have been removed.') }}
           {% endif %}
-          <a class="btn btn-link" name="repeating-undo-remove" href="javascript:;">{% block undo_button_text %}{{ _('Undo') }}{% endblock %}</a>
+          <a class="btn btn-link" name="repeating-undo-remove" href="javascript:;"
+            >{% block undo_button_text %}<i class="fa fa-undo" aria-hidden="true"></i>&nbsp;{{ _('Undo') }}{% endblock %}</a>
         {% endblock %}
       </div>
     </div>
@@ -67,7 +77,8 @@
       {{ repeating_panel(index, index + 1) }}
     {% endfor %}
     <div class="form-group control-medium">
-      <a href="javascript:;" name="repeating-add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}</a>
+      <a href="javascript:;" name="repeating-add" class="btn btn-link"
+        >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>
 
       {% set help_text = h.scheming_language_text(field.help_text) %}
       {% if help_text %}
