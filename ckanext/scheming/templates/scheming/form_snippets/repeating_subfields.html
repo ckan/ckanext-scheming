@@ -7,19 +7,13 @@
   <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
     <div class="panel panel-default">
       <header class="panel-heading">
-        <div class="row">
-          <div class="col-md-9">
-            {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ index1 }}
-          </div>
-          <div class="col-md-3">
-            <div class="pull-right">
-              {% block field_removal_button%}
-                <a class="btn btn-link btn-sm" name="repeating-remove" href="javascript:;"
-                  >{% block delete_button_text %}<i class="fa fa-remove " ></i>&nbsp;{{ _('Delete') }}{% endblock %}</a>
-              {% endblock %}
-            </div>
-          </div>
+        <div class="remove-button pull-right">
+          {% block field_removal_button%}
+            <a class="btn btn-link btn-sm" name="repeating-remove" href="javascript:;"
+              >{% block delete_button_text %}<i class="fa fa-remove" ></i>&nbsp;{{ _('Delete') }}{% endblock %}</a>
+          {% endblock %}
         </div>
+        {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ index1 }}
       </header>
       <div class="panel-body fields-content">
         {% for subfield in field.repeating_subfields %}
