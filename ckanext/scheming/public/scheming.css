@@ -11,3 +11,23 @@ header.panel-heading {
   padding: 0 12px;
   border-radius: 100px;
 }
+
+li.multiple-text-field {
+  position: relative;
+  padding-bottom: 2px;
+}
+
+li.multiple-text-field input {
+  padding-right: 90px;
+}
+
+/* try to resemble .btn-remove-url style in resource form */
+a.btn.btn-multiple-remove {
+  position: absolute;
+  margin-right: 0;
+  top: 6px;
+  right: 7px;
+  padding: 0 12px;
+  border-radius: 100px;
+}
+

@@ -1,17 +1,57 @@
+{% resource 'scheming/scheming-multiple-text.js' %}
 {% import 'macros/form.html' as form %}
+
+{% macro multiple_text(element) %}
+  <li class="multiple-text-field control-full">
+    <input
+      type="text"
+      name="{{ field.field_name }}"
+      value="{{ element }}"
+      class="form-control"
+      {{ form.attributes(field.form_attrs if 'form_attrs' in field else {}) }} />
+    <a class="btn btn-default btn-multiple-remove" name="multiple-remove" href="javascript:;"
+      >{% block delete_button_text %}{{ _('Remove') }}{% endblock %}</a>
+  </li>
+{% endmacro %}
 
 {%- set values = data.get(field.field_name, [])
     + [''] * field.get('form_blanks', 3) -%}
-{%- for element in values -%}
-  {{ form.input(
-    field.field_name + '-' ~ loop.index,
-    id='field-' + field.field_name + '-' ~ loop.index,
-    label=h.scheming_language_text(field.label) + ' ' ~ loop.index,
-    placeholder=h.scheming_language_text(field.form_placeholder),
-    value=element,
-    error=errors[field.field_name],
-    classes=['control-medium'],
-    attrs=field.form_attrs if 'form_attrs' in field else {},
-    is_required=h.scheming_field_required(field) and loop.index == 1,
-    ) }}
-{%- endfor -%}
+
+{% call form.input_block(
+  'field-' + field.field_name,
+  h.scheming_language_text(field.label) or field.field_name,
+  errors[field.field_name],
+  field.classes if 'classes' in field else ['control-medium'],
+  dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
+  is_required=h.scheming_field_required(field)) %}
+  <fieldset name="scheming-multiple-text" class="scheming-fieldset" data-module="scheming-multiple-text">
+    <ol>
+      {%- for element in values -%}
+        {{ multiple_text(element) }}
+      {%- endfor -%}
+    </ol>
+
+    {% set help_text = h.scheming_language_text(field.help_text) %}
+    {% if help_text %}
+      <div class="info-block mrgn-tp-md">
+        {{ help_text }}
+      </div>
+    {% endif %}
+
+    <div class="form-group control-medium">
+      <a href="javascript:;" name="multiple-add" class="btn btn-link"
+        >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>
+
+      {% set help_text = h.scheming_language_text(field.help_text) %}
+      {% if help_text %}
+        <div class="info-block mrgn-tp-md">
+          {{ help_text }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div name="multiple-template" style="display:none">{{ multiple_text("") }}</div>
+  </fieldset>
+{% endcall %}
+
+

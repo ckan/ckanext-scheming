@@ -55,7 +55,7 @@
   dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
   is_required=h.scheming_field_required(field)) %}
   <fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields">
-  {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
+    {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
     {% if alert_warning %}
       <section class="alert alert-warning">
         {{ alert_warning|safe }}
