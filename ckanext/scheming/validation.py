@@ -495,7 +495,7 @@ def scheming_multiple_text(key, data, errors, context):
 
        "Person One"
 
-    3. separate fields per language (for form submissions):
+    3. numbered fields (for form submissions):
 
        fieldname-0 = "Person One"
        fieldname-1 = "Person Two"
@@ -517,6 +517,9 @@ def scheming_multiple_text(key, data, errors, context):
 
         out = []
         for element in value:
+            if not element:
+                continue
+
             if not isinstance(element, six.string_types):
                 errors[key].append(_('invalid type for repeating text: %r')
                                    % element)
@@ -528,13 +531,14 @@ def scheming_multiple_text(key, data, errors, context):
                     errors[key]. append(_('invalid encoding for "%s" value')
                                         % element)
                     continue
+
             out.append(element)
 
         if not errors[key]:
             data[key] = json.dumps(out)
         return
 
-    # 3. separate fields
+    # 3. numbered fields
     found = {}
     prefix = key[-1] + '-'
     extras = data.get(key[:-1] + ('__extras',), {})
