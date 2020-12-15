@@ -9,9 +9,9 @@ this.ckan.module('scheming-multiple-text', function($, _) {
       $template.remove();
 
       $add.on('click', function(e) {
-        var $last = $this.find('.multiple-text-field').last();
         var $copy = $(template);
-        $copy.insertAfter($last).hide().show(100);
+        $this.find('.multiple-text-group').append($copy);
+        $copy.hide().show(100);
         e.preventDefault();
       });
 

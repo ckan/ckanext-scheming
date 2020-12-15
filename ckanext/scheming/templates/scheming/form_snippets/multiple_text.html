@@ -25,7 +25,7 @@
   dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
   is_required=h.scheming_field_required(field)) %}
   <fieldset name="scheming-multiple-text" class="scheming-fieldset" data-module="scheming-multiple-text">
-    <ol>
+    <ol class="multiple-text-group">
       {%- for element in values -%}
         {{ multiple_text(element) }}
       {%- endfor -%}
@@ -38,7 +38,7 @@
       </div>
     {% endif %}
 
-    <div class="form-group control-medium">
+    <div class="control-medium">
       <a href="javascript:;" name="multiple-add" class="btn btn-link"
         >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>
 
