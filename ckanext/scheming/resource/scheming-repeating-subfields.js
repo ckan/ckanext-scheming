@@ -15,6 +15,7 @@ this.ckan.module('scheming-repeating-subfields', function($, _) {
           template.replace(/REPEATING-INDEX0/g, group)
           .replace(/REPEATING-INDEX1/g, group + 1));
         $copy.insertAfter($last).hide().show(100);
+        $copy.find('input').first().focus();
         // hook for late init when required for rendering polyfills
         $this.trigger('scheming.subfield-group-init');
         e.preventDefault();
