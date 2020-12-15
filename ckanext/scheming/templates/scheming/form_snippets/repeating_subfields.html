@@ -68,9 +68,11 @@
       {%- set group_count = field.form_blanks|default(1) -%}
     {%- endif -%}
 
-    {% for index in range(group_count) %}
-      {{ repeating_panel(index, index + 1) }}
-    {% endfor %}
+    <div class="scheming-repeating-subfields-group">
+      {% for index in range(group_count) %}
+        {{ repeating_panel(index, index + 1) }}
+      {% endfor %}
+    </div>
     <div class="form-group control-medium">
       <a href="javascript:;" name="repeating-add" class="btn btn-link"
         >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>

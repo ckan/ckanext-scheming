@@ -10,11 +10,12 @@ this.ckan.module('scheming-repeating-subfields', function($, _) {
 
       $add.on('click', function(e) {
         var $last = $this.find('.scheming-subfield-group').last();
-        var group = $last.data('groupIndex') + 1;
+        var group = ($last.data('groupIndex') + 1) || 0;
         var $copy = $(
           template.replace(/REPEATING-INDEX0/g, group)
           .replace(/REPEATING-INDEX1/g, group + 1));
-        $copy.insertAfter($last).hide().show(100);
+        $this.find('.scheming-repeating-subfields-group').append($copy);
+        $copy.hide().show(100);
         $copy.find('input').first().focus();
         // hook for late init when required for rendering polyfills
         $this.trigger('scheming.subfield-group-init');
