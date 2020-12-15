@@ -14,8 +14,7 @@
   </li>
 {% endmacro %}
 
-{%- set values = data.get(field.field_name, [])
-    + [''] * field.get('form_blanks', 3) -%}
+{%- set values = data.get(field.field_name, []) or ([''] * field.get('form_blanks', 1)) -%}
 
 {% call form.input_block(
   'field-' + field.field_name,
