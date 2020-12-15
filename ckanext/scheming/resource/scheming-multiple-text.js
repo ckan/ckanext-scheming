@@ -12,6 +12,7 @@ this.ckan.module('scheming-multiple-text', function($, _) {
         var $copy = $(template);
         $this.find('.multiple-text-group').append($copy);
         $copy.hide().show(100);
+        $copy.find('input').focus();
         e.preventDefault();
       });
 
