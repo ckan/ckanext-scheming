@@ -43,33 +43,27 @@
           <td>{% snippet "snippets/license.html", pkg_dict=pkg, text_only=True %}</td>
         </tr>
       {%- endblock -%}
+
+        {%- block resource_fields -%}
+          {%- for field in schema.resource_fields -%}
+            {%- if field.field_name not in exclude_fields
+                and field.display_snippet is not none -%}
+              <tr>
+                <th scope="row">
+                  {{- h.scheming_language_text(field.label) -}}
+                </th>
+                <td>
+                  {%- snippet 'scheming/snippets/display_field.html',
+                      field=field, data=res, entity_type='dataset',
+                      object_type=dataset_type -%}
+                </td>
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endblock -%}
       </tbody>
     </table>
 
-    {% block resource_fields %}
-      {%- for group in schema.resource_fields -%}
-        {%- set group_fields = h.scheming_non_empty_fields(group.list|list, res, exclude_fields) -%}
-        {% if group_fields %}
-          <div class="additional-info">
-            <h3 class="dataset-group-label">{{ group.grouper }}</h3>
-            <dl>
-              {% for field in group_fields %}
-                <dt class="dataset-label">
-                  {{ h.scheming_language_text(field.label) }}
-                </dt>
-                <dd class="dataset-details">
-                  {%- snippet 'scheming/snippets/display_field.html',
-              field=field,
-              data=res,
-              entity_type='dataset',
-              object_type=dataset_type -%}
-                </dd>
-              {% endfor %}
-            </dl>
-          </div>
-        {% endif %}
-      {% endfor %}
-    {% endblock %}
 
   </div>
 {% endblock %}

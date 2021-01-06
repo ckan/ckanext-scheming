@@ -422,18 +422,3 @@ def scheming_flatten_subfield(subfield, data):
         for k in record:
             flat[prefix + k] = record[k]
     return flat
-
-
-@helper
-def scheming_non_empty_fields(field_list, pkg_dict, exclude):
-    r = []
-    for field in field_list:
-        if field['field_name'] in exclude:
-            continue
-
-        if field.get('display_snippet', False) is None:
-            continue
-
-        if pkg_dict.get(field['field_name']):
-            r.append(field)
-    return r
