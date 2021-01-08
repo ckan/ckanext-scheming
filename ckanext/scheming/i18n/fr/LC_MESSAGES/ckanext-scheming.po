@@ -9,15 +9,16 @@ msgstr ""
 "Project-Id-Version: ckanext-scheming 1.2.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2020-11-19 13:53+0000\n"
-"PO-Revision-Date: 2020-03-26 10:57+0100\n"
+"PO-Revision-Date: 2020-12-15 10:25+0300\n"
 "Last-Translator: \n"
 "Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: ckanext/scheming/plugins.py:241
 msgid "Unsupported {thing} type: {t}"
@@ -37,7 +38,7 @@ msgstr "choix inattendu \"{value}\""
 
 #: ckanext/scheming/validation.py:205
 msgid "expecting list of strings"
-msgstr "en attente de la liste de chaînes"
+msgstr "en attente de la liste de valeurs"
 
 #: ckanext/scheming/validation.py:223
 msgid "unexpected choice \"{element}\""
@@ -186,7 +187,7 @@ msgstr "Le type de ressource n’existe pas"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resource_form.html:81
 msgid "Save & add another"
-msgstr ""
+msgstr "Enregistrer et ajouter un autre"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:13
 msgid "Data and Resources"
@@ -194,14 +195,13 @@ msgstr "Données et ressources"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:26
 #, python-format
-msgid ""
-"<p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not "
-"add some?</a></p>"
-msgstr ""
+msgid "<p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not add some?</a></p>"
+msgstr "<p class=\"empty\">Cet ensemble de données ne contient aucune donnée,"
+"<a href=\"%(url)s\">pourquoi ne pas y ajouter ?</a></p>"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:30
 msgid "This dataset has no data"
-msgstr ""
+msgstr "Cet ensemble de données ne contient aucune donnée"
 
 #: ckanext/scheming/templates/scheming/package/snippets/resources_list.html:43
 msgid "Missing Resources"
@@ -243,4 +243,3 @@ msgstr "Le formulaire contient des entrées non valides:"
 
 #~ msgid "Download Data Template"
 #~ msgstr "Télécharger le modèle de données"
-
