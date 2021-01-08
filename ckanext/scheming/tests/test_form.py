@@ -14,10 +14,10 @@ def sysadmin_env():
     return {"REMOTE_USER": user["name"].encode("ascii")}
 
 
-def _get_package_new_page_as_sysadmin(app):
+def _get_package_new_page_as_sysadmin(app, type_='test-schema'):
     user = Sysadmin()
     env = {"REMOTE_USER": user["name"].encode("ascii")}
-    response = app.get(url="/test-schema/new", extra_environ=env)
+    response = app.get(url="/{0}/new".format(type_), extra_environ=env)
     return env, response
 
 
@@ -321,3 +321,146 @@ class TestJSONResourceForm(object):
         dataset = call_action("package_show", id=dataset["id"])
 
         assert dataset["resources"][0]["a_resource_json_field"] == value
+
+
+@pytest.mark.usefixtures("clean_db")
+class TestSubfieldDatasetForm(object):
+    def test_dataset_form_includes_subfields(self, app):
+        env, response = _get_package_new_page_as_sysadmin(app, 'test-subfields')
+        form = BeautifulSoup(response.body).select("form")[1]
+        assert form.select("fieldset[name=scheming-repeating-subfields]")
+
+    def test_dataset_form_create(self, app, sysadmin_env):
+        data = {"save": "", "_ckan_phase": 1}
+
+        data["name"] = "subfield_dataset_1"
+        data["citation-0-originator"] = ['mei', 'ahmed']
+        data["contact_address-0-address"] = 'anyplace'
+
+        url = '/test-subfields/new'
+        try:
+            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        dataset = call_action("package_show", id="subfield_dataset_1")
+        assert dataset["citation"] == [{'originator': ['mei', 'ahmed']}]
+        assert dataset["contact_address"] == [{'address': 'anyplace'}]
+
+    def test_dataset_form_update(self, app):
+        dataset = Dataset(
+            type="test-subfields",
+            citation=[{'originator': ['mei']}, {'originator': ['ahmed']}],
+            contact_address=[{'address': 'anyplace'}])
+
+        env, response = _get_package_update_page_as_sysadmin(
+            app, dataset["id"]
+        )
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert form.select_one(
+            "input[name=citation-1-originator]"
+        ).attrs['value'] == 'ahmed'
+
+        data = {"save": ""}
+        data["citation-0-originator"] = ['ling']
+        data["citation-1-originator"] = ['umet']
+        data["contact_address-0-address"] = 'home'
+        data["name"] = dataset["name"]
+
+        url = '/test-subfields/edit/' + dataset["id"]
+        try:
+            app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=env)
+
+        dataset = call_action("package_show", id=dataset["id"])
+
+        assert dataset["citation"] == [{'originator': ['ling']}, {'originator': ['umet']}]
+        assert dataset["contact_address"] == [{'address': 'home'}]
+
+
+
+@pytest.mark.usefixtures("clean_db")
+class TestSubfieldResourceForm(object):
+    def test_resource_form_includes_subfields(self, app):
+        dataset = Dataset(type="test-subfields", citation=[{'originator': 'na'}])
+
+        env, response = _get_resource_new_page_as_sysadmin(app, dataset["id"])
+        form = BeautifulSoup(response.body).select_one("#resource-edit")
+        assert form.select("fieldset[name=scheming-repeating-subfields]")
+
+    def test_resource_form_create(self, app):
+        dataset = Dataset(type="test-subfields", citation=[{'originator': 'na'}])
+
+        env, response = _get_resource_new_page_as_sysadmin(app, dataset["id"])
+
+        url = ckantoolkit.h.url_for(
+            "test-subfields_resource.new", id=dataset["id"]
+        )
+        if not url.startswith('/'):  # ckan < 2.9
+            url = '/dataset/new_resource/' + dataset["id"]
+
+        data = {"id": "", "save": ""}
+        data["url"] = "http://example.com/data.csv",
+        data["schedule-0-impact"] = "P"
+        try:
+            app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=env)
+        dataset = call_action("package_show", id=dataset["id"])
+
+        assert dataset["resources"][0]["schedule"] == [{"impact": "P"}]
+
+    def test_resource_form_update(self, app):
+        dataset = Dataset(
+            type="test-subfields",
+            citation=[{'originator': 'na'}],
+            resources=[
+                {
+                    "url": "http://example.com/data.csv",
+                    "schedule": [
+                        {"impact": "A", "frequency": "1m"},
+                        {"impact": "P", "frequency": "7d"},
+                    ]
+                }
+            ],
+        )
+
+        env, response = _get_resource_update_page_as_sysadmin(
+            app, dataset["id"], dataset["resources"][0]["id"]
+        )
+        form = BeautifulSoup(response.body).select_one("#resource-edit")
+        opt7d = form.find_all('option', {'value': '7d'})
+        assert 'selected' not in opt7d[0].attrs
+        assert 'selected' in opt7d[1].attrs
+        assert 'selected' not in opt7d[2].attrs  # blank subfields
+
+        url = ckantoolkit.h.url_for(
+            "test-schema_resource.edit",
+            id=dataset["id"],
+            resource_id=dataset["resources"][0]["id"],
+        )
+        if not url.startswith('/'):  # ckan < 2.9
+            url = '/dataset/{ds}/resource_edit/{rs}'.format(
+                ds=dataset["id"],
+                rs=dataset["resources"][0]["id"]
+            )
+
+        data = {"id": dataset["resources"][0]["id"], "save": ""}
+        data["url"] = "http://example.com/data.csv",
+        data["schedule-0-frequency"] = '1y'
+        data["schedule-0-impact"] = 'A'
+        data["schedule-1-frequency"] = '1m'
+        data["schedule-1-impact"] = 'P'
+
+        try:
+            app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=env)
+
+        dataset = call_action("package_show", id=dataset["id"])
+
+        assert dataset["resources"][0]["schedule"] == [
+            {"frequency": '1y', "impact": 'A'},
+            {"frequency": '1m', "impact": 'P'},
+        ]
