@@ -13,6 +13,7 @@ from ckantoolkit import (
     UnknownValidator,
     missing,
     Invalid,
+    StopOnError,
     _
 )
 
@@ -480,11 +481,13 @@ def convert_to_json_if_datetime(date, context):
     return date
 
 
+@scheming_validator
 @register_validator
-def scheming_multiple_text(key, data, errors, context):
+def scheming_multiple_text(field, schema):
     """
-    Accept repeating text input in the following forms
-    and convert to a json list for storage:
+    Accept repeating text input in the following forms and convert to a json list
+    for storage. Also act like scheming_required to check for at least one non-empty
+    string when required is true:
 
     1. a list of strings, eg.
 
@@ -494,69 +497,51 @@ def scheming_multiple_text(key, data, errors, context):
        migrated to repeating text
 
        "Person One"
-
-    3. numbered fields (for form submissions):
-
-       fieldname-0 = "Person One"
-       fieldname-1 = "Person Two"
     """
-
-    # just in case there was an error before our validator,
-    # bail out here because our errors won't be useful
-    if errors[key]:
-        return
-
-    value = data[key]
-    # 1. list of strings or 2. single string
-    if value is not missing:
-        if isinstance(value, six.string_types):
-            value = [value]
-        if not isinstance(value, list):
-            errors[key].append(_('expecting list of strings'))
+    def _scheming_multiple_text(key, data, errors, context):
+        # just in case there was an error before our validator,
+        # bail out here because our errors won't be useful
+        if errors[key]:
             return
 
-        out = []
-        for element in value:
-            if not element:
-                continue
+        value = data[key]
+        # 1. list of strings or 2. single string
+        if value is not missing:
+            if isinstance(value, six.string_types):
+                value = [value]
+            if not isinstance(value, list):
+                errors[key].append(_('expecting list of strings'))
+                raise StopOnError
 
-            if not isinstance(element, six.string_types):
-                errors[key].append(_('invalid type for repeating text: %r')
-                                   % element)
-                continue
-            if isinstance(element, str):
-                try:
-                    element = element.decode('utf-8')
-                except UnicodeDecodeError:
-                    errors[key]. append(_('invalid encoding for "%s" value')
-                                        % element)
+            out = []
+            for element in value:
+                if not element:
                     continue
 
-            out.append(element)
+                if not isinstance(element, six.string_types):
+                    errors[key].append(_('invalid type for repeating text: %r')
+                                       % element)
+                    continue
+                if isinstance(element, six.binary_type):
+                    try:
+                        element = element.decode('utf-8')
+                    except UnicodeDecodeError:
+                        errors[key]. append(_('invalid encoding for "%s" value')
+                                            % element)
+                        continue
 
-        if not errors[key]:
+                out.append(element)
+
+            if errors[key]:
+                raise StopOnError
+
             data[key] = json.dumps(out)
-        return
 
-    # 3. numbered fields
-    found = {}
-    prefix = key[-1] + '-'
-    extras = data.get(key[:-1] + ('__extras',), {})
+        if (data[key] is missing or data[key] == '[]') and field.get('required'):
+            errors[key].append(_('Missing value'))
+            raise StopOnError
 
-    for name, text in extras.items():
-        if not name.startswith(prefix):
-            continue
-        if not text:
-            continue
-        index = name.rsplit('-', 1)[1]
-        try:
-            index = int(index)
-        except ValueError:
-            continue
-        found[index] = text
-
-    out = [found[i] for i in sorted(found)]
-    data[key] = json.dumps(out)
+    return _scheming_multiple_text
 
 
 @register_validator
