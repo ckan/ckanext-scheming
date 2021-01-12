@@ -1,7 +1,7 @@
 {% resource 'scheming/scheming-multiple-text.js' %}
 {% import 'macros/form.html' as form %}
 
-{% macro multiple_text(element) %}
+{% macro multiple_text(element, error) %}
   <li class="multiple-text-field control-full">
     <input
       type="text"
@@ -11,6 +11,7 @@
       {{ form.attributes(field.form_attrs if 'form_attrs' in field else {}) }} />
     <a class="btn btn-default btn-multiple-remove" name="multiple-remove" href="javascript:;"
       >{% block delete_button_text %}{{ _('Remove') }}{% endblock %}</a>
+      {% if error and error is iterable %}<span class="error-block">{{ error|join(', ') }}</span>{% endif %}
   </li>
 {% endmacro %}
 
@@ -19,14 +20,14 @@
 {% call form.input_block(
   'field-' + field.field_name,
   h.scheming_language_text(field.label) or field.field_name,
-  errors[field.field_name],
+  "",
   field.classes if 'classes' in field else ['control-medium'],
   dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
   is_required=h.scheming_field_required(field)) %}
   <fieldset name="scheming-multiple-text" class="scheming-fieldset" data-module="scheming-multiple-text">
     <ol class="multiple-text-group">
       {%- for element in values -%}
-        {{ multiple_text(element) }}
+        {{ multiple_text(element, errors[field.field_name] if loop.index == 1 else "") }}
       {%- endfor -%}
     </ol>
 
