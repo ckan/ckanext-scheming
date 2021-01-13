@@ -1,0 +1,98 @@
+scheming_version: 2
+dataset_type: test-subfields
+about: Example dataset schema with simple and repeating subfields
+about_url: https://github.com/ckan/ckanext-scheming
+
+
+dataset_fields:
+
+- field_name: title
+  label: Title
+  preset: title
+  form_placeholder: eg. A descriptive title
+  required: True
+
+- field_name: name
+  label: URL
+  preset: dataset_slug
+  form_placeholder: eg. my-dataset
+
+- field_name: citation
+  label: Citation
+  repeating_subfields:
+  - field_name: originator
+    label: Originator
+    preset: multiple_text
+    form_blanks: 3
+    required: true
+  - field_name: publication_date
+    label: Publication Date
+    preset: date
+
+- field_name: contact_address
+  label: Contact Address
+  repeating_subfields:
+  - field_name: address
+    label: Address
+    required: true
+  - field_name: city
+    label: City
+  - field_name: state
+    label: State
+  - field_name: postal_code
+    label: Postal Code
+  - field_name: country
+    label: Country
+
+
+resource_fields:
+
+- field_name: url
+  label: URL
+  preset: resource_url_upload
+
+- field_name: name
+  label: Title
+  form_placeholder: Descriptive name of the resource.
+
+- field_name: description
+  label: Description
+  form_snippet: markdown.html
+  form_placeholder: Summary explanation of file contents, purpose, origination, methods and usage guidance.
+
+- field_name: schedule
+  label: Schedule
+  repeating_subfields:
+  - field_name: impact
+    label: Impact
+    preset: select
+    choices:
+    - label: All
+      value: A
+    - label: Partial
+      value: P
+    - label: Corrections
+      value: C
+    required: true
+  - field_name: frequency
+    label: Frequency
+    preset: select
+    choices:
+    - label: Daily
+      value: 1d
+    - label: Weekly
+      value: 7d
+    - label: Monthly
+      value: 1m
+    - label: Quarterly
+      value: 3m
+    - label: Semiannual
+      value: 6m
+    - label: Annual
+      value: 1y
+    - label: Decennial
+      value: 10y
+
+- field_name: format
+  label: Format
+  preset: resource_format_autocomplete
