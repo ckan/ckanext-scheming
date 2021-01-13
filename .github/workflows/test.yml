@@ -48,7 +48,7 @@ jobs:
     - name: Install requirements
       run: |
         pip install -r test-requirements.txt
-        setup.py develop
+        python setup.py develop
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
     - name: Setup extension (CKAN >= 2.9)
