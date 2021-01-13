@@ -401,6 +401,7 @@ class TestSubfieldResourceForm(object):
             url = '/dataset/new_resource/' + dataset["id"]
 
         data = {"id": "", "save": ""}
+        data["name"] = dataset["name"]
         data["url"] = "http://example.com/data.csv",
         data["schedule-0-impact"] = "P"
         try:
@@ -448,6 +449,7 @@ class TestSubfieldResourceForm(object):
 
         data = {"id": dataset["resources"][0]["id"], "save": ""}
         data["url"] = "http://example.com/data.csv",
+        data["name"] = dataset["name"]
         data["schedule-0-frequency"] = '1y'
         data["schedule-0-impact"] = 'A'
         data["schedule-1-frequency"] = '1m'
