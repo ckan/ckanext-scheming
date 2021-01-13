@@ -51,6 +51,7 @@ jobs:
         python setup.py develop
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+        sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test_subclass.ini
     - name: Setup extension (CKAN >= 2.9)
       if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
       run: |
@@ -59,7 +60,7 @@ jobs:
       if: ${{ matrix.ckan-version == '2.7' || matrix.ckan-version == '2.8' }}
       run: |
         paster --plugin=ckan db init -c test.ini
-    - name: Run tests
-      run: |
-        pytest --ckan-ini=test.ini --cov=ckanext.scheming ckanext/scheming/tests
-        pytest --ckan-ini=test_subclass.ini ckanext/scheming/tests/test_dataset_display.py ckanext/scheming/tests/test_form.py::TestDatasetFormNew ckanext/scheming/tests/test_dataset_logic.py
+    - name: Run all tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.scheming ckanext/scheming/tests
+    - name: Run plugin subclassing tests
+      run: pytest --ckan-ini=test_subclass.ini ckanext/scheming/tests/test_dataset_display.py ckanext/scheming/tests/test_form.py::TestDatasetFormNew ckanext/scheming/tests/test_dataset_logic.py
