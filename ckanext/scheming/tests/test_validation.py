@@ -941,6 +941,6 @@ class TestSubfieldResourceInvalid(object):
             )
         except ValidationError as e:
             assert e.error_dict["resources"][0]["schedule"][0]["impact"][0
-                ].startswith("Value must be one of:")
+                ].startswith("Value must be one of")
         else:
             raise AssertionError("ValidationError not raised")

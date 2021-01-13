@@ -2,7 +2,7 @@ name: Tests
 on: [push, pull_request]
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
 
     name: CKAN ${{ matrix.ckan-version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     container:
       image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
     services:
@@ -48,7 +48,7 @@ jobs:
     - name: Install requirements
       run: |
         pip install -r test-requirements.txt
-        python setup.py develop
+        pip install -e .
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test_subclass.ini
