@@ -30,26 +30,8 @@ this.ckan.module('scheming-repeating-subfields', function($, _) {
         $button.hide();
         $removed.show(100);
         $body.hide(100, function() {
-          if($body.html()) {
-          $body.data('undo_html', $body.html());
-          $body.html('')
-          }
+          $body.html('');
         });
-        e.preventDefault();
-      });
-
-      $(document).on('click', 'a[name="repeating-undo-remove"]', function(e) {
-        var $curr = $(this).closest('.scheming-subfield-group');
-        var $removed = $curr.find('.panel-body.fields-removed-notice');
-        var $button = $curr.find('.btn-repeating-remove');
-        var $body = $curr.find('.panel-body.fields-content');
-        if($body.data('undo_html')) {
-          $removed.hide(100);
-          $button.show();
-          $body.html($body.data('undo_html')).show(100);
-          $curr.data('undo_html', undefined);
-          $this.trigger('scheming.subfield-group-init');
-        }
         e.preventDefault();
       });
     }
