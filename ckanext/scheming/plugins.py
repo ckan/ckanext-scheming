@@ -33,6 +33,7 @@ from ckantoolkit import (
     add_resource,
     add_public_directory,
     missing,
+    check_ckan_version,
 )
 
 from ckanext.scheming import helpers, validation, logic, loader
@@ -95,9 +96,10 @@ class _SchemingMixin(object):
 
     @run_once_for_caller('_scheming_add_template_directory', lambda: None)
     def _add_template_directory(self, config):
+        if not check_ckan_version('2.9'):
+            add_template_directory(config, '2.8_templates')
         add_template_directory(config, 'templates')
-        add_resource('resource', 'scheming')
-        add_public_directory(config, 'public')
+        add_resource('assets', 'ckanext-scheming')
 
     @staticmethod
     def _load_presets(config):

@@ -1,0 +1,16 @@
+scheming_css:
+  output: ckanext-scheming/%(version)s_scheming_css.css
+  contents:
+    - styles/scheming.css
+
+subfields:
+  filters: rjsmin
+  output: ckanext-scheming/%(version)s_scheming_subfields.js
+  contents:
+    - js/scheming-repeating-subfields.js
+
+multiple_text:
+  filters: rjsmin
+  output: ckanext-scheming/%(version)s_scheming_multiple_text.js
+  contents:
+    - js/scheming-multiple-text.js
