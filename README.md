@@ -232,7 +232,13 @@ convert repeating subfields to formats that can be indexed by solr. For
 testing you may use the included `scheming_nerf_index` plugin to encode
 all repeating fields as JSON strings to prevent solr errors.
 
+`repeating_label` may be used to provide a singular version of the label
+for each group.
+
 ```yaml
+field_name: contacts
+label: Contacts
+repeating_label: Contact
 repeating_subfields:
   - field_name: address
     label: Address
