@@ -70,8 +70,8 @@ With this plugin, you can customize the group, organization, and dataset entitie
 ### Top-level Schema Keys (Common among dataset, group, and organization schemas)
 #### `scheming_version`
 
-Set to `1`. Future versions of ckanext-scheming may use a larger
-number to indicate a change to the description JSON format.
+Set to `2`. Future versions of ckanext-scheming may use a larger
+number to indicate a change to the schema format.
 
 #### `about_url`
 
@@ -83,6 +83,7 @@ Its use is optional but highly recommended.
 
 * [default dataset schema](ckanext/scheming/ckan_dataset.yaml)
 * [camel photos schema](ckanext/scheming/camel_photos.yaml)
+* [subfields schema](ckanext/scheming/subfields.yaml)
 
 These schemas are included in ckanext-scheming and may be enabled
 with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.yaml`
@@ -218,6 +219,30 @@ When using a plain string translations will be provided with gettext:
 
 ```yaml
 label: Title
+```
+
+
+#### `repeating_subfields`
+
+This field is the parent of group of repeating subfields. The value is
+a list of fields entered the same way as normal fields. **CKAN 2.8+ only**
+
+CKAN needs an IPackageController plugin with `before_index` to
+convert repeating subfields to formats that can be indexed by solr. For
+testing you may use the included `scheming_nerf_index` plugin to encode
+all repeating fields as JSON strings to prevent solr errors.
+
+```yaml
+repeating_subfields:
+  - field_name: address
+    label: Address
+    required: true
+
+  - field_name: city
+    label: City
+
+  - field_name: phone
+    label: Phone Number
 ```
 
 
