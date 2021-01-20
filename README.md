@@ -5,7 +5,7 @@ This CKAN extension provides a way to configure and share metadata schemas using
 YAML or JSON schema description. Custom validation and template snippets for editing
 and display are supported.
 
-[![CI](https://github.com/ckan/ckanext-scheming/workflows/Tests/badge.svg?branch=master)](https://github.com/ckan/ckanext-scheming/actions]
+[![Tests](https://github.com/ckan/ckanext-scheming/workflows/Tests/badge.svg?branch=master)](https://github.com/ckan/ckanext-scheming/actions)
 
 
 Requirements
