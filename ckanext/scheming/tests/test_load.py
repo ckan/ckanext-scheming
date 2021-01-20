@@ -17,7 +17,7 @@ class TestLoadSchema(object):
         assert (
             _load_schema(
                 "https://raw.githubusercontent.com/ckan/ckanext-scheming/"
-                "master/ckanext/scheming/camel_photos.json"
+                "master/ckanext/scheming/camel_photos.yaml"
             )["dataset_type"]
             == "camel-photos"
         )
