@@ -300,6 +300,11 @@ datastore_choices_resource: countries-resource-id-or-alias
 datastore_choices_columns:
   value: Country Code
   label: English Country Name
+datastore_additional_choices:
+- value: none
+  label: None
+- value: na
+  label: N/A
 ```
 
 
