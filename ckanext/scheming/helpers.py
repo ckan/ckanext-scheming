@@ -109,6 +109,13 @@ def scheming_datastore_choices(field):
         "value": "value_column_name",
         "label": "label_column_name" }
     "datastore_choices_limit": 1000 (default)
+    "datastore_additional_choices": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        "..."
+      ]
 
     When columns aren't specified the first column is used as value
     and second column used as label.
@@ -134,10 +141,14 @@ def scheming_datastore_choices(field):
     if not fields:
         fields = [f['id'] for f in result['fields'] if f['id'] != '_id']
 
-    return [{
+    datastore_choices = [{
         'value': r[fields[0]],
         'label': r[fields[1]]
     } for r in result['records']]
+
+    additional_choices = field.get('datastore_additional_choices', [])
+
+    return additional_choices + datastore_choices
 
 
 @helper
