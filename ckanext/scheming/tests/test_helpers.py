@@ -169,8 +169,13 @@ class TestDatastoreChoices(object):
                 "datastore_choices_resource": "all-params",
                 "datastore_choices_limit": 5,
                 "datastore_choices_columns": {"value": "a", "label": "b"},
+                "datastore_additional_choices":
+                    [{"value": "none", "label": "None"},
+                     {"value": "na", "label": "N/A"}]
             }
         ) == [
+            {"value": "none", "label": "None"},
+            {"value": "na", "label": "N/A"},
             {"value": "one", "label": "two"},
             {"value": "three", "label": "four"},
         ]
