@@ -36,25 +36,25 @@
           <th scope="row">{{ _('Metadata last updated') }}</th>
           <td>{{ h.render_datetime(res.metadata_modified) or h.render_datetime(res.created) or _('unknown') }}</td>
         </tr>
-        {%- endblock -%}  
+        {%- endblock -%}
         {%- block resource_created -%}
         <tr>
           <th scope="row">{{ _('Created') }}</th>
           <td>{{ h.render_datetime(res.created) or _('unknown') }}</td>
         </tr>
-        {%- endblock -%}  
+        {%- endblock -%}
         {%- block resource_format -%}
         <tr>
           <th scope="row">{{ _('Format') }}</th>
           <td>{{ res.format or res.mimetype_inner or res.mimetype or _('unknown') }}</td>
         </tr>
-        {%- endblock -%}  
+        {%- endblock -%}
         {%- block resource_license -%}
         <tr>
           <th scope="row">{{ _('License') }}</th>
           <td>{% snippet "snippets/license.html", pkg_dict=pkg, text_only=True %}</td>
         </tr>
-        {%- endblock -%} 
+        {%- endblock -%}
         {% for key, value in h.format_resource_items(res.items()) %}
           {% if key not in ('created', 'metadata modified', 'last modified', 'format') %}
             <tr class="toggle-more"><th scope="row">{{ key | capitalize }}</th><td>{{ value }}</td></tr>
