@@ -322,6 +322,8 @@ This extension includes the following presets:
   rendered as checkboxes in the form
 * `preset: multiple_select` - multiple choice from [choices](#choices)
   rendered as a multiple select box in the form
+* `preset: multiple_text` - repeating text field stored as a list of
+  strings
 * `preset: date` - date validation and form snippet
 * `preset: datetime` date and time validation and form snippet
 * `preset: dataset_slug` - dataset slug validation and form snippet that
