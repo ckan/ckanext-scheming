@@ -16,8 +16,8 @@ class TestLoadSchema(object):
     def test_url_to_schema(self):
         assert (
             _load_schema(
-                "https://raw.githubusercontent.com/ckan/ckanext-scheming/"
-                "master/ckanext/scheming/camel_photos.json"
+                "https://raw.githubusercontent.com/fjelltopp/ckanext-scheming/"
+                "development/ckanext/scheming/camel_photos.json"
             )["dataset_type"]
             == "camel-photos"
         )
