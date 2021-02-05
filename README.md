@@ -319,11 +319,11 @@ This extension includes the following presets:
 * `preset: select` - validation that choice is from [choices](#choices),
   form select box and display snippet
 * `preset: multiple_checkbox` - multiple choice from [choices](#choices)
-  rendered as checkboxes in the form
+  rendered as checkboxes in the form, stored as a list of values
 * `preset: multiple_select` - multiple choice from [choices](#choices)
-  rendered as a multiple select box in the form
-* `preset: multiple_text` - repeating text field stored as a list of
-  strings
+  rendered as a multiple select box in the form, stored as a list of values
+* `preset: multiple_text` - repeating text field with add and remove
+  buttons, stored as a list of strings
 * `preset: date` - date validation and form snippet
 * `preset: datetime` date and time validation and form snippet
 * `preset: dataset_slug` - dataset slug validation and form snippet that
@@ -339,6 +339,7 @@ This extension includes the following presets:
 * `preset: json_object` - JSON based input. Only JSON objects are supported.
   The input JSON will be loaded during output (eg when loading the dataset in
   a template or via the API).
+* `preset: markdown` - markdown text area and display
 
 
 You may add your own presets by adding them to the `scheming.presets`

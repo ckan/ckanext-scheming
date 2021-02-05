@@ -136,6 +136,13 @@
         "validators": "scheming_multiple_text",
         "output_validators": "scheming_load_json"
       }
+    },
+    {
+      "preset_name": "markdown",
+      "values": {
+        "form_snippet": "markdown.html",
+        "display_snippet": "markdown.html"
+      }
     }
   ]
 }
