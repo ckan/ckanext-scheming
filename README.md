@@ -378,6 +378,16 @@ The included display snippets may be found under [templates/scheming/display_sni
 
 If `display_snippet: null` is used the field will be removed from the view page.
 
+#### `display_property`
+
+```yaml
+- field_name: author
+  label: Author
+  display_property: dc:creator
+```
+
+Set a `property` attribute on dataset fields displayed as "Additional Info", useful for adding RDF markup.
+
 #### `select_size`
 
 ```yaml
