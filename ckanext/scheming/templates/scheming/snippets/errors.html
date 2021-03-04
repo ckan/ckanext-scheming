@@ -26,7 +26,7 @@
             {%- for se in errors -%}
               {%- if se -%}
                 <li data-field-label="{{ field.field_name }}-{{ loop.index }}">{{
-                  h.scheming_language_text(field.label) }} {{ loop.index }}:
+                  h.scheming_language_text(field.repeating_label or field.label) }} {{ loop.index }}:
                   <ul>
                     {%- for sf in field.repeating_subfields -%}
                       {%- set se_unprocessed = se.copy() -%}
