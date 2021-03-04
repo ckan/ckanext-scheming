@@ -167,7 +167,7 @@ class _GroupOrganizationMixin(object):
 
     def validate(self, context, data_dict, schema, action):
         thing, action_type = action.split('_')
-        t = data_dict.get('type')
+        t = data_dict.get('type', self.UNSPECIFIED_GROUP_TYPE)
         if not t or t not in self._schemas:
             return data_dict, {'type': "Unsupported {thing} type: {t}".format(
                 thing=thing, t=t)}
