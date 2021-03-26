@@ -1,5 +1,5 @@
 var scheming_multiple_text_init_done = false;
-this.ckan.module('scheming-multiple-text-custom', function($, _) {
+this.ckan.module('scheming-multiple-text', function($, _) {
   MultipleText = {
 
      multiple_add: function(field_name){
