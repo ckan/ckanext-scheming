@@ -14,7 +14,7 @@ this.ckan.module('scheming-multiple-text', function($, _) {
     },
     initialize: function() {
       if (!scheming_multiple_text_init_done) {
-        $(document).on('click', 'a[name="multiple-remove-custom"]', function(e) {
+        $(document).on('click', 'a[name="multiple-remove"]', function(e) {
           var list = $(this).closest('ol').find('li');
           if (list.length != 1){
               var $curr = $(this).closest('.multiple-text-field');
