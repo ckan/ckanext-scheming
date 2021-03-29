@@ -1,4 +1,5 @@
 {% include 'scheming/snippets/multiple_text_asset.html' %}
+
 {% import 'macros/form.html' as form %}
 
 {% macro multiple_text(element, error) %}
@@ -16,9 +17,6 @@
 {% endmacro %}
 
 {%- set values = data.get(field.field_name, []) or ([''] * field.get('form_blanks', 1)) -%}
-{%- if values is string -%}  {# single value posted in form containing errors #}
-  {%- set values = [values] -%}
-{%- endif -%}
 
 {% call form.input_block(
   'field-' + field.field_name,
@@ -27,7 +25,7 @@
   field.classes if 'classes' in field else ['control-medium'],
   dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
   is_required=h.scheming_field_required(field)) %}
-  <fieldset name="scheming-multiple-text" class="scheming-fieldset" data-module="scheming-multiple-text">
+  <fieldset name="{{ field.field_name }}" class="scheming-fieldset" data-module="scheming-multiple-text">
     <ol class="multiple-text-group">
       {%- for element in values -%}
         {{ multiple_text(element, errors[field.field_name] if loop.index == 1 else "") }}
@@ -42,19 +40,8 @@
     {% endif %}
 
     <div class="control-medium">
-      <a href="javascript:;" name="multiple-add" class="btn btn-link"
+      <a href="javascript:MultipleText.multiple_add('{{ field.field_name }}');" class="btn btn-link"
         >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>
-
-      {% set help_text = h.scheming_language_text(field.help_text) %}
-      {% if help_text %}
-        <div class="info-block mrgn-tp-md">
-          {{ help_text }}
-        </div>
-      {% endif %}
     </div>
-
-    <div name="multiple-template" style="display:none">{{ multiple_text("") }}</div>
   </fieldset>
 {% endcall %}
-
-
