@@ -31,3 +31,18 @@ a.btn.btn-multiple-remove {
   border-radius: 100px;
 }
 
+
+/* Harmonize form fields heigh for multiple_text fields */
+.control-full input, .control-full select, .control-full textarea {
+  height: 34px;
+}
+
+/* Fix Tag fields https://github.com/ckan/ckanext-scheming/issues/219 */
+.select2-container{
+  height:auto;
+}
+
+/* reduce the select2-container double form effect */
+.form-control {
+  padding: unset;
+}
