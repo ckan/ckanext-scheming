@@ -1,7 +1,6 @@
 from setuptools import setup, find_packages
-import sys, os
 
-version = '1.2.0'
+version = '2.1.0'
 
 setup(
     name='ckanext-scheming',
@@ -16,7 +15,7 @@ setup(
     https://github.com/open-data/ckanext-canada
     """,
     classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    keywords='',
+    keywords='ckan',
     author='Ian Ward',
     author_email='ian@excess.org',
     url='https://github.com/ckan/ckanext-scheming',
@@ -25,17 +24,21 @@ setup(
     namespace_packages=['ckanext'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=[],
+    install_requires=[
+        'pyyaml',
+        'ckanapi',
+        'ckantoolkit>=0.0.2',
+        'pytz',
+        'six',
+    ],
     entry_points=\
     """
     [ckan.plugins]
     scheming_datasets=ckanext.scheming.plugins:SchemingDatasetsPlugin
     scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
     scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
+    scheming_nerf_index=ckanext.scheming.plugins:SchemingNerfIndexPlugin
     scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
     scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
-
-    [paste.paster_command]
-    scheming=ckanext.scheming.commands:SchemingCommand
     """,
 )
