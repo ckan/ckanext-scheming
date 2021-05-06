@@ -123,6 +123,8 @@ class _SchemingMixin(object):
             'scheming_display_json_value': helpers.scheming_display_json_value,
             'scheming_non_empty_fields': helpers.scheming_non_empty_fields,
             'scheming_natural_sort': helpers.scheming_natural_sort,
+            'get_core_resources': helpers.get_core_resources,
+            'get_extra_resources': helpers.get_extra_resources,
 
             'get_missing_resources': unaids_helpers.get_missing_resources,
             'get_user': unaids_helpers.get_user,
