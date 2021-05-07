@@ -98,27 +98,27 @@ def get_missing_resources(pkg, schema):
 
 
 @helper
-def get_core_resources(pkg):
+def get_core_resources(dataset):
     """
     Using the dataset, return a list of it's resources which have
     a resource_type set
     """
     return [
         resource
-        for resource in pkg.get('resources', [])
+        for resource in dataset.get('resources', [])
         if resource['resource_type']
     ]
 
 
 @helper
-def get_extra_resources(pkg):
+def get_extra_resources(dataset):
     """
     Using the dataset, return a list of it's resources which do not
     have a resource_type set
     """
     return [
         resource
-        for resource in pkg.get('resources', [])
+        for resource in dataset.get('resources', [])
         if not resource['resource_type']
     ]
 
