@@ -29,8 +29,8 @@ class TestDatasetDisplay(object):
             url_for('dataset.read', id=dataset['name']),
             extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
         )
-        core_resources_container = BeautifulSoup(response.body)\
-            .select('.core-resources')[0]
+        soup = BeautifulSoup(response.body)
+        core_resources_container = soup.select('.core-resources')[0]
         assert self.core_resource['name'] in str(core_resources_container)
 
     def test_extra_resources(self, app):
@@ -44,8 +44,8 @@ class TestDatasetDisplay(object):
             url_for('dataset.read', id=dataset['name']),
             extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
         )
-        extra_resources_container = BeautifulSoup(response.body)\
-            .select('.extra-resources')[0]
+        soup = BeautifulSoup(response.body)
+        extra_resources_container = soup.select('.extra-resources')[0]
         assert self.extra_resource['name'] in str(extra_resources_container)
 
     def test_having_both_core_and_extra_resources(self, app):
@@ -59,10 +59,9 @@ class TestDatasetDisplay(object):
             url_for('dataset.read', id=dataset['name']),
             extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
         )
-        core_resources_container = BeautifulSoup(response.body)\
-            .select('.core-resources')[0]
-        extra_resources_container = BeautifulSoup(response.body)\
-            .select('.extra-resources')[0]
+        soup = BeautifulSoup(response.body)
+        core_resources_container = soup.select('.core-resources')[0]
+        extra_resources_container = soup.select('.extra-resources')[0]
         assert self.core_resource['name'] in str(core_resources_container)
         assert self.core_resource['name'] not in str(extra_resources_container)
         assert self.extra_resource['name'] in str(extra_resources_container)
