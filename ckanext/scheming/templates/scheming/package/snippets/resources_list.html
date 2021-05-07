@@ -21,13 +21,7 @@ Example:
       {% endfor %}
     </ul>
   {% else %}
-    {% if h.check_access('resource_create', {'package_id': pkg['id']}) and not is_activity_archive %}
-        {% trans url=h.url_for(pkg.type ~ '_resource.new', id=pkg.name) %}
-          <p class="empty">This dataset has no core resources, <a href="{{ url }}">why not add some?</a></p>
-        {% endtrans %}
-    {% else %}
-        <p class="empty">{{ _('This dataset has no core resources') }}</p>
-    {% endif %}
+    <p class="empty">{{ _('This dataset has no core resources') }}</p>
   {% endif %}
 </section>
 
