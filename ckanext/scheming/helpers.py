@@ -98,6 +98,32 @@ def get_missing_resources(pkg, schema):
 
 
 @helper
+def get_core_resources(dataset):
+    """
+    Using the dataset, return a list of it's resources which have
+    a resource_type set
+    """
+    return [
+        resource
+        for resource in dataset.get('resources', [])
+        if resource['resource_type']
+    ]
+
+
+@helper
+def get_extra_resources(dataset):
+    """
+    Using the dataset, return a list of it's resources which do not
+    have a resource_type set
+    """
+    return [
+        resource
+        for resource in dataset.get('resources', [])
+        if not resource['resource_type']
+    ]
+
+
+@helper
 def scheming_language_text(text, prefer_lang=None):
     """
     :param text: {lang: text} dict or text string

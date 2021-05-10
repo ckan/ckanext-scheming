@@ -1,10 +1,72 @@
 import pytest
 import six
-from ckantoolkit.tests.factories import Sysadmin, Dataset
+from ckan.lib.helpers import url_for
+from ckantoolkit.tests.factories import Sysadmin, User, Dataset
+from bs4 import BeautifulSoup
 
 
 @pytest.mark.usefixtures("clean_db")
 class TestDatasetDisplay(object):
+
+    core_resource = {
+        'name': 'Core Resource',
+        'url': 'http://example.com/camel.txt',
+        'resource_type': 'awesome-resource'
+    }
+    extra_resource = {
+        'name': 'Extra Resource',
+        'url': 'http://example.com/camel.txt',
+    }
+
+    def test_core_resources(self, app):
+        user = User()
+        dataset = Dataset(
+            user=user,
+            type='test-schema',
+            resources=[self.core_resource],
+        )
+        response = app.get(
+            url_for('dataset.read', id=dataset['name']),
+            extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
+        )
+        soup = BeautifulSoup(response.body)
+        core_resources_container = soup.select('.core-resources')[0]
+        assert self.core_resource['name'] in str(core_resources_container)
+
+    def test_extra_resources(self, app):
+        user = User()
+        dataset = Dataset(
+            user=user,
+            type='test-schema',
+            resources=[self.extra_resource],
+        )
+        response = app.get(
+            url_for('dataset.read', id=dataset['name']),
+            extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
+        )
+        soup = BeautifulSoup(response.body)
+        extra_resources_container = soup.select('.extra-resources')[0]
+        assert self.extra_resource['name'] in str(extra_resources_container)
+
+    def test_having_both_core_and_extra_resources(self, app):
+        user = User()
+        dataset = Dataset(
+            user=user,
+            type='test-schema',
+            resources=[self.core_resource, self.extra_resource],
+        )
+        response = app.get(
+            url_for('dataset.read', id=dataset['name']),
+            extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
+        )
+        soup = BeautifulSoup(response.body)
+        core_resources_container = soup.select('.core-resources')[0]
+        extra_resources_container = soup.select('.extra-resources')[0]
+        assert self.core_resource['name'] in str(core_resources_container)
+        assert self.core_resource['name'] not in str(extra_resources_container)
+        assert self.extra_resource['name'] in str(extra_resources_container)
+        assert self.extra_resource['name'] not in str(core_resources_container)
+
     def test_dataset_displays_custom_fields(self, app):
         user = Sysadmin()
         Dataset(
