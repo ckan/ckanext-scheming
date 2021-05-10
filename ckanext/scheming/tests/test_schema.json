@@ -126,5 +126,13 @@
       "field_name": "a_resource_json_field",
       "preset": "json_object"
     }
+  ],
+  "resources": [
+    {
+      "name": "Awesome Resource",
+      "about": "A validated awesome resource",
+      "resource_type": "awesome-resource",
+      "resource_fields": []
+    }
   ]
 }
