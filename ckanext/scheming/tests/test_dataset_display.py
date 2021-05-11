@@ -30,6 +30,7 @@ class TestDatasetDisplay(object):
             extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
         )
         soup = BeautifulSoup(response.body)
+        assert not soup.select('.all-resources')
         core_resources_container = soup.select('.core-resources')[0]
         assert self.core_resource['name'] in str(core_resources_container)
 
@@ -45,6 +46,7 @@ class TestDatasetDisplay(object):
             extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
         )
         soup = BeautifulSoup(response.body)
+        assert not soup.select('.all-resources')
         extra_resources_container = soup.select('.extra-resources')[0]
         assert self.extra_resource['name'] in str(extra_resources_container)
 
@@ -60,12 +62,29 @@ class TestDatasetDisplay(object):
             extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
         )
         soup = BeautifulSoup(response.body)
+        assert not soup.select('.all-resources')
         core_resources_container = soup.select('.core-resources')[0]
         extra_resources_container = soup.select('.extra-resources')[0]
         assert self.core_resource['name'] in str(core_resources_container)
         assert self.core_resource['name'] not in str(extra_resources_container)
         assert self.extra_resource['name'] in str(extra_resources_container)
         assert self.extra_resource['name'] not in str(core_resources_container)
+
+    def test_general_resources(self, app):
+        user = User()
+        dataset = Dataset(
+            user=user,
+            resources=[self.core_resource],
+        )
+        response = app.get(
+            url_for('dataset.read', id=dataset['name']),
+            extra_environ={'REMOTE_USER': six.ensure_str(user['name'])},
+        )
+        soup = BeautifulSoup(response.body)
+        assert not soup.select('.core-resources')
+        assert not soup.select('.extra-resources')
+        core_resources_container = soup.select('.all-resources')[0]
+        assert self.core_resource['name'] in str(core_resources_container)
 
     def test_dataset_displays_custom_fields(self, app):
         user = Sysadmin()
