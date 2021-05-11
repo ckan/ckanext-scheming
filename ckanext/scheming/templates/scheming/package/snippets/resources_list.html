@@ -10,20 +10,41 @@ Example:
 
 #}
 
-{% set core_resources = h.get_core_resources(pkg) %}
-{% set can_edit = h.check_access('package_update', {'id':pkg.id }) and not is_activity_archive %}
-<section id="dataset-resources" class="resources core-resources">
-  <h3>{{ _('Core Resources') }}</h3>  
-  {% if core_resources %}
-    <ul class="resource-list">
-      {% for resource in core_resources %}
-        {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource, can_edit=can_edit, is_activity_archive=is_activity_archive %}
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="empty">{{ _('This dataset has no core resources') }}</p>
-  {% endif %}
-</section>
+{% if schema.resources %}
+  {% set core_resources = h.get_core_resources(pkg) %}
+  {% set can_edit = h.check_access('package_update', {'id':pkg.id }) and not is_activity_archive %}
+  <section id="dataset-resources" class="resources core-resources">
+    <h3>{{ _('Core Resources') }}</h3>  
+    {% if core_resources %}
+      <ul class="resource-list">
+        {% for resource in core_resources %}
+          {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource, can_edit=can_edit, is_activity_archive=is_activity_archive %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty">{{ _('This dataset has no core resources') }}</p>
+    {% endif %}
+  </section>
+{% else %}
+  <section id="dataset-resources" class="resources all-resources">
+    <h3>{{ _('Data and Resources') }}</h3>  
+    {% if resources %}
+      <ul class="resource-list">
+        {% for resource in resources %}
+          {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource, can_edit=can_edit, is_activity_archive=is_activity_archive %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      {% if h.check_access('resource_create', {'package_id': pkg['id']}) and not is_activity_archive %}
+          {% trans url=h.url_for(pkg.type ~ '_resource.new', id=pkg.name) %}
+            <p class="empty">This dataset has no data, <a href="{{ url }}">why not add some?</a></p>
+          {% endtrans %}
+      {% else %}
+          <p class="empty">{{ _('This dataset has no data') }}</p>
+      {% endif %}
+    {% endif %}
+  </section>
+{% endif %}
 
 {% block other_resources_list %}
 {% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
@@ -42,14 +63,16 @@ Example:
 {% endif %}
 {% endblock %}
 
-{% set extra_resources = h.get_extra_resources(pkg) %}
-{% if extra_resources %}
-<section id="dataset-resources" class="resources extra-resources">
-  <h3>{{ _('Extra Resources') }}</h3>
-  <ul class="resource-list">
-    {% for resource in extra_resources %}
-      {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource, can_edit=can_edit, is_activity_archive=is_activity_archive %}
-    {% endfor %}
-  </ul>
-</section>
+{% if schema.resources %}
+  {% set extra_resources = h.get_extra_resources(pkg) %}
+  {% if extra_resources %}
+  <section id="dataset-resources" class="resources extra-resources">
+    <h3>{{ _('Extra Resources') }}</h3>
+    <ul class="resource-list">
+      {% for resource in extra_resources %}
+        {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource, can_edit=can_edit, is_activity_archive=is_activity_archive %}
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
 {% endif %}
