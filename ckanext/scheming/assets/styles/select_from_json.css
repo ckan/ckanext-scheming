@@ -1,0 +1,67 @@
+.metrics-block {
+	border: 1px solid #ccc;
+	border-radius:4px;
+	padding: 20px;
+	padding-top:10px;
+	margin-top:10px;
+}
+
+.metrics-block label {
+	border-bottom: 1px solid #ebebeb;
+}
+.tiny-metrics-url {
+	font-size: 0.7em;
+	font-weight:normal;
+	color:#aaa;
+}
+
+.metrics-url {
+	font-size: 14px;
+	margin: 0px;
+	margin-top:10px;
+}
+
+.metrics-value-list { 
+	list-style-type: none;
+	font-weight:normal;
+	margin: 0;
+	padding: 0;
+	display: table;
+	width:100%;
+}
+
+.metrics-value-list li{
+	font-size: 1em;
+	display: table-row;
+	border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.metrics-value-list li .sublabel-key {
+	color:#555555;
+	text-align:right;
+	display: table-cell;
+	padding: 5px;
+	background-color: #eeeeee;
+    border-right: 1px solid #ccc;
+    white-space: nowrap;
+	width: 1%;
+}
+.metrics-value-list li .sublabel-value {
+	background-color: #fff;
+	display: table-cell;
+	padding: 5px;
+}
+
+.input-group-row {
+	display:table-row;
+}
+
+.input-group-addon {
+    padding: 5px 12px;
+	text-align: right;
+}
+
+.input-group input {
+	width:100%;
+}

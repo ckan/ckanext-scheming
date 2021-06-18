@@ -99,6 +99,7 @@ class _SchemingMixin(object):
         if not check_ckan_version('2.9'):
             add_template_directory(config, '2.8_templates')
         add_template_directory(config, 'templates')
+        add_public_directory(config, 'public')
         add_resource('assets', 'ckanext-scheming')
 
     @staticmethod

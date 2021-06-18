@@ -1,0 +1,10 @@
+{% set ns = namespace(first=True) %}
+
+{%- for link in h.get_link_list(data[field.field_name]) -%}
+	{%- if ns.first -%}
+		{{ h.link_to(link, link, rel=field.display_property, target='_blank') }}
+		{%- set ns.first = False -%}
+	{%- else -%}
+		, {{ h.link_to(link, link, rel=field.display_property, target='_blank') }}
+	{%- endif -%}
+{%- endfor -%}

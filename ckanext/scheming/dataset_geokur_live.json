@@ -1,0 +1,190 @@
+{
+    "scheming_version": 1,
+    "dataset_type": "dataset",
+    "about": "CKAN dataset schema for GeoKur",
+    "about_url": "http://github.com/ckan/ckanext-scheming",
+    "dataset_fields": [
+        {
+            "field_name": "title",
+            "label": "Title",
+            "preset": "title",
+            "form_placeholder": "eg. A descriptive title"
+        },
+        {
+            "field_name": "name",
+            "label": "Identifier",
+            "preset": "name",
+            "form_placeholder": "eg. my-dataset"
+        },
+        {
+            "field_name": "notes",
+            "label": "Description",
+            "preset": "notes",
+            "form_placeholder": "Some useful notes about the data"
+        },
+        {
+            "field_name": "documentation",
+            "label": "Documentation",
+            "preset": "single_link",
+            "help_text": "eg. link to publication"
+        },
+        {
+            "field_name": "contact_name",
+            "label": "Contact Point",
+            "required_if_value_in": "contact_class",
+            "preset": "contact_name",
+            "form_placeholder": "Person or Organization"
+        },
+        {
+            "field_name": "contact_uri",
+            "label": "Contact Point - ORCID",
+            "preset": "single_link",
+            "help_text": "According ORCID as link, leave blank otherwise"
+        },
+        {
+            "field_name": "alternate_identifier",
+            "label": "Dataset DOI",
+            "preset": "single_link",
+            "from_placeholder": "insert DOI of the dataset if available",
+            "help_text": "e.g. https://doi.org/10.7283/T5MW2F2D"
+        },
+        {
+            "field_name": "url",
+            "label": "Information Website",
+            "preset": "single_link",
+            "help_text": "links to project website or dataset's page"
+        },
+        {
+            "field_name": "tag_string",
+            "label": "Keywords",
+            "preset": "tags",
+            "form_placeholder": "eg. economy, mental health, government"
+        },
+        {
+            "field_name": "theme",
+            "label": "Theme / Category",
+            "validators": "not_empty",
+            "help_text": "Provide links to descriptions of the themes; separate by comma. E.g.: http://inspire.ec.europa.eu/theme/ad, http://inspire.ec.europa.eu/theme/au.",
+            "preset": "multi_link"
+        },
+        {
+            "field_name": "spatial",
+            "label": "Spatial Coverage",
+            "preset": "spatial_extent",
+            "form_placeholder": "Paste a valid GeoJSON geometry",
+            "help_text": "Draw and edit the dataset extent as rectangles on the map, or paste a GeoJSON Polygon or Multipolygon geometry below, or create a bounding box from coordinates"
+        },
+        {
+            "field_name": "conforms_to",
+            "label": "Coordinate Reference System",
+            "preset": "single_link",
+            "form_placeholder": "http://www.opengis.net/def/crs/EPSG/0/4326",
+            "help_text": "Provide link to OGC definition of the CRS, http://docs.opengeospatial.org/DRAFTS/18-058.html#_crs_identifier_list, e.g. http://www.opengis.net/def/crs/EPSG/0/4326"
+        },
+        {
+            "field_name": "spatial_resolution",
+            "label": "Spatial Resolution",
+            "required_if_value_in": "spatial_resolution_type",
+            "preset": "spatial_resolution",
+            "help_text": "Spatial Resolution (the unit is determined by the resolution type)"
+        },
+        {
+            "field_name": "spatial_resolution_type",
+            "label": "Spatial Resolution Measured",
+            "required_if_value_in": "spatial_resolution",
+            "preset": "spatial_resolution_type",
+            "help_text": "In meters: This property refers to the minimum spatial separation resolvable in a Dataset, measured in metres.\nAs angular scale: Spatial resolution expressed as equivalent scale [ISO-19115], [ISO-19115-1], by using a representative fraction (e.g., 1:1,000, 1:1,000,000).\nAs angular distance: Spatial resolution expressed as angular distance [ISO-19115-1], by using a decimal degree.\nAs vertical distance: Spatial resolution expressed as vertical distance [ISO-19115-1]."
+        },
+        {
+            "field_name": "temporal_start",
+            "label": "Temporal Coverage Start",
+            "preset": "date_range_start"
+        },
+        {
+            "field_name": "temporal_end",
+            "label": "Temporal Coverage End",
+            "preset": "date_range_end"
+        },
+        {
+            "field_name": "temporal_resolution",
+            "label": "Temporal Resolution",
+            "preset": "textinput",
+            "help_text": "E.g. 'P2Y3M20D' describes a period 2 years, 3 months and 20 days or 'P1D' describes a period of 1 day"
+        },
+        {
+            "field_name": "quality_metrics",
+            "label": "Data Quality Metric",
+            "preset": "select_metrics",
+            "help_text": "Value of quality metric: Measured Value of the selected quality metric | Ground Truth Dataset: Link to ground truth dataset | Confidence term: Label of the confidence value of the selected quality metric, e.g. r value | Confidence value: According confidence threshold | Thematic representativity: Describes thematic aspects for which quality information is given | Spatial representativity: Describes region for which quality information is given | Temporal representativity: Describes time step or range for which quality information is given | Name of quality source: Name of the source of information of the selected quality metric | Type of quality source: Describes the origin of the quality information: data, report, scientific publication, Web site, other | Link to quality source: Web link to access the quality information source"
+        },
+        {
+            "field_name": "is_version_of",
+            "label": "Is Version of",
+            "preset": "single_dataset_ref",
+            "help_text": "Insert according dataset's identifier. A related resource of which the described resource is a version, edition, or adaptation. Changes in version imply substantive changes in content rather than differences in format."
+        },
+        {
+            "field_name": "is_part_of",
+            "label": "Is Part of",
+            "preset": "single_dataset_ref",
+            "help_text": "A related resource in which the described resource is physically or logically included (https://dublincore.org/specifications/dublin-core/dcmi-terms/#isPartOf)."
+        },
+        {
+            "field_name": "was_derived_from",
+            "label": "Derived from",
+            "preset": "multi_dataset_ref",
+            "help_text": "Provenance Statement: The dataset from which the current dataset was derived."
+        },
+        {
+            "field_name": "was_generated_by",
+            "label": "Generated by",
+            "preset": "select_process",
+            "help_text": "Provenance Statement: Process/Tool/Model that generated the dataset. Click Add New Process to create a new process."
+        },
+        {
+            "field_name": "owner_org",
+            "label": "Organization",
+            "preset": "owner_org"
+        },
+        {
+            "field_name": "license_id",
+            "label": "Dataset License",
+            "preset": "textinput",
+            "form_placeholder": "A legal document giving official permission to do something with the resource.",
+            "help_text": "Recommended best practice is to identify the license using a URI. Examples of such licenses can be found at http://creativecommons.org/licenses/."
+        }
+    ],
+    "resource_fields": [
+        {
+            "field_name": "url",
+            "label": "URL",
+            "preset": "resource_url",
+            "form_placeholder": "http://example.com/my-data.csv"
+        },
+        {
+            "field_name": "name",
+            "label": "Name",
+            "validators": "if_empty_same_as(url) unicode",
+            "form_placeholder": "leave blank to use resource file name"
+        },
+        {
+            "field_name": "description",
+            "label": "Description",
+            "form_snippet": "markdown.html",
+            "form_placeholder": "Some useful notes about the resource"
+        },
+        {
+            "field_name": "license",
+            "label": "Resource License",
+            "preset": "textinput",
+            "form_placeholder": "A legal document giving official permission to do something with the resource.",
+            "help_text": "Recommended best practice is to identify the license using a URI. Examples of such licenses can be found at http://creativecommons.org/licenses/."
+        },
+        {
+            "field_name": "format",
+            "label": "Format",
+            "preset": "resource_format",
+            "form_placeholder": "eg. CSV, XML or JSON"
+        }
+    ]
+}

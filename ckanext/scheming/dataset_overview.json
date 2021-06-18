@@ -1,0 +1,144 @@
+{
+    "scheming_version": 2,
+    "dataset_type": "dataset",
+    "about": "CKAN dataset schema with all possible form parts",
+    "about_url": "http://github.com/ckan/ckanext-scheming",
+    "dataset_fields": [
+        {
+            "field_name": "title",
+            "label": "CKAN Default: Title",
+			"preset": "title"
+        },
+        {
+            "field_name": "name",
+            "label": "CKAN Default: Identifier",
+            "preset": "name"
+        },
+		{
+            "field_name": "tag_string",
+            "label": "CKAN Default: Keywords",
+            "preset": "tags"
+        },
+        {
+            "field_name": "notes",
+            "label": "CKAN Default: Description",
+            "preset": "notes"
+        },
+        {
+            "field_name": "exfield_01",
+            "label": "Textarea with markdown",
+            "preset": "textarea_markdown"
+        },
+        {
+            "field_name": "exfield_02",
+			"label": "Textinput mandatory",
+            "preset": "textinput_mandatory"
+        },
+        {
+            "field_name": "exfield_03-1",
+            "label": "Single link",
+            "preset": "single_link"
+        },
+        {
+            "field_name": "exfield_03-2",
+            "label": "Multiple links comma separated",
+            "preset": "multi_link"
+        },
+        {
+            "field_name": "exfield_05",
+            "label": "Spatial extent as GeoJSON",
+			"preset": "spatial_extent"
+        },
+        {
+            "field_name": "exfield_06",
+            "label": "Require neigboring field",
+			"required_if_value_in": "exfield_07",
+			"preset": "spatial_resolution"
+            
+        },
+        {
+            "field_name": "exfield_07",
+            "label": "Drop down with fixed values",
+            "required_if_value_in": "exfield_06",
+            "preset": "spatial_resolution_type"
+        },
+        {
+            "field_name": "exfield_08",
+            "label": "Date: Temporal Coverage Start",
+			"preset": "date_range_start"
+
+        },
+        {
+            "field_name": "exfield_09",
+            "label": "Date: Temporal Coverage End",
+			"preset": "date_range_end"
+        },
+        {
+            "field_name": "exfield_10-1",
+            "label": "Single dataset reference",
+            "preset": "single_dataset_ref"
+        },
+		{
+            "field_name": "exfield_10-2",
+            "label": "Multiple dataset reference comma separated",
+            "preset": "multi_dataset_ref"
+        },
+        {
+            "field_name": "exfield_11",
+            "label": "Multiple Checkbox",
+            "choices": [
+                {
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/pages/geospatial-categories-register#selection",
+                    "label": "Selection"
+                },
+                {
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/pages/geospatial-categories-register#transformation",
+                    "label": "Transformation"
+                }
+            ],
+			"preset": "multiple_choice"
+        },
+        {
+            "field_name": "exfield_12",
+            "label": "Select metrics from Fuseki",
+            "preset": "select_metrics"
+        },
+        {
+            "field_name": "owner_org",
+            "label": "Default: Organization",
+            "preset": "owner_org"
+        }
+    ],
+    "resource_fields": [
+        {
+            "field_name": "url",
+            "label": "CKAN Default: URL",
+            "validators": "ignore_missing unicode remove_whitespace",
+			"form_snippet": "upload.html",
+			"upload_field": "upload",
+			"upload_clear": "clear_upload",
+			"upload_label": "File"
+        },
+        {
+            "field_name": "name",
+            "label": "CKAN Default: Name",
+            "validators": "if_empty_same_as(url) unicode"
+        },
+        {
+            "field_name": "description",
+            "label": "CKAN Default: Description",
+            "form_snippet": "markdown.html"
+        },
+        {
+            "field_name": "format",
+            "label": "CKAN Default: Format",
+            "validators": "if_empty_guess_format ignore_missing clean_format unicode",
+			"form_snippet": "fixed_autocomplete.html",
+			"form_placeholder": "eg. CSV, XML or JSON",
+			"form_attrs": {
+				"data-module": "autocomplete",
+				"data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
+			}
+        }
+    ]
+}

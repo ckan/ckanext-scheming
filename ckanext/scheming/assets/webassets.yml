@@ -20,3 +20,53 @@ multiple_text:
       - base/main
   contents:
     - js/scheming-multiple-text.js
+
+leaflet_css:
+  filters: cssrewrite
+  output: ckanext-scheming/%(version)s_leaflet.css
+  contents:
+    - ../public/vendor/leaflet/leaflet.css
+    - ../public/vendor/leaflet.draw/leaflet.draw.css
+
+spatial_form_css:
+  output: ckanext-scheming/%(version)s_spatial_form.css
+  contents:
+    - styles/spatial_query.css
+
+spatial_form:
+  output: ckanext-scheming/%(version)s_spatial_form.js  
+  extra:
+    preload:
+      - base/main
+      - ckanext-scheming/spatial_form_css
+      - ckanext-scheming/leaflet_css
+  contents:
+    - ../public/vendor/leaflet/leaflet.js
+    - ../public/vendor/leaflet.draw/leaflet.draw.js
+    - js/common_map.js
+    - js/spatial_form.js
+
+select_from_json_css:
+  output: ckanext-scheming/%(version)s_select_from_json.css  
+  contents:
+    - styles/select_from_json.css
+
+select_from_json:
+  output: ckanext-scheming/%(version)s_select_from_json.js  
+  extra:
+    preload:
+      - base/main
+      - ckanext-scheming/select_from_json_css
+  contents:
+    - js/select_from_json.js
+
+select_process:
+  output: ckanext-scheming/%(version)s_select_process.js  
+  extra:
+    preload:
+      - base/main
+      - ckanext-scheming/select_from_json_css
+  contents:
+    - js/select_process.js
+
+

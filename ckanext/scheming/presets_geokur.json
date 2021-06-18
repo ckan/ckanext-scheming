@@ -1,0 +1,289 @@
+{
+	"scheming_presets_version": 1,
+	"about": "these are the geokur scheming field presets",
+	"about_url": "http://github.com/ckan/ckanext-scheming#preset",
+	"presets": [
+		{
+			"preset_name": "title",
+			"values": {
+				"validators": "if_empty_same_as(name) unicode",
+				"form_snippet": "large_text.html",
+				"form_attrs": {
+					"data-module": "slug-preview-target"
+				}
+			}
+		},
+		{
+			"preset_name": "name",
+			"values": {
+				"validators": "not_empty unicode name_validator package_name_validator",
+				"form_snippet": "slug.html"
+			}
+		},
+		{
+			"preset_name": "tags",
+			"values": {
+				"validators": "ignore_missing tag_string_convert",
+				"form_snippet": "fixed_autocomplete.html",
+				"form_attrs": {
+					"data-module": "autocomplete",
+					"data-module-tags": "true",
+					"data-module-createtags": "true",
+					"data-module-source": "/api/3/action/tag_autocomplete?query=?"
+				}
+			}
+		},
+		{
+			"preset_name": "notes",
+			"values": {
+				"form_snippet": "markdown.html"
+			}
+		},
+		{
+			"preset_name": "textarea_markdown",
+			"values": {
+				"form_snippet": "markdown.html",
+				"display_snippet": "markdown.html"
+			}
+		},
+		{
+			"preset_name": "textinput",
+			"values": {
+				"validators": "ignore_missing unicode"
+			}
+		},
+		{
+			"preset_name": "textinput_mandatory",
+			"values": {
+				"validators": "not_empty unicode"
+			}
+		},
+		{
+			"preset_name": "single_link",
+			"values": {
+				"validators": "ignore_missing unicode remove_whitespace single_link_validator",
+				"display_property": "foaf:homepage",
+				"display_snippet": "link.html"
+			}
+		},
+		{
+			"preset_name": "multi_link",
+			"values": {
+				"validators": "ignore_missing unicode remove_whitespace link_list_string_convert",
+				"display_property": "foaf:homepage",
+				"display_snippet": "list_link.html"
+			}
+		},
+		{
+			"preset_name": "spatial_extent",
+			"values": {
+				"validators": "scheming_valid_json_object",
+				"form_snippet": "spatial_extent.html",
+				"display_snippet": "json.html",
+				"display_property": "dcat:Dataset/dct:spatial"
+			}
+		},
+		{
+			"preset_name": "contact_name",
+			"values": {
+				"validators": "not_empty unicode check_required_field"
+			}
+		},
+		{
+			"preset_name": "contact_class",
+			"values": {
+				"classes": [
+					"col-md-4 no-padding"
+				],
+				"form_snippet": "fixed_select.html",
+				"display_snippet": "select.html",
+				"validators": "ignore_missing unicode scheming_choices_ignore_missing check_required_field",
+				"choices": [
+					{
+						"value": "individual",
+						"label": "Individual"
+					},
+					{
+						"value": "organization",
+						"label": "Organization"
+					}
+				]
+			}
+		},
+		{
+			"preset_name": "textinput_required_if",
+			"values": {
+				"validators": "unicode check_required_field"
+			}
+		},
+		{
+			"preset_name": "spatial_resolution",
+			"values": {
+				"classes": [
+					"col-md-4 view-list"
+				],
+				"validators": "ignore_missing unicode spatial_resolution_validator check_required_field"
+			}
+		},
+		{
+			"preset_name": "spatial_resolution_type",
+			"values": {
+				"classes": [
+					"col-md-8 no-padding"
+				],
+				"form_snippet": "fixed_select.html",
+				"display_snippet": "select.html",
+				"validators": "ignore_missing unicode scheming_choices_ignore_missing check_required_field",
+				"choices": [
+					{
+						"value": "meters",
+						"label": "In meters"
+					},
+					{
+						"value": "scale",
+						"label": "As scale"
+					},
+					{
+						"value": "angular",
+						"label": "As angular distance"
+					}
+				]
+			}
+		},
+		{
+			"preset_name": "date_range_start",
+			"values": {
+				"validators": "ignore_missing unicode",
+				"classes": [
+					"col-md-6",
+					"view-list"
+				],
+				"form_snippet": "fixed_date.html"
+			}
+		},
+		{
+			"preset_name": "date_range_end",
+			"values": {
+				"validators": "ignore_missing unicode",
+				"classes": [
+					"col-md-6",
+					"no-padding"
+				],
+				"form_snippet": "fixed_date.html"
+			}
+		},
+		{
+			"preset_name": "single_dataset_ref",
+			"values": {
+				"validators": "ignore_missing unicode if_not_missing_package_id_or_name_exists",
+				"display_property": "foaf:homepage",
+				"display_snippet": "link.html",
+				"form_snippet": "fixed_autocomplete.html",
+				"form_attrs": {
+					"data-module": "autocomplete",
+					"data-module-source": "/api/2/util/dataset/autocomplete?incomplete=?"
+				}
+			}
+		},
+		{
+			"preset_name": "multi_dataset_ref",
+			"values": {
+				"validators": "ignore_missing unicode if_not_missing_package_id_or_name_exists_list",
+				"display_property": "foaf:homepage",
+				"display_snippet": "list_link.html",
+				"form_snippet": "fixed_autocomplete.html",
+				"form_attrs": {
+					"data-module": "autocomplete",
+					"data-module-tags": "true",
+					"data-module-createtags": "false",
+					"data-module-source": "/api/2/util/dataset/autocomplete?incomplete=?"
+				}
+			}
+		},
+		{
+			"preset_name": "multiple_choice",
+			"values": {
+				"validators": "scheming_multiple_choice",
+				"output_validators": "scheming_multiple_choice_output",
+				"form_snippet": "multiple_checkbox.html",
+				"display_snippet": "multiple_choice.html"
+			}
+		},
+		{
+			"preset_name": "select_metrics",
+			"values": {
+				"validators": "scheming_valid_json_object",
+				"display_snippet": "metric_blocks.html",
+				"form_snippet": "select_from_json.html",
+				"form_attrs": {
+					"data-module": "select-from-json",
+					"data-module-mode": "sparql",
+					"data-module-sublabels": "value of quality metric|ground truth dataset|confidence term|confidence value|thematic representativity|spatial representativity|temporal representativity|name of quality source|type of quality source|link to quality source",
+					"data-module-source": "https://geokur-dmp2.geo.tu-dresden.de/fuseki/geokur_quality_register/query",
+					"data-module-query": "PREFIX dqv: <http://www.w3.org/ns/dqv#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#>PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>PREFIX gkq: <https://geokur-dmp.geo.tu-dresden.de/pages/quality-elements#>SELECT ?subject ?label ?datatype WHERE {   ?subject a dqv:Metric .  ?subject skos:prefLabel ?label .  ?subject dqv:expectedDataType ?datatype . }"
+				}
+			}
+		},
+		{
+			"preset_name": "select_process",
+			"values": {
+				"validators": "scheming_valid_json_object",
+				"form_snippet": "select_process.html",
+				"form_attrs": {
+					"data-module": "select-process",
+					"data-module-mode": "sparql",
+					"data-module-source": "https://geokur-dmp2.geo.tu-dresden.de/fuseki/geokur_process_register/sparql",
+					"data-module-query": "PREFIX prov: <http://www.w3.org/ns/prov#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?subject ?label WHERE { ?subject a prov:Activity . ?subject rdfs:label ?label. }"
+				}
+			}
+		},
+		{
+			"preset_name": "select_json",
+			"values": {
+				"form_snippet": "select_from_json.html",
+				"form_attrs": {
+					"data-module": "select-from-json",
+					"data-module-mode": "json",
+					"data-module-source": "https://inspire.ec.europa.eu/theme/theme.de.json"
+				}
+			}
+		},
+		{
+			"preset_name": "owner_org",
+			"values": {
+				"validators": "unicode owner_org_validator",
+				"form_snippet": "organization.html"
+			}
+		},
+		{
+			"preset_name": "resource_url",
+			"values": {
+				"validators": "ignore_missing unicode remove_whitespace",
+				"form_snippet": "upload.html",
+				"upload_field": "upload",
+				"upload_clear": "clear_upload",
+				"upload_label": "File"
+			}
+		},
+		{
+			"preset_name": "resource_format",
+			"values": {
+				"validators": "if_empty_guess_format ignore_missing clean_format unicode",
+				"form_snippet": "fixed_autocomplete.html",
+				"form_attrs": {
+					"data-module": "autocomplete",
+					"data-module-source": "/api/2/util/resource/format_autocomplete?incomplete=?"
+				}
+			}
+		},
+		{
+			"preset_name": "multiple_text",
+			"values": {
+				"form_snippet": "multiple_text.html",
+				"display_snippet": "multiple_text.html",
+				"validators": "scheming_multiple_text",
+				"output_validators": "scheming_load_json"
+			}
+		}
+	]
+}

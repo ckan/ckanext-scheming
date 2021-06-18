@@ -1,0 +1,21 @@
+
+{% asset 'ckanext-scheming/select_from_json' %}
+
+<tr>
+	<th scope="row" class="dataset-label" colspan="2">{{ h.scheming_language_text(field.label) }}
+	{%- if data[field.field_name] != '' -%}
+	<div style="padding:0px 10px;">
+	{%- for metric, values in h.get_json_as_dict(data[field.field_name]).items() -%}
+
+		<p class="metrics-url">{{ values['label'] }}</p>
+		<p class="tiny-metrics-url">{{ metric }}</p>
+		<ul class="metrics-value-list">
+		{%- for key, value in values['values'].items() -%}
+			<li><span class="sublabel-key">{{ key }}:</span><span class="sublabel-value">{{ value }}</span></li>
+		{%- endfor -%}
+		</ul>
+	{%- endfor -%}
+	</div>
+	{%- endif -%}
+	</th>
+</tr>

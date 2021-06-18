@@ -1,0 +1,68 @@
+{#
+An input widget for polygons, such as the ckanext-spatial "spatial" field for 
+the dataset extent.
+
+This widget retains the plain text input which accepts a valid GeoJSON
+geometry, and also adds a map on which one can simply draw the dataset extent.
+
+Providing alternative map input has two motivations:
+- Drawing is achievable, pasting a valid GeoJSON geometry will post a challenge
+to many non-GIS-trained users
+- Users will have additional, silent expert knowledge on the real extent
+of their dataset.
+
+This form snippet depends on a custom branch of ckanext-spatial, which
+provides (and is the appropriate home for) the JavaScript functions to 
+provide an editable map.
+
+#}
+
+{% import 'macros/form.html' as form %}
+
+{% with 
+    name=field.field_name, 
+    id='field-' + field.field_name,
+    label=h.scheming_language_text(field.label),
+    placeholder=h.scheming_language_text(field.form_placeholder),
+    value=data[field.field_name],
+    error=errors[field.field_name],
+    classes=field.classes if 'classes' in field else ['control-medium'],
+    is_required=h.scheming_field_required(field)
+	%}
+
+	{% call form.input_block(id, label, error, classes, is_required=is_required) %}
+  
+		{% set map_config = h.get_common_map_config() %}
+		<div class="dataset-map" 
+			data-module="spatial-form"
+			data-input_id="{{ id }}"
+			data-extent="{{ value }}"
+			data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}" 
+			data-module-map_config="{{ h.dump_json(map_config) }}">
+		  <div id="dataset-map-container"></div>
+		</div>
+		
+		{%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+		
+		<textarea class="form-control" 
+			id="{{ id }}"
+			type="{{ type }}" 
+			name="{{ name }}" 
+			placeholder="{{ placeholder }}" 
+			rows=5 
+			style="width:100%;">{{ value | empty_and_escape }}</textarea>	
+		<button id="{{ id }}-btn" class="btn btn-default btn-sm btn-block"></button>
+		
+		<div id="{{ id }}-template">
+			<div class="input-group">
+				<span class="input-group-addon">bottom left</span><input type="text" placeholder="lng,lat eg. 13.7250,51.03000" />
+			</div>
+			<div class="input-group" style="margin-top:10px;">
+				<span class="input-group-addon">upper right</span><input type="text" placeholder="lng,lat eg. 13.7200,51.02900" />
+			</div>
+		</div>
+		
+		{% asset 'ckanext-scheming/spatial_form' %}
+	
+	{% endcall %}
+{% endwith %}

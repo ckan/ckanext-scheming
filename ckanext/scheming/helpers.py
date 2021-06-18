@@ -11,6 +11,11 @@ from ckantoolkit import config, _
 
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    from sqlalchemy.util import OrderedDict
+
 all_helpers = {}
 
 def helper(fn):
@@ -433,3 +438,11 @@ def scheming_flatten_subfield(subfield, data):
         for k in record:
             flat[prefix + k] = record[k]
     return flat
+
+@helper
+def get_link_list(link_list):
+    return link_list.split(',')
+
+@helper
+def get_json_as_dict(value):
+    return json.loads(value, object_pairs_hook=OrderedDict)
