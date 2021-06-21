@@ -1,7 +1,7 @@
 {
     "scheming_version": 2,
     "dataset_type": "dataset",
-    "about": "CKAN dataset schema for GeoKur",
+    "about": "CKAN dataset schema for KlimaKonform",
     "about_url": "https://github.com/GeoinformationSystems/ckanext-scheming",
     "dataset_fields": [
         {
@@ -30,9 +30,8 @@
         },
         {
             "field_name": "contact_name",
-            "label": "Contact Point",
-            "required_if_value_in": "contact_class",
-            "preset": "contact_name",
+            "label": "Contact Point - Name",
+            "preset": "contact_name",					 
             "form_placeholder": "Person or Organization"
         },
         {
@@ -63,9 +62,147 @@
         {
             "field_name": "theme",
             "label": "Theme / Category",
-            "validators": "not_empty",
-            "help_text": "Provide links to descriptions of the themes; separate by comma. E.g.: http://inspire.ec.europa.eu/theme/ad, http://inspire.ec.europa.eu/theme/au.",
-            "preset": "multi_link"
+            "help_text": "Select at least one INSPIRE theme. Further information at: http://inspire.ec.europa.eu/theme",
+            "preset": "multiple_checkbox",
+            "required": "true",
+            "choices": [
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/ad",
+                    "label": "Addresses"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/au",
+                    "label": "Administrative units"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/af",
+                    "label": "Agricultural and aquaculture facilities"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/am",
+                    "label": "Area management/restriction/regulation zones and reporting units"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/ac",
+                    "label": "Atmospheric conditions"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/br",
+                    "label": "Bio-geographical regions"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/bu",
+                    "label": "Buildings"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/cp",
+                    "label": "Cadastral parcels"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/rs",
+                    "label": "Coordinate reference systems"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/el",
+                    "label": "Elevation"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/er",
+                    "label": "Energy resources"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/ef",
+                    "label": "Environmental monitoring facilities"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/gg",
+                    "label": "Geographical grid systems"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/gn",
+                    "label": "Geographical names"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/ge",
+                    "label": "Geology"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/hb",
+                    "label": "Habitats and biotopes"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/hh",
+                    "label": "Human health and safety"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/hy",
+                    "label": "Hydrography"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/lc",
+                    "label": "Land cover"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/lu",
+                    "label": "Land use"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/mf",
+                    "label": "Meteorological geographical features"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/mr",
+                    "label": "Mineral resources"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/nz",
+                    "label": "Natural risk zones"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/of",
+                    "label": "Oceanographic geographical features"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/oi",
+                    "label": "Orthoimagery"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/pd",
+                    "label": "Population distribution — demography"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/pf",
+                    "label": "Production and industrial facilities"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/ps",
+                    "label": "Protected sites"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/sr",
+                    "label": "Sea regions"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/so",
+                    "label": "Soil"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/sd",
+                    "label": "Species distribution"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/su",
+                    "label": "Statistical units"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/tn",
+                    "label": "Transport networks"
+                },
+                {
+                    "value": "http://inspire.ec.europa.eu/theme/us",
+                    "label": "Utility and governmental services"
+                }
+            ]
         },
         {
             "field_name": "spatial",
@@ -112,34 +249,22 @@
             "help_text": "E.g. 'P2Y3M20D' describes a period 2 years, 3 months and 20 days or 'P1D' describes a period of 1 day"
         },
         {
-            "field_name": "quality_metrics",
-            "label": "Data Quality Metric",
-            "preset": "select_metrics",
-            "help_text": "Value of quality metric: Measured Value of the selected quality metric | Ground Truth Dataset: Link to ground truth dataset | Confidence term: Label of the confidence value of the selected quality metric, e.g. r value | Confidence value: According confidence threshold | Thematic representativity: Describes thematic aspects for which quality information is given | Spatial representativity: Describes region for which quality information is given | Temporal representativity: Describes time step or range for which quality information is given | Name of quality source: Name of the source of information of the selected quality metric | Type of quality source: Describes the origin of the quality information: data, report, scientific publication, Web site, other | Link to quality source: Web link to access the quality information source"
-        },
-        {
             "field_name": "is_version_of",
             "label": "Is Version of",
             "preset": "single_dataset_ref",
             "help_text": "Insert according dataset's identifier. A related resource of which the described resource is a version, edition, or adaptation. Changes in version imply substantive changes in content rather than differences in format."
         },
         {
-            "field_name": "is_part_of",
-            "label": "Is Part of",
+            "field_name": "related_resource",
+            "label": "Parent Dataset",
             "preset": "single_dataset_ref",
-            "help_text": "A related resource in which the described resource is physically or logically included (https://dublincore.org/specifications/dublin-core/dcmi-terms/#isPartOf)."
+            "help_text": "A resource with an unspecified relationship to the cataloged item. https://www.w3.org/TR/vocab-dcat-2/#Property:resource_relation"
         },
         {
             "field_name": "was_derived_from",
             "label": "Derived from",
-            "preset": "multi_dataset_ref",
-            "help_text": "Provenance Statement: The dataset from which the current dataset was derived."
-        },
-        {
-            "field_name": "was_generated_by",
-            "label": "Generated by",
-            "preset": "select_process",
-            "help_text": "Provenance Statement: Process/Tool/Model that generated the dataset. Click Add New Process to create a new process."
+            "preset": "multi_link",
+            "help_text": "The dataset from which the current dataset was derived. Provide the URL of the according datasets. In case of multiple Entries, split with comma \",\"."
         },
         {
             "field_name": "owner_org",
@@ -158,8 +283,7 @@
         {
             "field_name": "url",
             "label": "URL",
-            "preset": "resource_url",
-            "form_placeholder": "http://example.com/my-data.csv"
+            "preset": "resource_url"
         },
         {
             "field_name": "name",
