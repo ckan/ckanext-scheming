@@ -1,0 +1,65 @@
+{
+    "scheming_version": 2,
+    "dataset_type": "process",
+    "about": "CKAN process schema for GeoKur",
+    "about_url": "https://github.com/GeoinformationSystems/ckanext-scheming",
+    "dataset_fields": [
+        {
+            "field_name": "title",
+            "label": "Title",
+            "preset": "title"
+        },
+        {
+            "field_name": "name",
+            "label": "Identifier",
+            "preset": "name"
+        },
+        {
+            "field_name": "notes",
+            "label": "Short Description / Abstract",
+            "preset": "notes"
+        },
+        {
+            "field_name": "documentation",
+            "label": "Link to full Documentation / Paper",
+            "preset": "single_link"
+        },
+        {
+            "field_name": "is_version_of",
+            "label": "Is Version of",
+            "preset": "single_dataset_ref",
+            "help_text": "Fill if the current processes is a new version of an existing process."
+        },
+        {
+            "field_name": "is_part_of",
+            "label": "Is Part of",
+            "preset": "single_dataset_ref",
+            "help_text": "Fill if the current processes is part of an existing superordinate process."
+        },
+        {
+            "field_name": "owner_org",
+            "label": "Organization",
+            "preset": "owner_org"
+        }
+    ],
+	"resource_fields": [
+        {
+            "field_name": "url",
+            "label": "URL",
+            "preset": "resource_url",
+            "form_placeholder": "http://example.com/my-data.csv"
+        },
+        {
+            "field_name": "name",
+            "label": "Name",
+            "validators": "if_empty_same_as(url) unicode",
+            "form_placeholder": "leave blank to use resource file name"
+        },
+        {
+            "field_name": "format",
+            "label": "Format",
+            "preset": "resource_format",
+            "form_placeholder": "eg. CSV, XML or JSON"
+        }
+    ]
+}

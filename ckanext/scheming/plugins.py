@@ -196,6 +196,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.IFacets)
 
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
@@ -219,6 +220,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
     def package_types(self):
         return list(self._schemas)
+
+    def dataset_facets(self, facets_dict, package_type):
+
+        facets_dict['type'] = p.toolkit._('Type') 
+
+        # Return the updated facet dict.
+        return facets_dict
 
     def validate(self, context, data_dict, schema, action):
         """
@@ -632,3 +640,5 @@ def _expand_schemas(schemas):
 
         out[name] = schema
     return out
+
+
