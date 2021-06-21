@@ -1,0 +1,11 @@
+{# Adds 'Add ***' button for group / foreach dataset-type #}
+
+{% set dataset_types = h.scheming_dataset_schemas() %}
+
+{% if group %}
+    {% link_for _('Add Dataset'), named_route='dataset.new', group=group, class_='btn btn-primary', icon='plus-square' %}
+{% else %}
+	{% for dataset_type in dataset_types %}
+		{% link_for _('Add ' + dataset_type.title()), named_route='%s.new' % dataset_type, class_='btn btn-primary', icon='plus-square' %}
+	{% endfor %}
+{% endif %}
