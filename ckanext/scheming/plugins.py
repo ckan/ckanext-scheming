@@ -8,6 +8,7 @@ from functools import wraps
 import six
 import yaml
 import ckan.plugins as p
+from pylons import config
 
 try:
     from paste.reloader import watch_file
@@ -21,6 +22,11 @@ try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
 except ImportError:  # CKAN <= 2.5
     core_helper_functions = None
+
+try:
+	from collections import OrderedDict  # from python 2.7
+except ImportError:
+	from sqlalchemy.util import OrderedDict
 
 from ckantoolkit import (
     DefaultDatasetForm,
@@ -201,6 +207,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
+    SCHEMA_FILTER_ORDER = ['organization', 'groups', 'tags', 'res_format', 'license_id']
+    SCHEMA_FILTER_TITLES = [p.toolkit._('Organizations'), p.toolkit._('Groups'), p.toolkit._('Tags'), p.toolkit._('Formats'), p.toolkit._('License')]
 
     @classmethod
     def _store_instance(cls, self):
@@ -221,20 +229,36 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
+    def get_filter_config(self):
+        filter_order = config.get('ckanext.scheming.filter_order', '')
+        filter_titles = config.get('ckanext.scheming.filter_titles', '')
+        if filter_order and filter_titles:
+            filter_order = filter_order.split(' ')
+            filter_titles = filter_titles.split(' ')
+        else:
+            filter_order = SCHEMA_FILTER_ORDER
+            filter_titles = SCHEMA_FILTER_TITLES
+
+        facets_ordered = OrderedDict()
+        for k in range(len(filter_order)):
+            facets_ordered[filter_order[k]] = filter_titles[k]
+        
+        return facets_ordered
+    
     def dataset_facets(self, facets_dict, package_type):
-        facets_dict['type'] = p.toolkit._('Type') 
+        #facets_dict['type'] = p.toolkit._('Type')        
         # Return the updated facet dict.
-        return facets_dict
+        return self.get_filter_config()
             
     def organization_facets(self, facets_dict, organization_type, package_type):
-        facets_dict['type'] = p.toolkit._('Type')
+        #facets_dict['type'] = p.toolkit._('Type')
         # Return the updated facet dict.
-        return facets_dict
+        return self.get_filter_config()
         
     def group_facets(self, facets_dict, group_type, package_type):
-        facets_dict['type'] = p.toolkit._('Type')
+        #facets_dict['type'] = p.toolkit._('Type')
         # Return the updated facet dict.
-        return facets_dict
+        return self.get_filter_config()
 
     def validate(self, context, data_dict, schema, action):
         """
