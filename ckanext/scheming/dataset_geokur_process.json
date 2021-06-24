@@ -1,6 +1,7 @@
 {
     "scheming_version": 2,
     "dataset_type": "process",
+	"skip_resources": true,
     "about": "CKAN process schema for GeoKur",
     "about_url": "https://github.com/GeoinformationSystems/ckanext-scheming",
     "dataset_fields": [
