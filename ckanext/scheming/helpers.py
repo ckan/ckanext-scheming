@@ -7,9 +7,10 @@ import json
 import six
 import logging
 
+import ckan.logic as logic
+
 from jinja2 import Environment
 from ckantoolkit import config, _
-
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
 
 try:
@@ -460,3 +461,10 @@ def get_link_list(link_list):
 @helper
 def get_json_as_dict(value):
     return json.loads(value, object_pairs_hook=OrderedDict)
+
+@helper
+def datasets_available(ds_type):
+    context = {}
+    data_dict = { u'fq': ds_type }
+    result = logic.get_action(u'package_search')(context, data_dict)
+    return result['results']
