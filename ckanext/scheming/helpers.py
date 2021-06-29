@@ -5,6 +5,7 @@ import datetime
 import pytz
 import json
 import six
+import logging
 
 from jinja2 import Environment
 from ckantoolkit import config, _
@@ -17,6 +18,7 @@ except ImportError:
     from sqlalchemy.util import OrderedDict
 
 all_helpers = {}
+log = logging.getLogger(__name__)
 
 def helper(fn):
     """
@@ -177,6 +179,18 @@ def scheming_dataset_schemas(expanded=True):
         if expanded:
             return p.instance._expanded_schemas
         return p.instance._schemas
+
+
+@helper
+def scheming_dataset_types_ordered():
+    """
+    Return the dict of dataset schemas. Or if scheming_datasets
+    plugin is not loaded return None.
+    """
+    from ckanext.scheming.plugins import SchemingDatasetsPlugin as p
+    if p.instance:        
+        ordered = tuple(sorted(p.instance._expanded_schemas))
+        return ordered
 
 
 @helper
