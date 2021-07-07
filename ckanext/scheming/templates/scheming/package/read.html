@@ -19,9 +19,20 @@
 {% endblock %}
 
 {% block package_resources %}
-  {% snippet "scheming/package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources, schema=schema %}
+  {% asset 'ckanext-unaids/BulkFileUploaderComponentStyles' %}
+  <div
+      id="BulkFileUploaderComponent"
+      data-lfsServer="{{ h.blob_storage_server_url() }}"
+      data-maxResourceSize="{{ h.max_resource_size() }}"
+      data-orgId="{{ pkg.organization.name }}"
+      data-datasetName="{{ pkg.name }}"
+      data-defaultFields="{{ h.bulk_file_uploader_default_fields() }}"
+  ></div>
+  {% asset 'ckanext-unaids/BulkFileUploaderComponentScripts' %}
+  <div id="ContentToMoveInsideDropzone">
+    {% snippet "scheming/package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources, schema=schema %}
+  </div>
 {% endblock %}
-
 
 {% block package_additional_info %}
   {% snippet "scheming/package/snippets/additional_info.html",
