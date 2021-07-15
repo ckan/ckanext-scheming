@@ -60,6 +60,20 @@ select_from_json:
   contents:
     - js/select_from_json.js
 
+select_dataset_by_type_css:
+  output: ckanext-scheming/%(version)s_select_dataset_by_type.css  
+  contents:
+    - styles/select_dataset_by_type.css
+
+select_dataset_by_type:
+  output: ckanext-scheming/%(version)s_select_dataset_by_type.js  
+  extra:
+    preload:
+      - base/main
+      - ckanext-scheming/select_dataset_by_type_css
+  contents:
+    - js/select_dataset_by_type.js
+
 select_process:
   output: ckanext-scheming/%(version)s_select_process.js  
   extra:

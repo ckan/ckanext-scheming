@@ -1,6 +1,5 @@
 {% import 'macros/form.html' as form %}
 
-
 {% with
 	name=field.field_name,
 	id='field-' + field.field_name,
@@ -11,34 +10,62 @@
 	classes=field.classes if 'classes' in field else ['control-medium'],
 	attrs=dict( **(field.get('form_attrs', {}))),
 	is_required=h.scheming_field_required(field),
-	required_type = 'type:' + field.required_type if 'required_type' in field else 'type:dataset'
+	required_type = field.required_type if 'required_type' in field else 'dataset',
+	multiple_items = field.multiple_items if 'multiple_items' in field else false,
+	allow_external_items = field.allow_external_items if 'allow_external_items' in field else false
 %}
 
+	{%- set read_endpoint = '.read' if h.ckan_version() > '2.9' else '_read' -%}
+	{%- set url = h.url_for(required_type + read_endpoint, id='', qualified=true) -%}	
 
-	{% call form.input_block(name,
-		label=label,
-		error=error,
-		is_required=is_required,
-		classes=classes
-		) %}
-		<div {{ form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
-		<select id="{{ id }}" name="{{ name }}" {{ form.attributes(attrs) }} data-module="autocomplete">
+	{% call form.input_block(id, label=label, error=error, classes=classes, is_required=is_required) %}
+	
+	<div data-module= "select-dataset-by-type" data-module-field="{{ id }}" {{ form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
+	{% set datasets_available = h.datasets_available('type:' + required_type) %}
+	{%- if not multiple_items -%}	
+		<select id="{{ id }}-select" name="{{ name }}" data-module="autocomplete">
 		  {% if not is_required %}
 			<option value=""></option>
-		  {% endif %}
-		  {% set datasets_available = h.datasets_available(required_type) %}
-			{% for dataset in datasets_available %}
+		  {% endif %}		  
+			{% for dataset in datasets_available %}				
 				{% set selected_ds = data[field.field_name] %}
-				<option value="{{ dataset.name }}" 
-					{% if dataset.name == value %} 
+				<option value="{{ url + dataset.name }}" 
+					{% if url + dataset.name == value %} 
 						selected="selected"
 					{% endif %}
 				>{{ dataset.title }}</option>
 			{% endfor %}
 		</select>
-		
-		{%- snippet 'scheming/form_snippets/help_text.html', field=field %}
+	{%- else -%}
+		<div style="width:calc(100% - 50px); display: inline-block;">
+			<select id="{{ id }}-select" data-module="autocomplete" >
+			  {% if not is_required %}
+				<option value="">&lt;Choose {{ required_type }}&gt;</option>
+			  {% endif %}
+				{% for dataset in datasets_available %}
+					{% set selected_ds = data[field.field_name] %}
+					<option value="{{ url + dataset.name }}" >{{ dataset.title }}</option>
+				{% endfor %}
+			</select>
 		</div>
+		<button id="{{ id }}-btn" class="btn btn-default btn-sm" style="top:-3px;">Add</button>
+		{%- if allow_external_items -%}
+			<p style="font-style: italic;">or</p>
+			<div style="width:calc(100% - 50px); display: inline-block;">
+				<div class="input-group" >
+					<span class="input-group-addon">link to external source:</span><input id="{{ id }}-input" type="text" class="form-control" />
+				</div>
+			</div>
+			<button id="{{ id }}-btn-ext" class="btn btn-default btn-sm" style="vertical-align:text-bottom; top:-4px;">Add</button>
+		{%- endif -%}
+		<ul id="{{ id }}-list" class="list-dataset-links">
+		</ul>
+		<input type="hidden" class="form-control" id="{{ id }}" name="{{ name }}" style="width:100%; margin-top:10px" value="{{ value }}" />
+	{%- endif -%}
+	
+	{%- snippet 'scheming/form_snippets/help_text.html', field=field %}
+	{% asset 'ckanext-scheming/select_dataset_by_type' %}
+	</div>
 	{% endcall %}
 {% endwith %}
 

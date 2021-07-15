@@ -1,0 +1,36 @@
+.list-dataset-links{
+	padding-left: 0px;
+}
+
+.list-dataset-links > li{
+	padding: 5px 8px 5px 22px;
+	margin: 3px 0 3px 0px;
+    position: relative;
+    line-height: 13px;
+    color: #333;
+    cursor: default;
+    border: 1px solid #aaaaaa;
+    border-radius: 3px;
+    background-clip: padding-box;
+    background-color: #e4e4e4;
+	padding: 5px 8px 5px 22px;
+	background-image: linear-gradient(to bottom, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+	list-style: none;
+	display:table;
+}
+.list-dataset-links > li > a{
+	display: block;
+    width: 12px;
+    height: 13px;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    font-size: 1px;
+    outline: none;
+    background: url(../../base/vendor/select2/select2.png) right top no-repeat;
+}
+
+.list-dataset-links > li > a:hover, .list-dataset-links > li > a:focus {
+	background-position: right -11px;
+	cursor: pointer;
+}

@@ -17,20 +17,42 @@
         },
         {
             "field_name": "notes",
-            "label": "Short Description / Abstract",
+            "label": "Description",
+			"help_text": "Describe the core characteristics.",
             "preset": "notes"
         },
         {
             "field_name": "documentation",
-            "label": "Link to full Documentation / Paper",
+            "label": "Documentation",
+			"help_text": "Reference a documentation resp. related publication.",
             "preset": "single_link"
         },
         {
-            "field_name": "processes",
-            "label": "Processes - ToDo: with fancy dropdown and add-button",
-            "help_text": "All processes that are included in the worklow.",
+            "field_name": "rel_datasets",
+            "label": "Related datasets",
+            "help_text": "Please specify related datasets.",
 			"form_snippet": "select_dataset_by_type.html",
-			"required_type": "process"
+			"required_type": "dataset",
+			"multiple_items": true,
+			"allow_external_items": true
+        },
+        {
+            "field_name": "result",
+            "label": "Result",
+            "help_text": "Please specify output datasets.",
+			"form_snippet": "select_dataset_by_type.html",
+			"required_type": "dataset",
+			"multiple_items": true,
+			"allow_external_items": true
+        },
+        {
+            "field_name": "rel_processes",
+            "label": "Related processes",
+            "help_text": "Please select all processes that are included in the worklow.",
+			"form_snippet": "select_dataset_by_type.html",
+			"required_type": "process",
+			"multiple_items": true,
+			"allow_external_items": false
         },
         {
             "field_name": "owner_org",
