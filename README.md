@@ -5,25 +5,111 @@ This CKAN extension provides a way to configure and share metadata schemas using
 YAML or JSON schema description. Custom validation and template snippets for editing
 and display are supported.
 
-[![Tests](https://github.com/ckan/ckanext-scheming/workflows/Tests/badge.svg?branch=master)](https://github.com/ckan/ckanext-scheming/actions)
+Note: This fork has been extended and modified to fit the needs of CKAN instances at the [Chair of Geoinformatics, TU Dresden](https://tu-dresden.de/bu/umwelt/geo/geoinformatik/)
 
-
+------------
 Requirements
-============
+------------
 
-This plugin is compatible with CKAN 2.6 or later.
+Works with CKAN 2.9 and Python 2.7.
+
+Recommended plugins
+------------
+
+Install https://github.com/ckan/ckanext-spatial like this::
+
+	sudo apt-get install python-dev libxml2-dev libxslt1-dev libgeos-c1v5
+	sudo apt-get install postgresql-11-postgis-2.5
+	sudo apt-get install postgresql-11-postgis-2.5-scripts
+	sudo -u postgres psql -d ckan_default
+
+		CREATE EXTENSION postgis;
+		SELECT PostGIS_version();
+		\q
+
+	sudo -u postgres psql -d ckan_default -c 'ALTER TABLE geometry_columns OWNER TO ckan_default;'
+	sudo -u postgres psql -d ckan_default -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'
+
+	. /usr/lib/ckan/default/bin/activate
+	cd /usr/lib/ckan/default/src/ 
+	pip install -e "git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial"
+	pip install -r /usr/lib/ckan/default/src/ckanext-spatial/pip-requirements.txt
+
+Install https://github.com/ckan/ckanext-geoview like this::
+
+	. /usr/lib/ckan/default/bin/activate
+	cd /usr/lib/ckan/default/src/
+	git clone https://github.com/ckan/ckanext-geoview.git
+	cd ckanext-geoview
+	python setup.py develop
+	pip install -r pip-requirements.txt
+
+Activate these by adding ``spatial_metadata spatial_query geo_view geojson_view wmts_view shp_view`` to the ``ckan.plugins`` setting in your CKAN config file (by default the config file is located at ``/etc/ckan/default/ckan.ini``).
+
+Usefull settings with these plugins::
+	
+	# Setting for spatial search
+	ckanext.spatial.search_backend = postgis
+	
+	# Add default views from geoview plugin if they should be created be default
+	ckan.views.default_views = [...] geo_view geojson_view wmts_view shp_view
+
+------------
+(Developer) Installation
+------------
+
+To install ckanext-scheming:
+
+1. Activate your CKAN virtual environment, for example::
+
+	. /usr/lib/ckan/default/bin/activate
+
+2. Install the ckanext-scheming Python package into your virtual environment::
+
+	cd /usr/lib/ckan/default/src
+	git clone https://github.com/GeoinformationSystems/ckanext-scheming.git
+	cd ckanext-scheming
+	python setup.py develop
+	pip install -r requirements.txt
+
+3. Add ``scheming_datasets`` to the end of ``ckan.plugins`` setting in your CKAN config file (by default the config file is located at ``/etc/ckan/default/ckan.ini``).
+
+4. Restart CKAN. For example if you've deployed CKAN with Supervisor on Ubuntu::
+
+	sudo service supervisor restart
 
 
-Installation
-============
+---------------
+Custom Configuration
+---------------
 
-You can install the extension with the following shell commands:
+To use the default CKAN metadata scheme set the following in your ``/etc/ckan/default/ckan.ini``::
 
-```sh
-cd $CKAN_VENV/src/
+	# Define scheming file to be used
+	scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml
+	# Define preset files to be used
+	scheming.presets = ckanext.scheming:presets.json 
 
-pip install -e "git+https://github.com/ckan/ckanext-scheming.git#egg=ckanext-scheming"
-```
+To use KlimaKonform metadata scheme set the following in your ``/etc/ckan/default/ckan.ini``::
+
+	# Define scheming file to be used
+	scheming.dataset_schemas = ckanext.scheming:dataset_klimakonform_simple.json
+	# Define preset files to be used
+	scheming.presets = ckanext.scheming:presets_klimakonform.json 
+
+To use GeoKur metadata scheme set the following in your ``/etc/ckan/default/ckan.ini``::
+
+	# Define scheming file to be used
+	scheming.dataset_schemas = ckanext.scheming:dataset_geokur_workflow.json ckanext.scheming:dataset_geokur_process.json ckanext.scheming:dataset_geokur_live.json 
+	# Define preset files to be used
+	scheming.presets = ckanext.scheming:presets_geokur.json
+
+To customize the order and titles of filters (facets) at the datasets page (mostly usefull to get filter "Type" to the top when using multiple dataset types, eg. GeoKur schemes)::
+
+	ckanext.scheming.filter_order = type organization groups tags res_format license_id
+	ckanext.scheming.filter_titles = Type Organizations Groups Tags Formats Licenses
+
+
 
 
 Configuration
