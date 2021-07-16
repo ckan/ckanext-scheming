@@ -468,3 +468,38 @@ def datasets_available(ds_type):
     data_dict = { u'fq': ds_type }
     result = logic.get_action(u'package_search')(context, data_dict)
     return result['results']
+
+@helper
+def datasets_related(ds_type, field, term):
+    context = {}
+    data_dict = { u'fq': u''+field+':*'+term+'* type:'+ds_type }
+    result = logic.get_action(u'package_search')(context, data_dict)
+    return result['results']
+ 
+@helper
+def get_link_list_mixed_sources(link_list):
+    links = link_list.split(',')
+    res = []
+    from ckantoolkit import h
+    for record in links:
+        if h.url_is_local(record):
+            ds_id = record.rsplit('/', 1)[-1]
+            try:
+                ds_name = logic.get_action(u'package_show')({}, { 'id': ds_id })
+                ds_name = ds_name['title']
+            except NotFound:
+                ds_name=record
+                            
+            info = {
+                "link": record,
+                "name": ds_name,
+            }
+        else:
+            info = {
+                "link": record,
+                "name": record,
+            }
+        res.append(info)
+        
+    return res
+
