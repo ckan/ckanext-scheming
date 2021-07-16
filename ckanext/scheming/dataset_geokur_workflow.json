@@ -28,10 +28,16 @@
             "preset": "single_link"
         },
         {
+            "field_name": "source_code",
+            "label": "Source code",
+			"help_text": "Reference the related source code, e.g. link to GitHub or Zenodo folder.",
+            "preset": "single_link"
+        },
+        {
             "field_name": "rel_datasets",
             "label": "Related datasets",
             "help_text": "Please specify related datasets.",
-			"form_snippet": "select_dataset_by_type.html",
+			"preset": "select_dataset_by_type",
 			"required_type": "dataset",
 			"multiple_items": true,
 			"allow_external_items": true
@@ -40,7 +46,7 @@
             "field_name": "result",
             "label": "Result",
             "help_text": "Please specify output datasets.",
-			"form_snippet": "select_dataset_by_type.html",
+			"preset": "select_dataset_by_type",
 			"required_type": "dataset",
 			"multiple_items": true,
 			"allow_external_items": true
@@ -49,7 +55,7 @@
             "field_name": "rel_processes",
             "label": "Related processes",
             "help_text": "Please select all processes that are included in the worklow.",
-			"form_snippet": "select_dataset_by_type.html",
+			"preset": "select_dataset_by_type",
 			"required_type": "process",
 			"multiple_items": true,
 			"allow_external_items": false

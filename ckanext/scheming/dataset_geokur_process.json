@@ -4,6 +4,13 @@
 	"skip_resources": true,
     "about": "CKAN process schema for GeoKur",
     "about_url": "https://github.com/GeoinformationSystems/ckanext-scheming",
+	"related_fields": [ 
+		{ 
+			"type": "workflow",
+			"relation_field": "rel_processes",
+			"relation_name": "Related workflows"
+		}
+	],
     "dataset_fields": [
         {
             "field_name": "title",
@@ -17,25 +24,82 @@
         },
         {
             "field_name": "notes",
-            "label": "Short Description / Abstract",
+            "label": "Description",
+			"help_text": "Describe the core characteristics.",
             "preset": "notes"
         },
         {
             "field_name": "documentation",
-            "label": "Link to full Documentation / Paper",
+            "label": "Documentation",
+			"help_text": "Reference a documentation resp. related publication.",
             "preset": "single_link"
         },
         {
-            "field_name": "is_version_of",
-            "label": "Is Version of",
-            "preset": "single_dataset_ref",
-            "help_text": "Fill if the current processes is a new version of an existing process."
+            "field_name": "used",
+            "label": "Used",
+            "help_text": "Please specify input datasets.",
+			"preset": "select_dataset_by_type",
+			"required_type": "dataset",
+			"multiple_items": true,
+			"allow_external_items": true
         },
         {
-            "field_name": "is_part_of",
-            "label": "Is Part of",
-            "preset": "single_dataset_ref",
-            "help_text": "Fill if the current processes is part of an existing superordinate process."
+            "field_name": "generated",
+            "label": "Generated",
+            "help_text": "Please specify output datasets.",
+			"preset": "select_dataset_by_type",
+			"required_type": "dataset",
+			"multiple_items": true,
+			"allow_external_items": true
+        },
+        {
+            "field_name": "category",
+            "label": "Category",
+            "help_text": "Please categorize the process",
+            "preset": "multiple_checkbox",
+            "required": "true",
+            "choices": [
+                {
+                    "value": "geokur:Selection",
+                    "label": "geokur:Selection"
+                },
+                {
+                    "value": "geokur:Transformation",
+                    "label": "geokur:Transformation"
+                },
+                {
+                    "value": "geokur:Reclassification",
+                    "label": "geokur:Reclassification"
+                },
+                {
+                    "value": "geokur:Geometric",
+                    "label": "geokur:Geometric"
+                },
+                {
+                    "value": "geokur:Visualization",
+                    "label": "geokur:Visualization"
+                },
+                {
+                    "value": "geokur:Neighborhood",
+                    "label": "geokur:Neighborhood"
+                },
+                {
+                    "value": "geokur:Overlay",
+                    "label": "geokur:Overlay"
+                },
+                {
+                    "value": "geokur:Network",
+                    "label": "geokur:Network"
+                },
+                {
+                    "value": "geokur:Statistics",
+                    "label": "geokur:Statistics"
+                },
+                {
+                    "value": "geokur:Module",
+                    "label": "geokur:Module"
+                }
+            ]
         },
         {
             "field_name": "owner_org",

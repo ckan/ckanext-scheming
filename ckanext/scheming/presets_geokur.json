@@ -74,6 +74,15 @@
 				"display_snippet": "list_link.html"
 			}
 		},
+        {
+            "preset_name": "multiple_checkbox",
+            "values": {
+                "form_snippet": "multiple_checkbox.html",
+                "display_snippet": "multiple_choice.html",
+                "validators": "scheming_multiple_choice",
+                "output_validators": "scheming_multiple_choice_output"
+            }
+        },
 		{
 			"preset_name": "spatial_extent",
 			"values": {
@@ -222,6 +231,31 @@
 					"data-module-source": "https://geokur-dmp2.geo.tu-dresden.de/fuseki/geokur_quality_register/query",
 					"data-module-query": "PREFIX dqv: <http://www.w3.org/ns/dqv#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#>PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>PREFIX gkq: <https://geokur-dmp.geo.tu-dresden.de/pages/quality-elements#>SELECT ?subject ?label ?datatype WHERE {   ?subject a dqv:Metric .  ?subject skos:prefLabel ?label .  ?subject dqv:expectedDataType ?datatype . }"
 				}
+			}
+		},
+		{
+			"preset_name": "select_category",
+			"values": {
+				"validators": "scheming_valid_json_object",
+				"display_snippet": "metric_blocks.html",
+				"form_snippet": "select_from_json.html",
+				"form_attrs": {
+					"data-module": "select-from-json",
+					"data-module-mode": "sparql",
+					"data-module-sublabels": "value of quality metric|ground truth dataset|confidence term|confidence value|thematic representativity|spatial representativity|temporal representativity|name of quality source|type of quality source|link to quality source",
+					"data-module-source": "https://geokur-dmp2.geo.tu-dresden.de/fuseki/geokur_quality_register/query",
+					"data-module-query": "PREFIX dqv: <http://www.w3.org/ns/dqv#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#>PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>PREFIX gkq: <https://geokur-dmp.geo.tu-dresden.de/pages/quality-elements#>SELECT ?subject ?label ?datatype WHERE {   ?subject a dqv:Metric .  ?subject skos:prefLabel ?label .  ?subject dqv:expectedDataType ?datatype . }"
+				}
+			}
+		},
+		{
+			"preset_name": "select_dataset_by_type",
+			"values": {
+				"validators": "ignore_missing unicode remove_whitespace link_list_string_convert",
+				"form_snippet": "select_dataset_by_type.html",
+				"exclude_from_additional_info": false,
+				"show_relation_above": false,
+				"span_over_columns": true
 			}
 		},
 		{
