@@ -29,7 +29,7 @@
 		  {% endif %}		  
 			{% for dataset in datasets_available %}				
 				{% set selected_ds = data[field.field_name] %}
-				<option value="{{ url + dataset.name }}" 
+				<option value="{{ url + dataset.id }}" 
 					{% if url + dataset.name == value %} 
 						selected="selected"
 					{% endif %}
@@ -44,7 +44,7 @@
 			  {% endif %}
 				{% for dataset in datasets_available %}
 					{% set selected_ds = data[field.field_name] %}
-					<option value="{{ url + dataset.name }}" >{{ dataset.title }}</option>
+					<option value="{{ url + dataset.id }}" >{{ dataset.title }}</option>
 				{% endfor %}
 			</select>
 		</div>
@@ -59,6 +59,11 @@
 			<button id="{{ id }}-btn-ext" class="btn btn-default btn-sm" style="vertical-align:text-bottom; top:-4px;">Add</button>
 		{%- endif -%}
 		<ul id="{{ id }}-list" class="list-dataset-links">
+			{%- if value -%}
+				{%- for link in h.get_link_list_mixed_sources(data[field.field_name]) -%}
+				<li data-value="{{ link.link }}"> {{ link.name }} <a></a></li>
+				{%- endfor -%}
+			{%- endif -%}
 		</ul>
 		<input type="hidden" class="form-control" id="{{ id }}" name="{{ name }}" style="width:100%; margin-top:10px" value="{{ value }}" />
 	{%- endif -%}
