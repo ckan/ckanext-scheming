@@ -236,8 +236,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             filter_order = filter_order.split(' ')
             filter_titles = filter_titles.split(' ')
         else:
-            filter_order = SCHEMA_FILTER_ORDER
-            filter_titles = SCHEMA_FILTER_TITLES
+            filter_order = self.SCHEMA_FILTER_ORDER
+            filter_titles = self.SCHEMA_FILTER_TITLES
 
         facets_ordered = OrderedDict()
         for k in range(len(filter_order)):
