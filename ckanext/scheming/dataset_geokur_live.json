@@ -86,7 +86,6 @@
         {
             "field_name": "theme",
             "label": "Theme / Category",
-            "validators": "not_empty",
             "help_text": "Provide links to descriptions of the themes; separate by comma. E.g.: http://inspire.ec.europa.eu/theme/ad, http://inspire.ec.europa.eu/theme/au.",
             "preset": "multi_link"
         },

@@ -1,16 +1,16 @@
 {
     "scheming_version": 2,
     "dataset_type": "process",
-	"skip_resources": true,
+    "skip_resources": true,
     "about": "CKAN process schema for GeoKur",
     "about_url": "https://github.com/GeoinformationSystems/ckanext-scheming",
-	"related_fields": [ 
-		{ 
-			"type": "workflow",
-			"relation_field": "rel_processes",
-			"relation_name": "Related workflows"
-		}
-	],
+    "related_fields": [
+        {
+            "type": "workflow",
+            "relation_field": "rel_processes",
+            "relation_name": "Related workflows"
+        }
+    ],
     "dataset_fields": [
         {
             "field_name": "title",
@@ -25,39 +25,38 @@
         {
             "field_name": "notes",
             "label": "Description",
-			"help_text": "Describe the core characteristics.",
+            "help_text": "Describe the core characteristics.",
             "preset": "notes"
         },
         {
             "field_name": "documentation",
             "label": "Documentation",
-			"help_text": "Reference a documentation resp. related publication.",
+            "help_text": "Reference a documentation resp. related publication.",
             "preset": "single_link"
         },
         {
             "field_name": "used",
             "label": "Used",
             "help_text": "Please specify input datasets.",
-			"preset": "select_dataset_by_type",
-			"required_type": "dataset",
-			"multiple_items": true,
-			"allow_external_items": true
+            "preset": "select_dataset_by_type",
+            "required_type": "dataset",
+            "multiple_items": true,
+            "allow_external_items": true
         },
         {
             "field_name": "generated",
             "label": "Generated",
             "help_text": "Please specify output datasets.",
-			"preset": "select_dataset_by_type",
-			"required_type": "dataset",
-			"multiple_items": true,
-			"allow_external_items": true
+            "preset": "select_dataset_by_type",
+            "required_type": "dataset",
+            "multiple_items": true,
+            "allow_external_items": true
         },
         {
             "field_name": "category",
             "label": "Category",
             "help_text": "Please categorize the process",
             "preset": "multiple_checkbox",
-            "required": "true",
             "choices": [
                 {
                     "value": "geokur:Selection",
@@ -107,7 +106,7 @@
             "preset": "owner_org"
         }
     ],
-	"resource_fields": [
+    "resource_fields": [
         {
             "field_name": "url",
             "label": "URL",
