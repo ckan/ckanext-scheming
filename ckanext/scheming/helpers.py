@@ -465,14 +465,14 @@ def get_json_as_dict(value):
 @helper
 def datasets_available(ds_type):
     context = {}
-    data_dict = { u'fq': ds_type }
+    data_dict = { u'fq': ds_type , u'rows': '1000'}
     result = logic.get_action(u'package_search')(context, data_dict)
     return result['results']
 
 @helper
 def datasets_related(ds_type, field, term):
     context = {}
-    data_dict = { u'fq': u''+field+':*'+term+'* type:'+ds_type }
+    data_dict = { u'fq': u''+field+':*'+term+'* type:'+ds_type , u'rows': '1000'}
     result = logic.get_action(u'package_search')(context, data_dict)
     return result['results']
  
