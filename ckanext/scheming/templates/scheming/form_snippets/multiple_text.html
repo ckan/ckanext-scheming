@@ -1,0 +1,47 @@
+{% include 'scheming/snippets/multiple_text_asset.html' %}
+
+{% import 'macros/form.html' as form %}
+
+{% macro multiple_text(element, error) %}
+  <li class="multiple-text-field control-full">
+    <input
+      type="text"
+      name="{{ field.field_name }}"
+      value="{{ element }}"
+      class="form-control"
+      {{ form.attributes(field.form_attrs if 'form_attrs' in field else {}) }} />
+    <a class="btn btn-default btn-multiple-remove" name="multiple-remove" href="javascript:;"
+      >{% block delete_button_text %}{{ _('Remove') }}{% endblock %}</a>
+      {% if error and error is iterable %}<span class="error-block">{{ error|join(', ') }}</span>{% endif %}
+  </li>
+{% endmacro %}
+
+{%- set values = data.get(field.field_name, []) or ([''] * field.get('form_blanks', 1)) -%}
+
+{% call form.input_block(
+  'field-' + field.field_name,
+  h.scheming_language_text(field.label) or field.field_name,
+  "",
+  field.classes if 'classes' in field else ['control-medium'],
+  dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
+  is_required=h.scheming_field_required(field)) %}
+  <fieldset name="{{ field.field_name }}" class="scheming-fieldset" data-module="scheming-multiple-text">
+    <ol class="multiple-text-group">
+      {%- for element in values -%}
+        {{ multiple_text(element, errors[field.field_name] if loop.index == 1 else "") }}
+      {%- endfor -%}
+    </ol>
+
+    {% set help_text = h.scheming_language_text(field.help_text) %}
+    {% if help_text %}
+      <div class="info-block mrgn-tp-md">
+        {{ help_text }}
+      </div>
+    {% endif %}
+
+    <div class="control-medium">
+      <a href="javascript:MultipleText.multiple_add('{{ field.field_name }}');" class="btn btn-link"
+        >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>
+    </div>
+  </fieldset>
+{% endcall %}

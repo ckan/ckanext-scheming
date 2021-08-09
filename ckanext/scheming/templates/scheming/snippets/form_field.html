@@ -1,7 +1,8 @@
 {#- master snippet for all scheming form fields -#}
 {#- render the field the user requested, or use a default field -#}
 
-{%- set form_snippet = field.form_snippet -%}
+{%- set form_snippet = field.form_snippet|default(
+  'repeating_subfields.html' if field.repeating_subfields else 'text.html') -%}
 
 {#- If explicitly marked as false in the schema, skip the field completely -#}
 {%- if not form_snippet is sameas false -%}
@@ -14,7 +15,13 @@
     {%- set form_snippet = 'scheming/form_snippets/' + form_snippet -%}
   {%- endif -%}
 
-  {%- snippet form_snippet, field=field, data=data, errors=errors,
-    licenses=licenses, entity_type=entity_type, object_type=object_type -%}
+  {%- snippet form_snippet,
+    field=field,
+    data=data,
+    errors=errors,
+    licenses=licenses,
+    entity_type=entity_type,
+    object_type=object_type
+  -%}
 
 {%- endif -%}
