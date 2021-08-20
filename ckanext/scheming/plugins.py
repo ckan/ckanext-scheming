@@ -331,15 +331,16 @@ def expand_form_composite(data, fieldnames):
     when submitting dataset/resource form composite fields look like
     "field-0-subfield..." convert these to lists of dicts
     """
+    sep = p.toolkit.h.scheming_composite_separator()
     # if "field" exists, don't look for "field-0-subfield"
     fieldnames -= set(data)
     if not fieldnames:
         return
     indexes = {}
     for key in sorted(data):
-        if '-' not in key:
+        if sep not in key:
             continue
-        parts = key.split('-')
+        parts = key.split(sep)
         if parts[0] not in fieldnames:
             continue
         if parts[1] not in indexes:
@@ -348,11 +349,11 @@ def expand_form_composite(data, fieldnames):
         parts[1] = indexes[parts[1]]
         try:
             try:
-                comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
+                comp[int(parts[1])][sep.join(parts[2:])] = data[key]
                 del data[key]
             except IndexError:
                 comp.append({})
-                comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
+                comp[int(parts[1])][sep.join(parts[2:])] = data[key]
                 del data[key]
         except (IndexError, ValueError):
             pass  # best-effort only

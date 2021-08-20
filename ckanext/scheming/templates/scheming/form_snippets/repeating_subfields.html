@@ -17,7 +17,7 @@
         {% for subfield in field.repeating_subfields %}
           {% set sf = dict(
             subfield,
-            field_name=field.field_name ~ '-' ~ index ~ '-' ~ subfield.field_name)
+            field_name=field.field_name ~ h.scheming_composite_separator() ~ index ~ h.scheming_composite_separator() ~ subfield.field_name)
           %}
           {%- snippet 'scheming/snippets/form_field.html',
             field=sf,
