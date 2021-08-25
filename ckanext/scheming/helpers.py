@@ -424,14 +424,16 @@ def scheming_flatten_subfield(subfield, data):
     after a validation error) then they are returned as-is.
     """
     flat = dict(data)
+    sep = toolkit.h.scheming_composite_separator()
 
     if subfield['field_name'] not in data:
         return flat
 
     for i, record in enumerate(data[subfield['field_name']]):
-        prefix = '{field_name}-{index}-'.format(
+        prefix = '{field_name}{sep}{index}{sep}'.format(
             field_name=subfield['field_name'],
             index=i,
+            sep=sep,
         )
         for k in record:
             flat[prefix + k] = record[k]
