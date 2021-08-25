@@ -262,7 +262,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     scheming_schema,
                     convert_this
                 )
-                if convert_this and 'repeating_subfields' in f:
+                if convert_this and ('repeating_subfields' in f or 'simple_subfields' in f):
                     composite_convert_fields.append(f['field_name'])
 
         def composite_convert_to(key, data, errors, context):
@@ -284,6 +284,14 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     if ex['key'] not in composite_convert_fields
                 ]
         else:
+            dataset_simple_composite = {
+                f['field_name']
+                for f in scheming_schema['dataset_fields']
+                if 'simple_subfields' in f
+            }
+            if dataset_simple_composite:
+                expand_form_simple_composite(data_dict, dataset_simple_composite)
+
             dataset_composite = {
                 f['field_name']
                 for f in scheming_schema['dataset_fields']
@@ -358,7 +366,34 @@ def expand_form_composite(data, fieldnames):
         except (IndexError, ValueError):
             pass  # best-effort only
 
+def expand_form_simple_composite(data, fieldnames):
+    """
+    when submitting dataset/resource form composite fields look like
+    "field-subfield..." convert these to a dicts
+    """
+    sep = p.toolkit.h.scheming_composite_separator()
+    # if "field" exists, don't look for "field-0-subfield"
 
+    fieldnames -= set(data)
+    if not fieldnames:
+        return
+    for key in sorted(data):
+        if sep not in key:
+            continue
+        parts = key.split(sep)
+        if parts[0] not in fieldnames:
+            continue
+        comp = data.setdefault(parts[0], {})
+        try:
+            try:
+                comp[sep.join(parts[1:])] = data[key]
+                del data[key]
+            except IndexError:
+                comp = {}
+                comp[sep.join(parts[1:])] = data[key]
+                del data[key]
+        except (IndexError, ValueError):
+            pass  # best-effort only
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
                            DefaultGroupForm, _SchemingMixin):

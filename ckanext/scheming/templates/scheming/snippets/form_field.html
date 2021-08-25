@@ -1,7 +1,7 @@
 {#- master snippet for all scheming form fields -#}
 {#- render the field the user requested, or use a default field -#}
 {%- set form_snippet = field.form_snippet|default(
-  'repeating_subfields.html' if field.repeating_subfields else 'text.html') -%}
+  'repeating_subfields.html' if field.repeating_subfields else 'simple_subfields.html' if field.simple_subfields else 'text.html') -%}
 
 {%- if '/' not in form_snippet -%}
   {%- set form_snippet = 'scheming/form_snippets/' + form_snippet -%}
