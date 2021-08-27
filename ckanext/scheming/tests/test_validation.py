@@ -898,6 +898,59 @@ class TestSubfieldDatasetInvalid(object):
             raise AssertionError("ValidationError not raised")
 
 
+
+@pytest.mark.usefixtures("clean_db")
+class TestSimpleSubfieldDatasetValid(object):
+    def test_valid_simple_subfields(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type="test-subfields",
+            name="a_sf_1",
+            temporal_extent=[{'begin': '2000-01-23', 'end': ''}]
+        )
+
+        assert dataset["temporal_extent"] == [{'begin': '2000-01-23'}]
+
+    def test_empty_simple_subfields(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type="test-subfields",
+            name="a_sf_1",
+            temporal_extent=[],
+        )
+
+        assert "temporal_extent" not in dataset
+
+@pytest.mark.usefixtures("clean_db")
+class TestSimpleSubfieldDatasetInvalid(object):
+    def test_invalid_missing_required_simple_subfield(self):
+        lc = LocalCKAN()
+
+        try:
+            lc.action.package_create(
+                type="test-subfields",
+                name="b_sf_1",
+                temporal_extent=[{'begin': '', 'end': '2000-01-23'}]
+            )
+        except ValidationError as e:
+            assert e.error_dict["temporal_extent"][0]["begin"] == ["Missing value"]
+        else:
+            raise AssertionError("ValidationError not raised")
+
+    def test_invalid_bad_date_subfield(self):
+        lc = LocalCKAN()
+
+        try:
+            lc.action.package_create(
+                type="test-subfields",
+                name="b_sf_1",
+                temporal_extent=[{'begin': '2000-01-23', 'end': 'THEN'}]
+            )
+        except ValidationError as e:
+            assert e.error_dict["temporal_extent"][0]["end"] == ["Date format incorrect"]
+        else:
+            raise AssertionError("ValidationError not raised")
+
 @pytest.mark.usefixtures("clean_db")
 class TestSubfieldResourceValid(object):
     def test_simple(self):

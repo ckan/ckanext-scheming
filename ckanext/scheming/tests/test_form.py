@@ -379,6 +379,58 @@ class TestSubfieldDatasetForm(object):
         assert dataset["contact_address"] == [{'address': 'home'}]
 
 
+@pytest.mark.usefixtures("clean_db")
+class TestSimpleSubfieldDatasetForm(object):
+    def test_dataset_form_includes_simple_subfields(self, app):
+        env, response = _get_package_new_page_as_sysadmin(app, 'test-subfields')
+        form = BeautifulSoup(response.body).select("form")[1]
+        assert form.select("fieldset[name=scheming-simple-subfields]")
+
+    def test_dataset_form_create_simple_subfields(self, app, sysadmin_env):
+        data = {"save": "", "_ckan_phase": 1}
+
+        data["name"] = "subfield_dataset_1"
+        data["temporal_extent-begin"] = '2000-01-23'
+        data["temporal_extent-end"] = '2021-12-30'
+
+        url = '/test-subfields/new'
+        try:
+            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        dataset = call_action("package_show", id="subfield_dataset_1")
+        # TODO: I think the output of package_show for a simple_subfield should be 
+        # a dict not as list but can't seem to find where to change
+        assert dataset["temporal_extent"] == [{'begin': '2000-01-23', 'end': '2021-12-30'}]
+
+    def test_dataset_form_update_simple_subfield(self, app):
+        dataset = Dataset(
+            type="test-subfields",
+            temporal_extent=[{'begin': '2000-01-23', 'end': '2021-12-30'}])
+
+        env, response = _get_package_update_page_as_sysadmin(
+            app, dataset["id"]
+        )
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert form.select_one(
+            "input[name=temporal_extent-begin]"
+        ).attrs['value'] == '2000-01-23'
+
+        data = {"save": ""}
+        data["temporal_extent-begin"] = '1989-04-13'
+        data["temporal_extent-end"] = '1995-05-15'
+        data["name"] = dataset["name"]
+
+        url = '/test-subfields/edit/' + dataset["id"]
+        try:
+            app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=env)
+
+        dataset = call_action("package_show", id=dataset["id"])
+
+        assert dataset["temporal_extent"] == [{'begin': '1989-04-13', 'end': '1995-05-15'}]
 
 @pytest.mark.usefixtures("clean_db")
 class TestSubfieldResourceForm(object):

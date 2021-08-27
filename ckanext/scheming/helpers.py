@@ -29,7 +29,7 @@ def lang():
 
 @helper
 def scheming_composite_separator():
-    return config.get('scheming.composite.separator','|')
+    return config.get('scheming.composite.separator','-')
 
 @helper
 def scheming_language_text(text, prefer_lang=None):
@@ -423,8 +423,9 @@ def scheming_flatten_subfield(subfield, data):
     If data already contains flattened subfields (e.g. rendering values
     after a validation error) then they are returned as-is.
     """
+    from ckantoolkit import h
     flat = dict(data)
-    sep = toolkit.h.scheming_composite_separator()
+    sep = h.scheming_composite_separator()
 
     if subfield['field_name'] not in data:
         return flat
@@ -449,8 +450,9 @@ def scheming_flatten_simple_subfield(subfield, data):
     If data already contains flattened subfields (e.g. rendering values
     after a validation error) then they are returned as-is.
     """
+    from ckantoolkit import h
     flat = dict(data)
-    sep = toolkit.h.scheming_composite_separator()
+    sep = h.scheming_composite_separator()
 
     if subfield['field_name'] not in data:
         return flat
@@ -460,5 +462,6 @@ def scheming_flatten_simple_subfield(subfield, data):
             field_name=subfield['field_name'],
             sep=sep,
         )
-        flat[prefix + record] = data[subfield['field_name']][record]
+        for k in record:
+            flat[prefix + k] = record[k]
     return flat

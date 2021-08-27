@@ -369,7 +369,7 @@ def expand_form_composite(data, fieldnames):
 def expand_form_simple_composite(data, fieldnames):
     """
     when submitting dataset/resource form composite fields look like
-    "field-subfield..." convert these to a dicts
+    "field-subfield..." convert these to lists of dicts
     """
     sep = p.toolkit.h.scheming_composite_separator()
     # if "field" exists, don't look for "field-0-subfield"
@@ -383,14 +383,14 @@ def expand_form_simple_composite(data, fieldnames):
         parts = key.split(sep)
         if parts[0] not in fieldnames:
             continue
-        comp = data.setdefault(parts[0], {})
+        comp = data.setdefault(parts[0], [])
         try:
             try:
-                comp[sep.join(parts[1:])] = data[key]
+                comp[0][sep.join(parts[1:])] = data[key]
                 del data[key]
             except IndexError:
-                comp = {}
-                comp[sep.join(parts[1:])] = data[key]
+                comp.append({})
+                comp[0][sep.join(parts[1:])] = data[key]
                 del data[key]
         except (IndexError, ValueError):
             pass  # best-effort only
@@ -477,7 +477,7 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
         for d in schemas[data_dict['type']]['dataset_fields']:
             if d['field_name'] not in data_dict:
                 continue
-            if 'repeating_subfields' in d:
+            if 'repeating_subfields' in d or 'simple_subfields' in d:
                 data_dict[d['field_name']] = json.dumps(data_dict[d['field_name']])
 
         return data_dict
@@ -548,7 +548,12 @@ def _field_output_validators(f, schema, convert_extras,
     """
     Return the output validators for a scheming field f
     """
-    if 'repeating_subfields' in f:
+    if 'simple_subfields' in f:
+        validators = {
+            sf['field_name']: _field_output_validators(sf, schema, False)
+            for sf in f['simple_subfields']
+        }
+    elif 'repeating_subfields' in f:
         validators = {
             sf['field_name']: _field_output_validators(sf, schema, False)
             for sf in f['repeating_subfields']
@@ -583,7 +588,12 @@ def _field_validators(f, schema, convert_extras):
 
     # If this field contains children, we need a special validator to handle
     # them.
-    if 'repeating_subfields' in f:
+    if 'simple_subfields' in f:
+        validators = {
+            sf['field_name']: _field_validators(sf, schema, False)
+            for sf in f['simple_subfields']
+        }
+    elif 'repeating_subfields' in f:
         validators = {
             sf['field_name']: _field_validators(sf, schema, False)
             for sf in f['repeating_subfields']
@@ -611,7 +621,12 @@ def _field_create_validators(f, schema, convert_extras):
 
     # If this field contains children, we need a special validator to handle
     # them.
-    if 'repeating_subfields' in f:
+    if 'simple_subfields' in f:
+        validators = {
+            sf['field_name']: _field_create_validators(sf, schema, False)
+            for sf in f['simple_subfields']
+        }
+    elif 'repeating_subfields' in f:
         validators = {
             sf['field_name']: _field_create_validators(sf, schema, False)
             for sf in f['repeating_subfields']
