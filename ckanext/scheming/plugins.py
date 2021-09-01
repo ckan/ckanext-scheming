@@ -372,8 +372,8 @@ def expand_form_simple_composite(data, fieldnames):
     "field-subfield..." convert these to lists of dicts
     """
     sep = p.toolkit.h.scheming_composite_separator()
-    # if "field" exists, don't look for "field-0-subfield"
 
+    # if "field" exists, don't look for "field-subfield"
     fieldnames -= set(data)
     if not fieldnames:
         return
@@ -477,11 +477,37 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
         for d in schemas[data_dict['type']]['dataset_fields']:
             if d['field_name'] not in data_dict:
                 continue
+            if 'simple_subfields' in d and isinstance(data_dict[d['field_name']], list):
+                data_dict[d['field_name']] = data_dict[d['field_name']][0]
             if 'repeating_subfields' in d or 'simple_subfields' in d:
                 data_dict[d['field_name']] = json.dumps(data_dict[d['field_name']])
 
         return data_dict
 
+    def after_search(self, search_results, search_params):
+        if 'results' not in search_results:
+            return search_results
+        schemas = SchemingDatasetsPlugin.instance._expanded_schemas
+        for data_dict in search_results['results']:
+            if data_dict['type'] not in schemas:
+                continue
+            for d in schemas[data_dict['type']]['dataset_fields']:
+                if d['field_name'] not in data_dict:
+                    continue
+                if 'simple_subfields' in d and isinstance(data_dict[d['field_name']], list):
+                    data_dict[d['field_name']] = data_dict[d['field_name']][0]
+        return search_results
+
+    def after_show(self, context, data_dict):
+        schemas = SchemingDatasetsPlugin.instance._expanded_schemas
+        if data_dict['type'] not in schemas:
+            return data_dict
+        for d in schemas[data_dict['type']]['dataset_fields']:
+            if d['field_name'] not in data_dict:
+                continue
+            if 'simple_subfields' in d and isinstance(data_dict[d['field_name']], list):
+                data_dict[d['field_name']] = data_dict[d['field_name']][0]
+        return data_dict
 
 def _load_schemas(schemas, type_field):
     out = {}
