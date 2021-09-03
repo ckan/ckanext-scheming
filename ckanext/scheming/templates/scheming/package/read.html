@@ -1,53 +1,62 @@
 {% extends "package/read.html" %}
 
 {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
-
+{% block page_heading %}
+[{{dataset_type}}]
+{{ h.dataset_display_name(pkg) }}
+{% if pkg.state.startswith('draft') %}
+[{{ _('Draft') }}]
+{% endif %}
+{% if pkg.state == 'deleted' %}
+[{{ _('Deleted') }}]
+{% endif %}
+{% endblock %}
 
 {% block package_notes %}
-  {%- if not dataset_type -%}
-    <p>
-    dataset_type not passed to template. your version of CKAN
-    might not be compatible with ckanext-scheming
-    </p>
-  {%- endif -%}
-  {% if (h.scheming_field_by_name(schema.dataset_fields, 'notes') or
-    h.scheming_field_by_name(schema.dataset_fields, 'notes_translated')) and
-    pkg.notes%}
-    <div class="notes embedded-content">
-      {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
-    </div>
-  {% endif %}
+{%- if not dataset_type -%}
+<p>
+	dataset_type not passed to template. your version of CKAN
+	might not be compatible with ckanext-scheming
+</p>
+{%- endif -%}
+{% if (h.scheming_field_by_name(schema.dataset_fields, 'notes') or
+h.scheming_field_by_name(schema.dataset_fields, 'notes_translated')) and
+pkg.notes%}
+<div class="notes embedded-content">
+	{{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
+</div>
+{% endif %}
 {% endblock %}
 
 {% block package_additional_info %}
-	{%- if schema.related_fields -%}
-		{%- for field in schema.related_fields -%}
-			{%- set res = h.datasets_related( field.type, field.relation_field, pkg.name  ) -%}
-			{%- set read_endpoint = '.read' if h.ckan_version() > '2.9' else '_read' -%}
-			{%- set url = h.url_for(field.type + read_endpoint, id='', qualified=true) -%}
-			{%- if res -%}
-				<ul class="tag-list well" style="margin:10px 0px;">
-				<p><b>{{ field.relation_name }}</b></p>
-				{%- for dataset in res -%}
-				<li><a class="tag" href="{{ url + dataset.name }}">{{ dataset.title }}</a></li>
-				{%- endfor -%}
-				</ul>
-			{% endif %}
-		{%- endfor -%}
-	{% endif %}
-	
-	{%- for field in schema.dataset_fields -%}
-		{%- if field.show_relation_above -%}
-			<ul class="tag-list well" style="margin:10px 0px;">
-				<p><b>{{ field.label }}</b></p>
-				{%- if pkg_dict[field.field_name] -%}
-				{%- for link in h.get_link_list_mixed_sources(pkg_dict[field.field_name]) -%}
-				<li>{{ h.link_to(link.name, link.link, class="tag") }}</li>
-				{%- endfor -%}
-				{% endif %}
-			</ul>
-		{%- endif -%}
+{%- if schema.related_fields -%}
+{%- for field in schema.related_fields -%}
+{%- set res = h.datasets_related( field.type, field.relation_field, pkg.name ) -%}
+{%- set read_endpoint = '.read' if h.ckan_version() > '2.9' else '_read' -%}
+{%- set url = h.url_for(field.type + read_endpoint, id='', qualified=true) -%}
+{%- if res -%}
+<ul class="tag-list well" style="margin:10px 0px;">
+	<p><b>{{ field.relation_name }}</b></p>
+	{%- for dataset in res -%}
+	<li><a class="tag" href="{{ url + dataset.name }}">{{ dataset.title }}</a></li>
 	{%- endfor -%}
-	
-	{% snippet "scheming/package/snippets/additional_info.html", pkg_dict=pkg, dataset_type=dataset_type, schema=schema %}
+</ul>
+{% endif %}
+{%- endfor -%}
+{% endif %}
+
+{%- for field in schema.dataset_fields -%}
+{%- if field.show_relation_above -%}
+<ul class="tag-list well" style="margin:10px 0px;">
+	<p><b>{{ field.label }}</b></p>
+	{%- if pkg_dict[field.field_name] -%}
+	{%- for link in h.get_link_list_mixed_sources(pkg_dict[field.field_name]) -%}
+	<li>{{ h.link_to(link.name, link.link, class="tag") }}</li>
+	{%- endfor -%}
+	{% endif %}
+</ul>
+{%- endif -%}
+{%- endfor -%}
+
+{% snippet "scheming/package/snippets/additional_info.html", pkg_dict=pkg, dataset_type=dataset_type, schema=schema %}
 {% endblock %}
