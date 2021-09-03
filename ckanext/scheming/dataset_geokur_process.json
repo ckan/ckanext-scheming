@@ -59,44 +59,44 @@
             "preset": "multiple_checkbox",
             "choices": [
                 {
-                    "value": "geokur:Selection",
-                    "label": "geokur:Selection"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Selection",
+                    "label": "Selection"
                 },
                 {
-                    "value": "geokur:Transformation",
-                    "label": "geokur:Transformation"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Transformation",
+                    "label": "Transformation"
                 },
                 {
-                    "value": "geokur:Reclassification",
-                    "label": "geokur:Reclassification"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Reclassification",
+                    "label": "Reclassification"
                 },
                 {
-                    "value": "geokur:Geometric",
-                    "label": "geokur:Geometric"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Geometric",
+                    "label": "Geometric"
                 },
                 {
-                    "value": "geokur:Visualization",
-                    "label": "geokur:Visualization"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Visualization",
+                    "label": "Visualization"
                 },
                 {
-                    "value": "geokur:Neighborhood",
-                    "label": "geokur:Neighborhood"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Neighborhood",
+                    "label": "Neighborhood"
                 },
                 {
-                    "value": "geokur:Overlay",
-                    "label": "geokur:Overlay"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Overlay",
+                    "label": "Overlay"
                 },
                 {
-                    "value": "geokur:Network",
-                    "label": "geokur:Network"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Network",
+                    "label": "Network"
                 },
                 {
-                    "value": "geokur:Statistics",
-                    "label": "geokur:Statistics"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Statistics",
+                    "label": "Statistics"
                 },
                 {
-                    "value": "geokur:Module",
-                    "label": "geokur:Module"
+                    "value": "https://geokur-dmp.geo.tu-dresden.de/geospatial-categories-register#Module",
+                    "label": "Module"
                 }
             ]
         },
