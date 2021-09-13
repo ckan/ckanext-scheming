@@ -8,6 +8,7 @@ import six
 
 import ckan.lib.helpers as h
 from ckan.lib.navl.dictization_functions import convert
+from ckan.lib.navl.validators import unicode_safe
 from ckantoolkit import (
     get_validator,
     UnknownValidator,
@@ -431,7 +432,7 @@ def get_validator_or_converter(name):
     Get a validator or converter by name
     """
     if name == 'unicode':
-        return six.text_type
+        return unicode_safe
     try:
         v = get_validator(name)
         return v
