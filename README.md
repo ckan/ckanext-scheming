@@ -463,6 +463,10 @@ Only if this key is supplied, its value will be shown as inline help text,
 Help text must be plain text, no markdown or HTML are allowed.
 Help text may be provided in multiple languages like [label fields](#label).
 
+#### `help_allow_html`
+
+Allow HTML inside the help text if set to `true`. Default is `false`.
+
 #### `help_inline`
 
 Display help text inline if set to `true`. Default is `false`.
