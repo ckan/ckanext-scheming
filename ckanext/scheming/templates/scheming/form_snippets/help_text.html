@@ -2,7 +2,7 @@
 
 {%- if field.help_text -%}
     {{- form.info(
-        text=h.scheming_language_text(field.help_text),
+        text=h.scheming_language_text(field.help_text)|safe,
         inline=field.get('help_inline', false)
         ) -}}
 {%- endif -%}
