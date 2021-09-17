@@ -4,6 +4,7 @@ import os
 import inspect
 import logging
 from functools import wraps
+from typing import Any, Optional
 
 import ckan.plugins as p
 
@@ -63,6 +64,30 @@ def run_once_for_caller(var_name, rval_fn):
             return fn(*args, **kwargs)
         return wrapper
     return decorator
+
+
+class _FieldGroup:
+    def __init__(self, name, convert_extras=True, dest=None):
+        # type: (str, bool, Optional[str]) -> None
+        self.name = name
+        self.convert_extras = convert_extras
+        self.dest = dest
+
+    def fields(self, schema):
+        # type: (dict[str, Any]) -> list[Any]
+        return schema[self.name]
+
+    def destination(self, schema):
+        # type: (dict[str, Any]) -> dict[str, Any]
+        if self.dest:
+            return schema[self.dest]
+        return schema
+
+    def targets(self, data_dict):
+        # type: (dict[str, Any]) -> list[dict[str, Any]]
+        if self.dest:
+            return data_dict.get(self.dest, [])
+        return [data_dict]
 
 
 class _SchemingMixin(object):
@@ -173,11 +198,10 @@ class _SchemingMixin(object):
         fg = self._field_groups
 
         composite_convert_fields = []
-        for field_list_name, get_destination, convert_extras, _ in fg:
-            field_list = scheming_schema[field_list_name]
-            destination = get_destination(schema)
-            for f in field_list:
-                convert_this = convert_extras and f['field_name'] not in schema
+        for field_group in fg:
+            destination = field_group.destination(schema)
+            for f in field_group.fields(scheming_schema):
+                convert_this = field_group.convert_extras and f['field_name'] not in schema
                 destination[f['field_name']] = get_validators(
                     f,
                     scheming_schema,
@@ -205,13 +229,11 @@ class _SchemingMixin(object):
                     if ex['key'] not in composite_convert_fields
                 ]
         else:
-            for field_list_name, get_destination, convert_extras, get_targets in fg:
-                field_list = scheming_schema[field_list_name]
-                destination = get_destination(schema)
-                targets = get_targets(data_dict)
+            for field_group in fg:
+                targets = field_group.targets(data_dict)
                 composite_fields = {
                     f['field_name']
-                    for f in field_list
+                    for f in field_group.fields(scheming_schema)
                     if 'repeating_subfields' in f
                 }
                 if composite_fields and targets:
@@ -256,7 +278,7 @@ class _GroupOrganizationMixin(object):
         )
 
     _field_groups = (
-        ("fields", lambda s: s, True, lambda dest: [dest]),
+        _FieldGroup("fields"),
     )
 
     def group_types(self):
@@ -287,8 +309,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     SCHEMA_TYPE_FIELD = 'dataset_type'
 
     _field_groups = (
-        ('dataset_fields', lambda s: s, True, lambda dest: [dest]),
-        ('resource_fields', lambda s: s['resources'], False, lambda dest: dest.get('resources', []))
+        _FieldGroup("dataset_fields"),
+        _FieldGroup("resource_fields", False, "resources"),
     )
 
     @classmethod

@@ -30,6 +30,7 @@ setup(
         'ckantoolkit>=0.0.2',
         'pytz',
         'six',
+        'typing; python_version < "3.0"'
     ],
     entry_points=\
     """
