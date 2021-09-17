@@ -54,7 +54,8 @@ class TestFieldRequired(object):
         assert not scheming_field_required({"required": False})
 
     def test_not_empty_in_validators(self):
-        assert scheming_field_required({"validators": "not_empty unicode"})
+        assert scheming_field_required(\
+            {"validators": "not_empty unicode_safe"})
 
     def test_not_empty_not_in_validators(self):
         assert not scheming_field_required({"validators": "maybe_not_empty"})

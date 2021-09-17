@@ -43,7 +43,7 @@ dataset_fields:
 
 - field_name: version
   label: Version
-  validators: ignore_missing unicode package_version_validator
+  validators: ignore_missing unicode_safe package_version_validator
   form_placeholder: '1.0'
 
 - field_name: author
