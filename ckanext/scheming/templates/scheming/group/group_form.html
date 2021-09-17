@@ -9,7 +9,7 @@
     </p>
 {%- endif -%}
 
-<form class="dataset-form form-horizontal" method="post" data-module="basic-form" enctype="multipart/form-data">
+<form class="dataset-form" method="post" data-module="basic-form" enctype="multipart/form-data">
     {%- set schema = h.scheming_get_group_schema(group_type) -%}
     {%- for field in schema['fields'] -%}
         {%- if field.form_snippet is not none -%}

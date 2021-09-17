@@ -4,7 +4,7 @@ import os
 import inspect
 import logging
 from functools import wraps
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 import ckan.plugins as p
 
@@ -74,11 +74,11 @@ class _FieldGroup:
         self.dest = dest
 
     def fields(self, schema):
-        # type: (dict[str, Any]) -> list[Any]
+        # type: (dict[str, Any]) -> list[dict[str, Any]]
         return schema[self.name]
 
     def destination(self, schema):
-        # type: (dict[str, Any]) -> dict[str, Any]
+        # type: (dict[str, Any]) -> dict[str, list[Any]]
         if self.dest:
             return schema[self.dest]
         return schema
@@ -102,7 +102,8 @@ class _SchemingMixin(object):
     _is_fallback = False
     _schema_urls = tuple()
     _schemas = tuple()
-    _expanded_schemas = tuple()
+    _expanded_schemas = {}
+    _field_groups = tuple() # type: tuple[_FieldGroup, ...]
 
     @run_once_for_caller('_scheming_get_helpers', dict)
     def get_helpers(self):
@@ -473,6 +474,7 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
 
 def _field_output_validators(
         f, schema, convert_extras, convert_from_extras_type):
+    # type: (...) -> Union[list[Any], dict[str, Any]]
     if 'repeating_subfields' in f:
         return {
             sf['field_name']: _field_output_validators(
@@ -612,6 +614,7 @@ def _expand(schema, field):
 
 
 def _expand_schemas(schemas):
+    # type: (dict[str, Any]) -> dict[str, Any]
     """
     Return a new dict of schemas with all field presets expanded.
     """
