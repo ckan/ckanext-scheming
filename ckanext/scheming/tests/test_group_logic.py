@@ -6,7 +6,7 @@ class TestGroupSchemaLists(object):
     def test_group_schema_list(self):
         lc = LocalCKAN("visitor")
         group_schemas = lc.action.scheming_group_schema_list()
-        assert sorted(group_schemas) == ["group", "theme"]
+        assert sorted(group_schemas) == ["group", "theme", "theme-subfields"]
 
     def test_group_schema_show(self):
         lc = LocalCKAN("visitor")
