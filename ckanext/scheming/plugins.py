@@ -96,8 +96,6 @@ class _SchemingMixin(object):
 
     @run_once_for_caller('_scheming_add_template_directory', lambda: None)
     def _add_template_directory(self, config):
-        if not check_ckan_version('2.9'):
-            add_template_directory(config, '2.8_templates')
         add_template_directory(config, 'templates')
         add_resource('assets', 'ckanext-scheming')
 
