@@ -558,7 +558,6 @@ def repeating_text_output(value):
         return [value]
 
 
-@scheming_validator
 @register_validator
 def unicode_safe(value):
     '''
