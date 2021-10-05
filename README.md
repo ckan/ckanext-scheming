@@ -419,7 +419,7 @@ validators: if_empty_same_as(name) unicode_safe
 is the same as a plugin using the validators:
 
 ```python
-[get_validator('if_empty_same_as')("name"), unicode_safe]
+[get_validator('if_empty_same_as')("name"), get_validator('unicode_safe')]
 ```
 
 This string does not contain arbitrary python code to be executed,
