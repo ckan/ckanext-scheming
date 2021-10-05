@@ -8,7 +8,6 @@ import six
 
 import ckan.lib.helpers as h
 from ckan.lib.navl.dictization_functions import convert
-from ckan.lib.navl.validators import unicode_safe
 from ckantoolkit import (
     get_validator,
     UnknownValidator,
@@ -557,3 +556,42 @@ def repeating_text_output(value):
         return json.loads(value)
     except ValueError:
         return [value]
+
+
+@scheming_validator
+@register_validator
+def unicode_safe(value):
+    '''
+    Make sure value passed is treated as unicode, but don't raise
+    an error if it's not, just make a reasonable attempt to
+    convert other types passed.
+
+    This validator is a safer alternative to the old ckan idiom
+    of using the unicode() function as a validator. It tries
+    not to pollute values with Python repr garbage e.g. when passed
+    a list of strings (uses json format instead). It also
+    converts binary strings assuming either UTF-8 or CP1252
+    encodings (not ASCII, with occasional decoding errors)
+    '''
+    if isinstance(value, str):
+        return value
+    if hasattr(value, 'filename'):
+        # cgi.FieldStorage instance for uploaded files, show the name
+        value = value.filename
+    if value is missing or value is None:
+        return u''
+    if isinstance(value, bytes):
+        # bytes only arrive when core ckan or plugins call
+        # actions from Python code
+        try:
+            return six.ensure_text(value)
+        except UnicodeDecodeError:
+            return value.decode(u'cp1252')
+    try:
+        return json.dumps(value, sort_keys=True, ensure_ascii=False)
+    except Exception:
+        # at this point we have given up. Just don't error out
+        try:
+            return str(value)
+        except Exception:
+            return u'\N{REPLACEMENT CHARACTER}'
