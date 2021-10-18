@@ -28,7 +28,8 @@
         "form_attrs": {
           "data-module": "autocomplete",
           "data-module-tags": "",
-          "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?"
+          "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?",
+          "class": ""
         }
       }
     },
@@ -48,6 +49,14 @@
         "upload_field": "upload",
         "upload_clear": "clear_upload",
         "upload_label": "File"
+      }
+    },
+    {
+      "preset_name": "organization_url_upload",
+      "values": {
+        "validators": "ignore_missing unicode remove_whitespace",
+        "form_snippet": "organization_upload.html",
+        "form_placeholder": "http://example.com/my-data.csv"
       }
     },
     {
@@ -119,7 +128,22 @@
         "form_snippet": "json.html",
         "display_snippet": "json.html"
       }
+    },
+    {
+      "preset_name": "multiple_text",
+      "values": {
+        "form_snippet": "multiple_text.html",
+        "display_snippet": "multiple_text.html",
+        "validators": "scheming_multiple_text",
+        "output_validators": "scheming_load_json"
+      }
+    },
+    {
+      "preset_name": "markdown",
+      "values": {
+        "form_snippet": "markdown.html",
+        "display_snippet": "markdown.html"
+      }
     }
-
   ]
 }

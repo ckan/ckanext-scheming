@@ -1,10 +1,11 @@
 {#- master snippet for all scheming display fields -#}
 {#- render the field the user requested, or use a default field -#}
-
 {%- set display_snippet = field.display_snippet -%}
 
 {%- if not display_snippet -%}
-  {%- if h.scheming_field_choices(field) -%}
+  {%- if field.repeating_subfields -%}
+    {%- set display_snippet = 'repeating_subfields.html' -%}
+  {%- elif h.scheming_field_choices(field) -%}
     {%- set display_snippet = 'select.html' -%}
   {%- else -%}
     {%- set display_snippet = 'text.html' -%}
@@ -16,6 +17,11 @@
 {%- endif -%}
 
 {%- if field.field_name in data -%}
-  {%- snippet display_snippet, field=field, data=data, errors=errors,
-    entity_type=entity_type, object_type=object_type -%}
+  {%- snippet display_snippet,
+    field=field,
+    data=data,
+    errors=errors,
+    entity_type=entity_type,
+    object_type=object_type
+  -%}
 {%- endif -%}

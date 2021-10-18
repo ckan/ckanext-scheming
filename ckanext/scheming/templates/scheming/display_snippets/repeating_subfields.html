@@ -1,0 +1,28 @@
+{% set fields = data[field.field_name] %}
+
+{% block subfield_display %}
+  {% for field_data in fields %}
+    <div class="panel panel-default">
+        <header class="panel-heading">
+          {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ loop.index }}
+        </header>
+      <div class="panel-body">
+        <dl class="scheming-subfield-list">
+          {% for subfield in field.repeating_subfields %}
+            <dt class="dataset-label">
+              {{ h.scheming_language_text(subfield.label) }}
+            </dt>
+            <dd>
+            {%- snippet 'scheming/snippets/display_field.html',
+              field=subfield,
+              data=field_data,
+              entity_type=entity_type,
+              object_type=object_type
+            -%}
+            </dd>
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}

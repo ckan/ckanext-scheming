@@ -1,0 +1,77 @@
+scheming_version: 2
+dataset_type: camel-photos
+about_url: http://example.com/the-camel-photos-schema
+
+
+dataset_fields:
+
+- field_name: title
+  label: Title
+  preset: title
+  form_placeholder: eg. Larry, Peter, Susan
+
+- field_name: name
+  label: URL
+  preset: dataset_slug
+  form_placeholder: eg. camel-no-5
+
+- field_name: humps
+  label: Humps
+  validators: ignore_missing int_validator
+  form_placeholder: eg. 2
+
+- field_name: category
+  label: Category
+  help_text: Make and model
+  help_inline: true
+  preset: select
+  choices:
+  - value: bactrian
+    label: Bactrian Camel
+  - value: hybrid
+    label: Hybrid Camel
+  - value: f2hybrid
+    label: F2 Hybrid Camel
+  - value: snowwhite
+    label: Snow-white Dromedary
+  - value: black
+    label: Black Camel
+
+- field_name: personality
+  label: Personality
+  preset: multiple_checkbox
+  choices:
+  - value: friendly
+    label: Often friendly
+  - value: jealous
+    label: Jealous of others
+  - value: spits
+    label: Tends to spit
+
+- field_name: other
+  label:
+    en: Other information
+  output_validators: ignore_missing
+
+
+resource_fields:
+
+- field_name: url
+  label: Photo
+  preset: resource_url_upload
+  form_placeholder: http://example.com/my-camel-photo.jpg
+  upload_label: Photo
+
+- field_name: camels_in_photo
+  label: Camels in Photo
+  validators: ignore_missing int_validator
+  form_placeholder: eg. 2
+
+- field_name: others_in_photo
+  label: Other Thing in Photo
+  output_validators: ignore_missing
+
+- field_name: datetime
+  label: Date Taken
+  label_time: Time Taken
+  preset: datetime
