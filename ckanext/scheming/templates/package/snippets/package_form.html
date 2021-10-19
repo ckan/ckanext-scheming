@@ -7,14 +7,15 @@ then itself be extended to add/remove blocks of functionality. #}
 
   {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
   {%- if not schema.skip_resources -%}
-  
+
   {% block stages %}
     {{ h.snippet('package/snippets/stages.html', stages=stage) }}
   {% endblock %}
-  <input type="hidden" name="_ckan_phase" value="dataset_new_1" />
-  
+
   {%- endif -%}
-  
+
+  <input type="hidden" name="_ckan_phase" value="dataset_new_1" />  
+
   {# pkg_name used in 3 stage edit #}
   <input type="hidden" name="pkg_name" value="{{ data.id }}" />
   {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
