@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
+import copy
 import inspect
 import logging
+import enum
 from functools import wraps
+from typing import OrderedDict
 
 import six
 import yaml
@@ -141,6 +144,9 @@ class _SchemingMixin(object):
         )
 
         self._expanded_schemas = _expand_schemas(self._schemas)
+        for schema in self._expanded_schemas.values():
+            _extend_schema(schema, self._expanded_schemas)
+
 
     def is_fallback(self):
         return self._is_fallback
@@ -607,7 +613,7 @@ def _expand_schemas(schemas):
     """
     out = {}
     for name, original in schemas.items():
-        schema = dict(original)
+        schema = copy.deepcopy(original)
         for grouping in ('fields', 'dataset_fields', 'resource_fields'):
             if grouping not in schema:
                 continue
@@ -631,3 +637,66 @@ def _expand_schemas(schemas):
 
         out[name] = schema
     return out
+
+
+def _extend_schema(schema, schemas):
+    """Copy fields from the parent schema into the current one.
+    """
+    # extend each schema only once in case of multi-inheritance
+    extensions = schema.pop("extensions", [])
+    if not extensions:
+        return
+
+    for extension in extensions:
+        parent_name = extension["name"]
+
+        try:
+            parent = schemas[parent_name]
+        except KeyError:
+            raise KeyError("Cannot extend unknown schema: {}".format(parent_name))
+
+        # make sure parent schema is finalized
+        if "extensions" in parent:
+            _extend_schema(parent, schemas)
+
+        strategy = ExtensionStrategy[extension["strategy"]]
+        for grouping in ('fields', 'dataset_fields', 'resource_fields'):
+            if grouping not in schema:
+                continue
+
+            schema[grouping] = strategy.extend(schema[grouping], parent.get(grouping, []))
+
+
+class ExtensionStrategy(enum.Enum):
+    append = enum.auto()
+    merge = enum.auto()
+    replace = enum.auto()
+
+    def extend(self, fields, parent_fields):
+        result = OrderedDict()
+        for field in parent_fields:
+            result[field["field_name"]] = copy.deepcopy(field)
+
+        for field in fields:
+            name = field["field_name"]
+            if name not in result:
+                result[name] = field
+                continue
+
+            base = result[name]
+            if self is ExtensionStrategy.replace:
+                base = field
+            elif self is ExtensionStrategy.append:
+                base.update(field)
+            elif self is ExtensionStrategy.replace:
+                _recursive_dict_update(base, field)
+            result[name] = base
+        return list(result.values())
+
+
+def _recursive_dict_update(data, patch):
+    for key, value in patch.items():
+        if isinstance(data.get(key), dict) and isinstance(value, dict):
+            _recursive_dict_update(data[key], value)
+        else:
+            data[key] = value

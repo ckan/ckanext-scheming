@@ -1,0 +1,12 @@
+scheming_version: 2
+dataset_type: test-extensions
+about: Example dataset schema that extends CKAN dataset
+about_url: https://github.com/ckan/ckanext-scheming
+extensions:
+- name: dataset
+  strategy: replace
+
+dataset_fields:
+
+- field_name: title
+  label: Extended title

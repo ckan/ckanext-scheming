@@ -77,6 +77,30 @@ number to indicate a change to the schema format.
 `about_url` is a Link to human-readable information about this schema.
 Its use is optional but highly recommended.
 
+#### `extensions`
+
+List of parent schemas for the current one. Every parent schema represented by a dictionary with two keys:
+
+* `name`: the name of schema to extend. Schema must be of the same
+  type. Datasets must extend only dataset schemas, group must extend only group
+  schemas, etc.
+* `strategy`: defines how conflicting fields merge into final version. Possible
+  options are `replace`(definition from the child schema completely overrides
+  parent's version), `append`(all properties from the child's version copiend
+  into parent, every property that exists only inside parent stays intact) and
+  `merge`(nested dictionaries, `form_attrs` as example, are merged recursively,
+  otherwise it's the same as `append`)
+
+```yaml
+...
+dataset_type: combined_dataset
+extensions:
+  - name: dataset
+    strategy: merge
+  - name: camel_photos:
+    strategy: replace
+...
+```
 -------------------------------
 ### Example Schemas - Datasets
 

@@ -30,6 +30,7 @@ setup(
         'ckantoolkit>=0.0.2',
         'pytz',
         'six',
+        'enum34; python_version < "3.4"',
     ],
     entry_points=\
     """
