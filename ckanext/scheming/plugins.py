@@ -6,7 +6,7 @@ import inspect
 import logging
 import enum
 from functools import wraps
-from typing import OrderedDict
+from collections import OrderedDict
 
 import six
 import yaml
