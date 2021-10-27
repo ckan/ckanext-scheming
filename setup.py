@@ -25,7 +25,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'pyyaml',
+        'pyyaml==5.4',
         'ckanapi',
         'ckantoolkit>=0.0.2',
         'pytz',
