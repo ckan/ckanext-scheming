@@ -668,9 +668,9 @@ def _extend_schema(schema, schemas):
 
 
 class ExtensionStrategy(enum.Enum):
-    append = enum.auto()
-    merge = enum.auto()
-    replace = enum.auto()
+    append = 1
+    merge = 2
+    replace = 4
 
     def extend(self, fields, parent_fields):
         result = OrderedDict()
