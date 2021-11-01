@@ -163,7 +163,7 @@
         {
             "field_name": "was_derived_from",
             "label": "Was derived from",
-            "help_text": "This item describes the provenance of the dataset according to PROV-O (https://www.w3.org/TR/prov-o/#wasDerivedFrom). Requiered are the input datasets of the processes that generated this dataset.",
+            "help_text": "This item describes the provenance of the dataset according to PROV-O (https://www.w3.org/TR/prov-o/#wasDerivedFrom). Required are the input datasets of the process that generated this dataset.",
             "preset": "select_dataset_by_type",
             "required_type": "dataset",
             "multiple_items": true,
