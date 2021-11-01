@@ -29,7 +29,7 @@ def lang():
 
 @helper
 def scheming_composite_separator():
-    return config.get('scheming.composite.separator','|')
+    return config.get('scheming.composite.separator', '-')
 
 @helper
 def scheming_language_text(text, prefer_lang=None):
