@@ -52,6 +52,9 @@ scheming.organization_schemas = ckanext.scheming:org_with_dept_id.json
 #
 # scheming.dataset_schemas = http://example.com/spatialx_schema.yaml
 
+#   The separator to use to flatten composite fields (repeating_subfields)
+scheming.composite.separator = |
+
 #   Preset files may be included as well. The default preset setting is:
 scheming.presets = ckanext.scheming:presets.json
 
