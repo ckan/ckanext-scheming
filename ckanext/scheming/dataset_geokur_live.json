@@ -116,7 +116,7 @@
             "label": "Spatial Resolution Measured",
             "required_if_value_in": "spatial_resolution",
             "preset": "spatial_resolution_type",
-            "help_text": "In meters: This property refers to the minimum spatial separation resolvable in a Dataset, measured in metres.\nAs angular scale: Spatial resolution expressed as equivalent scale, by using a representative fraction (e.g., 1:1,000, 1:1,000,000) [ISO-19115-1].\nAs angular distance: Spatial resolution expressed as angular distance, by using a DECIMAL DEGREE [ISO-19115-1]."
+            "help_text": "In meters: This property refers to the minimum spatial separation resolvable in a Dataset, measured in meters.\nAs angular scale: Spatial resolution expressed as equivalent scale, by using a representative fraction (e.g., 1:1,000, 1:1,000,000) [ISO-19115-1].\nAs angular distance: Spatial resolution expressed as angular distance, by using a DECIMAL DEGREE [ISO-19115-1]."
         },
         {
             "field_name": "temporal_start",
