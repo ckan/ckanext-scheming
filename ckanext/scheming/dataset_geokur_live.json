@@ -62,7 +62,7 @@
             "field_name": "contact_uri",
             "label": "Contact Point - ORCID",
             "preset": "single_link",
-            "help_text": "According ORCID as link, leave blank otherwise"
+            "help_text": "Insert the according ORCID or email adress, leave blank otherwise"
         },
         {
             "field_name": "alternate_identifier",
@@ -79,14 +79,15 @@
         },
         {
             "field_name": "tag_string",
-            "label": "Keywords",
+            "label": "Keywords/ Tags",
             "preset": "tags",
+            "help_text": "Used to make this dataset more findable on CKAN.",
             "form_placeholder": "eg. economy, mental health, government"
         },
         {
             "field_name": "theme",
-            "label": "Theme / Category",
-            "help_text": "Provide links to descriptions of the themes; separate by comma. E.g.: http://inspire.ec.europa.eu/theme/ad, http://inspire.ec.europa.eu/theme/au.",
+            "label": "Theme / Vocabulary / Ontology",
+            "help_text": "Provide links to themes, vocabularies or ontologies that are refereneced in the dataset; separate by comma. E.g.: http://inspire.ec.europa.eu/theme/af, https://agrovoc.fao.org/browse/agrovoc/en/.",
             "preset": "multi_link"
         },
         {
@@ -115,23 +116,25 @@
             "label": "Spatial Resolution Measured",
             "required_if_value_in": "spatial_resolution",
             "preset": "spatial_resolution_type",
-            "help_text": "In meters: This property refers to the minimum spatial separation resolvable in a Dataset, measured in metres.\nAs angular scale: Spatial resolution expressed as equivalent scale [ISO-19115], [ISO-19115-1], by using a representative fraction (e.g., 1:1,000, 1:1,000,000).\nAs angular distance: Spatial resolution expressed as angular distance [ISO-19115-1], by using a decimal degree.\nAs vertical distance: Spatial resolution expressed as vertical distance [ISO-19115-1]."
+            "help_text": "In meters: This property refers to the minimum spatial separation resolvable in a Dataset, measured in metres.\nAs angular scale: Spatial resolution expressed as equivalent scale, by using a representative fraction (e.g., 1:1,000, 1:1,000,000) [ISO-19115-1].\nAs angular distance: Spatial resolution expressed as angular distance, by using a DECIMAL DEGREE [ISO-19115-1]."
         },
         {
             "field_name": "temporal_start",
             "label": "Temporal Coverage Start",
-            "preset": "date_range_start"
+            "preset": "date_range_start",
+            "help_text": "Date of first measurement (or modelled values)."
         },
         {
             "field_name": "temporal_end",
             "label": "Temporal Coverage End",
-            "preset": "date_range_end"
+            "preset": "date_range_end",
+            "help_text": "Date of last measurement (or modelled values)."
         },
         {
             "field_name": "temporal_resolution",
             "label": "Temporal Resolution",
             "preset": "textinput",
-            "help_text": "E.g. 'P2Y3M20D' describes a period 2 years, 3 months and 20 days or 'P1D' describes a period of 1 day"
+            "help_text": "E.g. 'P2Y3M20D' describes a duration of 2 years, 3 months and 20 days or 'P1D' describes a duration of 1 day [ISO 8601 - duration format]"
         },
         {
             "field_name": "quality_metrics",
@@ -160,7 +163,7 @@
         {
             "field_name": "was_derived_from",
             "label": "Was derived from",
-            "help_text": "Please specify datasets.",
+            "help_text": "This item describes the provenance of the dataset according to PROV-O (https://www.w3.org/TR/prov-o/#wasDerivedFrom). Requiered are the input datasets of the processes that generated this dataset.",
             "preset": "select_dataset_by_type",
             "required_type": "dataset",
             "multiple_items": true,
