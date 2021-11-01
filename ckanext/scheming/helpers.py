@@ -423,8 +423,9 @@ def scheming_flatten_subfield(subfield, data):
     If data already contains flattened subfields (e.g. rendering values
     after a validation error) then they are returned as-is.
     """
+    from ckantoolkit import h
     flat = dict(data)
-    sep = toolkit.h.scheming_composite_separator()
+    sep = h.scheming_composite_separator()
 
     if subfield['field_name'] not in data:
         return flat
