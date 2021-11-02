@@ -28,7 +28,8 @@
         "form_attrs": {
           "data-module": "autocomplete",
           "data-module-tags": "",
-          "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?"
+          "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?",
+          "class": ""
         }
       }
     },
