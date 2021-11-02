@@ -60,9 +60,9 @@
         },
         {
             "field_name": "contact_uri",
-            "label": "Contact Point - ORCID",
+            "label": "Contact Point - ORCID iD or E-Mail",
             "preset": "single_link",
-            "help_text": "Insert the according ORCID or email adress, leave blank otherwise"
+            "help_text": "Insert the according ORCID iD or email adress, leave blank otherwise"
         },
         {
             "field_name": "alternate_identifier",
