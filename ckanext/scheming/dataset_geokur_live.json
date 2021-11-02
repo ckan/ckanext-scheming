@@ -60,7 +60,7 @@
         },
         {
             "field_name": "contact_uri",
-            "label": "Contact Point - ORCID iD or E-Mail",
+            "label": "Contact Point - ORCID iD or e-mail adress",
             "preset": "single_link",
             "help_text": "Insert the according ORCID iD or email adress, leave blank otherwise"
         },
