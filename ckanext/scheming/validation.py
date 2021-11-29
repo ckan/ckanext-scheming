@@ -572,6 +572,9 @@ def unicode_safe(value):
     converts binary strings assuming either UTF-8 or CP1252
     encodings (not ASCII, with occasional decoding errors)
     '''
+    # This code was copied from core CKAN and was added to allow 
+    # support for >= 2.9 CKAN versions.
+
     if isinstance(value, str):
         return value
     if hasattr(value, 'filename'):
