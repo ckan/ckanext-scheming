@@ -515,7 +515,7 @@ Returns:
 }
 ```
 
-The full list of helper methods is available in [ckanext/scheming/logic.py](https://github.com/ckan/ckanext-scheming/blob/master/ckanext/scheming/logic.py)
+The full list of API actions are available in [ckanext/scheming/logic.py](https://github.com/ckan/ckanext-scheming/blob/master/ckanext/scheming/logic.py)
 
 
 Running the Tests
