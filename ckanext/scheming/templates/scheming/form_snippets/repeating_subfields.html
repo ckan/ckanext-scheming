@@ -51,7 +51,7 @@
   [],
   field.classes if 'classes' in field else ['control-medium'],
   is_required=h.scheming_field_required(field)) %}
-    <div {{ form.attributes(dict({"class": "form-control"}, **(field.get('form_attrs', {})))) }}>
+    <div {{ form.attributes(field.get('form_attrs', {})) }}>
       <fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields">
 	{% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
 	{% if alert_warning %}
