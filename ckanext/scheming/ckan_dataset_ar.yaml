@@ -26,6 +26,10 @@ dataset_fields:
   preset: fluent_markdown
   form_placeholder: eg. Some useful notes about the data
 
+- field_name: keywords
+  label: Keywords
+  preset: fluent_tags
+
 - field_name: license_id
   label: License
   form_snippet: license.html
