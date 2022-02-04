@@ -6,11 +6,6 @@ about_url: http://github.com/ckan/ckanext-scheming
 
 dataset_fields:
 
-- field_name: title
-  label: Title
-  preset: title
-  form_placeholder: eg. A descriptive title
-
 - field_name: title_translated
   label: Title
   preset: fluent_core_translated
@@ -21,11 +16,6 @@ dataset_fields:
   preset: dataset_slug
   form_placeholder: eg. my-dataset
 
-- field_name: notes
-  label: Description
-  form_snippet: markdown.html
-  form_placeholder: eg. Some useful notes about the data
-
 - field_name: notes_translated
   label: Description
   preset: fluent_markdown
@@ -34,11 +24,6 @@ dataset_fields:
 - field_name: tag_string
   label: Tags
   preset: tag_string_autocomplete
-  form_placeholder: eg. economy, mental health, government
-
-- field_name: tag_string
-  label: Tags
-  preset: fluent_tags
   form_placeholder: eg. economy, mental health, government
 
 - field_name: license_id
