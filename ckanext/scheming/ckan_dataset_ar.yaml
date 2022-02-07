@@ -59,6 +59,7 @@ dataset_fields:
   form_placeholder: Joe Bloggs
   display_property: dc:creator
   preset: fluent_core_translated
+  form_attrs: {'class': 'form-control'}
 
 - field_name: author_email
   label: Author Email
@@ -66,12 +67,14 @@ dataset_fields:
   display_property: dc:creator
   display_snippet: email.html
   display_email_name_field: author
+  form_attrs: {'class': 'form-control'}
 
 - field_name: maintainer_translated
   label: Maintainer
   form_placeholder: Joe Bloggs
   display_property: dc:contributor
   preset: fluent_core_translated
+  form_attrs: {'class': 'form-control'}
 
 - field_name: maintainer_email
   label: Maintainer Email
@@ -79,6 +82,7 @@ dataset_fields:
   display_property: dc:contributor
   display_snippet: email.html
   display_email_name_field: maintainer
+  form_attrs: {'class': 'form-control'}
 
 
 resource_fields:
