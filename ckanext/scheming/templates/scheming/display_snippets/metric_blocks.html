@@ -7,13 +7,27 @@
 	<div style="padding:0px 10px;">
 	{%- for metric, values in h.get_json_as_dict(data[field.field_name]).items() -%}
 
-		<p class="metrics-url">{{ values['label'] }}</p>
-		<p class="tiny-metrics-url">{{ metric }}</p>
-		<ul class="metrics-value-list">
-		{%- for key, value in values['values'].items() -%}
-			<li><span class="sublabel-key">{{ key }}:</span><span class="sublabel-value">{{ value }}</span></li>
-		{%- endfor -%}
-		</ul>
+		<!-- backwards compatibility: old datasets did not store multiple values as list -->
+		{%- if values['values'] is mapping  -%}
+			<p class="metrics-url">{{ values['label'] }}</p>
+			<p class="tiny-metrics-url">{{ metric }}</p>
+			<ul class="metrics-value-list">
+			{%- for key, value in values['values'].items() -%}
+				<li><span class="sublabel-key">{{ key }}:</span><span class="sublabel-value">{{ value }}</span></li>
+			{%- endfor -%}
+			</ul>
+		{%- else -%}
+			{%- for value in values['values'] -%}
+				<p class="metrics-url">{{ values['label'] }}</p>
+				<p class="tiny-metrics-url">{{ metric }}</p>
+				<ul class="metrics-value-list">
+				{%- for key, subvalue in value.items() -%}
+					<li><span class="sublabel-key">{{ key }}:</span><span class="sublabel-value">{{ subvalue }}</span></li>
+				{%- endfor -%}
+				</ul>
+			{%- endfor -%}
+		{%- endif -%}
+		
 	{%- endfor -%}
 	</div>
 	{%- endif -%}
