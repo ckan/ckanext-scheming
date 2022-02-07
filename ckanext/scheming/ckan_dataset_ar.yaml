@@ -89,6 +89,7 @@ resource_fields:
   label: Name
   preset: fluent_core_translated
   form_placeholder: eg. January 2011 Gold Prices
+  form_attrs: {'class': 'form-control'}
 
 - field_name: notes_translated
   label: Description
