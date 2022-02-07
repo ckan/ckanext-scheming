@@ -10,6 +10,8 @@ dataset_fields:
   label: Title
   preset: title
   form_placeholder: eg. A descriptive title
+  form_attrs: {'class': 'form-control'}
+
 
 - field_name: name
   label: URL

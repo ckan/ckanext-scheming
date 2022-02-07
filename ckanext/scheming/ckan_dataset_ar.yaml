@@ -6,15 +6,13 @@ about_url: http://github.com/ckan/ckanext-scheming
 
 dataset_fields:
 
-- field_name: title
-  label: Title
-  preset: title
-  form_placeholder: eg. A descriptive title
-
 - field_name: title_translated
   label: Title
   preset: fluent_core_translated
   form_placeholder: eg. A descriptive title
+  form_attrs: {'class': 'form-control', 'data-module': 'slug-preview-target'}
+
+
 
 - field_name: name
   label: URL
@@ -55,6 +53,7 @@ dataset_fields:
   form_placeholder: Joe Bloggs
   display_property: dc:creator
   preset: fluent_core_translated
+  form_attrs: {'class': 'form-control'}
 
 - field_name: author_email
   label: Author Email
@@ -62,12 +61,14 @@ dataset_fields:
   display_property: dc:creator
   display_snippet: email.html
   display_email_name_field: author
+  form_attrs: {'class': 'form-control'}
 
 - field_name: maintainer_translated
   label: Maintainer
   form_placeholder: Joe Bloggs
   display_property: dc:contributor
   preset: fluent_core_translated
+  form_attrs: {'class': 'form-control'}
 
 - field_name: maintainer_email
   label: Maintainer Email
@@ -75,6 +76,7 @@ dataset_fields:
   display_property: dc:contributor
   display_snippet: email.html
   display_email_name_field: maintainer
+  form_attrs: {'class': 'form-control'}
 
 
 resource_fields:
@@ -87,6 +89,7 @@ resource_fields:
   label: Name
   preset: fluent_core_translated
   form_placeholder: eg. January 2011 Gold Prices
+  form_attrs: {'class': 'form-control'}
 
 - field_name: notes_translated
   label: Description
