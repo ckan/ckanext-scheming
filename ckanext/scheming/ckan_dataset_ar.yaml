@@ -10,11 +10,15 @@ dataset_fields:
   label: Title
   preset: title
   form_placeholder: eg. A descriptive title
+  form_attrs: {'class': 'form-control'}
+
 
 - field_name: title_translated
   label: Title
   preset: fluent_core_translated
   form_placeholder: eg. A descriptive title
+  form_attrs: {'class': 'form-control'}
+
 
 - field_name: name
   label: URL
