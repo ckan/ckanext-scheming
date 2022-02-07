@@ -10,7 +10,7 @@ dataset_fields:
   label: Title
   preset: fluent_core_translated
   form_placeholder: eg. A descriptive title
-  form_attrs: {'class': 'form-control', 'data-module': 'slug-preview-target'}
+  form_attrs: {'class': 'form-control'}
 
 
 
