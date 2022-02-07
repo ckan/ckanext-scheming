@@ -6,16 +6,12 @@ about_url: http://github.com/ckan/ckanext-scheming
 
 dataset_fields:
 
-- field_name: title
-  label: Title
-  preset: title
-  form_placeholder: eg. A descriptive title
-
 - field_name: title_translated
   label: Title
   preset: fluent_core_translated
   form_placeholder: eg. A descriptive title
-  form_attrs: {'class': 'form-control'}
+  form_attrs: {'class': 'form-control', 'data-module': 'slug-preview-target'}
+
 
 
 - field_name: name
