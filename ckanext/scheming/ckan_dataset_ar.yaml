@@ -50,10 +50,11 @@ dataset_fields:
   validators: ignore_missing unicode package_version_validator
   form_placeholder: '1.0'
 
-- field_name: author
+- field_name: author_translated
   label: Author
   form_placeholder: Joe Bloggs
   display_property: dc:creator
+  preset: fluent_core_translated
 
 - field_name: author_email
   label: Author Email
@@ -62,10 +63,11 @@ dataset_fields:
   display_snippet: email.html
   display_email_name_field: author
 
-- field_name: maintainer
+- field_name: maintainer_translated
   label: Maintainer
   form_placeholder: Joe Bloggs
   display_property: dc:contributor
+  preset: fluent_core_translated
 
 - field_name: maintainer_email
   label: Maintainer Email
@@ -81,14 +83,15 @@ resource_fields:
   label: URL
   preset: resource_url_upload
 
-- field_name: name
+- field_name: name_translated
   label: Name
+  preset: fluent_core_translated
   form_placeholder: eg. January 2011 Gold Prices
 
-- field_name: description
+- field_name: notes_translated
   label: Description
-  form_snippet: markdown.html
-  form_placeholder: Some useful notes about the data
+  preset: fluent_markdown
+  form_placeholder: eg. Some useful notes about the data
 
 - field_name: format
   label: Format
