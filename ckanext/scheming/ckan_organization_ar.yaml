@@ -1,6 +1,7 @@
 scheming_version: 1
-group_type: group
+organization_type: publisher
 about_url: http://github.com/ckan/ckanext-scheming
+
 fields:
 
 - field_name: title_translated
