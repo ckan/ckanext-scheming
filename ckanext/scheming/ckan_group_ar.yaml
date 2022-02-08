@@ -7,7 +7,12 @@ fields:
   label: Name
   preset: fluent_core_translated
   form_placeholder: My Group
-  form_attrs: {'class': 'form-control', 'data-module': 'slug-preview-target'}
+  form_attrs: {'class': 'form-control'}
+
+- field_name: name
+  label: URL
+  preset: group_slug
+  form_placeholder: eg. my-group
 
 - field_name: description_translated
   label: Description
@@ -16,5 +21,7 @@ fields:
   form_attrs: {'class': 'form-control'}
 
 - field_name: url
-  label: Image URL
-  form_placeholder: http://example.com/my-image.jpg
+  label: image
+  preset: organization_url_upload
+  form_placeholder: http://example.com/my-camel-photo.jpg
+  upload_label: image

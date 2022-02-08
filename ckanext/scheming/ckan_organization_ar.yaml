@@ -1,5 +1,5 @@
 scheming_version: 1
-organization_type: publisher
+organization_type: organization
 about_url: http://github.com/ckan/ckanext-scheming
 
 fields:
@@ -10,6 +10,11 @@ fields:
   form_placeholder: My Organization
   form_attrs: {'class': 'form-control'}
 
+- field_name: name
+  label: URL
+  preset: organization_slug
+  form_placeholder: eg. my-organization
+
 - field_name: notes_translated
   label: Description
   preset: fluent_markdown
@@ -17,5 +22,7 @@ fields:
   form_attrs: {'class': 'form-control'}
 
 - field_name: url
-  label: Image URL
-  form_placeholder: http://example.com/my-image.jpg
+  label: image
+  preset: organization_url_upload
+  form_placeholder: http://example.com/my-camel-photo.jpg
+  upload_label: image
