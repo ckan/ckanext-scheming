@@ -21,10 +21,26 @@
       }
     },
     {
+      "preset_name": "group_slug",
+      "values": {
+        "validators": "not_empty unicode name_validator package_name_validator",
+        "form_snippet": "slug.html"
+      }
+    },
+    {
+      "preset_name": "organization_slug",
+      "values": {
+        "validators": "not_empty unicode name_validator package_name_validator",
+        "form_snippet": "slug.html"
+      }
+    },
+    {
       "preset_name": "tag_string_autocomplete",
       "values": {
         "validators": "ignore_missing tag_string_convert",
-        "classes": ["control-full"],
+        "classes": [
+          "control-full"
+        ],
         "form_attrs": {
           "data-module": "autocomplete",
           "data-module-tags": "",
