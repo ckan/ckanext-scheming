@@ -15,6 +15,12 @@ fields:
   preset: organization_slug
   form_placeholder: eg. my-organization
 
+- field_name: not_used
+  label: Parent organization
+  display_snippet: null
+  form_snippet: org_hierarchy.html
+  validators: ignore_missing
+
 - field_name: notes_translated
   label: Description
   preset: fluent_markdown
