@@ -5,10 +5,26 @@
 {% endif %}
 
 {% block primary_content_inner %}
-<dl>
-{% for f in c.scheming_fields %}
-<dt>{{ h.scheming_language_text(f.label) }}:</dt>
-<dd>{{ group_dict[f.field_name] or ("&nbsp;"|safe) }}</dd>
-{% endfor %}
-</dl>
+<table class="table table-striped table-bordered table-condensed">
+  <thead>
+    <tr>
+      <th scope="col">{{ _('Field') }}</th>
+      <th scope="col">{{ _('Value') }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for f in c.scheming_fields %}
+      <tr rel="dc:relation" resource="_:extra{{ i }}">
+        <th scope="row" class="dataset-label" property="rdfs:label">{{h.scheming_language_text(f.label)  }}</th>
+        
+        {% if h.lang() in group_dict[f.field_name]  %}
+            <td class="dataset-details" property="rdf:value">{{  group_dict[f.field_name][h.lang()] or ("&nbsp;"|safe) }}</td>
+        {% else %}
+            <td class="dataset-details" property="rdf:value">{{  group_dict[f.field_name] or ("&nbsp;"|safe) }}</td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}
