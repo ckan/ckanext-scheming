@@ -14,6 +14,12 @@ fields:
   preset: group_slug
   form_placeholder: eg. my-group
 
+- field_name: not_used
+  label: Parent Theme
+  display_snippet: null
+  form_snippet: group_hierarchy.html
+  validators: ignore_missing
+
 - field_name: description_translated
   label: Description
   preset: fluent_markdown
