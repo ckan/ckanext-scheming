@@ -6,11 +6,12 @@ about_url: http://github.com/ckan/ckanext-scheming
 
 dataset_fields:
 
-- field_name: title
+- field_name: title_translated
   label: Title
-  preset: title
+  preset: fluent_core_translated
   form_placeholder: eg. A descriptive title
   form_attrs: {'class': 'form-control'}
+
 
 
 - field_name: name
@@ -18,15 +19,14 @@ dataset_fields:
   preset: dataset_slug
   form_placeholder: eg. my-dataset
 
-- field_name: notes
+- field_name: notes_translated
   label: Description
-  form_snippet: markdown.html
+  preset: fluent_markdown
   form_placeholder: eg. Some useful notes about the data
 
-- field_name: tag_string
-  label: Tags
-  preset: tag_string_autocomplete
-  form_placeholder: eg. economy, mental health, government
+- field_name: keywords
+  label: Keywords
+  preset: fluent_tags
 
 - field_name: license_id
   label: License
@@ -48,10 +48,12 @@ dataset_fields:
   validators: ignore_missing unicode package_version_validator
   form_placeholder: '1.0'
 
-- field_name: author
+- field_name: author_translated
   label: Author
   form_placeholder: Joe Bloggs
   display_property: dc:creator
+  preset: fluent_core_translated
+  form_attrs: {'class': 'form-control'}
 
 - field_name: author_email
   label: Author Email
@@ -59,11 +61,14 @@ dataset_fields:
   display_property: dc:creator
   display_snippet: email.html
   display_email_name_field: author
+  form_attrs: {'class': 'form-control'}
 
-- field_name: maintainer
+- field_name: maintainer_translated
   label: Maintainer
   form_placeholder: Joe Bloggs
   display_property: dc:contributor
+  preset: fluent_core_translated
+  form_attrs: {'class': 'form-control'}
 
 - field_name: maintainer_email
   label: Maintainer Email
@@ -71,6 +76,7 @@ dataset_fields:
   display_property: dc:contributor
   display_snippet: email.html
   display_email_name_field: maintainer
+  form_attrs: {'class': 'form-control'}
 
 
 resource_fields:
@@ -79,14 +85,16 @@ resource_fields:
   label: URL
   preset: resource_url_upload
 
-- field_name: name
+- field_name: name_translated
   label: Name
+  preset: fluent_core_translated
   form_placeholder: eg. January 2011 Gold Prices
+  form_attrs: {'class': 'form-control'}
 
-- field_name: description
+- field_name: notes_translated
   label: Description
-  form_snippet: markdown.html
-  form_placeholder: Some useful notes about the data
+  preset: fluent_markdown
+  form_placeholder: eg. Some useful notes about the data
 
 - field_name: format
   label: Format

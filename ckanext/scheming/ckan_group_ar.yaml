@@ -1,0 +1,33 @@
+scheming_version: 1
+group_type: group
+about_url: http://github.com/ckan/ckanext-scheming
+fields:
+
+- field_name: title_translated
+  label: Name
+  preset: fluent_core_translated
+  form_placeholder: My Group
+  form_attrs: {'class': 'form-control'}
+
+- field_name: name
+  label: URL
+  preset: group_slug
+  form_placeholder: eg. my-group
+
+- field_name: not_used
+  label: Parent Theme
+  display_snippet: null
+  form_snippet: group_hierarchy.html
+  validators: ignore_missing
+
+- field_name: description_translated
+  label: Description
+  preset: fluent_markdown
+  form_placeholder: A little information about my group...
+  form_attrs: {'class': 'form-control'}
+
+- field_name: url
+  label: image
+  preset: organization_url_upload
+  form_placeholder: http://example.com/my-camel-photo.jpg
+  upload_label: image
