@@ -44,7 +44,9 @@
         "form_attrs": {
           "data-module": "autocomplete",
           "data-module-tags": "",
-          "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?",
+          "data-module-createtags": "false",
+          "data-module-interval": "50",
+          "data-module-source": "/api/2/util/vocab/tag/autocomplete?incomplete=?",
           "class": ""
         }
       }
