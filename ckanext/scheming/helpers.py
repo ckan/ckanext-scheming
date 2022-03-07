@@ -13,6 +13,7 @@ from ckanapi import LocalCKAN, NotFound, NotAuthorized
 
 all_helpers = {}
 
+
 def helper(fn):
     """
     collect helper functions into ckanext.scheming.all_helpers dict

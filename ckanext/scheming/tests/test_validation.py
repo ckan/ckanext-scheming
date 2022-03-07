@@ -20,7 +20,6 @@ ignore_missing = get_validator("ignore_missing")
 not_empty = get_validator("not_empty")
 
 
-
 class TestGetValidatorOrConverter(object):
     def test_missing(self):
         with pytest.raises(SchemingException):
@@ -463,7 +462,7 @@ class TestDateTimesTZ(object):
 
     def test_date_field_datetime_convert_to_utc(self):
         lc = LocalCKAN()
-        d = lc.action.package_create(
+        lc.action.package_create(
             type="test-schema",
             name="fred_datetime_tz11",
             a_relevant_datetime_tz=datetime.datetime(
@@ -941,7 +940,7 @@ class TestSubfieldResourceInvalid(object):
                 ],
             )
         except ValidationError as e:
-            assert e.error_dict["resources"][0]["schedule"][0]["impact"][0
-                ].startswith("Value must be one of")
+            assert e.error_dict["resources"][0]["schedule"][0]["impact"]
+            [0].startswith("Value must be one of")
         else:
             raise AssertionError("ValidationError not raised")

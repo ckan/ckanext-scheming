@@ -14,7 +14,7 @@ setup(
     Originally developed for the Government of Canada's custom metadata schema, part of
     https://github.com/open-data/ckanext-canada
     """,
-    classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords='ckan',
     author='Ian Ward',
     author_email='ian@excess.org',
@@ -31,15 +31,14 @@ setup(
         'pytz',
         'six',
     ],
-    entry_points=\
-    """
-    [ckan.plugins]
-    scheming_datasets=ckanext.scheming.plugins:SchemingDatasetsPlugin
-    scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
-    scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
-    scheming_nerf_index=ckanext.scheming.plugins:SchemingNerfIndexPlugin
-    scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
-    scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
+    entry_points="""
+        [ckan.plugins]
+        scheming_datasets=ckanext.scheming.plugins:SchemingDatasetsPlugin
+        scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
+        scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
+        scheming_nerf_index=ckanext.scheming.plugins:SchemingNerfIndexPlugin
+        scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
+        scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
     """,
     message_extractors={
         'ckanext': [

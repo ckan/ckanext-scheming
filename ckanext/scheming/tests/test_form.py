@@ -97,6 +97,7 @@ class TestDatasetFormNew(object):
         licenses = page.select('#field-license_id option')
         assert licenses
 
+
 @pytest.mark.usefixtures("clean_db")
 class TestOrganizationFormNew(object):
     def test_organization_form_includes_custom_field(self, app):
@@ -115,7 +116,6 @@ class TestOrganizationFormNew(object):
         # Commenting until ckan/ckan#4208 is fixed
         # assert_true('packages?id=' not in response.body)
         assert "/organization/" in response.body
-
 
 
 @pytest.mark.usefixtures("clean_db")
@@ -139,6 +139,7 @@ class TestGroupFormNew(object):
         # Commenting until ckan/ckan#4208 is fixed
         # assert_true('packages?id=' not in response.body)
         assert "/group/" in response.body
+
 
 @pytest.mark.usefixtures("clean_db")
 class TestCustomGroupFormNew(object):
@@ -377,7 +378,6 @@ class TestSubfieldDatasetForm(object):
 
         assert dataset["citation"] == [{'originator': ['ling']}, {'originator': ['umet']}]
         assert dataset["contact_address"] == [{'address': 'home'}]
-
 
 
 @pytest.mark.usefixtures("clean_db")

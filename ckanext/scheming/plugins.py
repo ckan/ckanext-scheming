@@ -153,6 +153,7 @@ class _SchemingMixin(object):
         module = sys.modules["ckanext.scheming.plugins"]
         return os.path.join(os.path.dirname(module.__file__), 'i18n')
 
+
 class _GroupOrganizationMixin(object):
     """
     Common methods for SchemingGroupsPlugin and SchemingOrganizationsPlugin

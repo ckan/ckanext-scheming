@@ -259,7 +259,7 @@ def validate_date_inputs(field, key, data, extras, errors, context):
         try:
             value_full = value
             date = h.date_str_to_datetime(value)
-        except (TypeError, ValueError) as e:
+        except (TypeError, ValueError):
             errors[date_key].append(date_error)
 
     time_key, value = get_input('time')
@@ -271,7 +271,7 @@ def validate_date_inputs(field, key, data, extras, errors, context):
             try:
                 value_full += ' ' + value
                 date = h.date_str_to_datetime(value_full)
-            except (TypeError, ValueError) as e:
+            except (TypeError, ValueError):
                 errors[time_key].append(time_error)
 
     tz_key, value = get_input('tz')
@@ -298,7 +298,7 @@ def scheming_isodatetime(field, schema):
             else:
                 try:
                     date = h.date_str_to_datetime(value)
-                except (TypeError, ValueError) as e:
+                except (TypeError, ValueError):
                     raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))
@@ -328,7 +328,7 @@ def scheming_isodatetime_tz(field, schema):
             else:
                 try:
                     date = sh.date_tz_str_to_datetime(value)
-                except (TypeError, ValueError) as e:
+                except (TypeError, ValueError):
                     raise Invalid(_('Date format incorrect'))
         else:
             extras = data.get(('__extras',))
