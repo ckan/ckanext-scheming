@@ -34,7 +34,23 @@
           {% endif %}
         {% endif %}
         {% endblock %}
-        <button class="btn btn-primary" name="save" type="submit">{% block save_text %}{{ _('Save Organization') }}{% endblock %}</button>
+        <button class="btn btn-primary" name="save" type="submit">
+            {% block save_text %}
+              {%- if action == "edit" -%}
+                {%- if 'humanize_entity_type' in h -%}
+                  {{ h.humanize_entity_type('organization', group_type, 'update label') }}
+                {%- else -%}
+                  {{ _('Update Organization') }}
+                {%- endif -%}
+              {%- else -%}
+                {%- if 'humanize_entity_type' in h -%}
+                  {{ h.humanize_entity_type('organization', group_type, 'create label') }}
+                {%- else -%}
+                  {{ _('Create Organization') }}
+                {%- endif -%}
+              {%- endif -%}
+            {% endblock %}
+        </button>
         {{ form.required_message() }}
     </div>
 </form>
