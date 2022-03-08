@@ -112,7 +112,6 @@ class TestDatastoreChoices(object):
         )
         lc.action.datastore_search.assert_called_once()
 
-
     @patch("ckanext.scheming.helpers.LocalCKAN")
     def test_no_choices_on_not_authorized(self, LocalCKAN):
         lc = Mock()
