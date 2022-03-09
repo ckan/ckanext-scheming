@@ -38,6 +38,10 @@ dataset_fields:
   label: Organization
   preset: dataset_organization
 
+- field_name: owner_theme
+  label: Theme
+  preset: dataset_theme
+  
 - field_name: url
   label: Source
   form_placeholder: http://example.com/dataset.json

@@ -59,6 +59,13 @@
       }
     },
     {
+      "preset_name": "dataset_theme",
+      "values": {
+        "validators": "unicode",
+        "form_snippet": "group.html"
+      }
+    },
+    {
       "preset_name": "resource_url_upload",
       "values": {
         "validators": "ignore_missing unicode remove_whitespace",
