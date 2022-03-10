@@ -4,7 +4,11 @@
 not used as a form_snippet directly #}
 
 {% macro _group() %}
-  {% set existing_group = data.owner_theme or data.group_id %}
+  {% set existing_group = []  %}
+  {% for group in data.groups or [] %}
+    {% if existing_group.append(group.id) %}{% endif %}
+  {% endfor %}
+
   {% call form.input_block('field-{{field.field_name}}',
     label=h.scheming_language_text(field.label),
     error=errors[field.field_name],
@@ -14,14 +18,12 @@ not used as a form_snippet directly #}
     ) %}
     <div {{
       form.attributes(field.form_attrs) if 'form_attrs' in field else '' }}>
-      <select id="field-{{field.field_name}}" name="{{field.field_name}}" data-module="autocomplete">
+      <select multiple id="field-{{field.field_name}}" name="{{field.field_name}}" data-module="autocomplete">
         field.get('form_select_attrs', {'data-module':'autocomplete'})) }}>
       {% if not group_required or field.get('form_include_blank_choice', false) %}
-        <option value="">{% if not group_required
-          %}{{ _('No Group') }}{% endif %}</option>
       {% endif %}
       {% for group in groups_available %}
-        {% set selected_group = existing_group == group.id %}
+        {% set selected_group = group.id in existing_group %}
         {{ group_option_tag(group, selected_group) }}
       {% endfor %}
     </select>

@@ -4,9 +4,9 @@
 
 {% macro group_option_tag(group, selected_group) %}
   {% block group_option scoped %}
-    <option value="{{ group.id }}"{%
-      if selected_group %} selected="selected"{% endif
-      %}>{{ group.display_name }}</option>
+    <option value="{{ group.id }}"{%if selected_group %} selected="selected"{% endif%}>
+      {{ group.display_name }}
+  </option>
   {% endblock %}
 {% endmacro %}
 
@@ -16,8 +16,7 @@
     data=data,
     errors=errors,
     groups_available=h.groups_available('create_dataset'),
-    group_required=not h.check_config_permission('create_unowned_dataset')
-      or h.scheming_field_required(field),
+    group_required=False,
     group_option_tag=group_option_tag %}
 
     {% block package_metadata_fields_visibility %}
