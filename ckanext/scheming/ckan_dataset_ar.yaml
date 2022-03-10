@@ -38,7 +38,7 @@ dataset_fields:
   label: Organization
   preset: dataset_organization
 
-- field_name: owner_theme
+- field_name: themes
   label: Theme
   preset: dataset_theme
   

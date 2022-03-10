@@ -61,7 +61,7 @@
     {
       "preset_name": "dataset_theme",
       "values": {
-        "validators": "unicode",
+        "validators": "ignore_missing unicode",
         "form_snippet": "group.html"
       }
     },
