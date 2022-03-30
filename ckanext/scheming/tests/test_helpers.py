@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from mock import patch, Mock
+try:
+    from unittest.mock import patch, Mock
+except ImportError:
+    from mock import patch, Mock
+
 import datetime
 import six
 
