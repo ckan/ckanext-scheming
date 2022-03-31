@@ -287,11 +287,7 @@ class TestRadioFormSnippet(object):
             "radio.html",
             field_name="radio-group",
             choices=[
-                {"value": "one", "label": "One"},
-                {"value": "two", "label": "Two"},
-                {"value": "three", "label": "Three"},
+                {"value": "one", "label": "One"}
             ],
         )
         assert '<input id="field-radio-group-one" type="radio" name="radio-group" value="one">' in html
-        assert '<input id="field-radio-group-two" type="radio" name="radio-group" value="two">' in html
-        assert '<input id="field-radio-group-three" type="radio" name="radio-group" value="three">' in html
