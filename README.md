@@ -471,6 +471,51 @@ Allow HTML inside the help text if set to `true`. Default is `false`.
 
 Display help text inline if set to `true`. Default is `false`.
 
+Action API Endpoints
+====================
+
+The extension adds action endpoints which expose any configured schemas via:
+https://github.com/ckan/ckanext-scheming/blob/master/ckanext/scheming/logic.py
+
+Some examples:
+
+Calling http://localhost:5000/api/3/action/scheming_dataset_schema_list
+
+Returns:
+
+```
+{
+  help: "http://localhost:5005/api/3/action/help_show?name=scheming_dataset_schema_list",
+  success: true,
+  result: [
+    "dataset",
+    "camel-photos"
+  ]
+}
+```
+
+Individual datasets can be called via [data_dict](https://docs.ckan.org/en/latest/maintaining/datastore.html#data-dictionary).
+
+Calling http://localhost:5000/api/3/action/scheming_dataset_schema_show?type=dataset
+
+Returns:
+
+```
+{
+  help: "http://localhost:5005/api/3/action/help_show?name=scheming_dataset_schema_show",
+  success: true,
+  result: {
+    scheming_version: 2,
+    dataset_type: "dataset",
+    about: "A reimplementation of the default CKAN dataset schema",
+    about_url: "http://github.com/ckan/ckanext-scheming",
+    dataset_fields: [...],
+    resource_fields: [...]
+  }
+}
+```
+
+The full list of API actions are available in [ckanext/scheming/logic.py](https://github.com/ckan/ckanext-scheming/blob/master/ckanext/scheming/logic.py)
 
 
 Running the Tests
