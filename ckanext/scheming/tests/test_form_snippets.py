@@ -278,3 +278,20 @@ class TestRepeatingSubfieldsFormSnippet(object):
         snippet = bs4.BeautifulSoup(html)
         attr_holder = snippet.select_one(".controls").div
         assert attr_holder['data-module'] == 'test-attrs'
+
+
+@pytest.mark.usefixtures("with_request_context")
+class TestRadioFormSnippet(object):
+    def test_radio_choices(self):
+        html = render_form_snippet(
+            "radio.html",
+            field_name="radio-group",
+            choices=[
+                {"value": "one", "label": "One"},
+                {"value": "two", "label": "Two"},
+                {"value": "three", "label": "Three"},
+            ],
+        )
+        assert '<input id="field-radio-group-one" type="radio" name="radio-group" value="one">' in html
+        assert '<input id="field-radio-group-two" type="radio" name="radio-group" value="two">' in html
+        assert '<input id="field-radio-group-three" type="radio" name="radio-group" value="three">' in html
