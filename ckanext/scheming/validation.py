@@ -408,8 +408,8 @@ def validators_from_string(s, field, schema):
     """
     convert a schema validators string to a list of validators
 
-    e.g. "if_empty_same_as(name) unicode" becomes:
-    [if_empty_same_as("name"), unicode]
+    e.g. "if_empty_same_as(name) unicode_safe" becomes:
+    [if_empty_same_as("name"), unicode_safe]
     """
     out = []
     parts = s.split()
