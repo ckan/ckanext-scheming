@@ -294,3 +294,16 @@ class TestRadioFormSnippet(object):
         attr_holder = snippet.select_one(".controls").label
         assert attr_holder.text.strip() == 'One' \
             and attr_holder.input["value"].strip() == 'one'
+
+    def test_radio_checked(self):
+        html = render_form_snippet(
+            "radio.html",
+            field_name="radio-group",
+            data={"radio-group": "one"},
+            choices=[
+                {"value": "one", "label": "One"}
+            ],
+        )
+        snippet = bs4.BeautifulSoup(html)
+        attr_holder = snippet.select_one(".controls").input
+        assert attr_holder.has_attr('checked')
