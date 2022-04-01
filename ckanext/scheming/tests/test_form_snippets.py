@@ -290,4 +290,7 @@ class TestRadioFormSnippet(object):
                 {"value": "one", "label": "One"}
             ],
         )
-        assert '<input id="field-radio-group-one" type="radio" name="radio-group" value="one">' in html
+        snippet = bs4.BeautifulSoup(html)
+        attr_holder = snippet.select_one(".controls").label
+        assert attr_holder.text.strip() == 'One' \
+            and attr_holder.input["value"].strip() == 'one'
