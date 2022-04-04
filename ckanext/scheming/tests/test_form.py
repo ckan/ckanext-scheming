@@ -50,7 +50,7 @@ def _get_resource_update_page_as_sysadmin(app, id, resource_id):
     if ckantoolkit.check_ckan_version(min_version="2.9"):
         url = '/dataset/{}/resource/{}/edit'.format(id, resource_id)
     else:
-        url = '/dataset/{}/edit_resource/{}'.format(id, resource_id)
+        url = '/dataset/{}/resource_edit/{}'.format(id, resource_id)
     response = app.get(
         url, extra_environ=env,
     )
