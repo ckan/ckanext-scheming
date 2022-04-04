@@ -136,6 +136,14 @@
         "validators": "scheming_multiple_text",
         "output_validators": "scheming_load_json"
       }
+    },
+    {
+      "preset_name": "radio",
+      "values": {
+        "form_snippet": "radio.html",
+        "display_snippet": "select.html",
+        "validators": "scheming_required scheming_choices"
+      }
     }
   ]
 }

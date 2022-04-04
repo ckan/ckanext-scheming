@@ -283,6 +283,8 @@ This extension includes the following presets:
 * `preset: title` - title validation and large text form snippet
 * `preset: select` - validation that choice is from [choices](#choices),
   form select box and display snippet
+* `preset: radio` - validation that choice is from [choices](#choices),
+  form radio buttons group and display snippet
 * `preset: multiple_checkbox` - multiple choice from [choices](#choices)
   rendered as checkboxes in the form
 * `preset: multiple_select` - multiple choice from [choices](#choices)
