@@ -81,6 +81,7 @@ class TestGetPreset(object):
                 u'dataset_organization',
                 u'json_object',
                 u'markdown',
+                u'radio',
             )
         ) == sorted(presets.keys())
 

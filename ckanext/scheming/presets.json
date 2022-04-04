@@ -144,6 +144,14 @@
         "form_snippet": "markdown.html",
         "display_snippet": "markdown.html"
       }
+    },
+    {
+      "preset_name": "radio",
+      "values": {
+        "form_snippet": "radio.html",
+        "display_snippet": "select.html",
+        "validators": "scheming_required scheming_choices"
+      }
     }
   ]
 }

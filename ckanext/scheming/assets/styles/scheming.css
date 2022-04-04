@@ -31,3 +31,11 @@ a.btn.btn-multiple-remove {
   border-radius: 100px;
 }
 
+/* remove ":" after form label */
+.radio-group label::after {
+  content: none;
+}
+
+.radio-group label {
+  font-weight: normal;
+}

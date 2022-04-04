@@ -1,0 +1,45 @@
+{% import 'macros/form.html' as form %}
+
+{%- set options=[] -%}
+{%- set form_restrict_choices_to=field.get('form_restrict_choices_to') -%}
+{%- if not h.scheming_field_required(field) or
+    field.get('form_include_blank_choice', false) -%}
+  {%- do options.append({'value': '', 'text': ''}) -%}
+{%- endif -%}
+{%- for c in h.scheming_field_choices(field) -%}
+  {%- if not form_restrict_choices_to or c.value in form_restrict_choices_to -%}
+    {%- do options.append({
+      'value': c.value|string,
+      'text': h.scheming_language_text(c.label) }) -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if field.get('sorted_choices') -%}
+  {%- set options = options|sort(case_sensitive=false, attribute='text') -%}
+{%- endif -%}
+{%- if data[field.field_name] -%}
+  {%- set option_selected = data[field.field_name]|string -%}
+{%- else -%}
+  {%- set option_selected = None -%}
+{%- endif -%}
+
+{%- call form.input_block(
+    label=h.scheming_language_text(field.label),
+    classes=['control-medium'],
+    error=errors[field.field_name],
+    is_required=h.scheming_field_required(field)) -%}
+    <fieldset class="radio-group">
+      {%- for c in field.choices -%}
+        <div>
+          <label for="field-{{ field.field_name }}-{{ c.value }}">
+            <input id="field-{{ field.field_name }}-{{ c.value }}"
+                type="radio"
+                name="{{ field.field_name }}"
+                value="{{ c.value }}"
+                {{ "checked " if c.value == data[field.field_name] }} />
+            {{ h.scheming_language_text(c.label) }}
+          </label>
+        </div>
+      {%- endfor -%}
+    </fieldset>
+    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+{%- endcall -%}
