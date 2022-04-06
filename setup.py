@@ -27,7 +27,7 @@ setup(
     install_requires=[
         'pyyaml',
         'ckanapi',
-        'ckantoolkit>=0.0.6',
+        'ckantoolkit>=0.0.7',
         'pytz',
         'six',
     ],
