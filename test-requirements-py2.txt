@@ -1,3 +1,4 @@
+six>=1.12.0
 factory-boy>=2
 mock
 soupsieve==1.2  # python2 compat beautifulsoup dep
