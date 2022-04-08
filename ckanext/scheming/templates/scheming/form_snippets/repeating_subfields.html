@@ -6,13 +6,15 @@
 {% macro repeating_panel(index, index1) %}
   <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
     <div class="panel panel-default">
-      <header class="panel-heading">
-        {% block field_removal_button%}
-          <a class="btn btn-danger btn-repeating-remove" name="repeating-remove" href="javascript:;"
-            >{% block delete_button_text %}{{ _('Remove') }}{% endblock %}</a>
-        {% endblock %}
-        {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ index1 }}
-      </header>
+      {% block repeating_panel_header %}
+        <header class="panel-heading">
+          {% block field_removal_button%}
+            <a class="btn btn-danger btn-repeating-remove" name="repeating-remove" href="javascript:;"
+              >{% block delete_button_text %}{{ _('Remove') }}{% endblock %}</a>
+          {% endblock %}
+          {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ index1 }}
+        </header>
+      {% endblock %}
       <div class="panel-body fields-content">
         {% for subfield in field.repeating_subfields %}
           {% set sf = dict(
@@ -72,8 +74,8 @@
 	  {% endfor %}
 	</div>
 	<div class="control-medium">
-	  <a href="javascript:;" name="repeating-add" class="btn btn-link"
-	    >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>
+	  {% block add_button %}<a href="javascript:;" name="repeating-add" class="btn btn-link"
+	    >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>{% endblock %}
 
 	  {% set help_text = h.scheming_language_text(field.help_text) %}
 	  {% if help_text %}
