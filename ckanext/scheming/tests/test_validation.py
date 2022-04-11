@@ -827,3 +827,120 @@ class TestJSONValidatorsResourceInvalid(object):
                 ].startswith("Unsupported type for JSON field:")
             else:
                 raise AssertionError("ValidationError not raised")
+
+
+@pytest.mark.usefixtures("clean_db")
+class TestSubfieldDatasetValid(object):
+    def test_valid_subfields(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type="test-subfields",
+            name="a_sf_1",
+            citation=[
+                {"originator": ["mei"], "publication_date": "2021-01-01"},
+                {"originator": ["ahmed"]}
+            ],
+            contact_address=[{"address": "anyplace"}],
+        )
+
+        assert dataset["citation"] == [
+            {"originator": ["mei"], "publication_date": "2021-01-01"},
+            {"originator": ["ahmed"]}
+        ]
+        assert dataset["contact_address"] == [{"address": "anyplace"}]
+
+    def test_empty_subfields(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type="test-subfields",
+            name="a_sf_1",
+            citation=[],
+            contact_address=[],
+        )
+
+        # current behaviour, would empty lists be better?
+        assert "citation" not in dataset
+        assert "contact_address" not in dataset
+
+
+class TestSubfieldDatasetInvalid(object):
+    def test_invalid_missing_required_subfield(self):
+        lc = LocalCKAN()
+
+        try:
+            lc.action.package_create(
+                type="test-subfields",
+                name="b_sf_1",
+                citation=[{"publication_date": "2021-01-01"}, {"originator": ["ahmed"]}],
+                contact_address=[{"address": "anyplace"}],
+            )
+        except ValidationError as e:
+            assert e.error_dict["citation"][0]["originator"] == ["Missing value"]
+        else:
+            raise AssertionError("ValidationError not raised")
+
+    def test_invalid_bad_date_subfield(self):
+        lc = LocalCKAN()
+
+        try:
+            lc.action.package_create(
+                type="test-subfields",
+                name="b_sf_1",
+                citation=[
+                    {"originator": ["mei"], "publication_date": "yesterday"},
+                    {"originator": ["ahmed"]}
+                ],
+                contact_address=[{"address": "anyplace"}],
+            )
+        except ValidationError as e:
+            assert e.error_dict["citation"][0]["publication_date"] == ["Date format incorrect"]
+        else:
+            raise AssertionError("ValidationError not raised")
+
+
+@pytest.mark.usefixtures("clean_db")
+class TestSubfieldResourceValid(object):
+    def test_simple(self):
+        lc = LocalCKAN()
+        dataset = lc.action.package_create(
+            type="test-subfields",
+            name="c_sf_1",
+            resources=[
+                {
+                    "url": "http://example.com/data.csv",
+                    "schedule": [
+                        {"impact": "A", "frequency": "1m"},
+                        {"impact": "P", "frequency": "7d"},
+                    ]
+                }
+            ],
+        )
+
+        assert dataset["resources"][0]["schedule"] == [
+            {"impact": "A", "frequency": "1m"},
+            {"impact": "P", "frequency": "7d"},
+        ]
+
+
+class TestSubfieldResourceInvalid(object):
+    def test_invalid_choice(self):
+        lc = LocalCKAN()
+        try:
+            lc.action.package_create(
+                type="test-subfields",
+                name="c_sf_1",
+                resources=[
+                    {
+                        "url": "http://example.com/data.csv",
+                        "schedule": [
+                            {"impact": "Q", "frequency": "1m"},
+                            {"impact": "P", "frequency": "7d"},
+                        ]
+                    }
+                ],
+            )
+        except ValidationError as e:
+            assert e.error_dict["resources"][0]["schedule"][0]["impact"][0
+                ].startswith("Value must be one of")
+        else:
+            raise AssertionError("ValidationError not raised")

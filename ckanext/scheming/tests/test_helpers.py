@@ -65,20 +65,23 @@ class TestGetPreset(object):
         presets = scheming_get_presets()
         assert sorted(
             (
-                u"title",
-                u"tag_string_autocomplete",
-                u"select",
-                u"resource_url_upload",
-                u"organization_url_upload",
-                u"resource_format_autocomplete",
-                u"multiple_select",
-                u"multiple_checkbox",
-                u"date",
-                u"datetime",
-                u"datetime_tz",
-                u"dataset_slug",
-                u"dataset_organization",
-                u"json_object",
+                u'title',
+                u'tag_string_autocomplete',
+                u'select',
+                u'resource_url_upload',
+                u'organization_url_upload',
+                u'resource_format_autocomplete',
+                u'multiple_select',
+                u'multiple_checkbox',
+                u'multiple_text',
+                u'date',
+                u'datetime',
+                u'datetime_tz',
+                u'dataset_slug',
+                u'dataset_organization',
+                u'json_object',
+                u'markdown',
+                u'radio',
             )
         ) == sorted(presets.keys())
 
@@ -168,8 +171,13 @@ class TestDatastoreChoices(object):
                 "datastore_choices_resource": "all-params",
                 "datastore_choices_limit": 5,
                 "datastore_choices_columns": {"value": "a", "label": "b"},
+                "datastore_additional_choices":
+                    [{"value": "none", "label": "None"},
+                     {"value": "na", "label": "N/A"}]
             }
         ) == [
+            {"value": "none", "label": "None"},
+            {"value": "na", "label": "N/A"},
             {"value": "one", "label": "two"},
             {"value": "three", "label": "four"},
         ]

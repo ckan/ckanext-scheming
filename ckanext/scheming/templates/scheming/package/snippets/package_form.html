@@ -16,18 +16,38 @@
     might not be compatible with ckanext-scheming
     </p>
   {%- endif -%}
+
   {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
   {%- for field in schema.dataset_fields -%}
     {%- if field.form_snippet is not none -%}
+      {%- if field.field_name not in data %}
+        {# Set the field default value before rendering but only if
+        it doesn't already exist in data which would mean the form
+        has been submitted. #}
+        {% if field.default_jinja2 %}
+          {% do data.__setitem__(
+            field.field_name,
+            h.scheming_render_from_string(field.default_jinja2)) %}
+        {% elif field.default %}
+          {% do data.__setitem__(field.field_name, field.default) %}
+        {% endif %}
+      {% endif -%}
       {%- snippet 'scheming/snippets/form_field.html',
-        field=field, data=data, errors=errors, licenses=c.licenses,
-        entity_type='dataset', object_type=dataset_type -%}
+        field=field,
+        data=data,
+        errors=errors,
+        licenses=c.licenses,
+        entity_type='dataset',
+        object_type=dataset_type
+      -%}
     {%- endif -%}
   {%- endfor -%}
+
   {%- if 'resource_fields' not in schema -%}
     <!-- force controller to skip resource-editing step for this type -->
     <input type="hidden" name="_ckan_phase" value="" />
   {%- endif -%}
+
 {% endblock %}
 
 {% block metadata_fields %}

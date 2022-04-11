@@ -1,0 +1,41 @@
+header.panel-heading {
+  position: relative;
+}
+
+/* try to resemble .btn-remove-url style in resource form */
+.btn.btn-danger.btn-repeating-remove {
+  position: absolute;
+  margin-right: 0;
+  top: 9px;
+  right: 7px;
+  padding: 0 12px;
+  border-radius: 100px;
+}
+
+li.multiple-text-field {
+  position: relative;
+  padding-bottom: 6px;
+}
+
+li.multiple-text-field input {
+  padding-right: 90px;
+}
+
+/* try to resemble .btn-remove-url style in resource form */
+a.btn.btn-multiple-remove {
+  position: absolute;
+  margin-right: 0;
+  top: 6px;
+  right: 7px;
+  padding: 0 12px;
+  border-radius: 100px;
+}
+
+/* remove ":" after form label */
+.radio-group label::after {
+  content: none;
+}
+
+.radio-group label {
+  font-weight: normal;
+}

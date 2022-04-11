@@ -1,0 +1,91 @@
+{# A complex field with repeating sub-fields #}
+
+{% include 'scheming/snippets/subfields_asset.html' %}
+{% import 'macros/form.html' as form %}
+
+{% macro repeating_panel(index, index1) %}
+  <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="{{ index }}">
+    <div class="panel panel-default">
+      {% block repeating_panel_header %}
+        <header class="panel-heading">
+          {% block field_removal_button%}
+            <a class="btn btn-danger btn-repeating-remove" name="repeating-remove" href="javascript:;"
+              >{% block delete_button_text %}{{ _('Remove') }}{% endblock %}</a>
+          {% endblock %}
+          {{ h.scheming_language_text(field.repeating_label or field.label) }} {{ index1 }}
+        </header>
+      {% endblock %}
+      <div class="panel-body fields-content">
+        {% for subfield in field.repeating_subfields %}
+          {% set sf = dict(
+            subfield,
+            field_name=field.field_name ~ '-' ~ index ~ '-' ~ subfield.field_name)
+          %}
+          {%- snippet 'scheming/snippets/form_field.html',
+            field=sf,
+            data=flat,
+            errors=flaterr,
+            licenses=licenses,
+            entity_type=entity_type,
+            object_type=object_type
+          -%}
+        {% endfor %}
+      </div>
+      <div class="panel-body fields-removed-notice" style="display:none">
+        {% block removal_text %}
+          {% if 'id' in data %}
+            {{ _('These fields have been removed, click update below to save your changes.') }}
+          {% else %}
+            {{ _('These fields have been removed.') }}
+          {% endif %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% set flat = h.scheming_flatten_subfield(field, data) %}
+{% set flaterr = h.scheming_flatten_subfield(field, errors) %}
+
+{% call form.input_block(
+  'field-' + field.field_name,
+  h.scheming_language_text(field.label) or field.field_name,
+  [],
+  field.classes if 'classes' in field else ['control-medium'],
+  is_required=h.scheming_field_required(field)) %}
+    <div {{ form.attributes(field.get('form_attrs', {})) }}>
+      <fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields">
+	{% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
+	{% if alert_warning %}
+	  <section class="alert alert-warning">
+	    {{ alert_warning|safe }}
+	  </section>
+	{% endif %}
+
+	{%- set group_data = data[field.field_name] -%}
+	{%- set group_count = group_data|length -%}
+	{%- if not group_count and 'id' not in data -%}
+	  {%- set group_count = field.form_blanks|default(1) -%}
+	{%- endif -%}
+
+	<div class="scheming-repeating-subfields-group">
+	  {% for index in range(group_count) %}
+	    {{ repeating_panel(index, index + 1) }}
+	  {% endfor %}
+	</div>
+	<div class="control-medium">
+	  {% block add_button %}<a href="javascript:;" name="repeating-add" class="btn btn-link"
+	    >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>{% endblock %}
+
+	  {% set help_text = h.scheming_language_text(field.help_text) %}
+	  {% if help_text %}
+	    <div class="info-block mrgn-tp-md">
+	      {{ help_text }}
+	    </div>
+	  {% endif %}
+	</div>
+
+	<div name="repeating-template" style="display:none">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</div>
+      </fieldset>
+    </div>
+{% endcall %}
