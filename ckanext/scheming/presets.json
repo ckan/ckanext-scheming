@@ -6,7 +6,7 @@
     {
       "preset_name": "title",
       "values": {
-        "validators": "if_empty_same_as(name) unicode",
+        "validators": "if_empty_same_as(name) unicode_safe",
         "form_snippet": "large_text.html",
         "form_attrs": {
           "data-module": "slug-preview-target"
@@ -16,7 +16,7 @@
     {
       "preset_name": "dataset_slug",
       "values": {
-        "validators": "not_empty unicode name_validator package_name_validator",
+        "validators": "not_empty unicode_safe name_validator package_name_validator",
         "form_snippet": "slug.html"
       }
     },
@@ -36,14 +36,14 @@
     {
       "preset_name": "dataset_organization",
       "values": {
-        "validators": "owner_org_validator unicode",
+        "validators": "owner_org_validator unicode_safe",
         "form_snippet": "organization.html"
       }
     },
     {
       "preset_name": "resource_url_upload",
       "values": {
-        "validators": "ignore_missing unicode remove_whitespace",
+        "validators": "ignore_missing unicode_safe remove_whitespace",
         "form_snippet": "upload.html",
         "form_placeholder": "http://example.com/my-data.csv",
         "upload_field": "upload",
@@ -54,7 +54,7 @@
     {
       "preset_name": "organization_url_upload",
       "values": {
-        "validators": "ignore_missing unicode remove_whitespace",
+        "validators": "ignore_missing unicode_safe remove_whitespace",
         "form_snippet": "organization_upload.html",
         "form_placeholder": "http://example.com/my-data.csv"
       }
@@ -62,7 +62,7 @@
     {
       "preset_name": "resource_format_autocomplete",
       "values": {
-        "validators": "if_empty_guess_format ignore_missing clean_format unicode",
+        "validators": "if_empty_guess_format ignore_missing clean_format unicode_safe",
         "form_placeholder": "eg. CSV, XML or JSON",
         "form_attrs": {
           "data-module": "autocomplete",

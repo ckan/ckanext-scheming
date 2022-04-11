@@ -415,13 +415,13 @@ passing the comma-separated values within as string parameters
 and the result is used as the validator/converter.
 
 ```yaml
-validators: if_empty_same_as(name) unicode
+validators: if_empty_same_as(name) unicode_safe
 ```
 
 is the same as a plugin using the validators:
 
 ```python
-[get_validator('if_empty_same_as')("name"), unicode]
+[get_validator('if_empty_same_as')("name"), unicode_safe]
 ```
 
 This string does not contain arbitrary python code to be executed,

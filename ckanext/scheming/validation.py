@@ -14,7 +14,8 @@ from ckantoolkit import (
     missing,
     Invalid,
     StopOnError,
-    _
+    _,
+    unicode_safe,
 )
 
 import ckanext.scheming.helpers as sh
@@ -25,6 +26,7 @@ ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
 
 all_validators = {}
+
 
 def register_validator(fn):
     """
@@ -43,6 +45,9 @@ def scheming_validator(fn):
     """
     fn.is_a_scheming_validator = True
     return fn
+
+
+register_validator(unicode_safe)
 
 
 @scheming_validator
@@ -408,8 +413,8 @@ def validators_from_string(s, field, schema):
     """
     convert a schema validators string to a list of validators
 
-    e.g. "if_empty_same_as(name) unicode" becomes:
-    [if_empty_same_as("name"), unicode]
+    e.g. "if_empty_same_as(name) unicode_safe" becomes:
+    [if_empty_same_as("name"), unicode_safe]
     """
     out = []
     parts = s.split()
