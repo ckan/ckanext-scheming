@@ -18,12 +18,14 @@
   <div class="module-content">
     {%- block additional_info_heading -%}<h2>{{ _('Additional Information') }}</h2>{%- endblock -%}
     <table class="table table-striped table-bordered table-condensed" data-module="table-toggle-more">
-      <thead>
-        <tr>
-          <th scope="col">{{ _('Field') }}</th>
-          <th scope="col">{{ _('Value') }}</th>
-        </tr>
-      </thead>
+      {%- block additional_info_table_head -%}
+        <thead>
+          <tr>
+            <th scope="col">{{ _('Field') }}</th>
+            <th scope="col">{{ _('Value') }}</th>
+          </tr>
+        </thead>
+      {%- endblock -%}
       <tbody>
         {%- block resource_last_updated -%}
         <tr>
@@ -55,11 +57,13 @@
           <td>{% snippet "snippets/license.html", pkg_dict=pkg, text_only=True %}</td>
         </tr>
         {%- endblock -%}
-        {% for key, value in h.format_resource_items(res.items()) %}
-          {% if key not in ('created', 'metadata modified', 'last modified', 'format') %}
-            <tr class="toggle-more"><th scope="row">{{ key | capitalize }}</th><td>{{ value }}</td></tr>
-          {% endif %}
-        {% endfor %}
+        {%- block resource_more_items -%}
+          {% for key, value in h.format_resource_items(res.items()) %}
+            {% if key not in ('created', 'metadata modified', 'last modified', 'format') %}
+              <tr class="toggle-more"><th scope="row">{{ key | capitalize }}</th><td>{{ value }}</td></tr>
+            {% endif %}
+          {% endfor %}
+        {%- endblock -%}
         {%- block resource_fields -%}
           {%- for field in schema.resource_fields -%}
             {%- if field.field_name not in exclude_fields
