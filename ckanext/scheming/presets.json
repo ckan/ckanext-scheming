@@ -85,6 +85,17 @@
       }
     },
     {
+      "preset_name": "group_icon",
+      "values": {
+        "validators": "ignore_missing unicode remove_whitespace",
+        "form_snippet": "upload.html",
+        "form_placeholder": "http://example.com/my-camel-photo.jpg",
+        "upload_field": "icon_upload",
+        "upload_clear": "clear_upload",
+        "upload_label": "Icon"
+      }
+    },
+    {
       "preset_name": "resource_format_autocomplete",
       "values": {
         "validators": "if_empty_guess_format ignore_missing clean_format unicode",

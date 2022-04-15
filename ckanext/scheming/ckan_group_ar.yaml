@@ -31,3 +31,9 @@ fields:
   preset: organization_url_upload
   form_placeholder: http://example.com/my-camel-photo.jpg
   upload_label: image
+
+- field_name: icon_url
+  label: icon
+  preset: group_icon
+  form_placeholder: http://example.com/my-camel-photo.jpg
+  upload_label: Icon
