@@ -19,8 +19,15 @@
           h.scheming_language_text(field.label) }}</th>
         <td class="dataset-details"{%
           if field.display_property %} property="{{ field.display_property
-          }}"{% endif %}>{%- snippet 'scheming/snippets/display_field.html',
-          field=field, data=pkg_dict, schema=schema -%}</td>
+          }}"{% endif %}>
+              {%- if field.field_name == 'keywords' -%}
+                  {%- for x in ([] if [pkg_dict.get('keywords')]|length < 1 else pkg_dict.get('keywords')) -%}
+                    {{ x.lower() + ' ' }}
+                  {%- endfor -%}
+              {%- else -%}
+                  {%- snippet 'scheming/snippets/display_field.html', field=field, data=pkg_dict, schema=schema -%}
+              {%- endif -%}
+        </td>
       </tr>
     {%- endif -%}
   {%- endfor -%}
