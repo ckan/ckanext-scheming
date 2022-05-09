@@ -484,31 +484,6 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
 
         return data_dict
 
-    def after_search(self, search_results, search_params):
-        if 'results' not in search_results:
-            return search_results
-        schemas = SchemingDatasetsPlugin.instance._expanded_schemas
-        for data_dict in search_results['results']:
-            if data_dict['type'] not in schemas:
-                continue
-            for d in schemas[data_dict['type']]['dataset_fields']:
-                if d['field_name'] not in data_dict:
-                    continue
-                if 'simple_subfields' in d and isinstance(data_dict[d['field_name']], list):
-                    data_dict[d['field_name']] = data_dict[d['field_name']][0]
-        return search_results
-
-    def after_show(self, context, data_dict):
-        schemas = SchemingDatasetsPlugin.instance._expanded_schemas
-        if data_dict['type'] not in schemas:
-            return data_dict
-        for d in schemas[data_dict['type']]['dataset_fields']:
-            if d['field_name'] not in data_dict:
-                continue
-            if 'simple_subfields' in d and isinstance(data_dict[d['field_name']], list):
-                data_dict[d['field_name']] = data_dict[d['field_name']][0]
-        return data_dict
-
 def _load_schemas(schemas, type_field):
     out = {}
     for n in schemas:

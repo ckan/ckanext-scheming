@@ -400,7 +400,7 @@ class TestSimpleSubfieldDatasetForm(object):
             app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
 
         dataset = call_action("package_show", id="subfield_dataset_1")
-        assert dataset["temporal_extent"] == {'begin': '2000-01-23', 'end': '2021-12-30'}
+        assert dataset["temporal_extent"] == [{'begin': '2000-01-23', 'end': '2021-12-30'}]
 
     def test_dataset_form_update_simple_subfield(self, app):
         dataset = Dataset(
@@ -428,7 +428,7 @@ class TestSimpleSubfieldDatasetForm(object):
 
         dataset = call_action("package_show", id=dataset["id"])
 
-        assert dataset["temporal_extent"] == {'begin': '1989-04-13', 'end': '1995-05-15'}
+        assert dataset["temporal_extent"] == [{'begin': '1989-04-13', 'end': '1995-05-15'}]
 
 @pytest.mark.usefixtures("clean_db")
 class TestSubfieldResourceForm(object):

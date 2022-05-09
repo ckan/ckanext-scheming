@@ -909,7 +909,7 @@ class TestSimpleSubfieldDatasetValid(object):
             temporal_extent=[{'begin': '2000-01-23', 'end': ''}]
         )
 
-        assert dataset["temporal_extent"] == {'begin': '2000-01-23'}
+        assert dataset["temporal_extent"] == [{'begin': '2000-01-23'}]
 
     def test_empty_simple_subfields(self):
         lc = LocalCKAN()
