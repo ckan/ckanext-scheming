@@ -461,7 +461,7 @@ def scheming_flatten_simple_subfield(subfield, data):
     if(isinstance(subdata, list) and len(subdata) == 1):
         subdata = subdata[0]
 
-    for field, value in data[subfield['field_name']].items():
+    for field, value in subdata.items():
         prefix = '{field_name}{sep}'.format(
             field_name=subfield['field_name'],
             sep=sep,
