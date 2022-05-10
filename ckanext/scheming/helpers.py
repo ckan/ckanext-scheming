@@ -457,6 +457,10 @@ def scheming_flatten_simple_subfield(subfield, data):
     if subfield['field_name'] not in data:
         return flat
 
+    subdata = data[subfield['field_name']]
+    if(isinstance(subdata, list) and len(subdata) == 1):
+        subdata = subdata[0]
+
     for field, value in data[subfield['field_name']].items():
         prefix = '{field_name}{sep}'.format(
             field_name=subfield['field_name'],
