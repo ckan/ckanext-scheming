@@ -921,6 +921,20 @@ class TestSimpleSubfieldDatasetValid(object):
 
         assert "temporal_extent" not in dataset
 
+    def test_invalid_simple_subfields_length(self):
+        lc = LocalCKAN()
+        try:
+            dataset = lc.action.package_create(
+                type="test-subfields",
+                name="a_sf_1",
+                temporal_extent=[{'begin': '2000-01-23', 'end': '2021-09-13'}, {'begin': '2022-02-23', 'end': ''}]
+            )
+        except ValidationError as e:
+            assert e.error_dict["temporal_extent_subfield_length"] == ["Too many items in simple subfield temporal_extent. Found 2 items, expected 1"]
+        else:
+            raise AssertionError("ValidationError not raised")
+            pass
+
 @pytest.mark.usefixtures("clean_db")
 class TestSimpleSubfieldDatasetInvalid(object):
     def test_invalid_missing_required_simple_subfield(self):

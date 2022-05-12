@@ -244,7 +244,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         if before:
             schema['__before'] = validation.validators_from_string(
-                before, None, scheming_schema)
+                before, None, scheming_schema) + validation.validators_from_string('scheming_simple_subfields', None, scheming_schema)
+        else:
+            schema['__before'] = validation.validators_from_string('scheming_simple_subfields', None, scheming_schema)
         if after:
             schema['__after'] = validation.validators_from_string(
                 after, None, scheming_schema)

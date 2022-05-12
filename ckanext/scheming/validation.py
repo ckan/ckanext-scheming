@@ -26,6 +26,7 @@ not_empty = get_validator('not_empty')
 
 all_validators = {}
 
+
 def register_validator(fn):
     """
     collect validator functions into ckanext.scheming.all_helpers dict
@@ -43,6 +44,26 @@ def scheming_validator(fn):
     """
     fn.is_a_scheming_validator = True
     return fn
+
+
+@scheming_validator
+@register_validator
+def scheming_simple_subfields(field, schema):
+    def validator(key, data, errors, context):
+        fields = schema.get('dataset_fields', []) + schema.get('resource_fields', [])
+        key_tuples = data.keys()
+        for f in fields:
+            if 'simple_subfields' in f:
+                iters = [tup[1] for tup in key_tuples if tup[0] == f['field_name']]
+                if iters and max(iters) > 0:
+                    if (f['field_name'],) not in errors:
+                        errors[(f['field_name'] + '_subfield_length',)] = []
+                    errors[(f['field_name'] + '_subfield_length',)].extend([
+                        _('Too many items in simple subfield %s. Found %s items, expected 1')
+                        % (f['field_name'], (max(iters) + 1))
+                    ])
+                    raise StopOnError
+    return validator
 
 
 @scheming_validator
