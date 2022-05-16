@@ -58,11 +58,12 @@ def scheming_simple_subfields(field, schema):
         key_tuples = data.keys()
         for f in fields:
             if 'simple_subfields' in f:
+                error_fn = f['field_name'] + '_subfield_length'
                 iters = [tup[1] for tup in key_tuples if tup[0] == f['field_name']]
                 if iters and max(iters) > 0:
-                    if (f['field_name'],) not in errors:
-                        errors[(f['field_name'] + '_subfield_length',)] = []
-                    errors[(f['field_name'] + '_subfield_length',)].extend([
+                    if (error_fn,) not in errors:
+                        errors[(error_fn,)] = []
+                    errors[(error_fn,)].extend([
                         _('Too many items in simple subfield %s. Found %s items, expected 1')
                         % (f['field_name'], (max(iters) + 1))
                     ])
