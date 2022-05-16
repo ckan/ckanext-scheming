@@ -6,7 +6,7 @@
     {
       "field_name": "title",
       "label": "Name",
-      "validators": "ignore_missing unicode",
+      "validators": "ignore_missing unicode_safe",
       "form_snippet": "large_text.html",
       "form_attrs": {"data-module": "slug-preview-target"},
       "form_placeholder": "My Organization"
@@ -14,7 +14,7 @@
     {
       "field_name": "name",
       "label": "URL",
-      "validators": "not_empty unicode name_validator group_name_validator",
+      "validators": "not_empty unicode_safe name_validator group_name_validator",
       "form_snippet": "slug.html",
       "form_placeholder": "my-organization"
     },

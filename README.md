@@ -318,6 +318,8 @@ This extension includes the following presets:
 * `preset: title` - title validation and large text form snippet
 * `preset: select` - validation that choice is from [choices](#choices),
   form select box and display snippet
+* `preset: radio` - validation that choice is from [choices](#choices),
+  form radio buttons group and display snippet
 * `preset: multiple_checkbox` - multiple choice from [choices](#choices)
   rendered as checkboxes in the form, stored as a list of values
 * `preset: multiple_select` - multiple choice from [choices](#choices)
@@ -413,13 +415,13 @@ passing the comma-separated values within as string parameters
 and the result is used as the validator/converter.
 
 ```yaml
-validators: if_empty_same_as(name) unicode
+validators: if_empty_same_as(name) unicode_safe
 ```
 
 is the same as a plugin using the validators:
 
 ```python
-[get_validator('if_empty_same_as')("name"), unicode]
+[get_validator('if_empty_same_as')("name"), unicode_safe]
 ```
 
 This string does not contain arbitrary python code to be executed,
@@ -463,10 +465,59 @@ Only if this key is supplied, its value will be shown as inline help text,
 Help text must be plain text, no markdown or HTML are allowed.
 Help text may be provided in multiple languages like [label fields](#label).
 
+#### `help_allow_html`
+
+Allow HTML inside the help text if set to `true`. Default is `false`.
+
 #### `help_inline`
 
 Display help text inline if set to `true`. Default is `false`.
 
+Action API Endpoints
+====================
+
+The extension adds action endpoints which expose any configured schemas via:
+https://github.com/ckan/ckanext-scheming/blob/master/ckanext/scheming/logic.py
+
+Some examples:
+
+Calling http://localhost:5000/api/3/action/scheming_dataset_schema_list
+
+Returns:
+
+```
+{
+  help: "http://localhost:5005/api/3/action/help_show?name=scheming_dataset_schema_list",
+  success: true,
+  result: [
+    "dataset",
+    "camel-photos"
+  ]
+}
+```
+
+Individual datasets can be called via [data_dict](https://docs.ckan.org/en/latest/maintaining/datastore.html#data-dictionary).
+
+Calling http://localhost:5000/api/3/action/scheming_dataset_schema_show?type=dataset
+
+Returns:
+
+```
+{
+  help: "http://localhost:5005/api/3/action/help_show?name=scheming_dataset_schema_show",
+  success: true,
+  result: {
+    scheming_version: 2,
+    dataset_type: "dataset",
+    about: "A reimplementation of the default CKAN dataset schema",
+    about_url: "http://github.com/ckan/ckanext-scheming",
+    dataset_fields: [...],
+    resource_fields: [...]
+  }
+}
+```
+
+The full list of API actions are available in [ckanext/scheming/logic.py](https://github.com/ckan/ckanext-scheming/blob/master/ckanext/scheming/logic.py)
 
 
 Running the Tests

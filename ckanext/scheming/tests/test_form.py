@@ -33,8 +33,13 @@ def _get_package_update_page_as_sysadmin(app, id):
 def _get_resource_new_page_as_sysadmin(app, id):
     user = Sysadmin()
     env = {"REMOTE_USER": user["name"].encode("ascii")}
+    if ckantoolkit.check_ckan_version(min_version="2.9"):
+        url = '/dataset/{}/resource/new'.format(id)
+    else:
+        url = '/dataset/new_resource/{}'.format(id)
+
     response = app.get(
-        url="/dataset/new_resource/{}".format(id), extra_environ=env
+        url, extra_environ=env
     )
     return env, response
 
@@ -42,9 +47,12 @@ def _get_resource_new_page_as_sysadmin(app, id):
 def _get_resource_update_page_as_sysadmin(app, id, resource_id):
     user = Sysadmin()
     env = {"REMOTE_USER": user["name"].encode("ascii")}
+    if ckantoolkit.check_ckan_version(min_version="2.9"):
+        url = '/dataset/{}/resource/{}/edit'.format(id, resource_id)
+    else:
+        url = '/dataset/{}/resource_edit/{}'.format(id, resource_id)
     response = app.get(
-        url="/dataset/{}/resource_edit/{}".format(id, resource_id),
-        extra_environ=env,
+        url, extra_environ=env,
     )
     return env, response
 
@@ -79,8 +87,14 @@ class TestDatasetFormNew(object):
 
     def test_resource_form_includes_custom_fields(self, app, sysadmin_env):
         dataset = Dataset(type="test-schema", name="resource-includes-custom")
+
+        if ckantoolkit.check_ckan_version(min_version="2.9"):
+            url = '/dataset/{}/resource/new'.format(dataset["id"])
+        else:
+            url = '/dataset/new_resource/{}'.format(dataset["id"])
+
         response = app.get(
-            '/dataset/new_resource/' + dataset["id"],
+            url,
             extra_environ=sysadmin_env,
         )
         form = BeautifulSoup(response.body).select_one("#resource-edit")
