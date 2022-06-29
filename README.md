@@ -7,6 +7,46 @@ and display are supported.
 
 [![Tests](https://github.com/ckan/ckanext-scheming/workflows/Tests/badge.svg?branch=master)](https://github.com/ckan/ckanext-scheming/actions)
 
+Table of contents:
+
+1. [Requirements](#requirements)
+2. [Installation](#installation)
+3. [Configuration](#configuration)
+   - [Schema Types](#schema-types)
+   - [Example Schemas](#example-schemas)
+   - [Common Schema Keys](#common-schema-keys)
+     - [`scheming_version`](#scheming_version)
+     - [`about_url`](#about_url)
+   - [Dataset Schema Keys](#dataset-schema-keys)
+     - [`dataset_type`](#dataset_type)
+     - [`dataset_fields`, `resource_fields`](#dataset_fields-resource_fields)
+   - [Group / Organization Schema Keys](#group-organization-schema-keys)
+     - [`group_type`](#group_type)
+     - [`organization_type`](#organization_type)
+     - [`fields`](#fields)
+   - [Field Keys](#field-keys)
+     - [`field_name`](#field_name)
+     - [`label`](#label)
+     - [`repeating_subfields`](#repeating_subfields)
+     - [`required`](#required)
+     - [`choices`](#choices)
+     - [`choices_helper`](#choices_helper)
+     - [`preset`](#preset)
+     - [`form_snippet`](#form_snippet)
+     - [`display_snippet`](#display_snippet)
+     - [`display_property`](#display_property)
+     - [`select_size`](#select_size)
+     - [`sorted_choices`](#sorted_choices)
+     - [`validators`](#validators)
+     - [`output_validators`](#output_validators)
+     - [`create_validators`](#create_validators)
+     - [`help_text`](#help_text)
+     - [`help_allow_html`](#help_allow_html)
+     - [`help_inline`](#help_inline)
+4. [Action API Endpoints](#action-api-endpoints)
+5. [Running the Tests](#running-the-tests)
+
+
 
 Requirements
 ============
@@ -59,30 +99,19 @@ scheming.presets = ckanext.scheming:presets.json
 scheming.dataset_fallback = false
 ```
 
-## Different Types of Schemas
+## Schema Types
 With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly in **CKAN 2.8+ only** as is indicated throughout the examples.
 
 **Creating custom group or organization types is only supported in CKAN 2.8, instructions for that are below**
 
+## Example Schemas
 
--------------------------------------------------------------------------------------
-### Top-level Schema Keys (Common among dataset, group, and organization schemas)
-#### `scheming_version`
-
-Set to `2`. Future versions of ckanext-scheming may use a larger
-number to indicate a change to the schema format.
-
-#### `about_url`
-
-`about_url` is a Link to human-readable information about this schema.
-Its use is optional but highly recommended.
-
--------------------------------
-### Example Schemas - Datasets
+Dataset schemas:
 
 * [default dataset schema](ckanext/scheming/ckan_dataset.yaml)
 * [camel photos schema](ckanext/scheming/camel_photos.yaml)
 * [subfields schema](ckanext/scheming/subfields.yaml)
+* [form pages schema](ckanext/scheming/ckan_dataset_pages.yaml)
 
 These schemas are included in ckanext-scheming and may be enabled
 with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.yaml`
@@ -90,17 +119,37 @@ with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.yaml`
 These schemas use [presets](#preset) defined in
 [presets.json](ckanext/scheming/presets.json).
 
+Group schemas:
 
-### Schema Keys - Datasets
+* [Default group schema with field modifications](ckanext/scheming/group_with_bookface.json)
+* [Group with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_group_with_status.json)
+
+Organization schemas:
+
+* [Default organization schema with field modifications](ckanext/scheming/org_with_dept_id.json)
+* [Organization with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_org_with_address.json)
+
+
+## Common Schema Keys
+
+### `scheming_version`
+
+Set to `2`. Future versions of ckanext-scheming may use a larger
+number to indicate a change to the schema format.
+
+### `about_url`
 
 ```yaml
-scheming_version: 2
+about_url: https://github.com/link-to-my-project
 ```
 
-Use `scheming_version: 2` with ckanext-scheming version 2.0.0 or later.
+`about_url` is a link to human-readable information about this schema.
+ckanext-scheming automatically publishes your schema and this link allows users
+to learn more about it.
 
+## Dataset Schema Keys
 
-#### `dataset_type` / `group_type`
+### `dataset_type`
 
 ```yaml
 dataset_type: camel-photos
@@ -113,17 +162,7 @@ Normal datasets would be available under the URL `/dataset`, but datasets with
 the `camel_photos.json` schema above would appear under `/camel-photos` instead.
 
 
-#### `about_url`
-
-```yaml
-about_url: https://github.com/link-to-my-project
-```
-
-`about_url` is a Link to human-readable information about this schema.
-Its use is optional but highly recommended.
-
-
-#### `dataset_fields`, `resource_fields`
+### `dataset_fields`, `resource_fields`
 
 ```yaml
 dataset_fields:
@@ -146,41 +185,31 @@ pages.
 Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset.
 
----------------------------
-### Example Schemas - Group
-
-* [Default group schema with field modifications](ckanext/scheming/group_with_bookface.json)
-* [Group with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_group_with_status.json)
 
 
-### Example Schemas - Organization
 
-* [Default organization schema with field modifications](ckanext/scheming/org_with_dept_id.json)
-* [Organization with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_org_with_address.json)
+## Group / Organization Schema Keys
 
-
-### Schema Keys - Groups / Organization
-
-#### `group_type`
+### `group_type`
 Examples:
 * `"group_type": "group"` used for modifying the default group schema
 * `"group_type": "theme"` an example of defining a custom group type, as seen in the above examples **(CKAN 2.8+ only)**
 
-#### `organization_type`
+Like `dataset_type`, a `group_type` of `group` allows you to customize the default group schema under the URL `/group`, such as the modified schema in group_with_bookface.json, but a schema with a custom type **(CKAN 2.8+ only)** such as `custom_group_with_status.json` schema above would appear under `/theme` instead, because its `group_type` field is set to "theme".
+
+### `organization_type`
 Examples:
 * `"organization_type": "organization"` used for modifying the default organization schema
 * `"organization_type": "publisher"` an example of defining a custom organization type, as seen in the above examples **(CKAN 2.8+ only)**
 
-#### `fields`
+### `fields`
 The `dataset_fields` and `resource_fields` schema properties don't exist in group or organization schemas. Instead, they just have a `fields` property.
-
-#### URLs
-Like `dataset_type`, a `group_type` of `group` allows you to customize the default group schema under the URL `/group`, such as the modified schema in group_with_bookface.json, but a schema with a custom type **(CKAN 2.8+ only)** such as `custom_group_with_status.json` schema above would appear under `/theme` instead, because its `group_type` field is set to "theme".
 
 
 ----------------
-### Field Keys
-#### `field_name`
+
+## Field Keys
+### `field_name`
 
 The `field_name` value is the name of an existing CKAN dataset or resource
 field or a new extra field. Existing dataset
@@ -201,7 +230,7 @@ New field names should follow the current lowercase_with_underscores
 This value is available to the form snippet as `field.field_name`.
 
 
-#### `label`
+### `label`
 
 The `label` value is a human-readable label for this field as
 it will appear in the dataset editing form.
@@ -221,7 +250,7 @@ label: Title
 ```
 
 
-#### `repeating_subfields`
+### `repeating_subfields`
 
 This field is the parent of group of repeating subfields. The value is
 a list of fields entered the same way as normal fields. **CKAN 2.8+ only**
@@ -251,7 +280,7 @@ repeating_subfields:
 ```
 
 
-#### `required`
+### `required`
 
 Use `required: true` for fields that must be included. Set to `false` or
 don't include this key for fields that are optional.
@@ -266,7 +295,7 @@ setting for this field and apply either the `not_empty` or `ignore_missing`
 validator.
 
 
-#### `choices`
+### `choices`
 
 The `choices` list may be provided for
 select and multiple choice fields.
@@ -283,7 +312,7 @@ choices:
   label: Hybrid Camel
 ```
 
-#### `choices_helper`
+### `choices_helper`
 
 If a choices list is not provided you must provide a `choices_helper`
 function that will return a list of choices in the same format as
@@ -307,7 +336,7 @@ datastore_additional_choices:
 ```
 
 
-#### `preset`
+### `preset`
 
 A `preset` specifies a set of default values for these field keys. They
 are used to define validation and snippets for common field
@@ -348,7 +377,7 @@ You may add your own presets by adding them to the `scheming.presets`
 configuration setting.
 
 
-#### `form_snippet`
+### `form_snippet`
 
 The `form_snippet` value is the name of the snippet template to
 use for this field in the dataset or resource editing form.
@@ -363,7 +392,7 @@ you added to your that aren't handled by this extension.
 
 The included form snippets may be found under [templates/scheming/form_snippets](ckanext/scheming/templates/scheming/form_snippets).
 
-#### `display_snippet`
+### `display_snippet`
 
 The `display_snippet` value is the name of the snippet template to
 use for this field in the dataset, resource, group or organization view page.
@@ -380,7 +409,7 @@ The included display snippets may be found under [templates/scheming/display_sni
 
 If `display_snippet: null` is used the field will be removed from the view page.
 
-#### `display_property`
+### `display_property`
 
 ```yaml
 - field_name: author
@@ -390,7 +419,7 @@ If `display_snippet: null` is used the field will be removed from the view page.
 
 Set a `property` attribute on dataset fields displayed as "Additional Info", useful for adding RDF markup.
 
-#### `select_size`
+### `select_size`
 
 ```yaml
 select_size: 5
@@ -400,13 +429,13 @@ Set to the number of [choices](#choices) to display in the multiple_select
 [form](#form_snippet) snippets.
 
 
-#### `sorted_choices`
+### `sorted_choices`
 
 Set to `"true"` to sort [choices](#choices) alphabetically in [form](#form_snippet)
 and [display](#display_snippet) snippets.
 
 
-#### `validators`
+### `validators`
 
 The `validators` value is a space-separated string of validator and
 converter functions to use for this field when creating or updating data.
@@ -444,7 +473,7 @@ validator and use its return value for validation of the field.
 CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html)
 lists available validators ready to be used.
 
-#### `output_validators`
+### `output_validators`
 
 The `output_validators` value is like `validators` but used when
 retrieving values from the database instead of when saving them.
@@ -454,22 +483,22 @@ sent to the user.
 This extension automatically adds calls to `convert_from_extras`
 for extra fields so you should not add that to this list.
 
-#### `create_validators`
+### `create_validators`
 
 The `create_validators` value if present overrides `validators` during
 create only.
 
-#### `help_text`
+### `help_text`
 
 Only if this key is supplied, its value will be shown as inline help text,
 Help text must be plain text, no markdown or HTML are allowed.
 Help text may be provided in multiple languages like [label fields](#label).
 
-#### `help_allow_html`
+### `help_allow_html`
 
 Allow HTML inside the help text if set to `true`. Default is `false`.
 
-#### `help_inline`
+### `help_inline`
 
 Display help text inline if set to `true`. Default is `false`.
 
