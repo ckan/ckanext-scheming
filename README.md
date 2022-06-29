@@ -20,7 +20,7 @@ Table of contents:
    - [Dataset Schema Keys](#dataset-schema-keys)
      - [`dataset_type`](#dataset_type)
      - [`dataset_fields`, `resource_fields`](#dataset_fields-resource_fields)
-   - [Group / Organization Schema Keys](#group-organization-schema-keys)
+   - [Group / Organization Schema Keys](#group--organization-schema-keys)
      - [`group_type`](#group_type)
      - [`organization_type`](#organization_type)
      - [`fields`](#fields)
