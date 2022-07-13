@@ -28,6 +28,7 @@ Table of contents:
      - [`field_name`](#field_name)
      - [`label`](#label)
      - [`repeating_subfields`](#repeating_subfields)
+     - [`start_form_page`](#start_form_page)
      - [`required`](#required)
      - [`choices`](#choices)
      - [`choices_helper`](#choices_helper)
@@ -278,6 +279,24 @@ repeating_subfields:
   - field_name: phone
     label: Phone Number
 ```
+
+
+### `start_form_page`
+
+Dataset fields may be divided into separate form pages for creation
+and editing **alpha CKAN feature only**. Adding this key to a field
+marks this field as the start of a new page of fields.
+
+```yaml
+- start_form_page:
+    title: Detailed Metadata
+    description:
+      These fields improve search and give users important links
+```
+
+A title and description should be provided to help with navigation.
+These values may be strings or objects providing multiple
+language versions of text.
 
 
 ### `required`
