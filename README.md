@@ -524,8 +524,6 @@ Returns:
 }
 ```
 
-Individual datasets can be called via [data_dict](https://docs.ckan.org/en/latest/maintaining/datastore.html#data-dictionary).
-
 Calling http://localhost:5000/api/3/action/scheming_dataset_schema_show?type=dataset
 
 Returns:
