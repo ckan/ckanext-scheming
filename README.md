@@ -311,6 +311,15 @@ choices:
   label: Hybrid Camel
 ```
 
+For required `select` fields you may also want to add
+
+```yaml
+form_include_blank_choice: true
+```
+
+so that users are forced to choose an item in the form, otherwise the first
+choice will be selected in the form by default.
+
 ### `choices_helper`
 
 If a choices list is not provided you must provide a `choices_helper`
