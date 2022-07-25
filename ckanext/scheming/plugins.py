@@ -337,7 +337,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             for f in schema['dataset_fields']:
                 if not pages or 'start_form_page' in f:
                     fp = f.get('start_form_page', {})
-                    dataset_form_pages.append({
+                    pages.append({
                         'title': fp.get('title', ''),
                         'description': fp.get('description', ''),
                         'fields': [],
