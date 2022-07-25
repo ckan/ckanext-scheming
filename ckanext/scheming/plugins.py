@@ -254,9 +254,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         )
 
         composite_convert_fields = []
-        for field_list, destination, convert_extras in fg:
+        for field_list, destination, is_dataset in fg:
             for f in field_list:
-                convert_this = convert_extras and f['field_name'] not in schema
+                convert_this = is_dataset and f['field_name'] not in schema
                 destination[f['field_name']] = get_validators(
                     f,
                     scheming_schema,
@@ -324,6 +324,26 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         # are not empty.
         if not hasattr(c, 'licenses'):
             c.licenses = [('', '')] + model.Package.get_license_options()
+
+    def update_config(self, config):
+        rval = _SchemingMixin.update_config(self, config)
+
+        self._dataset_form_pages = {}
+
+        for t, schema in self._expanded_schemas.items():
+            pages = []
+            self._dataset_form_pages[t] = pages
+
+            for f in schema['dataset_fields']:
+                if not pages or 'start_form_page' in f:
+                    fp = f.get('start_form_page', {})
+                    dataset_form_pages.append({
+                        'title': fp.get('title', ''),
+                        'description': fp.get('description', ''),
+                        'fields': [],
+                    })
+                pages[-1]['fields'].append(f)
+        return rval
 
 
 def expand_form_composite(data, fieldnames):
