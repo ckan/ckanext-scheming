@@ -298,7 +298,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             }
             if resource_composite and 'resources' in data_dict:
                 for res in data_dict['resources']:
-                    expand_form_composite(res, resource_composite)
+                    expand_form_composite(res, resource_composite.copy())
             # convert composite package fields to extras so they are stored
             if composite_convert_fields:
                 schema = dict(
