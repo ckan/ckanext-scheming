@@ -128,8 +128,9 @@ class _SchemingMixin(object):
         # can find it:
         self._store_instance(self)
         self._add_template_directory(config)
-        self._load_presets(config)
 
+    def configure(self, config):
+        self._load_presets(config)
         self._is_fallback = p.toolkit.asbool(
             config.get(self.FALLBACK_OPTION, False)
         )
@@ -191,6 +192,7 @@ class _GroupOrganizationMixin(object):
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                              _SchemingMixin):
     p.implements(p.IConfigurer)
+    p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
