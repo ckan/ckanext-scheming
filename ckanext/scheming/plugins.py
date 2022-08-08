@@ -364,6 +364,7 @@ def expand_form_composite(data, fieldnames):
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
                            DefaultGroupForm, _SchemingMixin):
     p.implements(p.IConfigurer)
+    p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
@@ -394,6 +395,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
                                   DefaultOrganizationForm, _SchemingMixin):
     p.implements(p.IConfigurer)
+    p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
