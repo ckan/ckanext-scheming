@@ -128,8 +128,9 @@ class _SchemingMixin(object):
         # can find it:
         self._store_instance(self)
         self._add_template_directory(config)
-        self._load_presets(config)
 
+    def configure(self, config):
+        self._load_presets(config)
         self._is_fallback = p.toolkit.asbool(
             config.get(self.FALLBACK_OPTION, False)
         )
@@ -191,6 +192,7 @@ class _GroupOrganizationMixin(object):
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                              _SchemingMixin):
     p.implements(p.IConfigurer)
+    p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
@@ -325,9 +327,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         if not hasattr(c, 'licenses'):
             c.licenses = [('', '')] + model.Package.get_license_options()
 
-    def update_config(self, config):
-        rval = _SchemingMixin.update_config(self, config)
-
+    def configure(self, config):
+        _SchemingMixin.configure(self, config)
         self._dataset_form_pages = {}
 
         for t, schema in self._expanded_schemas.items():
@@ -343,7 +344,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                         'fields': [],
                     })
                 pages[-1]['fields'].append(f)
-        return rval
 
 
 def expand_form_composite(data, fieldnames):
