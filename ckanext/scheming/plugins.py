@@ -129,7 +129,9 @@ class _SchemingMixin(object):
         self._store_instance(self)
         self._add_template_directory(config)
 
-    def configure(self, config):
+        # FIXME: need to read configuration in update_config
+        # because self._schemas need to be defined early for
+        # IDatasetForm
         self._load_presets(config)
         self._is_fallback = p.toolkit.asbool(
             config.get(self.FALLBACK_OPTION, False)
@@ -192,7 +194,6 @@ class _GroupOrganizationMixin(object):
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                              _SchemingMixin):
     p.implements(p.IConfigurer)
-    p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
@@ -382,7 +383,6 @@ def expand_form_composite(data, fieldnames):
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
                            DefaultGroupForm, _SchemingMixin):
     p.implements(p.IConfigurer)
-    p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
@@ -413,7 +413,6 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
                                   DefaultOrganizationForm, _SchemingMixin):
     p.implements(p.IConfigurer)
-    p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
     p.implements(p.IActions)
