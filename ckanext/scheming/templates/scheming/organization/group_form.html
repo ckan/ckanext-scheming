@@ -12,6 +12,7 @@
 {%- endif -%}
 
 <form class="dataset-form form-horizontal" method="post" data-module="basic-form" enctype="multipart/form-data">
+    {{ h.csrf_input() }}
     {%- set schema = h.scheming_get_organization_schema(group_type) -%}
     {%- for field in schema['fields'] -%}
         {%- if field.form_snippet is not none -%}
@@ -34,13 +35,13 @@
             {% block save_text %}
               {%- if action == "edit" -%}
                 {%- if 'humanize_entity_type' in h -%}
-                  {{ h.humanize_entity_type('organization', group_type, 'update label') }}
+                  {{ h.humanize_entity_type('Organization', group_type, 'update label') }}
                 {%- else -%}
                   {{ _('Update Organization') }}
                 {%- endif -%}
               {%- else -%}
                 {%- if 'humanize_entity_type' in h -%}
-                  {{ h.humanize_entity_type('organization', group_type, 'create label') }}
+                  {{ h.humanize_entity_type('Organization', group_type, 'create label') }}
                 {%- else -%}
                   {{ _('Create Organization') }}
                 {%- endif -%}
