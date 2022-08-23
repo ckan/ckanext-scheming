@@ -7,7 +7,7 @@ import json
 import six
 
 from jinja2 import Environment
-from ckantoolkit import config, _, check_ckan_version
+from ckantoolkit import config, _
 
 from ckanapi import LocalCKAN, NotFound, NotAuthorized
 
@@ -433,12 +433,3 @@ def scheming_flatten_subfield(subfield, data):
         for k in record:
             flat[prefix + k] = record[k]
     return flat
-
-
-@helper
-def csrf_input():
-    import ckan.plugins as p
-
-    if check_ckan_version(min_version='2.10'):
-        return p.toolkit.csrf_input()
-    return ''
