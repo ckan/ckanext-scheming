@@ -16,7 +16,7 @@ class TestOrganizationDisplay(object):
 class TestGroupDisplay(object):
     def test_group_displays_custom_fields(self, app):
         user = Sysadmin()
-        Group(user=user, name="group-one", bookface="theoneandonly")
+        Group(user=user, name="group-one", bookface="theoneandonly", type="group")
 
         response = app.get("/group/about/group-one")
         assert "Bookface" in response.body

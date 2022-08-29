@@ -4,7 +4,7 @@ import pytest
 import ckantoolkit
 from bs4 import BeautifulSoup
 
-from ckantoolkit.tests.factories import Sysadmin, Dataset
+from ckantoolkit.tests.factories import Sysadmin, Dataset, Group
 from ckantoolkit.tests.helpers import call_action
 
 
@@ -68,6 +68,13 @@ def _get_group_new_page_as_sysadmin(app, type="group"):
     user = Sysadmin()
     env = {"REMOTE_USER": user["name"].encode("ascii")}
     response = app.get(url="/{0}/new".format(type), extra_environ=env)
+    return env, response
+
+
+def _get_group_update_page_as_sysadmin(app, id):
+    user = Sysadmin()
+    env = {"REMOTE_USER": user["name"].encode("ascii")}
+    response = app.get(url="/theme-subfields/edit/{}".format(id), extra_environ=env)
     return env, response
 
 
@@ -476,3 +483,59 @@ class TestSubfieldResourceForm(object):
             {"frequency": '1y', "impact": 'A'},
             {"frequency": '1m', "impact": 'P'},
         ]
+
+
+@pytest.mark.usefixtures("clean_db")
+class TestSubfieldGroupForm(object):
+    def test_group_form_includes_subfields(self, app):
+        env, response = _get_group_new_page_as_sysadmin(app, 'theme-subfields')
+        form = BeautifulSoup(response.body).select("form")[1]
+        assert form.select("fieldset[name=scheming-repeating-subfields]")
+
+    def test_group_form_create(self, app, sysadmin_env):
+        data = {"save": "", "_ckan_phase": 1}
+
+        data["name"] = "subfield_group_1"
+        data["citation-0-originator"] = ['mei', 'ahmed']
+        data["contact_address-0-address"] = 'anyplace'
+
+        url = '/theme-subfields/new'
+        try:
+            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        group = call_action("group_show", id="subfield_group_1")
+        assert group["citation"] == [{'originator': ['mei', 'ahmed']}]
+        assert group["contact_address"] == [{'address': 'anyplace'}]
+
+    def test_group_form_update(self, app):
+        group = Group(
+            type="theme-subfields",
+            citation=[{'originator': ['mei']}, {'originator': ['ahmed']}],
+            contact_address=[{'address': 'anyplace'}])
+
+        env, response = _get_group_update_page_as_sysadmin(
+            app, group["id"]
+        )
+        form = BeautifulSoup(response.body).select_one("form.dataset-form")
+        assert form.select_one(
+            "input[name=citation-1-originator]"
+        ).attrs['value'] == 'ahmed'
+
+        data = {"save": ""}
+        data["citation-0-originator"] = ['ling']
+        data["citation-1-originator"] = ['umet']
+        data["contact_address-0-address"] = 'home'
+        data["name"] = group["name"]
+
+        url = '/theme-subfields/edit/' + group["id"]
+        try:
+            app.post(url, environ_overrides=env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=env)
+
+        group = call_action("group_show", id=group["id"])
+
+        assert group["citation"] == [{'originator': ['ling']}, {'originator': ['umet']}]
+        assert group["contact_address"] == [{'address': 'home'}]

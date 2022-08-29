@@ -4,9 +4,8 @@ import os
 import inspect
 import logging
 from functools import wraps
+from typing import Any, Optional, Union
 
-import six
-import yaml
 import ckan.plugins as p
 
 try:
@@ -16,11 +15,7 @@ except ImportError:
 
 import ckan.model as model
 from ckan.common import c, json
-from ckan.lib.navl.dictization_functions import unflatten, flatten_schema
-try:
-    from ckan.lib.helpers import helper_functions as core_helper_functions
-except ImportError:  # CKAN <= 2.5
-    core_helper_functions = None
+from ckan.lib.navl.dictization_functions import unflatten
 
 from ckantoolkit import (
     DefaultDatasetForm,
@@ -31,7 +26,6 @@ from ckantoolkit import (
     navl_validate,
     add_template_directory,
     add_resource,
-    add_public_directory,
     missing,
     check_ckan_version,
 )
@@ -72,6 +66,30 @@ def run_once_for_caller(var_name, rval_fn):
     return decorator
 
 
+class _FieldGroup:
+    def __init__(self, name, convert_extras=True, dest=None):
+        # type: (str, bool, Optional[str]) -> None
+        self.name = name
+        self.convert_extras = convert_extras
+        self.dest = dest
+
+    def fields(self, schema):
+        # type: (dict[str, Any]) -> list[dict[str, Any]]
+        return schema[self.name]
+
+    def destination(self, schema):
+        # type: (dict[str, Any]) -> dict[str, list[Any]]
+        if self.dest:
+            return schema[self.dest]
+        return schema
+
+    def targets(self, data_dict):
+        # type: (dict[str, Any]) -> list[dict[str, Any]]
+        if self.dest:
+            return data_dict.get(self.dest, [])
+        return [data_dict]
+
+
 class _SchemingMixin(object):
     """
     Store single plugin instances in class variable 'instance'
@@ -84,7 +102,8 @@ class _SchemingMixin(object):
     _is_fallback = False
     _schema_urls = tuple()
     _schemas = tuple()
-    _expanded_schemas = tuple()
+    _expanded_schemas = {}
+    _field_groups = tuple() # type: tuple[_FieldGroup, ...]
 
     @run_once_for_caller('_scheming_get_helpers', dict)
     def get_helpers(self):
@@ -148,97 +167,26 @@ class _SchemingMixin(object):
     def is_fallback(self):
         return self._is_fallback
 
-
-class _GroupOrganizationMixin(object):
-    """
-    Common methods for SchemingGroupsPlugin and SchemingOrganizationsPlugin
-    """
-
-    def group_types(self):
-        return list(self._schemas)
-
-    def setup_template_variables(self, context, data_dict):
-        group_type = data_dict.get('type')
-        if not group_type:
-            if c.group_dict:
-                group_type = c.group_dict['type']
-            else:
-                group_type = self.UNSPECIFIED_GROUP_TYPE
-        c.scheming_schema = self._schemas[group_type]
-        c.group_type = group_type
-        c.scheming_fields = c.scheming_schema['fields']
-
-    def validate(self, context, data_dict, schema, action):
-        thing, action_type = action.split('_')
-        t = data_dict.get('type', self.UNSPECIFIED_GROUP_TYPE)
-        if not t or t not in self._schemas:
-            return data_dict, {'type': "Unsupported {thing} type: {t}".format(
-                thing=thing, t=t)}
-        scheming_schema = self._expanded_schemas[t]
-        scheming_fields = scheming_schema['fields']
-
-        get_validators = (
-            _field_output_validators_group
-            if action_type == 'show' else _field_validators
-        )
-        for f in scheming_fields:
-            schema[f['field_name']] = get_validators(
-                f,
-                scheming_schema,
-                f['field_name'] not in schema
-            )
-
-        return navl_validate(data_dict, schema, context)
-
-
-class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
-                             _SchemingMixin):
-    p.implements(p.IConfigurer)
-    p.implements(p.ITemplateHelpers)
-    p.implements(p.IDatasetForm, inherit=True)
-    p.implements(p.IActions)
-    p.implements(p.IValidators)
-
-    SCHEMA_OPTION = 'scheming.dataset_schemas'
-    FALLBACK_OPTION = 'scheming.dataset_fallback'
-    SCHEMA_TYPE_FIELD = 'dataset_type'
-
-    @classmethod
-    def _store_instance(cls, self):
-        SchemingDatasetsPlugin.instance = self
-
-    def read_template(self):
-        return 'scheming/package/read.html'
-
-    def resource_template(self):
-        return 'scheming/package/resource_read.html'
-
-    def package_form(self):
-        return 'scheming/package/snippets/package_form.html'
-
-    def resource_form(self):
-        return 'scheming/package/snippets/resource_form.html'
-
-    def package_types(self):
-        return list(self._schemas)
-
     def validate(self, context, data_dict, schema, action):
         """
-        Validate and convert for package_create, package_update and
-        package_show actions.
+        Validate and convert for *_create, *_update and
+        *_show actions.
         """
         thing, action_type = action.split('_')
         t = data_dict.get('type')
         if not t or t not in self._schemas:
-            return data_dict, {'type': [
-                "Unsupported dataset type: {t}".format(t=t)]}
+            return data_dict, {
+                "type": "Unsupported {thing} type: {t}".format(
+                    thing=thing, t=t
+                )
+            }
 
         scheming_schema = self._expanded_schemas[t]
 
         before = scheming_schema.get('before_validators')
         after = scheming_schema.get('after_validators')
         if action_type == 'show':
-            get_validators = _field_output_validators
+            get_validators = self._output_validators
             before = after = None
         elif action_type == 'create':
             get_validators = _field_create_validators
@@ -251,15 +199,13 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         if after:
             schema['__after'] = validation.validators_from_string(
                 after, None, scheming_schema)
-        fg = (
-            (scheming_schema['dataset_fields'], schema, True),
-            (scheming_schema['resource_fields'], schema['resources'], False)
-        )
+        fg = self._field_groups
 
         composite_convert_fields = []
-        for field_list, destination, convert_extras in fg:
-            for f in field_list:
-                convert_this = convert_extras and f['field_name'] not in schema
+        for field_group in fg:
+            destination = field_group.destination(schema)
+            for f in field_group.fields(scheming_schema):
+                convert_this = field_group.convert_extras and f['field_name'] not in schema
                 destination[f['field_name']] = get_validators(
                     f,
                     scheming_schema,
@@ -287,21 +233,17 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     if ex['key'] not in composite_convert_fields
                 ]
         else:
-            dataset_composite = {
-                f['field_name']
-                for f in scheming_schema['dataset_fields']
-                if 'repeating_subfields' in f
-            }
-            if dataset_composite:
-                expand_form_composite(data_dict, dataset_composite)
-            resource_composite = {
-                f['field_name']
-                for f in scheming_schema['resource_fields']
-                if 'repeating_subfields' in f
-            }
-            if resource_composite and 'resources' in data_dict:
-                for res in data_dict['resources']:
-                    expand_form_composite(res, resource_composite)
+            for field_group in fg:
+                targets = field_group.targets(data_dict)
+                composite_fields = {
+                    f['field_name']
+                    for f in field_group.fields(scheming_schema)
+                    if 'repeating_subfields' in f
+                }
+                if composite_fields and targets:
+                    for target in targets:
+                        expand_form_composite(target, composite_fields)
+
             # convert composite package fields to extras so they are stored
             if composite_convert_fields:
                 schema = dict(
@@ -309,6 +251,90 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     __after=schema.get('__after', []) + [composite_convert_to])
 
         return navl_validate(data_dict, schema, context)
+
+    def _output_validators(self, f, schema, convert_extras):
+        """
+        Return the output validators for a scheming field f
+        """
+        return _field_output_validators(
+            f,
+            schema,
+            convert_extras,
+            convert_from_extras_type=convert_from_extras
+        )
+
+
+class _GroupOrganizationMixin(object):
+    """
+    Common methods for SchemingGroupsPlugin and SchemingOrganizationsPlugin
+    """
+
+    def _output_validators(self, f, schema, convert_extras):
+        """
+        Return the output validators for a scheming field f, tailored for groups
+        and orgs.
+        """
+        return _field_output_validators(
+            f,
+            schema,
+            convert_extras,
+            convert_from_extras_type=validation.convert_from_extras_group
+        )
+
+    _field_groups = (
+        _FieldGroup("fields"),
+    )
+
+    def group_types(self):
+        return list(self._schemas)
+
+    def setup_template_variables(self, context, data_dict):
+        group_type = data_dict.get('type')
+        if not group_type:
+            if c.group_dict:
+                group_type = c.group_dict['type']
+            else:
+                group_type = self.UNSPECIFIED_GROUP_TYPE
+        c.scheming_schema = self._schemas[group_type]
+        c.group_type = group_type
+        c.scheming_fields = c.scheming_schema['fields']
+
+
+class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
+                             _SchemingMixin):
+    p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
+    p.implements(p.IDatasetForm, inherit=True)
+    p.implements(p.IActions)
+    p.implements(p.IValidators)
+
+    SCHEMA_OPTION = 'scheming.dataset_schemas'
+    FALLBACK_OPTION = 'scheming.dataset_fallback'
+    SCHEMA_TYPE_FIELD = 'dataset_type'
+
+    _field_groups = (
+        _FieldGroup("dataset_fields"),
+        _FieldGroup("resource_fields", False, "resources"),
+    )
+
+    @classmethod
+    def _store_instance(cls, self):
+        SchemingDatasetsPlugin.instance = self
+
+    def read_template(self):
+        return 'scheming/package/read.html'
+
+    def resource_template(self):
+        return 'scheming/package/resource_read.html'
+
+    def package_form(self):
+        return 'scheming/package/snippets/package_form.html'
+
+    def resource_form(self):
+        return 'scheming/package/snippets/resource_form.html'
+
+    def package_types(self):
+        return list(self._schemas)
 
     def get_actions(self):
         """
@@ -359,7 +385,6 @@ def expand_form_composite(data, fieldnames):
                 del data[key]
         except (IndexError, ValueError):
             pass  # best-effort only
-
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
@@ -454,6 +479,26 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
         return data_dict
 
 
+def _field_output_validators(
+        f, schema, convert_extras, convert_from_extras_type):
+    # type: (...) -> Union[list[Any], dict[str, Any]]
+    if 'repeating_subfields' in f:
+        return {
+            sf['field_name']: _field_output_validators(
+                sf, schema, False, convert_from_extras_type)
+            for sf in f['repeating_subfields']
+        }
+
+    if convert_extras:
+        validators = [convert_from_extras_type, ignore_missing]
+    else:
+        validators = [ignore_missing]
+    if 'output_validators' in f:
+        validators += validation.validators_from_string(
+            f['output_validators'], f, schema)
+    return validators
+
+
 def _load_schemas(schemas, type_field):
     out = {}
     for n in schemas:
@@ -499,39 +544,6 @@ def _load_schema_url(url):
         raise SchemingException("Could not load %s" % url)
 
     return loader.loads(tables, url)
-
-
-def _field_output_validators_group(f, schema, convert_extras):
-    """
-    Return the output validators for a scheming field f, tailored for groups
-    and orgs.
-    """
-    return _field_output_validators(
-        f,
-        schema,
-        convert_extras,
-        convert_from_extras_type=validation.convert_from_extras_group
-    )
-
-
-def _field_output_validators(f, schema, convert_extras,
-                             convert_from_extras_type=convert_from_extras):
-    """
-    Return the output validators for a scheming field f
-    """
-    if 'repeating_subfields' in f:
-        validators = {
-            sf['field_name']: _field_output_validators(sf, schema, False)
-            for sf in f['repeating_subfields']
-        }
-    elif convert_extras:
-        validators = [convert_from_extras_type, ignore_missing]
-    else:
-        validators = [ignore_missing]
-    if 'output_validators' in f:
-        validators += validation.validators_from_string(
-            f['output_validators'], f, schema)
-    return validators
 
 
 def _field_validators(f, schema, convert_extras):
@@ -609,6 +621,7 @@ def _expand(schema, field):
 
 
 def _expand_schemas(schemas):
+    # type: (dict[str, Any]) -> dict[str, Any]
     """
     Return a new dict of schemas with all field presets expanded.
     """
