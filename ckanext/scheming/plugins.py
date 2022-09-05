@@ -36,7 +36,7 @@ from ckantoolkit import (
     check_ckan_version,
 )
 
-from ckanext.scheming import helpers, validation, logic, loader
+from ckanext.scheming import helpers, validation, logic, loader, views
 from ckanext.scheming.errors import SchemingException
 
 ignore_missing = get_validator('ignore_missing')
@@ -194,6 +194,7 @@ class _GroupOrganizationMixin(object):
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                              _SchemingMixin):
     p.implements(p.IConfigurer)
+    p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
@@ -329,7 +330,6 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             c.licenses = [('', '')] + model.Package.get_license_options()
 
     def configure(self, config):
-        _SchemingMixin.configure(self, config)
         self._dataset_form_pages = {}
 
         for t, schema in self._expanded_schemas.items():
@@ -345,6 +345,30 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                         'fields': [],
                     })
                 pages[-1]['fields'].append(f)
+
+    def prepare_dataset_blueprint(self, package_type, bp):
+        if package_type in self._dataset_form_pages:
+            bp.add_url_rule(
+                '/new',
+                'scheming_new',
+                views.SchemingCreateView.as_view('new'),
+            )
+            bp.add_url_rule(
+                '/new/<id>/<page>',
+                'scheming_new_page',
+                views.SchemingCreatePageView.as_view('new_page'),
+            )
+            bp.add_url_rule(
+                '/edit/<id>',
+                'scheming_edit',
+                views.edit,
+            )
+            bp.add_url_rule(
+                '/edit/<id>/<page>',
+                'scheming_edit_page',
+                views.edit_page,
+            )
+        return bp
 
 
 def expand_form_composite(data, fieldnames):
