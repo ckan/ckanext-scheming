@@ -366,7 +366,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             bp.add_url_rule(
                 '/edit/<id>/<page>',
                 'scheming_edit_page',
-                views.edit_page,
+                views.SchemingEditPageView.as_view('edit_page'),
             )
         return bp
 

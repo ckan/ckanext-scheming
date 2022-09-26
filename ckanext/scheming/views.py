@@ -3,17 +3,21 @@ from flask import Response, Blueprint
 from flask.views import MethodView
 from werkzeug.datastructures import MultiDict
 
-from ckan.plugins.toolkit import h, request, get_action, abort, _
+from ckan.plugins.toolkit import (
+    h, request, get_action, abort, _, ObjectNotFound, NotAuthorized,
+    ValidationError,
+)
 
 try:
-    from ckan.views.dataset import CreateView, _tag_string_to_list
+    from ckan.views.dataset import CreateView, EditView, _tag_string_to_list, _form_save_redirect
 
     # FIXME these not available from toolkit
     from ckan.lib.navl.dictization_functions import unflatten
     from ckan.logic import clean_dict, tuplize_dict, parse_params
 except ImportError:
-    # older ckan, just don't fail here
+    # older ckan, just don't fail at import time
     CreateView = MethodView
+    EditView = MethodView
 
 
 def _clean_page(package_type, page):
@@ -51,7 +55,7 @@ class SchemingCreatePageView(CreateView):
             return abort(404, _('Page not found'))
         try:
             data = get_action('package_show')(None, {'id': id})
-        except (NotAuthorized, NotFound):
+        except (NotAuthorized, ObjectNotFound):
             return abort(404, _('Dataset not found'))
 
         data['_form_page'] = page
@@ -64,7 +68,7 @@ class SchemingCreatePageView(CreateView):
             return abort(404, _('Page not found'))
         try:
             data = get_action('package_show')(None, {'id': id})
-        except (NotAuthorized, NotFound):
+        except (NotAuthorized, ObjectNotFound):
             return abort(404, _('Dataset not found'))
 
         # BEGIN: roughly copied from ckan/views/dataset.py
@@ -85,7 +89,7 @@ class SchemingCreatePageView(CreateView):
         data_dict['id'] = id
         try:
             complete_data = get_action('package_patch')(None, data_dict)
-        except NotFound:
+        except ObjectNotFound:
             return abort(404, _('Dataset not found'))
         except NotAuthorized:
             return base.abort(403, _(u'Unauthorized to update a dataset'))
@@ -94,7 +98,9 @@ class SchemingCreatePageView(CreateView):
             errors = e.error_dict
             error_summary = e.error_summary
             data_dict[u'state'] = data[u'state']
-            return self.get(
+            data_dict['_form_page'] = page
+
+            return EditView().get(
                 package_type,
                 id,
                 data_dict,
@@ -122,9 +128,77 @@ class SchemingCreatePageView(CreateView):
             page=page + 1,
         )
 
-def edit(package_type, id):
-    pass
 
-def edit_page(package_type, id, page):
-    0/0
-    pass
+def edit(package_type, id):
+    return h.redirect_to(
+        '{}.scheming_edit_page'.format(package_type),
+        id=id,
+        page=1
+    )
+
+class SchemingEditPageView(EditView):
+    '''
+    Handle dataset form pages using package_patch
+    '''
+    def get(self, package_type, id, page):
+        try:
+            page = _clean_page(package_type, page)
+        except ValueError:
+            return abort(404, _('Page not found'))
+        try:
+            data = get_action('package_show')(None, {'id': id})
+        except (NotAuthorized, ObjectNotFound):
+            return abort(404, _('Dataset not found'))
+
+        return super(SchemingEditPageView, self).get(package_type, id, {'_form_page':page})
+
+    def post(self, package_type, id, page):
+        try:
+            page = _clean_page(package_type, page)
+        except ValueError:
+            return abort(404, _('Page not found'))
+        try:
+            data = get_action('package_show')(None, {'id': id})
+        except (NotAuthorized, ObjectNotFound):
+            return abort(404, _('Dataset not found'))
+
+        # BEGIN: roughly copied from ckan/views/dataset.py
+        try:
+            data_dict = clean_dict(
+                unflatten(tuplize_dict(parse_params(request.form)))
+            )
+        except dict_fns.DataError:
+            return base.abort(400, _(u'Integrity Error'))
+        if u'tag_string' in data_dict:
+            data_dict[u'tags'] = _tag_string_to_list(
+                data_dict[u'tag_string']
+            )
+        data_dict.pop('pkg_name', None)
+        # END: roughly copied from ckan/views/dataset.py
+
+        data_dict['id'] = id
+        try:
+            complete_data = get_action('package_patch')(None, data_dict)
+        except ObjectNotFound:
+            return abort(404, _('Dataset not found'))
+        except NotAuthorized:
+            return base.abort(403, _(u'Unauthorized to update a dataset'))
+        except ValidationError as e:
+            # BEGIN: roughly copied from ckan/views/dataset.py
+            errors = e.error_dict
+            error_summary = e.error_summary
+            data_dict[u'state'] = data[u'state']
+            data_dict['_form_page'] = page
+
+            return EditView().get(
+                package_type,
+                id,
+                data_dict,
+                errors,
+                error_summary
+            )
+
+        return _form_save_redirect(
+            complete_data['name'], 'edit', package_type=package_type
+        )
+        # END: roughly copied from ckan/views/dataset.py

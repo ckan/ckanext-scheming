@@ -70,6 +70,7 @@ dataset_fields:
   display_property: dc:creator
   display_snippet: email.html
   display_email_name_field: author
+  validators: ignore_missing unicode_safe strip_value email_validator
 
 - field_name: maintainer
   label: Maintainer
@@ -82,6 +83,7 @@ dataset_fields:
   display_property: dc:contributor
   display_snippet: email.html
   display_email_name_field: maintainer
+  validators: ignore_missing unicode_safe strip_value email_validator
 
 
 resource_fields:
