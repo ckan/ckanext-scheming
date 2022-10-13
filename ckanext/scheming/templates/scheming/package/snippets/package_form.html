@@ -9,12 +9,12 @@
         <li class="{{
           'first ' if loop.first else ''}}{{
           'active ' if loop.index == active_page else '' }}"
-          style="width:{{ 100 / (loop.length + 0 if form_style == 'edit' else 1) }}%">
-          <span class="highlight">{% if loop.index < active_page
+          style="width:{{ 100 / (loop.length + (0 if form_style == 'edit' else 1)) }}%">
+          <span class="highlight" style="padding-right:0">{% if loop.index < active_page
               or (form_style == 'edit' and loop.index != active_page)
             %}<a href="{{
               h.url_for(dataset_type +
-                  '.scheming_edit_page' if form_style == 'edit' else '.scheming_new_page',
+                  ('.scheming_edit_page' if form_style == 'edit' else '.scheming_new_page'),
                 package_type=dataset_type,
                 id=data.name or data.id,
                 page=loop.index)
