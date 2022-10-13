@@ -2,7 +2,12 @@ import six
 import pytest
 import bs4
 from ckan.lib.base import render_snippet
-from jinja2 import Markup
+try:
+    from jinja2.utils import markupsafe
+    Markup = markupsafe.Markup
+except ImportError:
+    # old way
+    from jinja2 import Markup
 
 import ckantoolkit
 
