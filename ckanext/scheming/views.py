@@ -168,7 +168,7 @@ class SchemingEditPageView(EditView):
                 unflatten(tuplize_dict(parse_params(request.form)))
             )
         except DataError:
-            return base.abort(400, _(u'Integrity Error'))
+            return abort(400, _(u'Integrity Error'))
         if u'tag_string' in data_dict:
             data_dict[u'tags'] = _tag_string_to_list(
                 data_dict[u'tag_string']
@@ -182,7 +182,7 @@ class SchemingEditPageView(EditView):
         except ObjectNotFound:
             return abort(404, _('Dataset not found'))
         except NotAuthorized:
-            return base.abort(403, _(u'Unauthorized to update a dataset'))
+            return abort(403, _(u'Unauthorized to update a dataset'))
         except ValidationError as e:
             # BEGIN: roughly copied from ckan/views/dataset.py
             errors = e.error_dict
