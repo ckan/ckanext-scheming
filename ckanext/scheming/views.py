@@ -12,7 +12,7 @@ try:
     from ckan.views.dataset import CreateView, EditView, _tag_string_to_list, _form_save_redirect
 
     # FIXME these not available from toolkit
-    from ckan.lib.navl.dictization_functions import unflatten
+    from ckan.lib.navl.dictization_functions import unflatten, DataError
     from ckan.logic import clean_dict, tuplize_dict, parse_params
 except ImportError:
     # older ckan, just don't fail at import time
@@ -76,8 +76,8 @@ class SchemingCreatePageView(CreateView):
             data_dict = clean_dict(
                 unflatten(tuplize_dict(parse_params(request.form)))
             )
-        except dict_fns.DataError:
-            return base.abort(400, _(u'Integrity Error'))
+        except DataError:
+            return abort(400, _(u'Integrity Error'))
         if u'tag_string' in data_dict:
             data_dict[u'tags'] = _tag_string_to_list(
                 data_dict[u'tag_string']
@@ -92,7 +92,7 @@ class SchemingCreatePageView(CreateView):
         except ObjectNotFound:
             return abort(404, _('Dataset not found'))
         except NotAuthorized:
-            return base.abort(403, _(u'Unauthorized to update a dataset'))
+            return abort(403, _(u'Unauthorized to update a dataset'))
         except ValidationError as e:
             # BEGIN: roughly copied from ckan/views/dataset.py
             errors = e.error_dict
@@ -167,7 +167,7 @@ class SchemingEditPageView(EditView):
             data_dict = clean_dict(
                 unflatten(tuplize_dict(parse_params(request.form)))
             )
-        except dict_fns.DataError:
+        except DataError:
             return base.abort(400, _(u'Integrity Error'))
         if u'tag_string' in data_dict:
             data_dict[u'tags'] = _tag_string_to_list(
