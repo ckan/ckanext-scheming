@@ -14,6 +14,7 @@ Table of contents:
 3. [Configuration](#configuration)
    - [Schema Types](#schema-types)
    - [Example Schemas](#example-schemas)
+   - [Storing non-string data](#storing-non-string-data)
    - [Common Schema Keys](#common-schema-keys)
      - [`scheming_version`](#scheming_version)
      - [`about_url`](#about_url)
@@ -128,6 +129,28 @@ Organization schemas:
 * [Default organization schema with field modifications](ckanext/scheming/org_with_dept_id.json)
 * [Organization with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_org_with_address.json)
 
+
+## Storing non-string data
+
+Internally all extra fields are stored as strings. If you are attempting to save and restore other types of data you will need to use output validators. 
+
+For example if you use a simple "yes/no" question, you will need to let `ckanext-scheming` know that this data needs to be stored *and retrieved* as a boolean. This is acheieved using [`validators`](#validators) and [`output_validators`](#output_validators) keys.
+
+```
+  - field_name: is_camel_friendly
+    label: Is this camel friendly?
+    required: true
+    preset: select
+    choices:
+      - value: false
+        label: "No"
+      - value: true
+        label: "Yes"
+    validators: boolean_validator
+    output_validators: boolean_validator
+```
+
+[`output_validators`](#output_validators) are run to convert the internal string representation of a field to something else. This means it is used to return things like lists of strings or nested objects.
 
 ## Common Schema Keys
 
