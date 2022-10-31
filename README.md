@@ -112,7 +112,7 @@ Dataset schemas:
 * [default dataset schema](ckanext/scheming/ckan_dataset.yaml)
 * [camel photos schema](ckanext/scheming/camel_photos.yaml)
 * [subfields schema](ckanext/scheming/subfields.yaml)
-* [form pages schema](ckanext/scheming/ckan_dataset_pages.yaml)
+* [form pages schema](ckanext/scheming/ckan_formpages.yaml)
 
 These schemas are included in ckanext-scheming and may be enabled
 with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.yaml`
