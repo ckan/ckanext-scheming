@@ -346,6 +346,10 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     })
                 pages[-1]['fields'].append(f)
 
+            if len(pages) == 1 and not pages[0]['title']:
+                # no pages defined
+                pages[:] = []
+
     def prepare_dataset_blueprint(self, package_type, bp):
         if package_type in self._dataset_form_pages:
             bp.add_url_rule(
