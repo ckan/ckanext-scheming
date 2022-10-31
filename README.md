@@ -284,8 +284,11 @@ repeating_subfields:
 ### `start_form_page`
 
 Dataset fields may be divided into separate form pages for creation
-and editing **alpha CKAN feature only**. Adding this key to a field
-marks this field as the start of a new page of fields.
+and editing. **CKAN 2.9+ feature only**. Form pages for `dataset` type
+only supported by CKAN 2.10+ or with https://github.com/ckan/ckan/pull/7032
+. Adding this key to a field marks this field as the start of a
+new page of fields.
+
 
 ```yaml
 - start_form_page:
