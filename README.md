@@ -29,6 +29,7 @@ Table of contents:
      - [`field_name`](#field_name)
      - [`label`](#label)
      - [`repeating_subfields`](#repeating_subfields)
+     - [`start_form_page`](#start_form_page)
      - [`required`](#required)
      - [`choices`](#choices)
      - [`choices_helper`](#choices_helper)
@@ -112,6 +113,7 @@ Dataset schemas:
 * [default dataset schema](ckanext/scheming/ckan_dataset.yaml)
 * [camel photos schema](ckanext/scheming/camel_photos.yaml)
 * [subfields schema](ckanext/scheming/subfields.yaml)
+* [form pages schema](ckanext/scheming/ckan_formpages.yaml)
 
 These schemas are included in ckanext-scheming and may be enabled
 with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.yaml`
@@ -300,6 +302,27 @@ repeating_subfields:
   - field_name: phone
     label: Phone Number
 ```
+
+
+### `start_form_page`
+
+Dataset fields may be divided into separate form pages for creation
+and editing. **CKAN 2.9+ feature only**. Form pages for `dataset` type
+only supported by CKAN 2.10+ or with https://github.com/ckan/ckan/pull/7032
+. Adding this key to a field marks this field as the start of a
+new page of fields.
+
+
+```yaml
+- start_form_page:
+    title: Detailed Metadata
+    description:
+      These fields improve search and give users important links
+```
+
+A title and description should be provided to help with navigation.
+These values may be strings or objects providing multiple
+language versions of text.
 
 
 ### `required`

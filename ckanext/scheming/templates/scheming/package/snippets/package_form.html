@@ -1,5 +1,48 @@
 {% extends 'package/new_package_form.html' %}
 
+{% block stages %}
+  {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
+  {%- if pages -%}
+    {%- set active_page = data.get('_form_page', 1) | int -%}
+    <ol class="stages stage-1">
+      {%- for p in pages -%}
+        <li class="{{
+          'first ' if loop.first else ''}}{{
+          'active ' if loop.index == active_page else '' }}"
+          style="width:{{ 100 / (loop.length + (0 if form_style == 'edit' else 1)) }}%">
+          <span class="highlight" style="padding-right:0">{% if loop.index < active_page
+              or (form_style == 'edit' and loop.index != active_page)
+            %}<a href="{{
+              h.url_for(dataset_type +
+                  ('.scheming_edit_page' if form_style == 'edit' else '.scheming_new_page'),
+                package_type=dataset_type,
+                id=data.name or data.id,
+                page=loop.index)
+            }}">{{ h.scheming_language_text(p.title) }}</a>{%
+            else %}{{ h.scheming_language_text(p.title) }}{% endif %}
+          </span>
+        </li>
+      {%- endfor -%}
+      {%- if form_style != 'edit' -%}
+        <li class="last {{ s2 }}" style="width:{{ 100 / (pages | length + 1) }}%">
+          {% if s2 != 'complete' %}
+            <span class="highlight">{{ _('Add data') }}</span>
+          {% else %}
+            {% if s1 == 'active' %}
+              {# stage 1 #}
+              <button class="highlight" name="save" value="go-resources" type="submit">{{ _('Add data') }}</button>
+            {% else %}
+              {% link_for _('Add data'), named_route='dataset.new', class_="highlight" %}
+            {% endif %}
+          {% endif %}
+        </li>
+      {%- endif -%}
+    </ol>
+  {%- else -%}
+    {{ super() }}
+  {%- endif -%}
+{% endblock %}
+
 {% block errors %}
   {%- if errors -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
@@ -18,7 +61,14 @@
   {%- endif -%}
 
   {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
-  {%- for field in schema.dataset_fields -%}
+  {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
+  {%- if pages -%}
+    {%- set active_page = data.get('_form_page', 1) | int -%}
+    {%- set fields = pages[active_page - 1]['fields'] -%}
+  {%- else -%}
+    {%- set fields = schema.dataset_fields -%}
+  {%- endif -%}
+  {%- for field in fields -%}
     {%- if field.form_snippet is not none -%}
       {%- if field.field_name not in data %}
         {# Set the field default value before rendering but only if
@@ -43,7 +93,9 @@
     {%- endif -%}
   {%- endfor -%}
 
-  {%- if 'resource_fields' not in schema -%}
+  {%- if pages -%}
+    <input type="hidden" name="_ckan_phase" value="{{ active_page }}" />
+  {%- elif 'resource_fields' not in schema -%}
     <!-- force controller to skip resource-editing step for this type -->
     <input type="hidden" name="_ckan_phase" value="" />
   {%- endif -%}
@@ -51,4 +103,16 @@
 {% endblock %}
 
 {% block metadata_fields %}
+{% endblock %}
+
+{% block save_button_text %}
+  {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
+  {%- if pages and form_style == 'edit' -%}
+    {%- set active_page = data.get('_form_page', 1) | int -%}
+    {{ _('Update {page}').format(page=h.scheming_language_text(pages[active_page-1].title)) }}
+  {%- elif pages -%}
+    {{ _('Next') }}
+  {%- else -%}
+    {{ super() }}
+  {%- endif -%}
 {% endblock %}

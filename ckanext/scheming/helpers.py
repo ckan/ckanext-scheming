@@ -212,6 +212,18 @@ def scheming_get_dataset_schema(dataset_type, expanded=True):
 
 
 @helper
+def scheming_get_dataset_form_pages(dataset_type):
+    """
+    Return the dataset fields for dataset_type grouped into
+    separate pages based on start_form_page values, or []
+    if no pages were defined
+    """
+    from ckanext.scheming.plugins import SchemingDatasetsPlugin as p
+    if p.instance:
+        return p.instance._dataset_form_pages.get(dataset_type)
+
+
+@helper
 def scheming_group_schemas(expanded=True):
     """
     Return the dict of group schemas. Or if scheming_groups

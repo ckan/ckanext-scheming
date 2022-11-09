@@ -50,6 +50,14 @@ def scheming_validator(fn):
 register_validator(unicode_safe)
 
 
+@register_validator
+def strip_value(value):
+    '''
+    **starting from CKAN 2.10 this is included in CKAN core**
+    '''
+    return value.strip()
+
+
 @scheming_validator
 @register_validator
 def scheming_choices(field, schema):
