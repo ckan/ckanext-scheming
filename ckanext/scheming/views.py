@@ -130,11 +130,14 @@ class SchemingCreatePageView(CreateView):
 
 
 def edit(package_type, id):
-    return h.redirect_to(
-        '{}.scheming_edit_page'.format(package_type),
-        id=id,
-        page=1
-    )
+    if h.scheming_get_dataset_form_pages(package_type):
+        return h.redirect_to(
+            '{}.scheming_edit_page'.format(package_type),
+            id=id,
+            page=1
+        )
+    return EditView().get(package_type, id)
+
 
 class SchemingEditPageView(EditView):
     '''

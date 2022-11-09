@@ -346,6 +346,10 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                     })
                 pages[-1]['fields'].append(f)
 
+            if len(pages) == 1 and not pages[0]['title']:
+                # no pages defined
+                pages[:] = []
+
     def prepare_dataset_blueprint(self, package_type, bp):
         if package_type in self._dataset_form_pages:
             bp.add_url_rule(
@@ -478,11 +482,10 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
     """
     p.implements(p.IPackageController, inherit=True)
 
-    def before_index(self, data_dict):
-        return self.before_dataset_index(data_dict)
-
     def before_dataset_index(self, data_dict):
+        return self.before_index(data_dict)
 
+    def before_index(self, data_dict):
         schemas = SchemingDatasetsPlugin.instance._expanded_schemas
         if data_dict['type'] not in schemas:
             return data_dict

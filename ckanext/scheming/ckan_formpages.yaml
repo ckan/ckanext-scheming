@@ -1,5 +1,5 @@
 scheming_version: 2
-dataset_type: dataset
+dataset_type: formpages
 about: The default CKAN dataset schema with form split across multiple pages
 about_url: http://github.com/ckan/ckanext-scheming
 
