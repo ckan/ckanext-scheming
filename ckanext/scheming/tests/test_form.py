@@ -4,22 +4,21 @@ import pytest
 import ckantoolkit
 from bs4 import BeautifulSoup
 
-try:
-    from ckantoolkit.tests.factories import SysadminWithToken
-except ImportError:
-    from ckantoolkit.tests.factories import Sysadmin as SysadminWithToken
-
 from ckantoolkit.tests.factories import Dataset
 from ckantoolkit.tests.helpers import call_action
 
 
 @pytest.fixture
 def sysadmin_env():
-    user = SysadminWithToken()
-    return {
-        "REMOTE_USER": user["name"].encode("ascii"),
-        "Authorization": user.get("token", ''),
-    }
+    try:
+        from ckantoolkit.tests.factories import SysadminWithToken
+        user = SysadminWithToken()
+        return {'Authorization': user['token']}
+    except ImportError:
+        # ckan <= 2.9
+        from ckantoolkit.tests.factories import Sysadmin
+        user = Sysadmin()
+        return {"REMOTE_USER": user["name"].encode("ascii")}
 
 
 def _get_package_new_page(app, env, type_='test-schema'):
