@@ -23,7 +23,7 @@
     type='date',
     value=date,
     error=errors[field.field_name + '_date'],
-    classes=['control-medium'],
+    classes=field.classes if 'classes' in field else ['control-medium'],
     attrs=dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
     is_required=h.scheming_field_required(field)
     )
@@ -38,7 +38,7 @@
     type='time',
     value=time,
     error=errors[field.field_name + '_time'],
-    classes=['control-medium'],
+    classes=field.classes if 'classes' in field else ['control-medium'],
     attrs=dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
     is_required=h.scheming_field_required(field)
     )
@@ -54,7 +54,7 @@
     options=tz_list,
     selected=tz,
     error=errors[field.field_name + '_tz'],
-    classes=['control-medium'],
+    classes=field.classes if 'classes' in field else ['control-medium'],
     attrs=dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
     is_required=h.scheming_field_required(field)
     )

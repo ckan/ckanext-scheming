@@ -24,7 +24,7 @@
 
 {%- call form.input_block(
     label=h.scheming_language_text(field.label),
-    classes=['control-medium'],
+    classes=field.classes if 'classes' in field else ['control-medium'],
     error=errors[field.field_name],
     is_required=h.scheming_field_required(field)) -%}
     <fieldset class="radio-group">
