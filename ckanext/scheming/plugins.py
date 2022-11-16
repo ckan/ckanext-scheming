@@ -351,7 +351,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 pages[:] = []
 
     def prepare_dataset_blueprint(self, package_type, bp):
-        if package_type in self._dataset_form_pages:
+        if self._dataset_form_pages[package_type]:
             bp.add_url_rule(
                 '/new',
                 'scheming_new',
