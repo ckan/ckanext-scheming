@@ -304,10 +304,10 @@ label: Title
 This field is the parent of group of repeating subfields. The value is
 a list of fields entered the same way as normal fields. **CKAN 2.8+ only**
 
-CKAN needs an IPackageController plugin with `before_index` to
-convert repeating subfields to formats that can be indexed by solr. For
-testing you may use the included `scheming_nerf_index` plugin to encode
-all repeating fields as JSON strings to prevent solr errors.
+> **_NOTE:_** CKAN needs an IPackageController plugin with `before_index` to
+> convert repeating subfields to formats that can be indexed by solr. For
+> testing you may use the included `scheming_nerf_index` plugin to encode
+> all repeating fields as JSON strings to prevent solr errors.
 
 `repeating_label` may be used to provide a singular version of the label
 for each group.
