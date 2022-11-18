@@ -37,8 +37,6 @@ Table of contents:
      - [`form_snippet`](#form_snippet)
      - [`display_snippet`](#display_snippet)
      - [`display_property`](#display_property)
-     - [`select_size`](#select_size)
-     - [`sorted_choices`](#sorted_choices)
      - [`validators`](#validators)
      - [`output_validators`](#output_validators)
      - [`create_validators`](#create_validators)
@@ -370,15 +368,27 @@ and `value`s that will be stored in the dataset or resource:
 
 For storing non-string values see [output_validators](#output_validators).
 
-For required `select` fields you may also want to add
+For required `select` fields you may also want to add this setting
+so that users are forced to choose an item in the form, otherwise the first
+choice will be selected in the form by default:
 
 ```yaml
-form_include_blank_choice: true
+  form_include_blank_choice: true
 ```
 
-so that users are forced to choose an item in the form, otherwise the first
-choice will be selected in the form by default.
+To set the number of choices displayed in the `multiple_select`
+[form](#form_snippet) snippets use:
 
+```yaml
+  select_size: 5
+```
+
+To sort choices alphabetically in [form](#form_snippet)
+and [display](#display_snippet) snippets use:
+
+```yaml
+  sorted_choices: true
+```
 
 ### `choices_helper`
 
@@ -487,22 +497,6 @@ If `display_snippet: null` is used the field will be removed from the view page.
 ```
 
 Set a `property` attribute on dataset fields displayed as "Additional Info", useful for adding RDF markup.
-
-### `select_size`
-
-```yaml
-  select_size: 5
-```
-
-Set to the number of [choices](#choices) to display in the multiple_select
-[form](#form_snippet) snippets.
-
-
-### `sorted_choices`
-
-Set to `"true"` to sort [choices](#choices) alphabetically in [form](#form_snippet)
-and [display](#display_snippet) snippets.
-
 
 ### `validators`
 
