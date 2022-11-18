@@ -420,9 +420,8 @@ You may [register your own helper function](https://docs.ckan.org/en/2.8/theming
 
 ### `preset`
 
-A `preset` specifies a set of default values for these field keys. They
-are used to define validation and snippets for common field
-types.
+A `preset` specifies a set of default values for other field keys. They
+allow reuse of definitions for validation and snippets for common field types.
 
 This extension includes the following presets in [presets.json](ckanext/scheming/presets.json):
 
@@ -508,8 +507,8 @@ JSON based input. Only JSON objects are supported. The input JSON will be loaded
 markdown text area and display
 
 
-You may add your own presets by adding them to the `scheming.presets`
-configuration setting.
+You may define your own presets by adding additional files to the `scheming.presets`
+[configuration setting](#configuration).
 
 
 ### `form_snippet`
@@ -576,9 +575,8 @@ This string does not contain arbitrary python code to be executed,
 you may only use registered validator functions, optionally calling
 them with static string values provided.
 
-This extension automatically adds calls to `convert_to_extras`
-for new extra fields,
-so you should not add that to this list.
+> **_NOTE:_** ckanext-scheming automatically adds calls to `convert_to_extras`
+> for extra fields when required.
 
 New validators and converters may be added using the
 [IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
@@ -596,7 +594,7 @@ lists available validators ready to be used.
 
 Internally all extra fields are stored as strings. If you are attempting to save and restore other types of data you will need to use output validators.
 
-For example if you use a simple "yes/no" question, you will need to let `ckanext-scheming` know that this data needs to be stored *and retrieved* as a boolean. This is acheieved using [`validators`](#validators) and [`output_validators`](#output_validators) keys.
+For example if you use a simple "yes/no" question, you will need to let ckanext-scheming know that this data needs to be stored *and retrieved* as a boolean. This is acheieved using [`validators`](#validators) and [`output_validators`](#output_validators) keys.
 
 ```
   - field_name: is_camel_friendly
@@ -617,8 +615,8 @@ retrieving values from the database instead of when saving them.
 These validators may be used to transform the data before it is
 sent to the user.
 
-This extension automatically adds calls to `convert_from_extras`
-for extra fields where required.
+> **_NOTE:_** ckanext-scheming automatically adds calls to `convert_from_extras`
+> for extra fields when required.
 
 ### `create_validators`
 
