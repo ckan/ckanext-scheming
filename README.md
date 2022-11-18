@@ -148,7 +148,7 @@ For example if you use a simple "yes/no" question, you will need to let `ckanext
         label: "No"
       - value: true
         label: "Yes"
-    validators: boolean_validator
+    validators: scheming_required boolean_validator
     output_validators: boolean_validator
 ```
 
