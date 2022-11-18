@@ -132,27 +132,6 @@ Organization schemas:
 * [Organization with custom type **(CKAN 2.8+ only)**](ckanext/scheming/custom_org_with_address.json)
 
 
-## Storing non-string data
-
-Internally all extra fields are stored as strings. If you are attempting to save and restore other types of data you will need to use output validators. 
-
-For example if you use a simple "yes/no" question, you will need to let `ckanext-scheming` know that this data needs to be stored *and retrieved* as a boolean. This is acheieved using [`validators`](#validators) and [`output_validators`](#output_validators) keys.
-
-```
-  - field_name: is_camel_friendly
-    label: Is this camel friendly?
-    required: true
-    preset: select
-    choices:
-      - value: false
-        label: "No"
-      - value: true
-        label: "Yes"
-    validators: scheming_required boolean_validator
-    output_validators: boolean_validator
-```
-
-[`output_validators`](#output_validators) are run to convert the internal string representation of a field to something else. This means it is used to return things like lists of strings or nested objects.
 
 ## Common Schema Keys
 
@@ -343,6 +322,9 @@ new page of fields.
     title: Detailed Metadata
     description:
       These fields improve search and give users important links
+
+  field_name: address
+  label: Address
 ```
 
 A title and description should be provided to help with navigation.
@@ -359,10 +341,10 @@ Setting to `true` will mark the field as required in the editing form
 and include `not_empty` in the default validators that will be applied
 when `validators` is not specified.
 
-To honor this settings with custom validators include `scheming_required`
-as the first validator. `scheming_required` will check the required
-setting for this field and apply either the `not_empty` or `ignore_missing`
-validator.
+> *_NOTE:_* To honor this settings with custom validators include `scheming_required`
+> as the first validator. `scheming_required` will check the required
+> setting for this field and apply either the `not_empty` or `ignore_missing`
+> validator.
 
 
 ### `choices`
@@ -390,6 +372,8 @@ form_include_blank_choice: true
 
 so that users are forced to choose an item in the form, otherwise the first
 choice will be selected in the form by default.
+
+
 
 ### `choices_helper`
 
@@ -554,13 +538,31 @@ lists available validators ready to be used.
 
 ### `output_validators`
 
+Internally all extra fields are stored as strings. If you are attempting to save and restore other types of data you will need to use output validators.
+
+For example if you use a simple "yes/no" question, you will need to let `ckanext-scheming` know that this data needs to be stored *and retrieved* as a boolean. This is acheieved using [`validators`](#validators) and [`output_validators`](#output_validators) keys.
+
+```
+  - field_name: is_camel_friendly
+    label: Is this camel friendly?
+    required: true
+    preset: select
+    choices:
+      - value: false
+        label: "No"
+      - value: true
+        label: "Yes"
+    validators: scheming_required boolean_validator
+    output_validators: boolean_validator
+```
+
 The `output_validators` value is like `validators` but used when
 retrieving values from the database instead of when saving them.
 These validators may be used to transform the data before it is
 sent to the user.
 
 This extension automatically adds calls to `convert_from_extras`
-for extra fields so you should not add that to this list.
+for extra fields where required.
 
 ### `create_validators`
 
