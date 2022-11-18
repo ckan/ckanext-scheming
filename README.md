@@ -312,8 +312,8 @@ for each group.
 
 Dataset fields may be divided into separate form pages for creation
 and editing. **_CKAN 2.9+ only_**. Form pages for `dataset` type
-only supported by CKAN 2.10+ or with https://github.com/ckan/ckan/pull/7032
-. Adding this key to a field marks this field as the start of a
+only supported by **_CKAN 2.10+_** or with https://github.com/ckan/ckan/pull/7032
+. Adding `start_form_page` to a field marks this field as the start of a
 new page of fields.
 
 
@@ -334,7 +334,11 @@ language versions of text.
 
 ### `required`
 
-Use `required: true` for fields that must be included. Set to `false` or
+```yaml
+  required: true
+```
+
+Use for fields that must be included. Set to `false` or
 don't include this key for fields that are optional.
 
 Setting to `true` will mark the field as required in the editing form
@@ -422,33 +426,86 @@ types.
 
 This extension includes the following presets in [presets.json](ckanext/scheming/presets.json):
 
-* `preset: title` - title validation and large text form snippet
-* `preset: select` - validation that choice is from [choices](#choices),
-  form select box and display snippet
-* `preset: radio` - validation that choice is from [choices](#choices),
-  form radio buttons group and display snippet
-* `preset: multiple_checkbox` - multiple choice from [choices](#choices)
-  rendered as checkboxes in the form, stored as a list of values
-* `preset: multiple_select` - multiple choice from [choices](#choices)
-  rendered as a multiple select box in the form, stored as a list of values
-* `preset: multiple_text` - repeating text field with add and remove
-  buttons, stored as a list of strings
-* `preset: date` - date validation and form snippet
-* `preset: datetime` date and time validation and form snippet
-* `preset: dataset_slug` - dataset slug validation and form snippet that
-  autofills the value from the title field
-* `preset: tag_string_autocomplete` - tag string validation and form autocomplete
-* `preset: dataset_organization` - organization validation and form select box
-* `preset: resource_url_upload` - resource url validaton and link/upload form
-  field
-* `preset: resource_format_autocomplete` - resource format validation with
-* `preset: organization_url_upload` - organization url validaton and link/upload form
-  field
-  format guessing based on url and autocompleting form field
-* `preset: json_object` - JSON based input. Only JSON objects are supported.
-  The input JSON will be loaded during output (eg when loading the dataset in
-  a template or via the API).
-* `preset: markdown` - markdown text area and display
+```yaml
+  preset: title
+```
+title validation and large text form snippet
+
+```yaml
+  preset: select
+```
+validation that choice is from [choices](#choices), form select box and display snippet
+
+```yaml
+  preset: radio
+```
+validation that choice is from [choices](#choices), form radio buttons group and display snippet
+
+```yaml
+  preset: multiple_checkbox
+```
+multiple choice from [choices](#choices) rendered as checkboxes in the form, stored as a list of values
+
+```yaml
+  preset: multiple_select
+```
+multiple choice from [choices](#choices) rendered as a multiple select box in the form, stored as a list of values
+
+```yaml
+  preset: multiple_text
+```
+repeating text field with add and remove buttons, stored as a list of strings
+
+```yaml
+  preset: date
+```
+date validation and form snippet
+
+```yaml
+  preset: datetime
+```
+date and time validation and form snippet
+
+```yaml
+  preset: dataset_slug
+```
+dataset slug validation and form snippet that autofills the value from the title field
+
+```yaml
+  preset: tag_string_autocomplete
+```
+tag string validation and form autocomplete
+
+```yaml
+  preset: dataset_organization
+```
+organization validation and form select box
+
+```yaml
+  preset: resource_url_upload
+```
+resource url validaton and link/upload form field
+
+```yaml
+  preset: resource_format_autocomplete
+```
+resource format validation and form autocomplete
+
+```yaml
+  preset: organization_url_upload
+```
+organization url validaton and link/upload form field
+format guessing based on url and autocompleting form field
+
+```yaml
+  preset: json_object
+```
+JSON based input. Only JSON objects are supported. The input JSON will be loaded during output (eg when loading the dataset in a template or via the API
+
+```yaml
+  preset: markdown
+```
+markdown text area and display
 
 
 You may add your own presets by adding them to the `scheming.presets`
