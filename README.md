@@ -266,15 +266,17 @@ This label may be a string or an object providing multiple
 language versions:
 
 ```yaml
-label:
-  en: Title
-  fr: Titre
+- field_name: title
+  label:
+    en: Title
+    fr: Titre
 ```
 
 When using a plain string translations will be provided with gettext:
 
 ```yaml
-label: Title
+- field_name: title
+  label: Title
 ```
 
 
@@ -292,10 +294,11 @@ a list of fields entered the same way as normal fields. **CKAN 2.8+ only**
 for each group.
 
 ```yaml
-field_name: contacts
-label: Contacts
-repeating_label: Contact
-repeating_subfields:
+- field_name: contacts
+  label: Contacts
+  repeating_label: Contact
+  repeating_subfields:
+
   - field_name: address
     label: Address
     required: true
@@ -356,13 +359,16 @@ each element (may be multiple languages like a [field label](#label))
 and `value`s that will be stored in the dataset or resource:
 
 ```yaml
-preset: select
-choices:
-- value: bactrian
-  label: Bactrian Camel
-- value: hybrid
-  label: Hybrid Camel
+- field_name: category
+  preset: select
+  choices:
+  - value: bactrian
+    label: Bactrian Camel
+  - value: hybrid
+    label: Hybrid Camel
 ```
+
+For storing non-string values see [output_validators](#output_validators).
 
 For required `select` fields you may also want to add
 
@@ -372,7 +378,6 @@ form_include_blank_choice: true
 
 so that users are forced to choose an item in the form, otherwise the first
 choice will be selected in the form by default.
-
 
 
 ### `choices_helper`
@@ -385,17 +390,18 @@ You may [register your own helper function](https://docs.ckan.org/en/2.8/theming
 `scheming_datastore_choices` helper included in ckanext-scheming:
 
 ```yaml
-preset: select
-choices_helper: scheming_datastore_choices
-datastore_choices_resource: countries-resource-id-or-alias
-datastore_choices_columns:
-  value: Country Code
-  label: English Country Name
-datastore_additional_choices:
-- value: none
-  label: None
-- value: na
-  label: N/A
+- field_name: country
+  preset: select
+  choices_helper: scheming_datastore_choices
+  datastore_choices_resource: countries-resource-id-or-alias
+  datastore_choices_columns:
+    value: Country Code
+    label: English Country Name
+  datastore_additional_choices:
+  - value: none
+    label: None
+  - value: na
+    label: N/A
 ```
 
 
@@ -405,7 +411,7 @@ A `preset` specifies a set of default values for these field keys. They
 are used to define validation and snippets for common field
 types.
 
-This extension includes the following presets:
+This extension includes the following presets in [presets.json](ckanext/scheming/presets.json):
 
 * `preset: title` - title validation and large text form snippet
 * `preset: select` - validation that choice is from [choices](#choices),
@@ -485,7 +491,7 @@ Set a `property` attribute on dataset fields displayed as "Additional Info", use
 ### `select_size`
 
 ```yaml
-select_size: 5
+  select_size: 5
 ```
 
 Set to the number of [choices](#choices) to display in the multiple_select
@@ -507,7 +513,7 @@ passing the comma-separated values within as string parameters
 and the result is used as the validator/converter.
 
 ```yaml
-validators: if_empty_same_as(name) unicode_safe
+  validators: if_empty_same_as(name) unicode_safe
 ```
 
 is the same as a plugin using the validators:
@@ -591,7 +597,7 @@ https://github.com/ckan/ckanext-scheming/blob/master/ckanext/scheming/logic.py
 
 Some examples:
 
-Calling http://localhost:5000/api/3/action/scheming_dataset_schema_list
+Calling `http://localhost:5000/api/3/action/scheming_dataset_schema_list`
 
 Returns:
 
@@ -606,7 +612,7 @@ Returns:
 }
 ```
 
-Calling http://localhost:5000/api/3/action/scheming_dataset_schema_show?type=dataset
+Calling `http://localhost:5000/api/3/action/scheming_dataset_schema_show?type=dataset`
 
 Returns:
 
