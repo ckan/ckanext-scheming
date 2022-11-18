@@ -144,8 +144,8 @@ about_url: https://github.com/link-to-my-project
 ```
 
 `about_url` is a link to human-readable information about this schema.
-ckanext-scheming automatically publishes your schema and this link allows users
-to learn more about it.
+ckanext-scheming [automatically publishes](#action-api-endpoints) your
+schema and this link allows users to learn more about it.
 
 ## Dataset Schema Keys
 
