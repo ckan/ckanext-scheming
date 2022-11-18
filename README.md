@@ -215,19 +215,46 @@ be accepted when editing or updating this type of dataset.
 ## Group / Organization Schema Keys
 
 ### `group_type`
-Examples:
-* `"group_type": "group"` used for modifying the default group schema
-* `"group_type": "theme"` an example of defining a custom group type, as seen in the above examples **(CKAN 2.8+ only)**
 
-Like `dataset_type`, a `group_type` of `group` allows you to customize the default group schema under the URL `/group`, such as the modified schema in group_with_bookface.json, but a schema with a custom type **(CKAN 2.8+ only)** such as `custom_group_with_status.json` schema above would appear under `/theme` instead, because its `group_type` field is set to "theme".
+```yaml
+group_type: group
+```
+is used for modifying the default group schema
+
+```yaml
+group_type: theme
+```
+is an example of defining a custom group type, as seen in the [example schemas above](#example-schemas) **(CKAN 2.8+ only)**
+
+Like `dataset_type`, a `group_type` of `group` allows you to customize the default group schema under the URL `/group`, such as the modified schema in `group_with_bookface.json`, but a schema with a custom type **(CKAN 2.8+ only)** such as `custom_group_with_status.json` schema above would appear under `/theme` instead, because its `group_type` field is set to "theme".
 
 ### `organization_type`
-Examples:
-* `"organization_type": "organization"` used for modifying the default organization schema
-* `"organization_type": "publisher"` an example of defining a custom organization type, as seen in the above examples **(CKAN 2.8+ only)**
+
+```yaml
+organization_type: organization
+```
+is used for modifying the default organization schema
+
+```yaml
+organization_type: publisher
+```
+is an example of defining a custom organization type, as seen in the [example schemas above](#example-schemas) **(CKAN 2.8+ only)**
 
 ### `fields`
-The `dataset_fields` and `resource_fields` schema properties don't exist in group or organization schemas. Instead, they just have a `fields` property.
+
+```yaml
+fields:
+
+- field_name: title
+  label: Name
+  form_snippet: large_text.html
+  form_attrs:
+    data_module: slug-preview-target
+  form_placeholder: My Organization
+
+...
+```
+A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties doin dataset schemas.
 
 
 ----------------
@@ -250,8 +277,6 @@ field names include:
 New field names should follow the current lowercase_with_underscores
  naming convention. Don't name your field `mySpecialField`, use
  `my_special_field` instead.
-
-This value is available to the form snippet as `field.field_name`.
 
 
 ### `label`
