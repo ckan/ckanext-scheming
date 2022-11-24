@@ -41,8 +41,6 @@ Table of contents:
      - [`output_validators`](#output_validators)
      - [`create_validators`](#create_validators)
      - [`help_text`](#help_text)
-     - [`help_allow_html`](#help_allow_html)
-     - [`help_inline`](#help_inline)
 4. [Action API Endpoints](#action-api-endpoints)
 5. [Running the Tests](#running-the-tests)
 
@@ -625,17 +623,26 @@ create only.
 
 ### `help_text`
 
-Only if this key is supplied, its value will be shown as inline help text,
-Help text must be plain text, no markdown or HTML are allowed.
+```yaml
+  help_text: License definitions and additional information
+```
+
+If this key is supplied, its value will be shown as inline help text.
 Help text may be provided in multiple languages like [label fields](#label).
 
-### `help_allow_html`
+Help text must be plain text, no markdown or HTML are allowed unless:
+
+```yaml
+  help_allow_html: true
+```
 
 Allow HTML inside the help text if set to `true`. Default is `false`.
 
-### `help_inline`
+```yaml
+  help_inline: true
+```
 
-Display help text inline if set to `true`. Default is `false`.
+Display help text inline (next to the field) if set to `true`. Default is `false` (display help text t under the field).
 
 Action API Endpoints
 ====================
