@@ -51,7 +51,7 @@ Table of contents:
 Requirements
 ============
 
-This plugin is compatible with CKAN 2.6 or later.
+This plugin is compatible with CKAN 2.8 or later.
 
 
 Installation
@@ -100,7 +100,7 @@ scheming.dataset_fallback = false
 ```
 
 ## Schema Types
-With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly in **_CKAN 2.8+ only_** as is indicated throughout the examples.
+With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly as is indicated throughout the examples.
 
 
 ## Example Schemas
@@ -121,12 +121,12 @@ These schemas use [presets](#preset) defined in
 Group schemas:
 
 * [Default group schema with field modifications](ckanext/scheming/group_with_bookface.json)
-* [Group with custom type](ckanext/scheming/custom_group_with_status.json) **_CKAN 2.8+ only_**
+* [Group with custom type](ckanext/scheming/custom_group_with_status.json)
 
 Organization schemas:
 
 * [Default organization schema with field modifications](ckanext/scheming/org_with_dept_id.json)
-* [Organization with custom type](ckanext/scheming/custom_org_with_address.json) **_CKAN 2.8+ only_**
+* [Organization with custom type](ckanext/scheming/custom_org_with_address.json)
 
 
 
@@ -200,9 +200,9 @@ is used for modifying the default group schema
 ```yaml
 group_type: theme
 ```
-is an example of defining a custom group type, as seen in the [example schemas above](#example-schemas) **_CKAN 2.8+ only_**
+is an example of defining a custom group type, as seen in the [example schemas above](#example-schemas)
 
-Like `dataset_type`, a `group_type` of `group` allows you to customize the default group schema under the URL `/group`, such as the modified schema in `group_with_bookface.json`, but a schema with a custom type **_CKAN 2.8+ only_** such as `custom_group_with_status.json` schema above would appear under `/theme` instead, because its `group_type` field is set to "theme".
+Like `dataset_type`, a `group_type` of `group` allows you to customize the default group schema under the URL `/group`, such as the modified schema in `group_with_bookface.json`, but a schema with a custom type such as `custom_group_with_status.json` schema above would appear under `/theme` instead, because its `group_type` field is set to "theme".
 
 ### `organization_type`
 
@@ -214,7 +214,7 @@ is used for modifying the default organization schema
 ```yaml
 organization_type: publisher
 ```
-is an example of defining a custom organization type, as seen in the [example schemas above](#example-schemas) **_CKAN 2.8+ only_**
+is an example of defining a custom organization type, as seen in the [example schemas above](#example-schemas)
 
 ### `fields`
 
@@ -280,7 +280,7 @@ When using a plain string translations will be provided with gettext:
 ### `repeating_subfields`
 
 This field is the parent of group of repeating subfields. The value is
-a list of fields entered the same way as normal fields. **_CKAN 2.8+ only_**
+a list of fields entered the same way as normal fields.
 
 > **_NOTE:_** CKAN needs an IPackageController plugin with `before_index` to
 > convert repeating subfields to formats that can be indexed by solr. For
