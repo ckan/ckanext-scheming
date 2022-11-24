@@ -627,7 +627,7 @@ create only.
   help_text: License definitions and additional information
 ```
 
-If this key is supplied, its value will be shown as inline help text.
+If this key is supplied, its value will be shown after the field as help text.
 Help text may be provided in multiple languages like [label fields](#label).
 
 Help text must be plain text, no markdown or HTML are allowed unless:
@@ -638,11 +638,13 @@ Help text must be plain text, no markdown or HTML are allowed unless:
 
 Allow HTML inside the help text if set to `true`. Default is `false`.
 
+Adjust the position of `help_text` with:
+
 ```yaml
   help_inline: true
 ```
 
-Display help text inline (next to the field) if set to `true`. Default is `false` (display help text t under the field).
+Display help text inline (next to the field) if set to `true`. Default is `false` (display help text under the field).
 
 Action API Endpoints
 ====================
