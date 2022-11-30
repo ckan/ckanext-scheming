@@ -260,6 +260,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         composite_convert_fields = []
         for field_list, destination, is_dataset in fg:
             for f in field_list:
+                if is_dataset and f['field_name'] == 'extras':
+                    continue
                 convert_this = is_dataset and f['field_name'] not in schema
                 destination[f['field_name']] = get_validators(
                     f,
