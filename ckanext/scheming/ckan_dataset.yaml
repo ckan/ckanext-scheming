@@ -25,6 +25,8 @@ dataset_fields:
   label: Tags
   preset: tag_string_autocomplete
   form_placeholder: eg. economy, mental health, government
+  help_text: Über Tags können Katalogeinträge besser gefunden werden. Ein Tag ist
+    ein Wort, welches im Zusammenhang mit dem Eintrag steht.
 
 - field_name: license_id
   label: License
@@ -34,6 +36,7 @@ dataset_fields:
 - field_name: owner_org
   label: Organization
   preset: dataset_organization
+  help_text: Legt fest welcher Organisation der Katalogeintrag zugeordnet ist.
 
 - field_name: url
   label: Source
