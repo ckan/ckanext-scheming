@@ -58,6 +58,29 @@ dataset_fields:
   preset: repeating_text
   label: Ansprechpartner
   form_blanks: 3
+  
+- field_name: maintainer
+  label: Maintainer
+  preset: composite
+  subfields:
+- field_name: name
+  label: Name
+  form_placeholder: Joe Bloggs
+- field_name: email
+  label: Email
+  form_placeholder: joe@example.com
+- field_name: date
+  label: Date
+  preset: date
+  form_placeholder: yyyy-mm-mm
+- field_name: identifier_scheme
+  label: Scheme
+  preset: select
+  choices:
+  - value: orcid
+    label: ORCID
+  - value: isni
+    label: ISNI
 
 resource_fields:
 
