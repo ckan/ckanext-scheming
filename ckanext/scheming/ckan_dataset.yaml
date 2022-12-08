@@ -49,44 +49,24 @@ dataset_fields:
   validators: ignore_missing unicode_safe package_version_validator
   form_placeholder: '1.0'
 
-- field_name: author
-  label: Author
-  preset: composite_repeating
-  form_blanks: 1
-    
-  subfields:
-  - field_name: author
-    label: Author
-    form_placeholder: Joe Bloggs
-    display_property: dc:creator
-  - field_name: author_email
-    label: Author Email
-    form_placeholder: joe@example.com
-    display_property: dc:creator
-    
-- field_name: maintainer
-  label: Maintainer
-  preset: composite_repeating
-  form_blanks: 1
- 
- subfields:
-  - field_name: maintainer
-    label: Maintainer
-    form_placeholder: John Smith
-    display_snippet: email.html
-    display_property: dc:contributor
-    
-  - field_name: maintainer_email
-    label: Maintainer Email
-    form_placeholder: joe@example.com
-    display_property: dc:contributor
-    display_snippet: email.html
-    display_email_name_field: maintainer
-    
-  - field_name: phone
-    label: Phone number
-    display_snippet: text.html
-    form_placeholder: "+49 8161 71 0000"    
+
+field_name: maintainer
+label: Maintainer
+preset: composite
+subfields:
+- field_name: name
+  label: Name
+  form_placeholder: Joe Bloggs
+- field_name: email
+  label: Email
+  form_placeholder: joe@example.com
+- field_name: date
+  label: Date
+  preset: date
+  form_placeholder: yyyy-mm-mm
+
+
+
 
 resource_fields:
 
