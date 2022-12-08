@@ -56,6 +56,39 @@ dataset_fields:
   form_blanks: 3
 
 
+###########
+
+
+- field_name: submission
+  label: Submissions
+  repeating_label: Submission
+  repeating_subfields:
+
+  - field_name: date
+    label: Date
+    preset: date
+    required: true
+
+  - field_name: text
+    label: Text
+    preset: markdown
+    required: true
+
+  - field_name: flags
+    label: Flags
+    preset: multiple_checkbox
+    choices:
+    - label: Draft
+      value: D
+    - label: Approved
+      value: A
+    - label: Response Required
+      value: R
+
+- field_name: contributors
+  label: Contributors
+  preset: multiple_text
+
 #- field_name: maintainer
 #  label: Maintainer
 #  preset: composite
