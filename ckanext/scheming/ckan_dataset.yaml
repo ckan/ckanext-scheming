@@ -65,10 +65,10 @@ dataset_fields:
 - field_name: maintainer
   label: Maintainer
   preset: composite
+  preset: multiple_text
   subfields:
   - field_name: name
     label: Name
-    preset: multiple_text
     form_placeholder: Joe Bloggs
   - field_name: email
     label: Email
