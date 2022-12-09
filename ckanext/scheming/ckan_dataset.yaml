@@ -51,7 +51,7 @@ dataset_fields:
 
 
 - field_name: authors
-  preset: composite_repeating
+  preset: composite
   label: Author
   form_blanks: 1
   subfields:
@@ -65,7 +65,7 @@ dataset_fields:
 
 - field_name: maintainer
   label: Maintainer
-  preset: composite_repeating
+  preset: composite
   form_blanks: 1
   subfields:
   - field_name: name
