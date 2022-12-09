@@ -77,6 +77,15 @@ dataset_fields:
     preset: date
     form_placeholder: yyyy-mm-mm
 
+- field_name: language
+  label: Language
+  validators: ignore_missing
+  preset: select
+  choices:
+  - value: de
+    label: Deutsch
+  - value: en
+    label: English
 
 resource_fields:
 
