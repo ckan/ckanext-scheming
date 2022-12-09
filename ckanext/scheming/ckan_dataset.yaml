@@ -87,6 +87,15 @@ dataset_fields:
   - value: en
     label: English
 
+- field_name: begin_collection_date
+  label: Start date
+  preset: date
+  
+- field_name: end_collection_date
+  label: End date
+  preset: date
+  validators: convert_to_extras
+
 resource_fields:
 
 - field_name: url
