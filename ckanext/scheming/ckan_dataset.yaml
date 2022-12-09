@@ -114,3 +114,9 @@ resource_fields:
 - field_name: format
   label: Format
   preset: resource_format_autocomplete
+ 
+- field_name: attr-desc
+  label: Attribute description
+  form_snippet: markdown.html
+  form_placeholder: Some useful notes about the definitions of the attributes in the
+    data
