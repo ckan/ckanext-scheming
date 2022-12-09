@@ -55,6 +55,17 @@ dataset_fields:
   label: Author
   form_blanks: 3
 
+- field_name: author
+  label: Author
+  preset: composite_repeating
+  form_blanks: 2
+  subfields:
+  - field_name: author
+    label: Author
+    form_placeholder: Joe Bloggs
+  - field_name: author_email
+    label: Author Email
+
 
 ###########
 
