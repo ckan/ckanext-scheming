@@ -27,11 +27,6 @@ dataset_fields:
   form_placeholder: eg. economy, mental health, government
   help_text: Über Tags können Katalogeinträge besser gefunden werden. Ein Tag ist
     ein Wort, welches im Zusammenhang mit dem Eintrag steht.
- 
-- field_name: date
-  label: Date
-  preset: date
-  required: true
 
 - field_name: license_id
   label: License
@@ -43,6 +38,11 @@ dataset_fields:
   preset: dataset_organization
   help_text: Legt fest welcher Organisation der Katalogeintrag zugeordnet ist.
 
+- field_name: url
+  label: Source
+  form_placeholder: http://example.com/dataset.json
+  display_property: foaf:homepage
+  display_snippet: link.html
 
 - field_name: version
   label: Version
@@ -51,57 +51,32 @@ dataset_fields:
 
 
 - field_name: authors
-  preset: composite
+  preset: repeating_text
   label: Author
-  form_blanks: 1
-  subfields:
-      - field_name: Author
-        label: Author
-        form_placeholder: Joe Bloggs
-      - field_name: author_email
-        label: Author Email
-        form_placeholder: joe@example.com
+  form_blanks: 3
 
+
+###########
+
+- field_name: contributors
+  label: Contributors
+  preset: multiple_text
 
 - field_name: maintainer
   label: Maintainer
   preset: composite
-  form_blanks: 1
   subfields:
   - field_name: name
     label: Name
     form_placeholder: Joe Bloggs
-    display_snippet: email.html
   - field_name: email
     label: Email
     form_placeholder: joe@example.com
-    display_snippet: email.html
-  - field_name: phone
-    label: Phone number
-    display_snippet: text.html
-    form_placeholder: "+49 8161 71 0000"
+  - field_name: date
+    label: Date
+    preset: date
+    form_placeholder: yyyy-mm-mm
 
-
-- field_name: language
-  label: Language
-  validators: ignore_missing
-  preset: select
-  choices:
-  - value: de
-    label: Deutsch
-  - value: en
-    label: English
-
-
-
-- field_name: begin_collection_date
-  label: Start date
-  preset: date
-  
-- field_name: end_collection_date
-  label: End date
-  preset: date
-  
 
 resource_fields:
 
@@ -121,8 +96,3 @@ resource_fields:
 - field_name: format
   label: Format
   preset: resource_format_autocomplete
-  
-- field_name: attr-desc
-    label: Attribute description
-    form_snippet: markdown.html
-    form_placeholder: Some useful notes about the definitions of the attributes in the data
