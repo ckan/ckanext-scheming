@@ -55,12 +55,6 @@ dataset_fields:
   label: Author
   form_blanks: 3
 
-- field_name: not_used
-  label: Parent group
-  display_snippet:
-  form_snippet: group_hierarchy.html
-  validators: ignore_missing
-
 ###########
 
 - field_name: contributors
