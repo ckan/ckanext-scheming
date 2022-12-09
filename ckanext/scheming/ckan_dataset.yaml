@@ -27,6 +27,11 @@ dataset_fields:
   form_placeholder: eg. economy, mental health, government
   help_text: Über Tags können Katalogeinträge besser gefunden werden. Ein Tag ist
     ein Wort, welches im Zusammenhang mit dem Eintrag steht.
+ 
+- field_name: date
+  label: Date
+  preset: date
+  required: true
 
 - field_name: license_id
   label: License
