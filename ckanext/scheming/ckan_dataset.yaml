@@ -73,20 +73,6 @@ dataset_fields:
   label: Contributors
   preset: multiple_text
 
-- field_name: maintainer
-  label: Maintainer
-  preset: composite _repeating_text
-  subfields:
-  - field_name: name
-    label: Name
-    form_placeholder: Joe Bloggs
-  - field_name: email
-    label: Email
-    form_placeholder: joe@example.com
-  - field_name: date
-    label: Date
-    preset: date
-    form_placeholder: yyyy-mm-mm
 
 - field_name: language
   label: Language
