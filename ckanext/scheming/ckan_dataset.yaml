@@ -38,6 +38,36 @@ dataset_fields:
   preset: dataset_organization
   help_text: Legt fest welcher Organisation der Katalogeintrag zugeordnet ist.
 
+##
+- field_name: author
+  label: Author
+  preset: composite_repeating
+  form_blanks: 1
+  subfields:
+  - field_name: author
+    label: Author
+    form_placeholder: Joe Bloggs
+  - field_name: author_email
+    form_placeholder: joe@example.com
+    label: Author Email
+
+- field_name: maintainer
+  label: Maintainer
+  preset: composite_repeating
+  form_blanks: 1
+  subfields:
+  - field_name: maintainer
+    label: Maintainer
+    form_placeholder: Joe Bloggs
+  - field_name: Maintainer Email
+    form_placeholder: joe@example.com
+    label: Maintainer Email
+  - field_name: phone
+    label: Phone number
+    display_snippet: text.html
+    form_placeholder: "+49 8161 71 0000"
+###
+
 - field_name: url
   label: Source
   form_placeholder: http://example.com/dataset.json
@@ -48,32 +78,7 @@ dataset_fields:
   label: Version
   validators: ignore_missing unicode_safe package_version_validator
   form_placeholder: '1.0'
-
-
-- field_name: authors
-  preset: repeating_text
-  label: Author
-  form_blanks: 3
-
-- field_name: author
-  label: Author
-  preset: composite_repeating
-  form_blanks: 2
-  subfields:
-  - field_name: author
-    label: Author
-    form_placeholder: Joe Bloggs
-  - field_name: author_email
-    label: Author Email
-
-
-###########
-
-- field_name: contributors
-  label: Contributors
-  preset: multiple_text
-
-
+  
 - field_name: language
   label: Language
   validators: ignore_missing
@@ -92,6 +97,7 @@ dataset_fields:
   label: End date
   preset: date
   validators: convert_to_extras
+  
 
 resource_fields:
 
