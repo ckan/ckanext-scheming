@@ -37,6 +37,13 @@ dataset_fields:
   label: Organization
   preset: dataset_organization
   help_text: Legt fest welcher Organisation der Katalogeintrag zugeordnet ist.
+  
+  
+##### test
+- field_name: not_used
+  label: Parent group
+  form_snippet: group_hierarchy.html
+  validators: ignore_missing
 
 ##
 - field_name: author
