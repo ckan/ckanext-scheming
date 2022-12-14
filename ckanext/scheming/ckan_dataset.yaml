@@ -40,10 +40,10 @@ dataset_fields:
   
   
 ##### test
-- field_name: not_used
-  label: Parent group
-  form_snippet: group_hierarchy.html
-  validators: ignore_missing
+#- field_name: not_used
+#  label: Parent group
+#  form_snippet: group_hierarchy.html
+#  validators: ignore_missing
 
 ##
 - field_name: author
