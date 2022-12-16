@@ -37,28 +37,7 @@ dataset_fields:
   label: Organization
   preset: dataset_organization
   help_text: Legt fest welcher Organisation der Katalogeintrag zugeordnet ist.
- 
-###test restricted 
-- field_name: restricted
-  label: Zugriffsbeschränkung
-  preset: composite
-  subfields:
-  
-  - field_name: level
-    label: Level
-    preset: select
-    form_include_blank_choice: 'false'
-    required: 'true'
-    choices:
-    - value: public
-      label: Public
-    - value: registered
-      label: Registered Users
-    - value: same_organization
-      label: Same Organization Members
-    - value: only_allowed_users
-      label: Allowed Users Only 
-  
+
 ##### test
 #- field_name: not_used
 #  label: Parent group
@@ -134,7 +113,30 @@ resource_fields:
   label: Description
   form_snippet: markdown.html
   form_placeholder: Some useful notes about the data
-
+ 
+ 
+###test restricted 
+- field_name: restricted
+  label: Zugriffsbeschränkung
+  preset: composite
+  subfields:
+  
+  - field_name: level
+    label: Level
+    preset: select
+    form_include_blank_choice: 'false'
+    required: 'true'
+    choices:
+    - value: public
+      label: Public
+    - value: registered
+      label: Registered Users
+    - value: same_organization
+      label: Same Organization Members
+    - value: only_allowed_users
+      label: Allowed Users Only 
+  
+  
 - field_name: format
   label: Format
   preset: resource_format_autocomplete
