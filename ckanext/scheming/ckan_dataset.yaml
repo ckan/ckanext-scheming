@@ -44,7 +44,8 @@ dataset_fields:
 #  form_snippet: group_hierarchy.html
 #  validators: ignore_missing
 
-##
+
+
 - field_name: author
   label: Author
   preset: composite_repeating
@@ -116,25 +117,25 @@ resource_fields:
  
  
 ###test restricted 
-- field_name: restricted
-  label: Zugriffsbeschränkung
-  preset: composite
-  subfields:
+#- field_name: restricted
+#  label: Zugriffsbeschränkung
+#  preset: composite
+#  subfields:
   
-  - field_name: level
-    label: Level
-    preset: select
-    form_include_blank_choice: 'false'
-    required: 'true'
-    choices:
-    - value: public
-      label: Public
-    - value: registered
-      label: Registered Users
-    - value: same_organization
-      label: Same Organization Members
-    - value: only_allowed_users
-      label: Allowed Users Only 
+#  - field_name: level
+#    label: Level
+#    preset: select
+#    form_include_blank_choice: 'false'
+#    required: 'true'
+#    choices:
+#    - value: public
+#      label: Public
+#    - value: registered
+#      label: Registered Users
+#    - value: same_organization
+#      label: Same Organization Members
+#    - value: only_allowed_users
+#      label: Allowed Users Only 
   
   
 - field_name: format
