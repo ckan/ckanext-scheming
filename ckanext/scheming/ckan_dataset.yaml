@@ -38,41 +38,40 @@ dataset_fields:
   preset: dataset_organization
   help_text: Legt fest welcher Organisation der Katalogeintrag zugeordnet ist.
 
-##### test
+##### test for group hierarchy
 #- field_name: not_used
 #  label: Parent group
 #  form_snippet: group_hierarchy.html
 #  validators: ignore_missing
 
 
-#COMPOSITE
-#- field_name: author
-#  label: Author
-#  preset: composite_repeating
-#  form_blanks: 1
-#  subfields:
-#  - field_name: author
-#    label: Author
-#    form_placeholder: Joe Bloggs
-#  - field_name: author_email
-#    form_placeholder: joe@example.com
-#    label: Author Email
+- field_name: author
+  label: Author
+  preset: composite_repeating
+  form_blanks: 1
+  subfields:
+  - field_name: author
+    label: Author
+    form_placeholder: Joe Bloggs
+  - field_name: author_email
+    form_placeholder: joe@example.com
+    label: Author Email
 
-#- field_name: maintainer
-#  label: Maintainer
-#  preset: composite_repeating
-#  form_blanks: 1
-#  subfields:
-#  - field_name: maintainer
-#    label: Maintainer
-#    form_placeholder: Joe Bloggs
-#  - field_name: Maintainer Email
-#    form_placeholder: joe@example.com
-#    label: Maintainer Email
-#  - field_name: phone
-#    label: Phone number
-#    display_snippet: text.html
-#    form_placeholder: "+49 8161 71 0000"
+- field_name: maintainer
+  label: Maintainer
+  preset: composite_repeating
+  form_blanks: 1
+  subfields:
+  - field_name: maintainer
+    label: Maintainer
+    form_placeholder: Joe Bloggs
+  - field_name: Maintainer Email
+    form_placeholder: joe@example.com
+    label: Maintainer Email
+  - field_name: phone
+    label: Phone number
+    display_snippet: text.html
+    form_placeholder: "+49 8161 71 0000"
 ###
 
 - field_name: version
