@@ -8,7 +8,6 @@ from functools import wraps
 import six
 import yaml
 import ckan.plugins as p
-from pylons import config
 
 try:
     from paste.reloader import watch_file
@@ -16,7 +15,7 @@ except ImportError:
     watch_file = None
 
 import ckan.model as model
-from ckan.common import c, json
+from ckan.common import c, json, config
 from ckan.lib.navl.dictization_functions import unflatten, flatten_schema
 try:
     from ckan.lib.helpers import helper_functions as core_helper_functions
