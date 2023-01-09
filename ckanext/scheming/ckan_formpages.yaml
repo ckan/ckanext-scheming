@@ -1,12 +1,16 @@
 scheming_version: 2
-dataset_type: dataset
-about: A reimplementation of the default CKAN dataset schema
+dataset_type: formpages
+about: The default CKAN dataset schema with form split across multiple pages
 about_url: http://github.com/ckan/ckanext-scheming
 
 
 dataset_fields:
 
-- field_name: title
+- start_form_page:
+    title: Basic Info
+    description: Required and core dataset fields
+
+  field_name: title
   label: Title
   preset: title
   form_placeholder: eg. A descriptive title
@@ -21,7 +25,16 @@ dataset_fields:
   form_snippet: markdown.html
   form_placeholder: eg. Some useful notes about the data
 
-- field_name: tag_string
+- field_name: owner_org
+  label: Organization
+  preset: dataset_organization
+
+- start_form_page:
+    title: Detailed Info
+    description:
+      These fields improve search and give users important links
+
+  field_name: tag_string
   label: Tags
   preset: tag_string_autocomplete
   form_placeholder: eg. economy, mental health, government
@@ -30,10 +43,6 @@ dataset_fields:
   label: License
   form_snippet: license.html
   help_text: License definitions and additional information can be found at http://opendefinition.org/
-
-- field_name: owner_org
-  label: Organization
-  preset: dataset_organization
 
 - field_name: url
   label: Source
@@ -46,7 +55,11 @@ dataset_fields:
   validators: ignore_missing unicode_safe package_version_validator
   form_placeholder: '1.0'
 
-- field_name: author
+- start_form_page:
+    title: Contact Info
+    description: Names and email addresses for this dataset
+
+  field_name: author
   label: Author
   form_placeholder: Joe Bloggs
   display_property: dc:creator
@@ -57,6 +70,7 @@ dataset_fields:
   display_property: dc:creator
   display_snippet: email.html
   display_email_name_field: author
+  validators: ignore_missing unicode_safe strip_value email_validator
 
 - field_name: maintainer
   label: Maintainer
@@ -69,6 +83,7 @@ dataset_fields:
   display_property: dc:contributor
   display_snippet: email.html
   display_email_name_field: maintainer
+  validators: ignore_missing unicode_safe strip_value email_validator
 
 
 resource_fields:

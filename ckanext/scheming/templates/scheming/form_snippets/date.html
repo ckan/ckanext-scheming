@@ -7,7 +7,7 @@
     type='date',
     value=(data.get(field.field_name) or '').split()[0],
     error=errors[field.field_name],
-    classes=['control-medium'],
+    classes=field.classes if 'classes' in field else ['control-medium'],
     attrs=dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
     is_required=h.scheming_field_required(field)
     )

@@ -1,0 +1,133 @@
+{
+    "scheming_version": 2,
+    "dataset_type": "application",
+    "about": "CKAN dataset schema for KlimaKonform",
+    "about_url": "https://github.com/GeoinformationSystems/ckanext-scheming",
+    "dataset_fields": [
+        {
+            "field_name": "title",
+            "label": "Title",
+            "preset": "title",
+            "form_placeholder": "eg. A descriptive title"
+        },
+        {
+            "field_name": "name",
+            "label": "Identifier",
+            "preset": "name",
+            "form_placeholder": "eg. my-dataset"
+        },
+        {
+            "field_name": "notes",
+            "label": "Description",
+            "preset": "notes",
+            "form_placeholder": "Some useful notes about the data"
+        },
+        {
+            "field_name": "documentation",
+            "label": "Documentation",
+            "preset": "single_link",
+            "help_text": "eg. link to publication"
+        },
+        {
+            "field_name": "contact_name",
+            "label": "Contact Point - Name",
+            "preset": "contact_name",					 
+            "form_placeholder": "Person or Organization"
+        },
+        {
+            "field_name": "contact_uri",
+            "label": "Contact Point - ORCID",
+            "preset": "single_link",
+            "help_text": "According ORCID as link, leave blank otherwise"
+        },
+        {
+            "field_name": "url",
+            "label": "Information Website",
+            "preset": "single_link",
+            "help_text": "links to project website or dataset's page"
+        },
+        {
+            "field_name": "tag_string",
+            "label": "Keywords",
+            "preset": "tags",
+            "form_placeholder": "eg. economy, mental health, government"
+        },
+        {
+            "field_name": "spatial",
+            "label": "Spatial Coverage",
+            "preset": "spatial_extent",
+            "form_placeholder": "Paste a valid GeoJSON geometry",
+            "help_text": "Draw and edit the dataset extent as rectangles on the map, or paste a GeoJSON Polygon or Multipolygon geometry below, or create a bounding box from coordinates"
+        },
+        {
+            "field_name": "app_type",
+            "label": "Application Type",
+            "help_text": "Select at least one application type",
+            "preset": "multiple_checkbox",
+            "required": "true",
+            "choices": [
+                {
+                    "value": "Visualization Service",
+                    "label": "Visualization Service"
+                },
+                {
+                    "value": "Data Processing Service",
+                    "label": "Data Processing Service"
+                }
+            ]
+        },
+        {
+            "field_name": "used",
+            "label": "Uses Datasets",
+            "help_text": "Please specify input datasets of the application",
+            "preset": "select_dataset_by_type",
+            "required_type": "dataset",
+            "multiple_items": true,
+            "allow_external_items": true
+        },
+        {
+            "field_name": "owner_org",
+            "label": "Organization",
+            "preset": "owner_org"
+        },
+        {
+            "field_name": "license_id",
+            "label": "Dataset License",
+            "preset": "textinput",
+            "form_placeholder": "A legal document giving official permission to do something with the resource.",
+            "help_text": "Recommended best practice is to identify the license using a URI. Examples of such licenses can be found at http://creativecommons.org/licenses/."
+        }
+    ],
+    "resource_fields": [
+        {
+            "field_name": "url",
+            "label": "URL",
+            "preset": "resource_url"
+        },
+        {
+            "field_name": "name",
+            "label": "Name",
+            "validators": "if_empty_same_as(url) unicode",
+            "form_placeholder": "leave blank to use resource file name"
+        },
+        {
+            "field_name": "description",
+            "label": "Description",
+            "form_snippet": "markdown.html",
+            "form_placeholder": "Some useful notes about the resource"
+        },
+        {
+            "field_name": "license",
+            "label": "Resource License",
+            "preset": "textinput",
+            "form_placeholder": "A legal document giving official permission to do something with the resource.",
+            "help_text": "Recommended best practice is to identify the license using a URI. Examples of such licenses can be found at http://creativecommons.org/licenses/."
+        },
+        {
+            "field_name": "format",
+            "label": "Format",
+            "preset": "resource_format",
+            "form_placeholder": "eg. CSV, XML or JSON"
+        }
+    ]
+}

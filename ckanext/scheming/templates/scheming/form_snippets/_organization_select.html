@@ -9,7 +9,7 @@ not used as a form_snippet directly #}
     label=h.scheming_language_text(field.label),
     error=errors[field.field_name],
     is_required=org_required,
-    classes=['form-group', 'control-medium'],
+    classes=field.classes if 'classes' in field else ['form-group', 'control-medium'],
     extra_html=caller() if caller,
     ) %}
     <div {{

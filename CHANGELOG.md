@@ -42,6 +42,7 @@
 * automatic reloading on schema changes in development mode
 * improved test coverage and lots of fixes
 
+
 ## 1.2.0
 
 2019-03-22
@@ -55,6 +56,7 @@
 * allow hiding resource fields
 * other small fixes
 
+
 ## 2.0.0
 
 2020-04-24
@@ -66,6 +68,7 @@
 * improved plugin reloading support
 * add support for group/org image uploads
 * other small fixes
+
 
 ## 2.1.0
 
@@ -79,3 +82,24 @@
 * fix auto-generation of resource names
 * restore license options in 2.9
 * add support for organization image uploads
+
+
+## 3.0.0
+
+2022-11-24
+
+* dataset metadata forms may now be split across multiple pages with
+  start_form_page
+* new ckan_formpages.yaml example schema using dataset form pages
+* datastore_additional_choices option for adding static choices
+  to a dynamic choice list
+* new markdown and radio field form snippets and presets
+* automated tests against 2.8 (py2), 2.9 (py2), 2.9 and 2.10
+* show extra resource fields on resource pages
+* csrf_input and humanize_entity_type support for ckan 2.10
+* improved documentation and examples
+* fixes for multiple_text form fields
+* fixes for repeating_subfields feature
+* fix for applying default org/group types
+* sync example dataset schemas, presets and templates with upstream ckan
+  changes

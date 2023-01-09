@@ -7,7 +7,7 @@ sous la licence MIT.
 
 Licence MIT
 
-(c) Droit d'auteur – Sa Majesté la Reine du chef du Canada, représentée par le président du Conseil
+(c) Droit d'auteur – Sa Majesté le Roi du chef du Canada, représentée par le président du Conseil
 du Trésor, 2013-2018
 
 La présente autorise toute personne d'obtenir gratuitement une copie du présent logiciel et des

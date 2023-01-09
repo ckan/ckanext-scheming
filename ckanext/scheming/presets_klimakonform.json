@@ -213,6 +213,16 @@
 			}
 		},
 		{
+			"preset_name": "select_dataset_by_type",
+			"values": {
+				"validators": "ignore_missing unicode remove_whitespace link_list_string_convert",
+				"form_snippet": "select_dataset_by_type.html",
+				"exclude_from_additional_info": false,
+				"show_relation_above": false,
+				"span_over_columns": true
+			}
+		},
+		{
 			"preset_name": "owner_org",
 			"values": {
 				"validators": "unicode owner_org_validator",
