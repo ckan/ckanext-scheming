@@ -41,13 +41,6 @@
             "help_text": "According ORCID as link, leave blank otherwise"
         },
         {
-            "field_name": "alternate_identifier",
-            "label": "Dataset DOI",
-            "preset": "single_link",
-            "from_placeholder": "insert DOI of the dataset if available",
-            "help_text": "e.g. https://doi.org/10.7283/T5MW2F2D"
-        },
-        {
             "field_name": "url",
             "label": "Information Website",
             "preset": "single_link",
@@ -67,10 +60,30 @@
             "help_text": "Draw and edit the dataset extent as rectangles on the map, or paste a GeoJSON Polygon or Multipolygon geometry below, or create a bounding box from coordinates"
         },
         {
-            "field_name": "related_resource",
+            "field_name": "app_type",
+            "label": "Application Type",
+            "help_text": "Select at least one application type",
+            "preset": "multiple_checkbox",
+            "required": "true",
+            "choices": [
+                {
+                    "value": "Visualization Service",
+                    "label": "Visualization Service"
+                },
+                {
+                    "value": "Data Processing Service",
+                    "label": "Data Processing Service"
+                }
+            ]
+        },
+        {
+            "field_name": "used",
             "label": "Uses Datasets",
-            "preset": "tags",
-            "help_text": "A resource with an unspecified relationship to the cataloged item. https://www.w3.org/TR/vocab-dcat-2/#Property:resource_relation"
+            "help_text": "Please specify input datasets of the application",
+            "preset": "select_dataset_by_type",
+            "required_type": "dataset",
+            "multiple_items": true,
+            "allow_external_items": true
         },
         {
             "field_name": "owner_org",
