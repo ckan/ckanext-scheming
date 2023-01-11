@@ -58,13 +58,16 @@
           {% do data.__setitem__(field.field_name, field.default) %}
         {% endif %}
       {% endif -%}
+      {# We pass pkg_name as the package_id because that's the only
+      variable available in this snippet #}
       {%- snippet 'scheming/snippets/form_field.html',
         field=field,
         data=data,
         errors=errors,
         licenses=c.licenses,
         entity_type='dataset',
-        object_type=dataset_type
+        object_type=dataset_type,
+        package_id=pkg_name
       -%}
     {%- endif -%}
   {%- endfor -%}
