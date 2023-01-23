@@ -44,34 +44,35 @@ dataset_fields:
 #  form_snippet: group_hierarchy.html
 #  validators: ignore_missing
 
+##### removed for testing of spatial##########
+#- field_name: author
+#  label: Author
+#  preset: composite_repeating
+#  form_blanks: 1
+#  subfields:
+#  - field_name: author
+#    label: Author
+#    form_placeholder: Joe Bloggs
+#  - field_name: author_email
+#    form_placeholder: joe@example.com
+#    label: Author Email
 
-- field_name: author
-  label: Author
-  preset: composite_repeating
-  form_blanks: 1
-  subfields:
-  - field_name: author
-    label: Author
-    form_placeholder: Joe Bloggs
-  - field_name: author_email
-    form_placeholder: joe@example.com
-    label: Author Email
-
-- field_name: maintainer
-  label: Maintainer
-  preset: composite_repeating
-  form_blanks: 1
-  subfields:
-  - field_name: maintainer
-    label: Maintainer
-    form_placeholder: Joe Bloggs
-  - field_name: Maintainer Email
-    form_placeholder: joe@example.com
-    label: Maintainer Email
-  - field_name: phone
-    label: Phone number
-    display_snippet: text.html
-    form_placeholder: "+49 8161 71 0000"
+##### removed for testing of spatial##########
+#- field_name: maintainer
+#  label: Maintainer
+#  preset: composite_repeating
+#  form_blanks: 1
+#  subfields:
+#  - field_name: maintainer
+#    label: Maintainer
+#    form_placeholder: Joe Bloggs
+#  - field_name: Maintainer Email
+#    form_placeholder: joe@example.com
+#    label: Maintainer Email
+#  - field_name: phone
+#    label: Phone number
+#    display_snippet: text.html
+#    form_placeholder: "+49 8161 71 0000"
 
 ##### test for sptial##
 - field_name: spatial
