@@ -72,6 +72,14 @@ dataset_fields:
     label: Phone number
     display_snippet: text.html
     form_placeholder: "+49 8161 71 0000"
+
+##### test for sptial##
+- field_name: spatial
+  label:
+    en: Spatial extent
+    de: Räumliche Ausdehnung
+  form_snippet: spatial.html
+  
 ###
 
 - field_name: version
