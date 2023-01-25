@@ -1,4 +1,4 @@
-{%- set values = data[field.field_name] -%}
+{%- set values = data[field.subfields.name] -%}
 <ol>
 {%- for element in values -%}
   <li>{{ element }}</li>
