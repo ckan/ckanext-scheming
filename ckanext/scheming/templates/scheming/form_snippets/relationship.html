@@ -1,0 +1,10 @@
+<div>
+	    <select id="select-dataset" class="demo-default" data-module="autocomplete">
+	      <option value="">Select a dataset...</option>
+              {% for dataset in  %}
+                <option value="{{dataset}}"> {{dataset.title}} </option>
+              {% endfor %}
+	    </select>
+	    </div>
+	    
+	    
