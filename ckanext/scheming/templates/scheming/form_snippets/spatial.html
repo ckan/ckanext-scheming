@@ -29,8 +29,6 @@ provide an editable map.
     classes=['control-medium'],
     is_required=h.scheming_field_required(field)
 %}
-
-  {% call form.input_block(id, label, error, classes, is_required=is_required) %}
   
     {% set map_config = h.get_common_map_config() %}
     <div class="dataset-map" 
