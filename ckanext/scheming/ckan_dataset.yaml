@@ -166,7 +166,8 @@ resource_fields:
 #    - value: only_allowed_users
 #      label: Allowed Users Only 
 #      help_text: Legt fest, wer Zugriff auf die Ressource hat.
- 
+
+#required restricted#
 #- field_name: allowed_users
 #   label: Allowed Users
 #   preset: tag_string_autocomplete
