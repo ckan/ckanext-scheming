@@ -80,7 +80,8 @@ dataset_fields:
 - field_name: owner_org
   label: Organization
   form_snippet: visibility.html
-
+  help_text: Legt fest wer den Katalogeintrag sehen kann.
+  
 - field_name: group
   label: Group
   form_snippet: group.html
@@ -95,35 +96,42 @@ dataset_fields:
     label: Deutsch
   - value: en
     label: English
+    help_text: Legt fest in welcher Sprache der Katalogeintrag verfasst ist.
 
 - field_name: version
   label: Version
   validators: ignore_missing unicode_safe package_version_validator
   form_placeholder: '1.0'
-
+  help_text: Über die Versionsnummer können Änderungen am Katalogeintrag sichtbar
+    gemacht werden. Je höher die Versionsnummer ist, desto öfter wurde der Katalogeintrag
+    bearbeitet.
+    
 - field_name: begin_collection_date
-  label: Start date
+  label: Start des Gültigkeitszeitraumes
   preset: date
-  
 - field_name: end_collection_date
-  label: End date
+  label: Ende des Gültigkeitszeitraumes
   preset: date
   validators: convert_to_extras
+  help_text: Dies markiert den Gültigkeitszeitraum des Katalogeintrags. Anhand dieses
+    Zeitraums kann später nach Einträgen gesucht werden.
   
 # request spatial #
-# field_name: spatial
-# label:
-#   en: Spatial extent
-#   de: Räumliche Ausdehnung
-# form_snippet: spatial.html
+#- field_name: spatial
+#  label:
+#    en: Spatial extent
+#    de: Räumliche Ausdehnung
+#  form_snippet: spatial.html
+#  help_text: Über eine räumliche Ausdehnung (Punkt oder Polygon, nicht beides gleichzeitig) kann später nach Katalogeinträgen gesucht werden.
 
+#- field_name: licence_agreement
+#  label: Datenschutzerklärung
+#  required: true
+#  preset: multiple_checkbox
+#  choices:
+#  - value: licence_agreement_check
+#    label: Hiermit bestätige ich, dass sämtliche von mir eingetragenen Daten unter die oben ausgewählte Lizenz fallen.
 
-
-##### request group hierarchy
-#- field_name: not_used
-#  label: Parent group
-#  form_snippet: group_hierarchy.html
-#  validators: ignore_missing
 
 
 resource_fields:
@@ -147,12 +155,10 @@ resource_fields:
  
 #test restricted 
 - field_name: restricted
-  label: Zugriffsbeschränkung
   preset: composite
   subfields:
-  
   - field_name: level
-    label: Level
+    label: Zugriffsrechte
     preset: select
     form_include_blank_choice: 'false'
     required: 'true'
@@ -165,14 +171,17 @@ resource_fields:
       label: Same Organization Members
     - value: only_allowed_users
       label: Allowed Users Only 
+      help_text: Legt fest, wer Zugriff auf die Ressource hat.
  
 #- field_name: allowed_users
 #   label: Allowed Users
 #   preset: tag_string_autocomplete
 #   data-module-source: "/api/2/util/user/autocomplete?q=?"
- 
+#   help_text: Wenn Sie im Drop-Down über diesem Feld "Nur ausgewählte Benutzer" ausgewählt haben, können Sie hier bestimmte Benutzer definieren, die als einzige Personen Zugriff auf die Ressource haben.
+#   form_placeholder: Wenn Sie "Nur ausgewählte Benutzer" ausgewählt haben, können Sie hier bestimmte Benutzer definieren. 
+   
+   
 - field_name: attr-desc
-  label: Attribute description
+  label: Weitere Informationen zu den Eigenschaften der Ressource
   form_snippet: markdown.html
-  form_placeholder: Some useful notes about the definitions of the attributes in the
-    data
+  form_placeholder: Some useful notes about the definitions of the attributes in the data
