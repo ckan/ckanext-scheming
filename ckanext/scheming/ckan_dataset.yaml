@@ -148,24 +148,24 @@ resource_fields:
   preset: resource_format_autocomplete 
  
 #test restricted 
-#- field_name: restricted
-#  preset: composite
-#  subfields:
-#  - field_name: level
-#    label: Zugriffsrechte
-#    preset: select
-#    form_include_blank_choice: 'false'
-#    required: 'true'
-#    choices:
-#    - value: public
-#      label: Public
-#    - value: registered
-#      label: Registered Users
-#    - value: same_organization
-#      label: Same Organization Members
-#    - value: only_allowed_users
-#      label: Allowed Users Only 
-#      help_text: Legt fest, wer Zugriff auf die Ressource hat.
+- field_name: restricted
+  preset: composite
+  subfields:
+  - field_name: level
+    label: Zugriffsrechte
+    preset: select
+    form_include_blank_choice: 'false'
+    required: 'true'
+    choices:
+    - value: public
+      label: Public
+    - value: registered
+      label: Registered Users
+    - value: same_organization
+      label: Same Organization Members
+    - value: only_allowed_users
+      label: Allowed Users Only 
+      help_text: Legt fest, wer Zugriff auf die Ressource hat.
 
 #required restricted#
 #- field_name: allowed_users
