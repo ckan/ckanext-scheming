@@ -52,8 +52,8 @@ dataset_fields:
 #    label: Author Email
 
 #####  requires composite and repeating ext #########
-- field_name: maintainer
-  label: Maintainer
+#- field_name: maintainer
+ # label: Maintainer
 #  preset: composite_repeating
 #  form_blanks: 1
 #  subfields:
@@ -67,15 +67,15 @@ dataset_fields:
 #    label: Phone number
 #    display_snippet: text.html
 #    form_placeholder: "+49 8161 71 0000"
-  - field_name: role
-    label: Role
-    preset: select
+- field_name: role
+  label: Role
+  preset: select
     display_snippet: multiple_select.html
     choices:
-      - value: data collector
-        label: Datensammler
-      - value: contact person
-        label: Experte
+     - value: data collector
+       label: Datensammler
+     - value: contact person
+       label: Experte
 
 - field_name: owner_org
   label: Organization
