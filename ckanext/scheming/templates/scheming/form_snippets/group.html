@@ -1,0 +1,241 @@
+
+{% import 'macros/form.html' as form %}
+
+<hr>
+
+<script>
+
+function show_checkboxes(a, show_checkboxes_after_checking=true){
+
+	// get the currently selected group-name from the activated dropdown
+	var selected_value = a.parentNode.childNodes[1].childNodes[0].childNodes[1].innerText;
+	
+	// get all checkboxes on the page
+	var checkboxes = document.querySelectorAll("[type=checkbox]");
+	
+	// iterate over all checkboxes
+	for(var i = 0; i < checkboxes.length; i++){
+	
+		// only do stuff with checkboxes that are related to the groups, not other checkboses from other scheming parts
+		if(checkboxes[i].id.includes("field-group-")){
+
+			// uncheck the main-category checkboxes so only one main category is checked
+			if(!show_checkboxes_after_checking && parseInt(checkboxes[i].id.split("group-")[1]) < 100){
+				checkboxes[i].checked = false;
+			}
+			
+			// check the checkbox that has the matching name
+			if(checkboxes[i].parentNode.innerText.includes(selected_value)){
+				checkboxes[i].checked = true;
+				
+				// make that checkbox visible (dont make it visible for main-categories)
+				if(show_checkboxes_after_checking){
+					checkboxes[i].parentNode.style.display = "block";
+				}
+			}
+		}
+	}
+}
+</script>
+
+	<label class="control-label" for="field-group"><span title="This field is required" class="control-required">*</span>Gruppen bearbeiten</label>
+ <br><br><ol>
+{# Check if it is in editing mode or new dataset mode. This is kinda obsolete, but maybe in the future some text changes should be added. Right now it works as it is, don't want to change it #}
+{% if data.groups %}
+
+	{# Jinja is kind of a weird language that does not allow modifying variables in for / if loops, so this workaround using the group ids and array searches is used. Also Jinja does not allow the 'append' function inside {% ... %}, so I put it inside a html tag that is not visible. #}
+	{% set main_groups_ids = [] %}
+	{% for group in h.get_allowable_children_groups_g('main-categories') %}
+		<label class="control-label" for="field-group" style="display:none"><span title="abc" class="control-required"></span>{{ main_groups_ids.append(group.id) }}</label>
+	{%endfor %}
+	{% set data_groups_ids = [] %}
+	{% for group in data.groups %}
+		<label class="control-label" for="field-group" style="display:none"><span title="abc" class="control-required"></span>{{ data_groups_ids.append(group.id) }}</label>
+	{%endfor %}
+
+
+	<label class="control-label" for="field-group"><span title="This field is required" class="control-required">* </span>Hauptkategorien</label>
+		{% for group in h.get_allowable_children_groups_g('main-categories') %}
+		{% if group.id in data_groups_ids %}
+			<label class="checkbox" for="field-group-{{ loop.index0 + 20 }}" style="display:none">
+				<input id="field-group-{{ loop.index0 + 20 }}" type="checkbox" name="groups__{{ loop.index0 + 20 }}__id" value="{{ group.id }}" checked=true/>{{ group.title }}
+			</label>
+		{% else %}
+			<label class="checkbox" for="field-group-{{ loop.index0 + 20 }}" style="display:none">
+				<input id="field-group-{{ loop.index0 + 20 }}" type="checkbox" name="groups__{{ loop.index0 + 20 }}__id" value="{{ group.id }}"/>{{ group.title }}
+			</label>
+		{% endif %}
+	{% endfor %}
+
+		
+	{# This would produce multiple drop-down bars, but since there can only be one main category, we are fine. Still really bad coding, but I don't know how to do it better in Jinja. #}
+	{% for group in data.groups %}
+		{%if group.id in main_groups_ids %}
+			<div class="controls">
+				<select id="field-group_1" name="groups__0__id" data-module="autocomplete" onclick="show_checkboxes(this, false)">
+					<option value="{{ group.id }}" >{{ group.title }}</option>
+					{% for group_iter in h.get_allowable_children_groups_g('main-categories')  %}
+						{% if group_iter.id != group.id %}
+							<option value="{{ group_iter.id }}" >{{ group_iter.title }}</option>
+						{% endif %}
+					{% endfor %}
+				</select>
+			</div>
+			<br>
+		{% endif %}
+	{% endfor %}
+		
+		
+
+
+	<label class="control-label" for="field-group"><span title="This field is required" class="control-required"></span>Themen</label>  
+
+	{# checking if group is included in data.groups does for some reason not work in Jinja, hence the id check, again with an invisible label #}
+	{% set group_ids = [] %}
+	{% for group in data.groups %}
+		<label class="control-label" for="field-group" style="display:none"><span title="abc" class="control-required"></span>{{ group_ids.append(group.id) }}</label>
+	{%endfor %}
+
+	{% for group in h.get_allowable_children_groups_g('topics') %}
+		{% if group.id in group_ids %}
+			<label class="checkbox" for="field-group-{{ loop.index0 + 100 }}">
+				<input id="field-group-{{ loop.index0 + 100 }}" type="checkbox" name="groups__{{ loop.index0 + 100 }}__id" value="{{ group.id }}" checked=true/>{{ group.title }}
+			</label>
+		{% else %}
+			<label class="checkbox" for="field-group-{{ loop.index0 + 100 }}" style="display:none">
+				<input id="field-group-{{ loop.index0 + 100 }}" type="checkbox" name="groups__{{ loop.index0 + 100 }}__id" value="{{ group.id }}"/>{{ group.title }}
+			</label>		
+		{% endif %}
+	{%endfor%}
+
+	<div class="controls">
+		<select id="field-group_2" name="groups__2__id" data-module="autocomplete" onclick="show_checkboxes(this)">
+			<option value=""selected="selected">Bitte wählen Sie</option>
+				{% for group in h.get_allowable_children_groups_g('topics') %}
+					{% set existing_group_id = group.id %}
+					{% if group.id not in group_ids %}
+						<option value="{{ group.id }}" >{{ group.title }}</option>
+					{% endif %}
+				{% endfor %}
+		</select>
+	</div>
+	<br>
+
+
+<!--
+	<label class="control-label" for="field-group"><span title="This field is required" class="control-required"> </span>Modellregionen</label>
+
+	{# checking if group is included in data.groups does for some reason not work in Jinja, hence the id check, again with an invisible label #}
+	{% set group_ids = [] %}
+	{% for group in data.groups %}
+		<label class="control-label" for="field-group" style="display:none"><span title="abc" class="control-required"></span>{{ group_ids.append(group.id) }}</label>
+	{%endfor %}
+	
+	{% for group in h.get_allowable_children_groups_g('model-regions') %}
+		{% if group.id in group_ids %}
+			<label class="checkbox" for="field-group-{{ loop.index0 + 1000 }}">
+				<input id="field-group-{{ loop.index0 + 1000 }}" type="checkbox" name="groups__{{ loop.index0 + 1000 }}__id" value="{{ group.id }}" checked=true/>{{ group.title }}
+			</label>
+		{% else %}
+			<label class="checkbox" for="field-group-{{ loop.index0 + 1000 }}" style="display:none">
+				<input id="field-group-{{ loop.index0 + 1000 }}" type="checkbox" name="groups__{{ loop.index0 + 1000 }}__id" value="{{ group.id }}"/>{{ group.title }}
+			</label>
+		{% endif %}
+	{% endfor %}
+
+	<div class="controls">
+		<select id="field-group_3" name="groups__1__id" data-module="autocomplete" onclick="show_checkboxes(this)">
+			<option value=""selected="selected">Bitte wählen Sie</option>
+				{% for group in h.get_allowable_children_groups_g('model-regions')  %}
+					{% set existing_group_id = group.id %}
+					{% if group.id not in group_ids %}
+						<option value="{{ group.id }}" >{{ group.title }}</option>
+					{% endif %}
+				{% endfor %}
+		</select>
+	</div>
+	</ol>
+	<br>
+-->
+	
+	<span class="info-block info-block-small">
+		<i class="fa fa-info-circle"></i>{% trans %}Die 'Hauptkategorie' ist ein Pflichtfeld. Um einen besseren Überblick über die gesamten Gruppen zu haben, sehen Sie sich diese <a href="http://129.187.38.46/group/">Seite</a> an.{% endtrans %}
+	</span>
+	<hr>
+
+		
+{% endif %}
+
+
+
+
+
+{% if not data.groups %}
+
+
+	<label class="control-label" for="field-group"><span title="This field is required" class="control-required">* </span>Hauptkategorien</label>
+	<div class="controls">
+		<select id="field-group" name="groups__0__id" data-module="autocomplete">
+			<!--option value=""selected="selected">Bitte wählen Sie</option-->
+			{% for group in h.get_allowable_children_groups_g('main-categories')  %}
+				{% set existing_group_id = group.id %}
+					<option value="{{ group.id }}">{{ group.title }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<br>
+	
+
+
+	<label class="control-label" for="field-group"><span title="This field is required" class="control-required"></span>Themen</label>
+	{% for group in h.get_allowable_children_groups_g('topics') %}
+		<label class="checkbox" for="field-group-{{ loop.index0 + 100 }}" style="display:none">
+			<input id="field-group-{{ loop.index0 + 100 }}" type="checkbox" name="groups__{{ loop.index0 + 100 }}__id" value="{{ group.id }}"/>{{ group.title }}
+		</label>
+	{% endfor %}
+
+	<div class="controls">
+		<select id="field-group" name="groups__2__id" data-module="autocomplete" onclick="show_checkboxes(this)">
+			<option value=""selected="selected">Bitte wählen Sie</option>
+			{% for group in h.get_allowable_children_groups_g('topics')  %}
+				{% set existing_group_id = group.id %}
+				<option value="{{ group.id }}">{{ group.title }}</option>
+			{% endfor %}
+			<option value="">Keine</option>
+		</select>
+	</div>
+	<br>
+
+
+<!--
+	<label class="control-label" for="field-group"><span title="This field is required" class="control-required"> </span>Modellregionen</label>
+	{% for group in h.get_allowable_children_groups_g('model-regions') %}
+		<label class="checkbox" for="field-group-{{ loop.index0 + 1000 }}" style="display:none">
+			<input id="field-group-{{ loop.index0 + 1000 }}" type="checkbox" name="groups__{{ loop.index0 + 1000 }}__id" value="{{ group.id }}"/>{{ group.title }}
+		</label>
+	{% endfor %}
+
+	<div class="controls">
+		<select id="field-group" name="groups__1__id" data-module="autocomplete" onclick="show_checkboxes(this)">
+			<option value=""selected="selected">Bitte wählen Sie</option>
+			{% for group in h.get_allowable_children_groups_g('model-regions')  %}
+				{% set existing_group_id = group.id %}
+				<option value="{{ group.id }}">{{ group.title }}</option>
+			{% endfor %}
+			<option value="">Keine</option>
+		</select>
+	</div>
+-->
+
+	</ol>
+
+<div class="form-group">
+	<div class="info-block">
+		<i class="fa fa-info-circle"></i>{% trans %}
+Jeder Katalogeintrag ist genau einer "Hauptkategorie" zugeordnet. Die Zuordnung zu den Gruppen "Themen" und "Modellregionen" ist optional, hier können auch mehr als eine Gruppe ausgewählt werden. Um einen besseren Überblick über die gesamten Gruppen zu haben, sehen Sie sich diese <a href="/group/">Seite</a> an.{% endtrans %}
+	</div>
+</div>
+	<hr/>
+	
+	
+{% endif %}
