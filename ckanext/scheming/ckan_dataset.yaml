@@ -145,31 +145,31 @@ resource_fields:
   label: Format
   preset: resource_format_autocomplete 
  
-###test restricted 
-#- field_name: restricted
-#  label: Zugriffsbeschränkung
-#  preset: composite
-#  subfields:
+#test restricted 
+- field_name: restricted
+  label: Zugriffsbeschränkung
+  preset: composite
+  subfields:
   
-#  - field_name: level
-#    label: Level
-#    preset: select
-#    form_include_blank_choice: 'false'
-#    required: 'true'
-#    choices:
-#    - value: public
-#      label: Public
-#    - value: registered
-#      label: Registered Users
-#    - value: same_organization
-#      label: Same Organization Members
-#    - value: only_allowed_users
-#      label: Allowed Users Only 
-  
-- field_name: allowed_users
-   label: Allowed Users
-   preset: tag_string_autocomplete
-   data-module-source: "/api/2/util/user/autocomplete?q=?"
+  - field_name: level
+    label: Level
+    preset: select
+    form_include_blank_choice: 'false'
+    required: 'true'
+    choices:
+    - value: public
+      label: Public
+    - value: registered
+      label: Registered Users
+    - value: same_organization
+      label: Same Organization Members
+    - value: only_allowed_users
+      label: Allowed Users Only 
+ 
+#- field_name: allowed_users
+#   label: Allowed Users
+#   preset: tag_string_autocomplete
+#   data-module-source: "/api/2/util/user/autocomplete?q=?"
  
 - field_name: attr-desc
   label: Attribute description
