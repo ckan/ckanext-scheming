@@ -38,13 +38,7 @@ dataset_fields:
   preset: dataset_organization
   help_text: Legt fest welcher Organisation der Katalogeintrag zugeordnet ist.
 
-##### test for group hierarchy
-#- field_name: not_used
-#  label: Parent group
-#  form_snippet: group_hierarchy.html
-#  validators: ignore_missing
-
-##### removed for testing of spatial##########
+##### requires composite and repeating ext#######
 #- field_name: author
 #  label: Author
 #  preset: composite_repeating
@@ -57,9 +51,9 @@ dataset_fields:
 #    form_placeholder: joe@example.com
 #    label: Author Email
 
-##### removed for testing of spatial##########
-#- field_name: maintainer
-#  label: Maintainer
+#####  requires composite and repeating ext #########
+- field_name: maintainer
+  label: Maintainer
 #  preset: composite_repeating
 #  form_blanks: 1
 #  subfields:
@@ -73,21 +67,25 @@ dataset_fields:
 #    label: Phone number
 #    display_snippet: text.html
 #    form_placeholder: "+49 8161 71 0000"
+  - field_name: role
+    label: Role
+    preset: select
+    display_snippet: multiple_select.html
+    choices:
+      - value: data collector
+        label: Datensammler
+      - value: contact person
+        label: Experte
 
-##### test for sptial##
-##- field_name: spatial
-##  label:
-##    en: Spatial extent
-##    de: Räumliche Ausdehnung
-##  form_snippet: spatial.html
-  
-###
+- field_name: owner_org
+  label: Organization
+  form_snippet: visibility.html
 
-- field_name: version
-  label: Version
-  validators: ignore_missing unicode_safe package_version_validator
-  form_placeholder: '1.0'
-  
+- field_name: group
+  label: Group
+  form_snippet: group.html
+  display_snippet:
+
 - field_name: language
   label: Language
   validators: ignore_missing
@@ -98,6 +96,11 @@ dataset_fields:
   - value: en
     label: English
 
+- field_name: version
+  label: Version
+  validators: ignore_missing unicode_safe package_version_validator
+  form_placeholder: '1.0'
+
 - field_name: begin_collection_date
   label: Start date
   preset: date
@@ -107,6 +110,21 @@ dataset_fields:
   preset: date
   validators: convert_to_extras
   
+# request spatial #
+# field_name: spatial
+# label:
+#   en: Spatial extent
+#   de: Räumliche Ausdehnung
+# form_snippet: spatial.html
+
+
+
+##### request group hierarchy
+#- field_name: not_used
+#  label: Parent group
+#  form_snippet: group_hierarchy.html
+#  validators: ignore_missing
+
 
 resource_fields:
 
@@ -122,7 +140,10 @@ resource_fields:
   label: Description
   form_snippet: markdown.html
   form_placeholder: Some useful notes about the data
- 
+  
+- field_name: format
+  label: Format
+  preset: resource_format_autocomplete 
  
 ###test restricted 
 #- field_name: restricted
@@ -145,10 +166,10 @@ resource_fields:
 #    - value: only_allowed_users
 #      label: Allowed Users Only 
   
-  
-- field_name: format
-  label: Format
-  preset: resource_format_autocomplete
+- field_name: allowed_users
+   label: Allowed Users
+   preset: tag_string_autocomplete
+   data-module-source: "/api/2/util/user/autocomplete?q=?"
  
 - field_name: attr-desc
   label: Attribute description
