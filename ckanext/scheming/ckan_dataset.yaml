@@ -147,7 +147,7 @@ resource_fields:
   label: Format
   preset: resource_format_autocomplete 
  
-#test restricted 
+# restricted and composite are required 
 - field_name: restricted
   preset: composite
   subfields:
@@ -158,13 +158,13 @@ resource_fields:
     required: 'true'
     choices:
     - value: public
-      label: Public
+      label: Öffentlich
     - value: registered
-      label: Registered Users
+      label: Registrierte Benutzer
     - value: same_organization
-      label: Same Organization Members
+      label: Mitlgieder der selben Organisation
     - value: only_allowed_users
-      label: Allowed Users Only 
+      label: Nur ausgewählte Benutzer
       help_text: Legt fest, wer Zugriff auf die Ressource hat.
 
 #required restricted#
