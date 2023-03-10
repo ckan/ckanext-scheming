@@ -176,7 +176,7 @@ resource_fields:
 #   form_placeholder: Wenn Sie "Nur ausgewählte Benutzer" ausgewählt haben, können Sie hier bestimmte Benutzer definieren. 
    
    
-- field_name: attr-desc
-  label: Weitere Informationen zu den Eigenschaften der Ressource
-  form_snippet: markdown.html
-  form_placeholder: Some useful notes about the definitions of the attributes in the data
+#- field_name: attr-desc
+#  label: Weitere Informationen zu den Eigenschaften der Ressource
+#  form_snippet: markdown.html
+#  form_placeholder: Some useful notes about the definitions of the attributes in the data
