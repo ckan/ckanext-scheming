@@ -33,11 +33,6 @@ dataset_fields:
   form_snippet: license.html
   help_text: License definitions and additional information can be found at http://opendefinition.org/
 
-- field_name: owner_org
-  label: Organization
-  preset: dataset_organization
-  help_text: Legt fest welcher Organisation der Katalogeintrag zugeordnet ist.
-
 ##### requires composite and repeating ext#######
 #- field_name: author
 #  label: Author
