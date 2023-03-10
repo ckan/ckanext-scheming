@@ -168,12 +168,12 @@ resource_fields:
       help_text: Legt fest, wer Zugriff auf die Ressource hat.
 
 #required restricted#
-#- field_name: allowed_users
-#   label: Allowed Users
-#   preset: tag_string_autocomplete
-#   data-module-source: "/api/2/util/user/autocomplete?q=?"
-#   help_text: Wenn Sie im Drop-Down über diesem Feld "Nur ausgewählte Benutzer" ausgewählt haben, können Sie hier bestimmte Benutzer definieren, die als einzige Personen Zugriff auf die Ressource haben.
-#   form_placeholder: Wenn Sie "Nur ausgewählte Benutzer" ausgewählt haben, können Sie hier bestimmte Benutzer definieren. 
+- field_name: allowed_users
+   label: Allowed Users
+   preset: tag_string_autocomplete
+   data-module-source: "/api/2/util/user/autocomplete?q=?"
+   help_text: Wenn Sie im Drop-Down über diesem Feld "Nur ausgewählte Benutzer" ausgewählt haben, können Sie hier bestimmte Benutzer definieren, die als einzige Personen Zugriff auf die Ressource haben.
+   form_placeholder: Wenn Sie "Nur ausgewählte Benutzer" ausgewählt haben, können Sie hier bestimmte Benutzer definieren. 
    
    
 #- field_name: attr-desc
