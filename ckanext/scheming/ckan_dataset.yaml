@@ -148,21 +148,21 @@ resource_fields:
   preset: resource_format_autocomplete 
  
 # restricted and composite are required 
-- field_name: restricted
-  preset: composite
-  subfields:
-  - field_name: level
-    label: Zugriffsrechte
-    preset: select
-    form_include_blank_choice: 'false'
-    required: 'true'
-    choices:
-    - value: public
-      label: Öffentlich
-    - value: registered
-      label: Registrierte Benutzer
-    - value: same_organization
-      label: Mitlgieder der selben Organisation
-    - value: only_allowed_users
-      label: Nur ausgewählte Benutzer
-      help_text: Legt fest, wer Zugriff auf die Ressource hat.
+#- field_name: restricted
+#  preset: composite
+#  subfields:
+#  - field_name: level
+#    label: Zugriffsrechte
+#    preset: select
+#    form_include_blank_choice: 'false'
+#    required: 'true'
+#    choices:
+#    - value: public
+#      label: Öffentlich
+#    - value: registered
+#      label: Registrierte Benutzer
+#    - value: same_organization
+#      label: Mitlgieder der selben Organisation
+#    - value: only_allowed_users
+#      label: Nur ausgewählte Benutzer
+#      help_text: Legt fest, wer Zugriff auf die Ressource hat.
