@@ -77,10 +77,10 @@ dataset_fields:
   form_snippet: visibility.html
   help_text: Legt fest wer den Katalogeintrag sehen kann.
   
-#- field_name: group
-#  label: Group
-#  form_snippet: group.html
-#  display_snippet:
+- field_name: group
+  label: Group
+  form_snippet: group.html
+  display_snippet:
 
 - field_name: language
   label: Language
