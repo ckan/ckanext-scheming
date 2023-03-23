@@ -110,13 +110,14 @@ dataset_fields:
   validators: convert_to_extras
   help_text: Dies markiert den Gültigkeitszeitraum des Katalogeintrags. Anhand dieses
     Zeitraums kann später nach Einträgen gesucht werden.
-  
-# request spatial #
+
+# request spatial
 - field_name: spatial
   label:
     en: Spatial extent
     de: Räumliche Ausdehnung
   form_snippet: spatial.html
+  display_snippet: spatial.html
   help_text: Über eine räumliche Ausdehnung (Punkt oder Polygon, nicht beides gleichzeitig) kann später nach Katalogeinträgen gesucht werden.
 
 - field_name: licence_agreement

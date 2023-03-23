@@ -1,4 +1,3 @@
-
 {#
 An input widget for polygons, such as the ckanext-spatial "spatial" field for 
 the dataset extent.
@@ -31,18 +30,22 @@ provide an editable map.
 %}
 
   {% call form.input_block(id, label, error, classes, is_required=is_required) %}
-  
     {% set map_config = h.get_common_map_config() %}
     <div class="dataset-map" 
         data-module="spatial-form"
         data-input_id="{{ id }}"
-        data-extent="{{ value }}" 
+        data-extent="{{ value }}"
         data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}" 
         data-module-map_config="{{ h.dump_json(map_config) }}">
       <div id="dataset-map-container"></div>
     </div>
     <p></p><!-- a little trailing space -->
-    
+    {% asset 'ckanext-spatial/dataset_map_js' %}
+    {% asset 'ckanext-spatial/spatial_form_js' %}
+    {% asset 'ckanext-spatial/dataset_map_css' %}
+    {% asset 'ckanext-spatial/spatial_query_js' %}
+    {% asset 'ckanext-spatial/spatial_query_css' %}
+
 
     <!-- choose predefined, on change update input {{ id }} -->
     <script type="text/javascript">
@@ -50,7 +53,7 @@ provide an editable map.
      * IDs are hard-coded, as this script lives at the same level as the IDs are defined 
      */
     function updateInput(){
-        //$("#{{ id }}").val($("#select-{{ id }}").val());
+        $("#{{ id }}").val($("#select-{{ id }}").val())
     }
     </script>
 
@@ -63,7 +66,6 @@ provide an editable map.
         <option value="{{ c.value | replace("u'","\"") | replace("'","\"") | empty_and_escape }}">{{ c.label }}</option>
       {% endfor %}
     </select>
-
 
     <!-- TODO this should be an autocompleting select box like tags,
          polling from a user-defined custom vocabulary of label/geojson pairs,
@@ -79,7 +81,6 @@ provide an editable map.
     <!-- TODO Show all attached GeoJSON resources on map (ajax load). This helps 
          the user to draw a bounding polygon around existing spatial features, but also 
          captures user's silent knowledge about the real dataset extent. 
-
     {{ form.info(text="Draw and edit the dataset extent as rectangles and/or polygons on the map, 
        or select a pre-defined area from the menu,
        or paste a GeoJSON Polygon or Multipolygon geometry below", inline=false) }}-->
@@ -104,12 +105,13 @@ provide an editable map.
 		// get the input field and the submit button
 		var spatial_input = document.getElementById("field-spatial");
 		var submit_button = document.querySelector(".btn.btn-primary");
-		
+
 		// execute this code when the submit button is pressed
 		submit_button.onclick=function(){
 			
 			// get the geojson string
 			var coords = spatial_input.value;
+            
 			
 			// if some geojson object is present
 			if(coords.includes("MultiPolygon")){
