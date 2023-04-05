@@ -1,5 +1,31 @@
 {% extends 'package/snippets/resource_form.html' %}
 
+{% block stages %}
+  {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
+  {%- if pages and stage -%}
+    <ol class="stages stage-1">
+      {%- for p in pages -%}
+        <li class="{{
+          'first ' if loop.first else ''}}"
+          style="width:{{ 100 / (loop.length + 1) }}%">
+          <span class="highlight" style="padding-right:0"><a href="{{
+              h.url_for(dataset_type + '.scheming_new_page',
+                package_type=dataset_type,
+                id=pkg_name,
+                page=loop.index)
+            }}">{{ h.scheming_language_text(p.title) }}</a>
+          </span>
+        </li>
+      {%- endfor -%}
+      <li class="last active" style="width:{{ 100 / (pages | length + 1) }}%">
+        <span class="highlight">{{ _('Add data') }}</span>
+      </li>
+    </ol>
+  {%- else -%}
+    {{ super() }}
+  {%- endif -%}
+{% endblock %}
+
 {% block errors %}
   {%- if errors -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
@@ -32,13 +58,16 @@
           {% do data.__setitem__(field.field_name, field.default) %}
         {% endif %}
       {% endif -%}
+      {# We pass pkg_name as the package_id because that's the only
+      variable available in this snippet #}
       {%- snippet 'scheming/snippets/form_field.html',
         field=field,
         data=data,
         errors=errors,
         licenses=c.licenses,
         entity_type='dataset',
-        object_type=dataset_type
+        object_type=dataset_type,
+        package_id=pkg_name
       -%}
     {%- endif -%}
   {%- endfor -%}
