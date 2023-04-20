@@ -16,9 +16,7 @@ Table of contents:
    - [Example Schemas](#example-schemas)
    - [Storing non-string data](#storing-non-string-data)
    - [Common Schema Keys](#common-schema-keys)
-     - [`scheming_version`](#scheming_version) .github/workflows/test.yml
-README.md
-ckanext/scheming/tests/test_helpers.py 
+     - [`scheming_version`](#scheming_version)
      - [`about_url`](#about_url)
    - [Dataset Schema Keys](#dataset-schema-keys)
      - [`dataset_type`](#dataset_type)
@@ -562,7 +560,7 @@ passing the comma-separated values within as string parameters
 and the result is used as the validator/converter.
 
 ```yaml
-validators: if_empty_same_as(name) unicode_safe
+  validators: if_empty_same_as(name) unicode_safe
 ```
 
 is the same as a plugin using the validators:
