@@ -354,6 +354,8 @@ def get_validator_or_converter(name):
     """
     Get a validator or converter by name
     """
+    if name == 'unicode':
+        return six.text_type
     try:
         v = get_validator(name)
         return v
