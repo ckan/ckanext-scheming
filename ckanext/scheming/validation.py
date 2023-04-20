@@ -47,7 +47,7 @@ def scheming_validator(fn):
 
 
 @register_validator
-def unicode_safe(value: Any) -> str:
+def unicode_safe(value):
     '''
     Make sure value passed is treated as unicode, but don't raise
     an error if it's not, just make a reasonable attempt to
