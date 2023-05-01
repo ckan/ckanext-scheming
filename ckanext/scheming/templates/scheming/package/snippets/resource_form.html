@@ -1,4 +1,5 @@
 {% extends 'package/snippets/resource_form.html' %}
+{% import 'macros/form.html' as form %}
 
 {% block stages %}
   {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
@@ -32,6 +33,8 @@
     {%- snippet 'scheming/snippets/errors.html',
       errors=errors, fields=schema.resource_fields,
       entity_type='dataset', object_type=dataset_type -%}
+  {%- elif error_summary|default(false) -%}
+    {{ form.errors(error_summary) }}
   {%- endif -%}
 {% endblock %}
 
