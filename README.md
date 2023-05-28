@@ -553,11 +553,11 @@ Set a `property` attribute on dataset fields displayed as "Additional Info", use
 
 ### `validators`
 
-The `validators` value is a space-separated string of validator and
-converter functions to use for this field when creating or updating data.
-When a validator name is followed by parenthesis the function is called
-passing the comma-separated values within as string parameters
-and the result is used as the validator/converter.
+The `validators` value is a space-separated string of validator and converter
+functions to use for this field when creating or updating data.  When a
+validator name is followed by parenthesis the function is called passing the
+comma-separated values within and the result is used as the
+validator/converter.
 
 ```yaml
   validators: if_empty_same_as(name) unicode_safe
@@ -567,6 +567,17 @@ is the same as a plugin using the validators:
 
 ```python
 [get_validator('if_empty_same_as')("name"), unicode_safe]
+```
+
+If parameters can be parsed as a valid python literals, they are passed with
+original type. If not, all parameters passed as strings. In addition, space
+character is not allowed in argument position. Use its HEX code instead `\\x20`.
+
+```yaml
+  validators: xxx(hello,world)    # xxx("hello", "world")
+  validators: xxx(hello,1)        # xxx("hello", "1")
+  validators: xxx("hello",1,None) # xxx("hello", 1, None)
+  validators: xxx("hello\\x20world") # xxx("hello world")
 ```
 
 This string does not contain arbitrary python code to be executed,
