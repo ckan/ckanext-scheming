@@ -9,12 +9,13 @@ from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.validation import (
     get_validator_or_converter,
     scheming_required,
+    validators_from_string,
 )
 from ckanext.scheming.plugins import (
     SchemingDatasetsPlugin,
     SchemingGroupsPlugin,
 )
-from ckantoolkit import get_validator, check_ckan_version
+from ckantoolkit import get_validator, check_ckan_version, navl_validate
 
 ignore_missing = get_validator("ignore_missing")
 not_empty = get_validator("not_empty")
@@ -944,3 +945,46 @@ class TestSubfieldResourceInvalid(object):
                 ].startswith("Value must be one of")
         else:
             raise AssertionError("ValidationError not raised")
+
+
+@pytest.mark.ckan_config("ckan.plugins", "scheming_test_validation")
+@pytest.mark.usefixtures("with_plugins")
+class TestValidatorsFromString:
+    def test_empty(self):
+        assert validators_from_string("", {}, {}) == []
+
+    def test_realworld_old_style(self):
+        first, second = validators_from_string("not_empty default(xxx)", {}, {})
+        assert first == not_empty
+
+        default = get_validator_or_converter("default")("xxx")
+
+        data = {
+            "empty": None,
+            "not_empty": "value"
+        }
+
+        assert navl_validate(data, {"empty": [second], "not_empty": [second]}) == navl_validate(
+            data, {"empty": [default], "not_empty": [default]}
+        )
+
+    def test_old_style_args(self):
+        result = validators_from_string("scheming_test_args(hello)", {}, {})
+        assert result == [("hello", )]
+
+        result = validators_from_string("scheming_test_args(x,y,z)", {}, {})
+        assert result == [("x","y","z")]
+
+    def test_new_style_args(self):
+
+        result = validators_from_string("scheming_test_args(1)", {}, {})
+        assert result == [(1, )]
+
+        result = validators_from_string("scheming_test_args('hello\\x20world')", {}, {})
+        assert result == [("hello world", )]
+
+        result = validators_from_string("scheming_test_args(())", {}, {})
+        assert result == [((), )]
+
+        result = validators_from_string("scheming_test_args('x',1,[None,()])", {}, {})
+        assert result == [("x", 1, [None, ()])]

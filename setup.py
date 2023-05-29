@@ -40,5 +40,6 @@ setup(
     scheming_nerf_index=ckanext.scheming.plugins:SchemingNerfIndexPlugin
     scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
     scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
+    scheming_test_validation=ckanext.scheming.tests.plugins:SchemingTestValidationPlugin
     """,
 )
