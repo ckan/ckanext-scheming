@@ -349,7 +349,7 @@ def validators_from_string(s, field, schema):
                     # argument is an empty tuple, for example: "default(())"
                     parsed_args = (parsed_args,)
 
-            except (ValueError, TypeError, SyntaxError, MemoryError, RecursionError):
+            except (ValueError, TypeError, SyntaxError, MemoryError):
                 parsed_args = args.split(',')
 
             v = get_validator_or_converter(name)(*parsed_args)
