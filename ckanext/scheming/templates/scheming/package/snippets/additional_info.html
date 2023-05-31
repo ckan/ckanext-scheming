@@ -13,7 +13,8 @@
 {% block package_additional_info %}
   {%- for field in schema.dataset_fields -%}
     {%- if field.field_name not in exclude_fields
-        and field.display_snippet is not none -%}
+        and field.display_snippet is not none
+        and pkg_dict[field.field_name] -%}
       <tr>
         <th scope="row" class="dataset-label">{{
           h.scheming_language_text(field.label) }}</th>
