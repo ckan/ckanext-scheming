@@ -19,6 +19,7 @@ dataset_fields:
 
 - field_name: notes
   label: Description
+  validators: not_empty
   form_snippet: markdown.html
   form_placeholder: eg. Some useful notes about the data
   required: True
@@ -44,6 +45,7 @@ dataset_fields:
     label: Publication Date
     preset: date
   - field_name: online_linkage
+    validators: not_empty unicode_safe
     label: Online Linkage
     preset: multiple_text
     form_blanks: 2
