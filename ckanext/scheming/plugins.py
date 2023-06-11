@@ -225,7 +225,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
-    def validate(self, context, data_dict, schema, pydantic_model, action):
+    def validate(self, context, data_dict, schema, action):
         """
         Validate and convert for package_create, package_update and
         package_show actions.
@@ -316,17 +316,19 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 for f in scheming_schema['dataset_fields']
                 if 'repeating_subfields' in f
             }
-        # breakpoint()
+        breakpoint()
         if dataset_composite:
             expand_form_composite(data_dict, dataset_composite)
         from ckanext.scheming.custom_schema import pydantic_model as custom_schema
-
-        try:
-            validated_data = custom_schema(**data_dict)
-        except pydantic.ValidationError as e:
-                breakpoint()
-                return e.errors
-        return validated_data
+        # try:
+        # validated_data, errors = schema(**data_dict)
+        result = custom_schema(**data_dict).dict()
+        errors = result.pop('errors')
+        return result, errors
+        # except pydantic.ValidationError as e:
+        #         breakpoint()
+        #         return e.errors()
+        # return validated_data
         # return navl_validate(data_dict, schema, context)
 
     def get_actions(self):

@@ -19,18 +19,19 @@ class CustomModel(BaseModel):
 
     class Config:
         extra = "allow"
+        arbitrary_types_allowed = True
 
     @classmethod
     def from_yaml(cls, file_path):
         cls.__annotations__ = {}
+        cls._validators = {}
         with open(file_path, "r") as yaml_file:
             data = yaml.safe_load(yaml_file)
 
         for field_data in data.get('dataset_fields'):
             new_fields = {}
             new_annotations = {}
-            class_validators = {}
-            breakpoint()
+
             f_name = field_data['field_name']
             if 'repeating_subfields' in field_data:
                 submodel_fields = {}
@@ -68,11 +69,8 @@ class CustomModel(BaseModel):
                 new_annotations[f_name] = List[submodel]
 
             else:
-                required = field_data.get('required', None)
+                required = ... if field_data.get('required') else None
                 extra_validators = field_data.get('validators', None)
-
-                if required:
-                    required = ...
                 type_ = (field_data.get('type', str), required)
 
                 if isinstance(type_, tuple):
@@ -89,7 +87,7 @@ class CustomModel(BaseModel):
                     new_annotations[f_name] = f_annotation
                 if extra_validators:
                     validators = extra_validators.split()
-
+                    cls._validators[f_name] = []
                     for validator in validators:
                         validator_name = validator
                         pydantic_validator = f'pydantic_{validator}'
@@ -97,20 +95,36 @@ class CustomModel(BaseModel):
                             validator = get_validator(pydantic_validator)
                         except:
                             validator = get_validator(validator)
-                        _validator = Validator(validator)
-                        class_validators.update({validator_name: _validator})
-                # breakpoint()
-                new_fields[f_name] = ModelField.infer(name=f_name, value=f_value, annotation=f_annotation, class_validators=class_validators, config=cls.__config__)
+
+                        cls._validators[f_name].append(validator)
+
+                new_fields[f_name] = ModelField.infer(name=f_name, value=f_value, annotation=f_annotation, class_validators={}, config=cls.__config__)
             cls.schema().update({f_name: {'title': f_name.capitalize(), 'type': new_annotations[f_name]}})
             cls.__fields__.update(new_fields)
             cls.__annotations__.update(new_annotations)
         return cls
 
-    # @root_validator(pre=True)
+    @root_validator(pre=True)
     def validate_fields(cls, values):
-        breakpoint()
-        # TODO
+        errors = {}
+        for name, f in cls.__fields__.items():
+            extra_validators = cls._validators.get(name)
+            errors[name] = []
+            if f.required and not values[name]:
+                errors[name].append("Missing value")
 
+            if not isinstance(values[name], f.type_):
+                errors[name].append(f"Must be of {f.type_} type")
+
+            if extra_validators:
+                for validator_func in extra_validators:
+                    try:
+                        v = validator_func(values[name], values, cls.__config__, cls.__fields__[name])
+                    except ValueError as e:
+                        errors[name].append("Missing value")
+            if not errors[name]:
+                del errors[name]
+        values["errors"] = errors
         return values
 
 
