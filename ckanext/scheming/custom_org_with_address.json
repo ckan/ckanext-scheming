@@ -1,6 +1,6 @@
 {
   "scheming_version": 1,
-  "organization_type": "publisher",
+  "organization_type": "repository",
   "about_url": "http://github.com/ckan/ckanext-scheming",
   "fields": [
     {
@@ -9,30 +9,26 @@
       "validators": "ignore_missing unicode_safe",
       "form_snippet": "large_text.html",
       "form_attrs": {"data-module": "slug-preview-target"},
-      "form_placeholder": "My theme"
+      "form_placeholder": "repository name"
     },
     {
       "field_name": "name",
       "label": "URL",
       "validators": "not_empty unicode_safe name_validator group_name_validator",
       "form_snippet": "slug.html",
-      "form_placeholder": "my-theme"
+      "form_placeholder": "repository"
     },
     {
       "field_name": "notes",
       "label": "Description",
       "form_snippet": "markdown.html",
-      "form_placeholder": "A little information about my group..."
+      "form_placeholder": "A little information about this repository..."
     },
     {
       "field_name": "url",
       "label": "Image URL",
       "form_placeholder": "http://example.com/my-image.jpg"
-    },
-    {
-      "field_name": "address",
-      "label": "Address",
-      "output_validators": "ignore_missing"
     }
   ]
 }
+
