@@ -22,6 +22,8 @@
         {%- endif -%}
     {%- endfor -%}
 
+    {{ form.required_message() }}
+
     <div class="form-actions">
         {% block delete_button %}
         {% if action == 'edit' %}
@@ -48,6 +50,5 @@
               {%- endif -%}
             {% endblock %}
         </button>
-        {{ form.required_message() }}
     </div>
 </form>
