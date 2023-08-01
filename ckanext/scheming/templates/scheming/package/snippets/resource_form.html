@@ -32,6 +32,9 @@
     {%- snippet 'scheming/snippets/errors.html',
       errors=errors, fields=schema.resource_fields,
       entity_type='dataset', object_type=dataset_type -%}
+  {%- else -%}
+    {# Resource CreateView You must add at least one data resource #}
+    {{ super() }}
   {%- endif -%}
 {% endblock %}
 
