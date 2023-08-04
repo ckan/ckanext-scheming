@@ -574,8 +574,15 @@ def _field_output_validators(f, schema, convert_extras,
     else:
         validators = [ignore_missing]
     if 'output_validators' in f:
-        validators += validation.validators_from_string(
-            f['output_validators'], f, schema)
+        if isinstance(validators, list):
+            validators += validation.validators_from_string(
+                f['output_validators'], f, schema
+            )
+        else:
+            validators.update({
+                f['field_name']: validation.validators_from_string(
+                f['output_validators'], f, schema
+            )})
     return validators
 
 
