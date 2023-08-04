@@ -3,7 +3,7 @@ this.ckan.module('scheming-multiple-text', function($, _) {
   MultipleText = {
 
      multiple_add: function(field_name){
-      var fieldset = $('fieldset[name='+field_name+']');
+      var fieldset = $('fieldset[name=\"'+field_name+'\"]');
       let list = fieldset.find('ol')
       let items = list.find('li')
       var copy = items.last().clone();
