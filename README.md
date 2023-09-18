@@ -6,7 +6,7 @@ YAML or JSON schema description. Custom validation and template snippets for edi
 and display are supported.
 
 [![Tests](https://github.com/datopian/ckanext-scheming/workflows/Tests/badge.svg?branch=ckan-2.10)](https://github.com/datopian/ckanext-scheming/actions)
-[![Coverage Status](https://coveralls.io/repos/github/datopian/ckanext-scheming/badge.svg?branch=master)](https://coveralls.io/github/datopian/ckanext-scheming?branch=ckan-2.10)
+[![Coverage Status](https://coveralls.io/repos/github/datopian/ckanext-scheming/badge.svg?branch=coverage/ckan-2.10)](https://coveralls.io/github/datopian/ckanext-scheming?branch=coverage/ckan-2.10)
 
 Table of contents:
 
