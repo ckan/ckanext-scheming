@@ -5,8 +5,8 @@ This CKAN extension provides a way to configure and share metadata schemas using
 YAML or JSON schema description. Custom validation and template snippets for editing
 and display are supported.
 
-[![Tests](https://github.com/datopian/ckanext-scheming/workflows/Tests/badge.svg?branch=master)](https://github.com/datopian/ckanext-scheming/actions)
-[![Coverage Status](https://coveralls.io/repos/github/datopian/ckanext-s3filestore/badge.svg?branch=master)](https://coveralls.io/github/datopian/ckanext-s3filestore?branch=master)
+[![Tests](https://github.com/datopian/ckanext-scheming/workflows/Tests/badge.svg?branch=ckan-2.10)](https://github.com/datopian/ckanext-scheming/actions)
+[![Coverage Status](https://coveralls.io/repos/github/datopian/ckanext-scheming/badge.svg?branch=master)](https://coveralls.io/github/datopian/ckanext-scheming?branch=ckan-2.10)
 
 Table of contents:
 
