@@ -60,5 +60,8 @@ jobs:
       run: pytest --ckan-ini=test.ini --cov=ckanext.scheming ckanext/scheming/tests
     - name: Run plugin subclassing tests
       run: pytest --ckan-ini=test_subclass.ini ckanext/scheming/tests/test_dataset_display.py ckanext/scheming/tests/test_form.py::TestDatasetFormNew ckanext/scheming/tests/test_dataset_logic.py
-    - name: Report Coveralls
-      uses: coverallsapp/github-action@v2
+    - name: Report Coveralls (Linux)
+      if: startsWith(runner.os, 'Linux')
+      run: curl -sL https://coveralls.io/coveralls-linux.tar.gz | tar -xz && ./coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
