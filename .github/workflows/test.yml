@@ -64,4 +64,4 @@ jobs:
       if: startsWith(runner.os, 'Linux')
       run: curl -sL https://coveralls.io/coveralls-linux.tar.gz | tar -xz && ./coveralls
       env:
-        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
