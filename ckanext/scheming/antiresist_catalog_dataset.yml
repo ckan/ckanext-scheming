@@ -1,0 +1,117 @@
+scheming_version: 2
+dataset_type: dataset
+about: A customized version of the CKAN dataset schema for NCCR AntiResist
+about_url: http://github.com/ckan/ckanext-scheming
+
+
+dataset_fields:
+
+- field_name: title
+  label: Title
+  preset: title
+  form_placeholder: A unique, descriptive title, e.g. Pseudomonas aeruginosa PAO1 genome
+
+- field_name: name
+  label: URL
+  preset: dataset_slug
+  form_placeholder: e.g. my-dataset
+
+- field_name: notes
+  label: Description
+  form_snippet: markdown.html
+  form_placeholder: Some useful notes about the dataset
+
+- field_name: datatype
+  label: Type
+  preset: genomics
+  choices:
+  - value: microscopy
+    label: Microscopy
+  - value: genomics
+    label: Genomics
+  - value: transcriptomics
+    label: Transcriptomics
+  - value: proteomics
+    label: Proteomics
+  - value: metabolomics
+    label: Metabolomics
+  - value: other
+    label: Other
+
+- field_name: category
+  label: Category
+  preset: conventional
+  choices:
+  - value: sensitive
+    label: Sensitive
+  - value: conventional
+    label: Non-sensitive
+  help_text: If you are not sure whether your dataset is sensitive, ask the RDO or MDO. Do not add any sensitive data files to the catalog.
+
+- field_name: status
+  label: Status
+  preset: planned
+  choices:
+  - value: planned
+    label: Planned
+  - value: inprogress
+    label: In Progress
+  - value: collected
+    label: Collected
+  - value: published
+    label: Published
+  - value: archived
+    label: Archived
+
+- field_name: tag_string
+  label: Tags
+  preset: tag_string_autocomplete
+  form_placeholder: e.g. sequencing, imaging, wp-eco
+
+- field_name: owner_org
+  label: Organization
+  preset: dataset_organization
+
+- field_name: author
+  label: Author
+  form_placeholder: Name
+  display_property: dc:creator
+
+- field_name: author_email
+  label: Author Email
+  form_placeholder: Email
+  display_property: dc:creator
+  display_snippet: email.html
+  display_email_name_field: author
+
+- field_name: maintainer
+  label: Maintainer
+  form_placeholder: Name
+  display_property: dc:contributor
+
+- field_name: maintainer_email
+  label: Maintainer Email
+  form_placeholder: Email
+  display_property: dc:contributor
+  display_snippet: email.html
+  display_email_name_field: maintainer
+
+
+resource_fields:
+
+- field_name: url
+  label: URL
+  preset: resource_url_upload
+
+- field_name: name
+  label: Name
+  form_placeholder: e.g. Genome assembly
+
+- field_name: description
+  label: Description
+  form_snippet: markdown.html
+  form_placeholder: Some useful notes about the data file
+
+- field_name: format
+  label: Format
+  preset: resource_format_autocomplete
