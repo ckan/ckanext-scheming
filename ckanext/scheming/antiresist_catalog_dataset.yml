@@ -21,9 +21,26 @@ dataset_fields:
   form_snippet: markdown.html
   form_placeholder: Some useful notes about the dataset
 
+- field_name: status
+  label: Status
+  required: true
+  preset: select
+  choices:
+  - value: planned
+    label: Planned
+  - value: inprogress
+    label: In Progress
+  - value: collected
+    label: Collected
+  - value: published
+    label: Published
+  - value: archived
+    label: Archived
+    
 - field_name: datatype
   label: Type
-  preset: genomics
+  required: true
+  preset: select
   choices:
   - value: microscopy
     label: Microscopy
@@ -40,28 +57,38 @@ dataset_fields:
 
 - field_name: category
   label: Category
-  preset: conventional
+  required: true
+  preset: select
   choices:
   - value: sensitive
     label: Sensitive
-  - value: conventional
+  - value: non-sensitive
     label: Non-sensitive
-  help_text: If you are not sure whether your dataset is sensitive, ask the RDO or MDO. Do not add any sensitive data files to the catalog.
+  help_text: If you are not sure whether your dataset is sensitive, ask the RDO or MDO. Do not upload any sensitive data files to the catalog.
 
-- field_name: status
-  label: Status
-  preset: planned
+- field_name: work_package
+  label: Work Package
+  required: true
+  preset: select
   choices:
-  - value: planned
-    label: Planned
-  - value: inprogress
-    label: In Progress
-  - value: collected
-    label: Collected
-  - value: published
-    label: Published
-  - value: archived
-    label: Archived
+  - value: wp-eco
+    label: WP-ECO
+  - value: wp-pae
+    label: WP-PAE
+  - value: wp-sau
+    label: WP-SAU
+  - value: wp-bme
+    label: WP-BME
+  - value: wp-cln
+    label: WP-CLN
+  - value: wp-mod
+    label: WP-MOD
+  - value: wp-trn
+    label: WP-TRN
+  - value: wp-tec
+    label: WP-TEC
+  - value: wp-dat
+    label: WP-DAT
 
 - field_name: tag_string
   label: Tags
@@ -71,6 +98,13 @@ dataset_fields:
 - field_name: owner_org
   label: Organization
   preset: dataset_organization
+
+- field_name: research_group
+  label: Research Group
+  required: true
+  preset: select
+  choices_helper: scheming_datastore_choices
+  datastore_choices_resource: research_groups
 
 - field_name: author
   label: Author
