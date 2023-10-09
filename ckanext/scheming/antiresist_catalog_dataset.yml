@@ -105,6 +105,9 @@ dataset_fields:
   preset: select
   choices_helper: scheming_datastore_choices
   datastore_choices_resource: research_groups
+  datastore_additional_choices:
+  - value: na
+    label: Not Applicable
 
 - field_name: author
   label: Author
