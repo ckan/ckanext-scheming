@@ -36,10 +36,22 @@ dataset_fields:
     label: Published
   - value: archived
     label: Archived
-    
+
+- field_name: category
+  label: Category
+  required: true
+  preset: select
+  choices:
+  - value: sensitive
+    label: Sensitive
+  - value: non-sensitive
+    label: Non-sensitive
+  help_text: If you are not sure whether your dataset is sensitive, ask the RDO or MDO. Do not upload any sensitive data files to the catalog.
+
 - field_name: datatype
   label: Type
   required: true
+  form_include_blank_choice: true
   preset: select
   choices:
   - value: microscopy
@@ -54,21 +66,11 @@ dataset_fields:
     label: Metabolomics
   - value: other
     label: Other
-
-- field_name: category
-  label: Category
-  required: true
-  preset: select
-  choices:
-  - value: sensitive
-    label: Sensitive
-  - value: non-sensitive
-    label: Non-sensitive
-  help_text: If you are not sure whether your dataset is sensitive, ask the RDO or MDO. Do not upload any sensitive data files to the catalog.
-
+    
 - field_name: work_package
   label: Work Package
   required: true
+  form_include_blank_choice: true
   preset: select
   choices:
   - value: wp-eco
@@ -90,6 +92,65 @@ dataset_fields:
   - value: wp-dat
     label: WP-DAT
 
+- field_name: research_group
+  label: Research Group
+  required: true
+  form_include_blank_choice: true
+  preset: select
+  choices:
+  - value: basler
+    label: Basler
+  - value: bumann
+    label: Bumann
+  - value: dehio
+    label: Dehio
+  - value: dittrich
+    label: Dittrich
+  - value: drescher
+    label: Drescher
+  - value: egli
+    label: Egli
+  - value: harms
+    label: Harms
+  - value: hierlemann
+    label: Hierlemann
+  - value: hiller
+    label: Hiller
+  - value: jenal
+    label: Jenal
+  - value: khanna
+    label: Khanna
+  - value: mckinney
+    label: McKinney
+  - value: moran-gilad
+    label: Moran-Gilad
+  - value: neher
+    label: Neher
+  - value: persat
+    label: Persat
+  - value: picotti
+    label: Picotti
+  - value: rentsch
+    label: Rentsch
+  - value: rivera-fuentes
+    label: Rivera-Fuentes
+  - value: sauer
+    label: Sauer
+  - value: stolz
+    label: Stolz
+  - value: tschudin-sutter
+    label: Tschudin-Sutter
+  - value: vannimwegen
+    label: van Nimwegen
+  - value: veening
+    label: Veening
+  - value: zampieri
+    label: Zampieri
+  - value: zinkernagel
+    label: Zinkernagel
+  - value: na
+    label: Not Applicable
+    
 - field_name: tag_string
   label: Tags
   preset: tag_string_autocomplete
@@ -98,16 +159,6 @@ dataset_fields:
 - field_name: owner_org
   label: Organization
   preset: dataset_organization
-
-- field_name: research_group
-  label: Research Group
-  required: true
-  preset: select
-  choices_helper: scheming_datastore_choices
-  datastore_choices_resource: research_groups
-  datastore_additional_choices:
-  - value: na
-    label: Not Applicable
 
 - field_name: author
   label: Author
