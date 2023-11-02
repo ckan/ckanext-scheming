@@ -52,6 +52,8 @@ convert_from_extras = get_converter('convert_from_extras')
 DEFAULT_PRESETS = 'ckanext.scheming:presets.json'
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+log.addHandler(logging.StreamHandler())
 
 def run_once_for_caller(var_name, rval_fn):
     """
@@ -210,8 +212,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
-    SCHEMA_FILTER_ORDER = ['organization', 'groups', 'tags', 'res_format', 'license_id']
-    SCHEMA_FILTER_TITLES = [p.toolkit._('Organizations'), p.toolkit._('Groups'), p.toolkit._('Tags'), p.toolkit._('Formats'), p.toolkit._('License')]
+    SCHEMA_FILTER_ORDER = ['product_type', 'organization', 'groups', 'tags', 'res_format', 'license_id']
+    SCHEMA_FILTER_TITLES = [p.toolkit._('Datentyp'), p.toolkit._('Organizations'), p.toolkit._('Groups'), p.toolkit._('Tags'), p.toolkit._('Formats'), p.toolkit._('License')]
 
     @classmethod
     def _store_instance(cls, self):

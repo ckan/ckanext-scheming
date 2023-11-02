@@ -15,8 +15,7 @@ from ckantoolkit import (
     missing,
     Invalid,
     StopOnError,
-    _,
-    unicode_safe,
+    _
 )
 from decimal import Decimal, DecimalException
 
@@ -49,7 +48,7 @@ def scheming_validator(fn):
     return fn
 
 
-register_validator(unicode_safe)
+# register_validator(unicode_safe)
 
 
 @register_validator

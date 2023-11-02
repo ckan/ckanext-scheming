@@ -272,6 +272,47 @@
             "preset": "owner_org"
         },
         {
+            "field_name": "product_type",
+            "label": "Datensatztyp",
+            "help_text": "Select a dataset type",
+            "preset": "multiple_checkbox",
+            "required": "true",
+            "choices": [
+                {
+                    "value": "Klimaprojektion",
+                    "label": "Klimaprojektion"
+                },
+                {
+                    "value": "Beobachtungsdaten",
+                    "label": "Beobachtungsdaten"
+                },
+                {
+                    "value": "Hydrologische Daten",
+                    "label": "Hydrologische Daten"
+                },
+                {
+                    "value": "Geologische Daten",
+                    "label": "Geologische Daten"
+                },
+                {
+                    "value": "Geobasisdaten",
+                    "label": "Geobasisdaten"
+                },
+                {
+                    "value": "Landnutzungsdaten",
+                    "label": "Landnutzungsdaten"
+                },
+                {
+                    "value": "Oberflächen- /Geländemodelle",
+                    "label": "Oberflächen- /Geländemodelle"
+                },
+                {
+                    "value": "Geobasisdaten",
+                    "label": "Geobasisdaten"
+                }
+            ]
+        },
+        {
             "field_name": "license_id",
             "label": "Dataset License",
             "preset": "textinput",

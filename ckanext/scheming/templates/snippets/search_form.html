@@ -1,0 +1,31 @@
+{% ckan_extends %}
+
+
+
+{% block search_facets %}
+{% if facets %}
+  <p class="filter-list">
+    {% for field in facets.fields %}
+      {% set search_facets_items = facets.search.get(field)['items'] %}
+      <span class="facet">{{ facets.titles.get(field) }}:</span>
+      {% for value in facets.fields[field] %}
+        {% if '["' in value and '"]' in value %}
+            {% set extracted_value = value.replace('["', '').replace('"]', '') %}
+        {% else %}
+            {% set extracted_value = value %}
+        {% endif %}
+        <span class="filtered pill">
+        {# TODO: usually you would regex filters here, but current jinja2 version does not support #}
+          {%- if facets.translated_fields and (field,extracted_value) in facets.translated_fields -%}
+            {{ facets.translated_fields[(field,extracted_value)] }}
+          {%- else -%}
+            {{ h.list_dict_filter(search_facets_items, 'name', 'display_name', extracted_value) }}
+          {%- endif %}
+          <a href="{{ facets.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}"><i class="fa fa-times"></i></a>
+        </span>
+      {% endfor %}
+    {% endfor %}
+  </p>
+  <a class="show-filters btn btn-default">{{ _('Filter Results') }}</a>
+{% endif %}
+{% endblock %}
