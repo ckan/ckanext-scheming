@@ -445,3 +445,28 @@ def scheming_flatten_subfield(subfield, data):
         for k in record:
             flat[prefix + k] = record[k]
     return flat
+
+
+@helper
+def scheming_arbitrary_schemas(expanded=True):
+    """
+    Return the dict of arbitrary schemas. Or if scheming_arbitrary
+    plugin is not loaded return None.
+    """
+    from ckanext.scheming.plugins import SchemingArbitraryPlugin as plugin
+
+    if plugin.instance:
+        if expanded:
+            return plugin.instance._expanded_schemas
+        return plugin.instance._schemas
+
+    return {}
+
+
+@helper
+def scheming_get_arbitrary_schema(schema_id, expanded=True):
+    """
+    Return the schema for the schema_id passed or None if
+    no schema is defined for that schema_id.
+    """
+    return scheming_arbitrary_schemas(expanded).get(schema_id)
