@@ -6,8 +6,6 @@ except ImportError:
     from mock import patch, Mock
 
 import datetime
-
-import pytest
 import six
 
 from ckanext.scheming.helpers import (
@@ -17,8 +15,6 @@ from ckanext.scheming.helpers import (
     scheming_get_presets,
     scheming_datastore_choices,
     scheming_display_json_value,
-    scheming_get_arbitrary_schema,
-    scheming_arbitrary_schemas,
 )
 
 from ckanapi import NotFound
@@ -31,7 +27,9 @@ class TestLanguageText(object):
         assert "hello1" == scheming_language_text("hello")
 
     def test_only_one_language(self):
-        assert "hello" == scheming_language_text({"zh": "hello"}, prefer_lang="en")
+        assert "hello" == scheming_language_text(
+            {"zh": "hello"}, prefer_lang="en"
+        )
 
     def test_matching_language(self):
         assert "hello" == scheming_language_text(
@@ -44,7 +42,7 @@ class TestLanguageText(object):
         )
 
     def test_decodes_utf8(self):
-        assert "\xa1Hola!" == scheming_language_text(six.b("\xc2\xa1Hola!"))
+        assert u"\xa1Hola!" == scheming_language_text(six.b("\xc2\xa1Hola!"))
 
     @patch("ckanext.scheming.helpers.lang")
     def test_no_user_lang(self, lang):
@@ -71,35 +69,35 @@ class TestGetPreset(object):
         presets = scheming_get_presets()
         assert sorted(
             (
-                "title",
-                "tag_string_autocomplete",
-                "select",
-                "resource_url_upload",
-                "organization_url_upload",
-                "resource_format_autocomplete",
-                "multiple_select",
-                "multiple_checkbox",
-                "multiple_text",
-                "date",
-                "datetime",
-                "datetime_tz",
-                "dataset_slug",
-                "dataset_organization",
-                "json_object",
-                "markdown",
-                "radio",
+                u'title',
+                u'tag_string_autocomplete',
+                u'select',
+                u'resource_url_upload',
+                u'organization_url_upload',
+                u'resource_format_autocomplete',
+                u'multiple_select',
+                u'multiple_checkbox',
+                u'multiple_text',
+                u'date',
+                u'datetime',
+                u'datetime_tz',
+                u'dataset_slug',
+                u'dataset_organization',
+                u'json_object',
+                u'markdown',
+                u'radio',
             )
         ) == sorted(presets.keys())
 
     def test_scheming_get_preset(self):
-        preset = scheming_get_preset("date")
+        preset = scheming_get_preset(u"date")
         assert sorted(
             (
-                ("display_snippet", "date.html"),
-                ("form_snippet", "date.html"),
+                (u"display_snippet", u"date.html"),
+                (u"form_snippet", u"date.html"),
                 (
-                    "validators",
-                    "scheming_required isodate convert_to_json_if_date",
+                    u"validators",
+                    u"scheming_required isodate convert_to_json_if_date",
                 ),
             )
         ) == sorted(preset.items())
@@ -112,7 +110,9 @@ class TestDatastoreChoices(object):
         lc.action.datastore_search.side_effect = NotFound()
         LocalCKAN.return_value = lc
         assert (
-            scheming_datastore_choices({"datastore_choices_resource": "not-found"})
+            scheming_datastore_choices(
+                {"datastore_choices_resource": "not-found"}
+            )
             == []
         )
         lc.action.datastore_search.assert_called_once()
@@ -123,7 +123,9 @@ class TestDatastoreChoices(object):
         lc.action.datastore_search.side_effect = NotFound()
         LocalCKAN.return_value = lc
         assert (
-            scheming_datastore_choices({"datastore_choices_resource": "not-allowed"})
+            scheming_datastore_choices(
+                {"datastore_choices_resource": "not-allowed"}
+            )
             == []
         )
         lc.action.datastore_search.assert_called_once()
@@ -134,7 +136,9 @@ class TestDatastoreChoices(object):
         lc.action.datastore_search.side_effect = NotFound()
         LocalCKAN.return_value = lc
         assert (
-            scheming_datastore_choices({"datastore_choices_resource": "not-allowed"})
+            scheming_datastore_choices(
+                {"datastore_choices_resource": "not-allowed"}
+            )
             == []
         )
         lc.action.datastore_search.assert_called_once()
@@ -171,10 +175,9 @@ class TestDatastoreChoices(object):
                 "datastore_choices_resource": "all-params",
                 "datastore_choices_limit": 5,
                 "datastore_choices_columns": {"value": "a", "label": "b"},
-                "datastore_additional_choices": [
-                    {"value": "none", "label": "None"},
-                    {"value": "na", "label": "N/A"},
-                ],
+                "datastore_additional_choices":
+                    [{"value": "none", "label": "None"},
+                     {"value": "na", "label": "N/A"}]
             }
         ) == [
             {"value": "none", "label": "None"},
@@ -191,56 +194,41 @@ class TestDatastoreChoices(object):
 
 class TestJSONHelpers(object):
     def test_display_json_value_default(self):
+
         value = {"a": "b"}
 
         assert scheming_display_json_value(value) == '{\n  "a": "b"\n}'
 
     def test_display_json_value_indent(self):
+
         value = {"a": "b"}
 
-        assert scheming_display_json_value(value, indent=4) == '{\n    "a": "b"\n}'
+        assert (
+            scheming_display_json_value(value, indent=4)
+            == '{\n    "a": "b"\n}'
+        )
 
     def test_display_json_value_no_indent(self):
+
         value = {"a": "b"}
 
         assert scheming_display_json_value(value, indent=None) == '{"a": "b"}'
 
     def test_display_json_value_keys_are_sorted(self):
+
         value = {"c": "d", "a": "b"}
         if six.PY3:
             expected = '{\n    "a": "b",\n    "c": "d"\n}'
         else:
             expected = '{\n    "a": "b", \n    "c": "d"\n}'
 
-        assert scheming_display_json_value(value, indent=4) == expected
+        assert (
+            scheming_display_json_value(value, indent=4) == expected
+        )
 
     def test_display_json_value_json_error(self):
+
         date = datetime.datetime.now()
         value = ("a", date)
 
         assert scheming_display_json_value(value) == ("a", date)
-
-
-@pytest.mark.usefixtures("with_plugins")
-class TestGetArbitrarySchemaHelper(object):
-    def test_get_all_arbitrary_schemas(self):
-        schemas = scheming_arbitrary_schemas()
-
-        assert schemas
-
-    @pytest.mark.ckan_config("scheming.arbitrary_schemas", "")
-    def test_get_all_arbitrary_schemas_if_none(self):
-        schemas = scheming_arbitrary_schemas()
-
-        assert not schemas
-
-    def test_get_specific_schema(self):
-        schema = scheming_get_arbitrary_schema("ckanext_notifier")
-
-        assert schema
-
-    @pytest.mark.ckan_config("scheming.arbitrary_schemas", "")
-    def test_get_specific_schema_if_none(self):
-        schema = scheming_get_arbitrary_schema("ckanext_notifier")
-
-        assert not schema
