@@ -25,6 +25,7 @@ Table of contents:
      - [`group_type`](#group_type)
      - [`organization_type`](#organization_type)
      - [`fields`](#fields)
+   - [Arbitrary Schema Keys](#arbitrary-schema-keys)
    - [Field Keys](#field-keys)
      - [`field_name`](#field_name)
      - [`label`](#label)
@@ -72,7 +73,7 @@ Set the schemas you want to use with configuration options:
 ```ini
 
 # Each of the plugins is optional depending on your use
-ckan.plugins = scheming_datasets scheming_groups scheming_organizations
+ckan.plugins = scheming_datasets scheming_groups scheming_organizations scheming_arbitrary
 
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.yaml
@@ -85,6 +86,7 @@ scheming.group_schemas = ckanext.scheming:group_with_bookface.json
                          ckanext.myplugin:/etc/ckan/default/group_with_custom_fields.json
 scheming.organization_schemas = ckanext.scheming:org_with_dept_id.json
                                 ckanext.myplugin:org_with_custom_fields.json
+scheming.arbitrary_schemas = ckanext.scheming:arbitrary_schema_example.yaml
 #
 #   URLs may also be used, e.g:
 #
@@ -99,6 +101,9 @@ scheming.dataset_fallback = false
 
 ## Schema Types
 With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly as is indicated throughout the examples.
+
+Moreover, `scheming_arbitrary` enables the definition and rendering of a custom form without being tied to a particular entity type.
+The handling of a form submission must be implemented by the developer separately.
 
 
 ## Example Schemas
@@ -126,7 +131,9 @@ Organization schemas:
 * [Default organization schema with field modifications](ckanext/scheming/org_with_dept_id.json)
 * [Organization with custom type](ckanext/scheming/custom_org_with_address.json)
 
+Arbitrary schemas:
 
+* [Arbitrary schema example](ckanext/scheming/arbitrary_schema_example.yaml)
 
 ## Common Schema Keys
 
@@ -229,6 +236,17 @@ fields:
 ...
 ```
 A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties doin dataset schemas.
+
+
+
+
+## Arbitrary Schema Keys
+
+It closely resembles the group/organization schema, with the exception of a single field - `schema_id`.
+
+### `schema_id`
+
+The `schema_id` field serves as a unique identifier for any arbitrary schema, which is utilized within the codebase for retrieving the schema.
 
 
 ----------------

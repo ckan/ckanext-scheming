@@ -473,6 +473,17 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
                 logic.scheming_organization_schema_show,
         }
 
+class SchemingArbitraryPlugin(p.SingletonPlugin, _SchemingMixin):
+    p.implements(p.IConfigurer)
+
+    SCHEMA_OPTION = "scheming.arbitrary_schemas"
+    FALLBACK_OPTION = 'scheming.arbitrary_fallback'
+    SCHEMA_TYPE_FIELD = "schema_id"
+
+    @classmethod
+    def _store_instance(cls, self):
+        SchemingArbitraryPlugin.instance = self
+
 
 class SchemingNerfIndexPlugin(p.SingletonPlugin):
     """

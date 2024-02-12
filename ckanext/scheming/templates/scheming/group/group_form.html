@@ -12,13 +12,7 @@
 <form class="dataset-form form-horizontal" method="post" data-module="basic-form" enctype="multipart/form-data">
     {{ h.csrf_input() if 'csrf_input' in h }}
     {%- set schema = h.scheming_get_group_schema(group_type) -%}
-    {%- for field in schema['fields'] -%}
-        {%- if field.form_snippet is not none -%}
-          {%- snippet 'scheming/snippets/form_field.html',
-          field=field, data=data, errors=errors, licenses=licenses,
-          entity_type='group', object_type=group_type -%}
-        {%- endif -%}
-    {%- endfor -%}
+    {% snippet 'scheming/snippets/render_fields.html', fields=schema.fields, data=data, errors=errors, entity_type='group', object_type=group_type %}
 
     <div class="form-actions">
         {% block delete_button %}
