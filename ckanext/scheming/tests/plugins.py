@@ -6,6 +6,14 @@ class SchemingTestSubclass(SchemingDatasetsPlugin):
     pass
 
 
+class SchemingTestValidationPlugin(p.SingletonPlugin):
+    p.implements(p.IValidators)
+
+    def get_validators(self):
+        return {
+            'scheming_test_args': lambda *a: a,
+        }
+
 
 class SchemingTestSchemaPlugin(p.SingletonPlugin):
     p.implements(p.ITemplateHelpers)

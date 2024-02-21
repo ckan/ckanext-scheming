@@ -55,37 +55,32 @@
   is_required=h.scheming_field_required(field)) %}
     <div {{ form.attributes(field.get('form_attrs', {})) }}>
       <fieldset name="scheming-repeating-subfields" class="scheming-fieldset" data-module="scheming-repeating-subfields">
-	{% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
-	{% if alert_warning %}
-	  <section class="alert alert-warning">
-	    {{ alert_warning|safe }}
-	  </section>
-	{% endif %}
+        {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
+        {% if alert_warning %}
+          <section class="alert alert-warning">
+            {{ alert_warning|safe }}
+          </section>
+        {% endif %}
 
-	{%- set group_data = data[field.field_name] -%}
-	{%- set group_count = group_data|length -%}
-	{%- if not group_count and 'id' not in data -%}
-	  {%- set group_count = field.form_blanks|default(1) -%}
-	{%- endif -%}
+        {%- set group_data = data[field.field_name] -%}
+        {%- set group_count = group_data|length -%}
+        {%- if not group_count and 'id' not in data -%}
+          {%- set group_count = field.form_blanks|default(1) -%}
+        {%- endif -%}
 
-	<div class="scheming-repeating-subfields-group">
-	  {% for index in range(group_count) %}
-	    {{ repeating_panel(index, index + 1) }}
-	  {% endfor %}
-	</div>
-	<div class="control-medium">
-	  {% block add_button %}<a href="javascript:;" name="repeating-add" class="btn btn-link"
-	    >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>{% endblock %}
+        <div class="scheming-repeating-subfields-group">
+          {% for index in range(group_count) %}
+            {{ repeating_panel(index, index + 1) }}
+          {% endfor %}
+        </div>
+        <div class="control-medium">
+          {% block add_button %}<a href="javascript:;" name="repeating-add" class="btn btn-link"
+            >{% block add_button_text %}<i class="fa fa-plus" aria-hidden="true"></i> {{ _('Add') }}{% endblock %}</a>{% endblock %}
 
-	  {% set help_text = h.scheming_language_text(field.help_text) %}
-	  {% if help_text %}
-	    <div class="info-block mrgn-tp-md">
-	      {{ help_text }}
-	    </div>
-	  {% endif %}
-	</div>
+          {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+        </div>
 
-	<div name="repeating-template" style="display:none">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</div>
+        <div name="repeating-template" style="display:none">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</div>
       </fieldset>
     </div>
 {% endcall %}

@@ -1,3 +1,4 @@
+import ast
 import json
 import datetime
 from collections import defaultdict
@@ -340,8 +341,18 @@ def validators_from_string(s, field, schema):
     for p in parts:
         if '(' in p and p[-1] == ')':
             name, args = p.split('(', 1)
-            args = args[:-1].split(',')  # trim trailing ')', break up
-            v = get_validator_or_converter(name)(*args)
+            args = args[:-1]  # trim trailing ')'
+            try:
+                parsed_args = ast.literal_eval(args)
+                if not isinstance(parsed_args, tuple) or not parsed_args:
+                    # it's a signle argument. `not parsed_args` means that this single
+                    # argument is an empty tuple, for example: "default(())"
+                    parsed_args = (parsed_args,)
+
+            except (ValueError, TypeError, SyntaxError, MemoryError):
+                parsed_args = args.split(',')
+
+            v = get_validator_or_converter(name)(*parsed_args)
         else:
             v = get_validator_or_converter(p)
         if getattr(v, 'is_a_scheming_validator', False):
