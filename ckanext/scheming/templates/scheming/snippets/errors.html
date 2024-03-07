@@ -54,6 +54,38 @@
                 </li>
               {%- endif -%}
             {%- endfor -%}
+          {%- elif 'simple_subfields' in field %}
+            {%- for se in errors -%}
+              {%- if se -%}
+                <li data-field-label="{{ field.field_name }}">{{
+                  h.scheming_language_text(field.label) }}:
+                  <ul>
+                    {%- for sf in field.simple_subfields -%}
+                      {%- set se_unprocessed = se.copy() -%}
+
+                      {%- if 'error_snippet' in sf -%}
+                        {%- set sfe_snippet = sf.error_snippet -%}
+
+                        {%- if '/' not in sfe_snippet -%}
+                          {%- set sfe_snippet = 'scheming/error_snippets/' +
+                            sfe_snippet -%}
+                        {%- endif -%}
+
+                        {%- snippet sfe_snippet, unprocessed=se_unprocessed,
+                          field=sf, fields=field.simple_subfileds,
+                          entity_type=entity_type, object_type=object_type -%}
+                      {%- endif -%}
+
+                      {%- if sf.field_name in se_unprocessed -%}
+                        <li data-field-label="{{ field.field_name }}{{ h.scheming_composite_separator() }}{{ sf.field_name }}">{{
+                          h.scheming_language_text(sf.label) }}:
+                          {{ se_unprocessed[sf.field_name][0] }}</li>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
           {%- else -%}
             <li data-field-label="{{ field.field_name }}">{{
               h.scheming_language_text(field.label) }}:
