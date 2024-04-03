@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-{% set read_endpoint = '.read' if h.ckan_version() > '2.9' else '_read' %}
+{% set read_endpoint = '.read' if h.check_ckan_version(min_version="2.9") else '_read' %}
 
 {%- if entity_type == 'dataset' %}
     {%- set controller = 'package' -%}
