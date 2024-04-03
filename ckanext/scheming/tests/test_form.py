@@ -31,21 +31,14 @@ def _get_package_update_page(app, id, env):
 
 
 def _get_resource_new_page(app, id, env):
-    if ckantoolkit.check_ckan_version(min_version="2.9"):
-        url = '/dataset/{}/resource/new'.format(id)
-    else:
-        url = '/dataset/new_resource/{}'.format(id)
-
+    url = '/dataset/{}/resource/new'.format(id)
     return app.get(
         url, extra_environ=env
     )
 
 
 def _get_resource_update_page(app, id, resource_id, env):
-    if ckantoolkit.check_ckan_version(min_version="2.9"):
-        url = '/dataset/{}/resource/{}/edit'.format(id, resource_id)
-    else:
-        url = '/dataset/{}/resource_edit/{}'.format(id, resource_id)
+    url = '/dataset/{}/resource/{}/edit'.format(id, resource_id)
     return app.get(
         url, extra_environ=env,
     )
@@ -76,10 +69,7 @@ class TestDatasetFormNew(object):
     def test_resource_form_includes_custom_fields(self, app, sysadmin_env):
         dataset = Dataset(type="test-schema", name="resource-includes-custom")
 
-        if ckantoolkit.check_ckan_version(min_version="2.9"):
-            url = '/dataset/{}/resource/new'.format(dataset["id"])
-        else:
-            url = '/dataset/new_resource/{}'.format(dataset["id"])
+        url = '/dataset/{}/resource/new'.format(dataset["id"])
 
         response = app.get(
             url,
@@ -121,10 +111,6 @@ class TestOrganizationFormNew(object):
 
 @pytest.mark.usefixtures("clean_db")
 class TestGroupFormNew(object):
-    @pytest.mark.skipif(
-        not ckantoolkit.check_ckan_version(min_version="2.7.0"),
-        reason="Unspecified"
-    )
     def test_group_form_includes_custom_field(self, app, sysadmin_env):
 
         response = _get_group_new_page(app, sysadmin_env)
@@ -144,10 +130,6 @@ class TestGroupFormNew(object):
 
 @pytest.mark.usefixtures("clean_db")
 class TestCustomGroupFormNew(object):
-    @pytest.mark.skipif(
-        not ckantoolkit.check_ckan_version(min_version="2.8.0"),
-        reason="Unspecified"
-    )
     def test_group_form_includes_custom_field(self, app, sysadmin_env):
         response = _get_group_new_page(app, sysadmin_env, "theme")
         form = BeautifulSoup(response.body).select("form")[1]
@@ -162,10 +144,6 @@ class TestCustomGroupFormNew(object):
 
 @pytest.mark.usefixtures("clean_db")
 class TestCustomOrgFormNew(object):
-    @pytest.mark.skipif(
-        not ckantoolkit.check_ckan_version(min_version="2.8.0"),
-        reason="Unspecified"
-    )
     def test_org_form_includes_custom_field(self, app, sysadmin_env):
         response = _get_organization_new_page(
             app, sysadmin_env, "publisher"
