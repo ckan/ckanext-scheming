@@ -11,26 +11,17 @@ except ImportError:
 
 import ckantoolkit
 
-if ckantoolkit.check_ckan_version(min_version='2.9.0'):
-    from contextlib import contextmanager
-    @contextmanager
-    def mock_pylons_request():
-        yield
-else:
-    from ckanext.scheming.tests.mock_pylons_request import mock_pylons_request
-
 
 def render_form_snippet(name, data=None, extra_args=None, errors=None, **kwargs):
     field = {"field_name": "test", "label": "Test"}
     field.update(kwargs)
-    with mock_pylons_request():
-        return render_snippet(
-            "scheming/form_snippets/" + name,
-            field=field,
-            data=data or {},
-            errors=errors or {},
-            **(extra_args or {})
-        )
+    return render_snippet(
+        "scheming/form_snippets/" + name,
+        field=field,
+        data=data or {},
+        errors=errors or {},
+        **(extra_args or {})
+    )
 
 
 @pytest.mark.usefixtures("with_request_context")
