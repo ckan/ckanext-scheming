@@ -402,8 +402,9 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 continue
             # index the field as extras_*
             field_name = field['field_name']
+            extras_field_name = 'extras_{}'.format(field_name)
             value = data_dict.get(field_name)
-            data_dict[f'extras_{field_name}'] = self.get_values_to_index(field, value)
+            data_dict[extras_field_name] = self.get_values_to_index(field, value)
 
         return data_dict
 
