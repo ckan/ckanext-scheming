@@ -183,8 +183,15 @@ pages.
 Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset.
 
+#### Index dataset Fields
 
+New schema fields that should be indexed by Solr for searching should be marked
+with `index_search: true`.  
 
+#### Facet this field
+
+New schema fields that should be faceted in the search results should be marked
+with `facet_field: true`.
 
 ## Group / Organization Schema Keys
 
