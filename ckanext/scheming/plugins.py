@@ -378,7 +378,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
     def dataset_facets(self, facets_dict, package_type):
         schemas = self._expanded_schemas
-        dataset_fields = schemas[package_type]['dataset_fields']
+        dataset_fields = schemas.get(package_type, {}).get('dataset_fields')
         for field in dataset_fields:
             if not field.get('facet_field', False):
                 continue
@@ -394,7 +394,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
         if data_dict['type'] not in schemas:
             return data_dict
 
-        dataset_fields = schemas[data_dict['type']]['dataset_fields']
+        package_type = data_dict['type']
+        dataset_fields = schemas.get(package_type, {}).get('dataset_fields')
         for field in dataset_fields:
             if field['field_name'] not in data_dict:
                 continue
