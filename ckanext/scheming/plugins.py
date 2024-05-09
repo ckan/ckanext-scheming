@@ -384,7 +384,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 continue
             # Add this label to facet
             field_name = field['field_name']
-            facet_field_name = f'extras_{field_name}'
+            facet_field_name = 'extras_{}'.format(field_name)
             facets_dict[facet_field_name] = field.get('label', field_name)
 
         return facets_dict
