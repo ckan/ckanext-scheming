@@ -199,6 +199,8 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     p.implements(p.IDatasetForm, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IValidators)
+    p.implements(p.IFacets, inherit=True)
+    p.implements(p.IPackageController, inherit=True)
 
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
@@ -374,6 +376,62 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             )
         return bp
 
+    def dataset_facets(self, facets_dict, package_type):
+        schemas = self._expanded_schemas
+        dataset_fields = schemas[package_type]['dataset_fields']
+        for field in dataset_fields:
+            if not field.get('facet_field', False):
+                continue
+            # Add this label to facet
+            field_name = field['field_name']
+            facet_field_name = f'extras_{field_name}'
+            facets_dict[facet_field_name] = field.get('label', field_name)
+
+        return facets_dict
+
+    def before_dataset_index(self, data_dict):
+        schemas = self._expanded_schemas
+        if data_dict['type'] not in schemas:
+            return data_dict
+
+        dataset_fields = schemas[data_dict['type']]['dataset_fields']
+        for field in dataset_fields:
+            if field['field_name'] not in data_dict:
+                continue
+            if not field.get('index_search', False):
+                continue
+            # index the field as extras_*
+            field_name = field['field_name']
+            value = data_dict.get(field_name)
+            data_dict[f'extras_{field_name}'] = self.get_values_to_index(field, value)
+
+        return data_dict
+
+    def get_values_to_index(self, schema_field, value):
+        """ Prepare to index a single field value """
+        if isinstance(value, list):
+            values = value
+        elif isinstance(value, str):
+            # Scheming is not clear on how to handle boolean values
+            if value.lower() in ['true', 'false']:
+                values = [p.toolkit.asbool(value)]
+            else:
+                try:
+                    values = json.loads(value)
+                except ValueError:
+                    values = [value]
+        else:
+            # TODO check if we need to handle other types
+            values = [value]
+        out = []
+        # Allow fields with choices_helper
+        choices = helpers.scheming_field_choices(schema_field)
+        for item in values:
+            for choice in choices:
+                if choice['value'] == item:
+                    out.append(choice['label'])
+        return out
+
 
 def expand_form_composite(data, fieldnames):
     """
@@ -486,7 +544,7 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
         return self.before_index(data_dict)
 
     def before_index(self, data_dict):
-        schemas = SchemingDatasetsPlugin.instance._expanded_schemas
+        schemas = self.instance._expanded_schemas
         if data_dict['type'] not in schemas:
             return data_dict
 
