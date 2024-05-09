@@ -546,7 +546,7 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
         return self.before_index(data_dict)
 
     def before_index(self, data_dict):
-        schemas = self.instance._expanded_schemas
+        schemas = SchemingDatasetsPlugin.instance._expanded_schemas
         if data_dict['type'] not in schemas:
             return data_dict
 
