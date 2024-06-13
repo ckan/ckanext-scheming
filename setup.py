@@ -38,6 +38,7 @@ setup(
     scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
     scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
     scheming_nerf_index=ckanext.scheming.plugins:SchemingNerfIndexPlugin
+    scheming_subfields_index=ckanext.scheming.plugins:SchemingSubfieldsIndexPlugin
     scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
     scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
     scheming_test_validation=ckanext.scheming.tests.plugins:SchemingTestValidationPlugin

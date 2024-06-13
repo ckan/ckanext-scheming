@@ -499,6 +499,51 @@ class SchemingNerfIndexPlugin(p.SingletonPlugin):
         return data_dict
 
 
+class SchemingSubfieldsIndexPlugin(p.SingletonPlugin):
+    """
+    Index suitable repeating dataset fields in before_dataset_index to prevent failures
+    on unmodified solr schema. This will allow hitting results in most text and list
+    subfields. Ideally you probably want to select the relevant subfields that will get
+    indexed and modify the Solr schema if necessary.
+
+    This implementation will group the values of the same subfields into an
+    `extras_{field_name}__{key}`,a text Solr field that will allow free-text search on
+    its value. Again, if you require more precise handling of a particular subfield,
+    you will need to customize the Solr schema to add particular fields needed.
+    """
+    p.implements(p.IPackageController, inherit=True)
+
+    def before_dataset_index(self, data_dict):
+        return self.before_index(data_dict)
+
+    def before_index(self, data_dict):
+        schemas = SchemingDatasetsPlugin.instance._expanded_schemas
+        if data_dict['type'] not in schemas:
+            return data_dict
+
+        schema = schemas[data_dict['type']]
+
+        for field in schema['dataset_fields']:
+            if field['field_name'] in data_dict and 'repeating_subfields' in field:
+                for item in data_dict[field['field_name']]:
+                    for key in item:
+                        value = item[key]
+                        if isinstance(value, dict):
+                            continue
+                        if isinstance(value, list):
+                            value = ' '.join(value)
+                        # Index a flattened version
+                        new_key = f'extras_{field["field_name"]}__{key}'
+                        if not data_dict.get(new_key):
+                            data_dict[new_key] = value
+                        else:
+                            data_dict[new_key] += ' ' + value
+
+                data_dict.pop(field['field_name'], None)
+
+        return data_dict
+
+
 def _load_schemas(schemas, type_field):
     out = {}
     for n in schemas:
