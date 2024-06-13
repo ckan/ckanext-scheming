@@ -89,3 +89,8 @@ resource_fields:
 - field_name: format
   label: Format
   preset: resource_format_autocomplete
+
+- field_name: size
+  label: File Size
+  validators: ignore_missing int_validator
+  display_snippet: file_size.html
