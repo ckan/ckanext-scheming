@@ -19,6 +19,7 @@ dataset_dict = {
 
 
 @pytest.mark.usefixtures("with_plugins", "clean_db")
+@pytest.mark.ckan_config("ckan.plugins", "scheming_datasets scheming_subfields_index")
 def test_repeating_subfields_index():
 
     with mock.patch("ckan.lib.search.index.make_connection") as m:
@@ -31,6 +32,7 @@ def test_repeating_subfields_index():
 
 
 @pytest.mark.usefixtures("with_plugins", "clean_db")
+@pytest.mark.ckan_config("ckan.plugins", "scheming_datasets scheming_subfields_index")
 def test_repeating_subfields_search():
 
     dataset = call_action("package_create", **dataset_dict)
