@@ -25,13 +25,15 @@ pytestmark = [
     pytest.mark.usefixtures("with_plugins"),
     pytest.mark.ckan_config(
         "ckan.plugins",
-        [
+        # CKAN 2.9 wants a string
+        " ".join([
             "scheming_datasets",
             "scheming_groups",
             "scheming_organizations",
             "scheming_test_plugin",
-            "scheming_subfields_index"
-        ]
+            "scheming_subfields_index",
+            "scheming_test_validation",
+        ])
     )
 ]
 
@@ -956,8 +958,6 @@ class TestSubfieldResourceInvalid(object):
             raise AssertionError("ValidationError not raised")
 
 
-@pytest.mark.ckan_config("ckan.plugins", "scheming_test_validation")
-@pytest.mark.usefixtures("with_plugins")
 class TestValidatorsFromString:
     def test_empty(self):
         assert validators_from_string("", {}, {}) == []
