@@ -533,7 +533,9 @@ class SchemingSubfieldsIndexPlugin(p.SingletonPlugin):
                         if isinstance(value, list):
                             value = ' '.join(value)
                         # Index a flattened version
-                        new_key = f'extras_{field["field_name"]}__{key}'
+                        new_key = 'extras_{field_name}__{key}'.format(
+                            field_name=field["field_name"], key=key
+                        )
                         if not data_dict.get(new_key):
                             data_dict[new_key] = value
                         else:
