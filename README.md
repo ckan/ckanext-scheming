@@ -280,10 +280,13 @@ When using a plain string translations will be provided with gettext:
 This field is the parent of group of repeating subfields. The value is
 a list of fields entered the same way as normal fields.
 
-> **_NOTE:_** CKAN needs an IPackageController plugin with `before_index` to
-> convert repeating subfields to formats that can be indexed by solr. For
-> testing you may use the included `scheming_nerf_index` plugin to encode
-> all repeating fields as JSON strings to prevent solr errors.
+> [!NOTE]
+> CKAN needs an IPackageController plugin with `before_dataset_index` to
+> convert repeating subfields to formats that can be indexed by solr. The
+> included `scheming_subfields_index` plugin will group the values of the
+> same subfields in a text field that will make the values findable. If
+> you require more precise handling of a particular subfield,
+> you will need to customize the Solr schema to add the necessary fields.
 
 `repeating_label` may be used to provide a singular version of the label
 for each group.
