@@ -21,6 +21,21 @@ ignore_missing = get_validator("ignore_missing")
 not_empty = get_validator("not_empty")
 
 
+pytestmark = [
+    pytest.mark.usefixtures("with_plugins"),
+    pytest.mark.ckan_config(
+        "ckan.plugins",
+        [
+            "scheming_datasets",
+            "scheming_groups",
+            "scheming_organizations",
+            "scheming_test_plugin",
+            "scheming_subfields_index"
+        ]
+    )
+]
+
+
 class TestGetValidatorOrConverter(object):
     def test_missing(self):
         with pytest.raises(SchemingException):
