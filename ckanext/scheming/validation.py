@@ -61,6 +61,27 @@ def strip_value(value):
 
 @scheming_validator
 @register_validator
+def scheming_simple_subfields(field, schema):
+    def validator(key, data, errors, context):
+        fields = schema.get('dataset_fields', []) + schema.get('resource_fields', [])
+        key_tuples = data.keys()
+        for f in fields:
+            if 'simple_subfields' in f:
+                error_fn = f['field_name'] + '_subfield_length'
+                iters = [tup[1] for tup in key_tuples if tup[0] == f['field_name']]
+                if iters and max(iters) > 0:
+                    if (error_fn,) not in errors:
+                        errors[(error_fn,)] = []
+                    errors[(error_fn,)].extend([
+                        _('Too many items in simple subfield %s. Found %s items, expected 1')
+                        % (f['field_name'], (max(iters) + 1))
+                    ])
+                    raise StopOnError
+    return validator
+
+
+@scheming_validator
+@register_validator
 def scheming_choices(field, schema):
     """
     Require that one of the field choices values is passed.
