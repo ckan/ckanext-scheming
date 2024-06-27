@@ -21,6 +21,22 @@ ignore_missing = get_validator("ignore_missing")
 not_empty = get_validator("not_empty")
 
 
+pytestmark = [
+    pytest.mark.usefixtures("with_plugins"),
+    pytest.mark.ckan_config(
+        "ckan.plugins",
+        " ".join([
+            "scheming_datasets",
+            "scheming_groups",
+            "scheming_organizations",
+            "scheming_test_plugin",
+            "scheming_nerf_index",
+            "scheming_test_validation",
+        ])
+    )
+]
+
+
 class TestGetValidatorOrConverter(object):
     def test_missing(self):
         with pytest.raises(SchemingException):
@@ -941,8 +957,6 @@ class TestSubfieldResourceInvalid(object):
             raise AssertionError("ValidationError not raised")
 
 
-@pytest.mark.ckan_config("ckan.plugins", "scheming_test_validation")
-@pytest.mark.usefixtures("with_plugins")
 class TestValidatorsFromString:
     def test_empty(self):
         assert validators_from_string("", {}, {}) == []
