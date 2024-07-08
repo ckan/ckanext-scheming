@@ -5,6 +5,8 @@
 {%- if not display_snippet -%}
   {%- if field.repeating_subfields -%}
     {%- set display_snippet = 'repeating_subfields.html' -%}
+  {%- elif field.simple_subfields -%}
+    {%- set display_snippet = 'simple_subfields.html' -%}
   {%- elif h.scheming_field_choices(field) -%}
     {%- set display_snippet = 'select.html' -%}
   {%- else -%}
