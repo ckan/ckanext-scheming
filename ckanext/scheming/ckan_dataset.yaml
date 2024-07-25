@@ -48,7 +48,7 @@ dataset_fields:
 
 - field_name: author
   label: Author
-  form_placeholder: Joe Bloggs
+  form_placeholder: Philipp
   display_property: dc:creator
 
 - field_name: author_email
