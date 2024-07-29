@@ -118,43 +118,6 @@ dataset_fields:
   form_placeholder: "Additional infos for archaeological period(s) of data collection"
   required: false
 
-- field_name: geological_timeframe
-  label: Geological Timeframe
-  repeating_subfields:
-    - field_name: geological_timeframe_entry
-      label: Geological Timeframe
-      choices:
-        - value: Holocene
-          label: Holocene
-        - value: Early Holocene
-          label: Early Holocene
-        - value: Mid Holocene
-          label: Mid Holocene
-        - value: Late Holocene
-          label: Late Holocene
-        - value: Pleistocene
-          label: Pleistocene
-        - value: Early Pleistocene
-          label: Early Pleistocene
-        - value: Mid Pleistocene
-          label: Mid Pleistocene
-        - value: Late Pleistocene
-          label: Late Pleistocene
-        - value: Pliocene
-          label: Pliocene
-        - value: Early Pliocene
-          label: Early Pliocene
-        - value: Mid Pliocene
-          label: Mid Pliocene
-        - value: Late Pliocene
-          label: Late Pliocene
-  required: false
-  preset: select
-
-- field_name: timeframes_addition
-  label: Timeframe(s) Addition
-  form_placeholder: "Additional infos for geological timeframe(s) of data collection"
-  required: false
 
 resource_fields:
 
