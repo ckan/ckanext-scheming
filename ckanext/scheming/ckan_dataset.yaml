@@ -5,12 +5,11 @@ about_url: http://github.com/ckan/ckanext-scheming
 
 
 dataset_fields:
-- field_name: content_information_header
-  label: Content Information
-  display_snippet: markdown.html
-  markdown: "### Content Information"
+- start_form_page:
+    title: Basic Info
+    description: Required and core dataset fields
 
-- field_name: title
+  field_name: title
   label: Title
   form_placeholder: Title of data collection
   required: true
@@ -29,8 +28,9 @@ dataset_fields:
   form_placeholder: "Detailed description of the (research) project and the resulting data collection."
   required: false
 
-- field_name: keywords
+- field_name: tag_String
   label: Keywords
+  preset: tag_string_autocomplete
   form_placeholder: "Useful keywords for data collection; separated by semicolon"
   required: false
 
@@ -105,6 +105,7 @@ dataset_fields:
   form_placeholder: "Specification of license for data collection"
   required: true
 
+    
 - field_name: archaeological_periods
   label: Archaeological Period(s)
   repeating_subfields:
