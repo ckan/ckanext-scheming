@@ -96,13 +96,11 @@ dataset_fields:
   label: Project Data Collection Start
   form_placeholder: "Year of project data collection start"
   required: false
-  validators: number_validator
 
 - field_name: project_data_collection_end
   label: Project Data Collection End
   form_placeholder: "Year of project data collection end"
   required: false
-  validators: number_validator
 
 - field_name: license
   label: License
