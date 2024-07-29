@@ -5,70 +5,108 @@ about_url: http://github.com/ckan/ckanext-scheming
 
 
 dataset_fields:
+- field_name: content_information_header
+  label: Content Information
+  form_snippet: markdown.html
+  markdown: "### Content Information"
+
+- field_name: database_id
+  label: Database ID
+  form_placeholder: SYS
+  required: false
 
 - field_name: title
   label: Title
-  preset: title
-  form_placeholder: eg. A descriptive title
+  form_placeholder: Title of data collection
+  required: true
 
-- field_name: name
-  label: URL
-  preset: dataset_slug
-  form_placeholder: eg. my-dataset
+- field_name: authors
+  label: Author(s)
+  repeating_subfields:
+    - field_name: author
+      label: Author
+      form_placeholder: "FirstName LastName"
+  required: true
 
-- field_name: notes
+- field_name: description
   label: Description
   form_snippet: markdown.html
-  form_placeholder: eg. Some useful notes about the data
+  form_placeholder: "Detailed description of the (research) project and the resulting data collection."
+  required: true
 
-- field_name: tag_string
-  label: Tags
-  preset: tag_string_autocomplete
-  form_placeholder: eg. economy, mental health, government
+- field_name: keywords
+  label: Keywords
+  form_placeholder: "Useful keywords for data collection; separated by semicolon"
+  required: true
 
-- field_name: license_id
+- field_name: data_pillar
+  label: Data Pillar
+  choices:
+    - value: Archaeology
+      label: Archaeology
+    - value: Geology
+      label: Geology
+    - value: Meteorology
+      label: Meteorology
+    - value: Humanities
+      label: Humanities
+  required: true
+  preset: select
+
+- field_name: raw_data_source
+  label: Raw Data Source
+  form_placeholder: "Sources used for creating data collection; multiple entries possible, separated by semicolon"
+  required: true
+
+- field_name: data_doi
+  label: Data DOI
+  form_placeholder: "A DOI that provides the location of the data collected."
+  required: false
+
+- field_name: language
+  label: Language
+  repeating_subfields:
+    - field_name: language_entry
+      label: Language Entry
+      form_placeholder: "Language"
+  required: true
+
+- field_name: citations
+  label: Citation(s)
+  repeating_subfields:
+    - field_name: citation
+      label: Citation
+      form_placeholder: "Citation"
+  required: false
+
+- field_name: project_references
+  label: Project Reference(s)
+  repeating_subfields:
+    - field_name: project_reference
+      label: Project Reference
+      form_placeholder: "Project Reference"
+  required: false
+
+- field_name: other_related_data
+  label: Other Related Data
+  form_placeholder: "Other entries, projects, or data that should likely be explored in conjunction with these data"
+  required: false
+
+- field_name: project_data_collection_start
+  label: Project Data Collection Start
+  form_placeholder: "Year of project data collection start"
+  required: false
+
+- field_name: project_data_collection_end
+  label: Project Data Collection End
+  form_placeholder: "Year of project data collection end"
+  required: false
+
+- field_name: license
   label: License
   form_snippet: license.html
-  help_text: License definitions and additional information can be found at http://opendefinition.org/
-
-- field_name: owner_org
-  label: Organization
-  preset: dataset_organization
-
-- field_name: url
-  label: Source
-  form_placeholder: http://example.com/dataset.json
-  display_property: foaf:homepage
-  display_snippet: link.html
-
-- field_name: version
-  label: Version
-  validators: ignore_missing unicode_safe package_version_validator
-  form_placeholder: '1.0'
-
-- field_name: author
-  label: Author
-  form_placeholder: Philipp
-  display_property: dc:creator
-
-- field_name: author_email
-  label: Author Email
-  form_placeholder: joe@example.com
-  display_property: dc:creator
-  display_snippet: email.html
-  display_email_name_field: author
-
-- field_name: maintainer
-  label: Maintainer
-  form_placeholder: Joe Bloggs
-  display_property: dc:contributor
-
-- field_name: maintainer_email
-  label: Maintainer Email
-  form_placeholder: joe@example.com
-  display_property: dc:contributor
-  display_snippet: email.html
-  display_email_name_field: maintainer
+  form_placeholder: "Specification of license for data collection"
+  required: true
 
 
 resource_fields:
