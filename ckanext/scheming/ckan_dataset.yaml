@@ -1,91 +1,300 @@
 scheming_version: 2
 dataset_type: dataset
-about: A reimplementation of the default CKAN dataset schema
+about: Custom CKAN dataset schema for research data management
 about_url: http://github.com/ckan/ckanext-scheming
 
-
 dataset_fields:
+  - field_name: content_information_header
+    label: Content Information
+    form_snippet: markdown.html
+    markdown: "### Content Information"
 
-- field_name: title
-  label: Title
-  preset: title
-  form_placeholder: eg. A descriptive title
+  - field_name: database_id
+    label: Database ID
+    form_placeholder: SYS
+    required: false
 
-- field_name: name
-  label: URL
-  preset: dataset_slug
-  form_placeholder: eg. my-dataset
+  - field_name: title
+    label: Title
+    form_placeholder: Title of data collection
+    required: true
 
-- field_name: notes
-  label: Description
-  form_snippet: markdown.html
-  form_placeholder: eg. Some useful notes about the data
+  - field_name: authors
+    label: Author(s)
+    repeating_subfields:
+      - field_name: author
+        label: Author
+        form_placeholder: "FirstName LastName"
+    required: true
 
-- field_name: tag_string
-  label: Tags
-  preset: tag_string_autocomplete
-  form_placeholder: eg. economy, mental health, government
+  - field_name: description
+    label: Description
+    form_snippet: markdown.html
+    form_placeholder: "Detailed description of the (research) project and the resulting data collection."
+    required: true
 
-- field_name: license_id
-  label: License
-  form_snippet: license.html
-  help_text: License definitions and additional information can be found at http://opendefinition.org/
+  - field_name: keywords
+    label: Keywords
+    form_placeholder: "Useful keywords for data collection; separated by semicolon"
+    required: true
 
-- field_name: owner_org
-  label: Organization
-  preset: dataset_organization
+  - field_name: data_pillar
+    label: Data Pillar
+    choices:
+      - value: Archaeology
+        label: Archaeology
+      - value: Geology
+        label: Geology
+      - value: Meteorology
+        label: Meteorology
+      - value: Humanities
+        label: Humanities
+    required: true
+    preset: select
 
-- field_name: url
-  label: Source
-  form_placeholder: http://example.com/dataset.json
-  display_property: foaf:homepage
-  display_snippet: link.html
+  - field_name: raw_data_source
+    label: Raw Data Source
+    form_placeholder: "Sources used for creating data collection; multiple entries possible, separated by semicolon"
+    required: true
 
-- field_name: version
-  label: Version
-  validators: ignore_missing unicode_safe package_version_validator
-  form_placeholder: '1.0'
+  - field_name: data_doi
+    label: Data DOI
+    form_placeholder: "A DOI that provides the location of the data collected."
+    required: false
 
-- field_name: author
-  label: Author
-  form_placeholder: Philipp
-  display_property: dc:creator
+  - field_name: language
+    label: Language
+    repeating_subfields:
+      - field_name: language_entry
+        label: Language Entry
+        form_placeholder: "Language"
+    required: true
 
-- field_name: author_email
-  label: Author Email
-  form_placeholder: joe@example.com
-  display_property: dc:creator
-  display_snippet: email.html
-  display_email_name_field: author
+  - field_name: citations
+    label: Citation(s)
+    repeating_subfields:
+      - field_name: citation
+        label: Citation
+        form_placeholder: "Citation"
+    required: false
 
-- field_name: maintainer
-  label: Maintainer
-  form_placeholder: Joe Bloggs
-  display_property: dc:contributor
+  - field_name: project_references
+    label: Project Reference(s)
+    repeating_subfields:
+      - field_name: project_reference
+        label: Project Reference
+        form_placeholder: "Project Reference"
+    required: false
 
-- field_name: maintainer_email
-  label: Maintainer Email
-  form_placeholder: joe@example.com
-  display_property: dc:contributor
-  display_snippet: email.html
-  display_email_name_field: maintainer
+  - field_name: other_related_data
+    label: Other Related Data
+    form_placeholder: "Other entries, projects, or data that should likely be explored in conjunction with these data"
+    required: false
 
+  - field_name: project_data_collection_start
+    label: Project Data Collection Start
+    form_placeholder: "Year of project data collection start"
+    required: false
+
+  - field_name: project_data_collection_end
+    label: Project Data Collection End
+    form_placeholder: "Year of project data collection end"
+    required: false
+
+  - field_name: license
+    label: License
+    form_snippet: license.html
+    form_placeholder: "Specification of license for data collection"
+    required: true
+
+  - field_name: spatio_temporal_categorization_header
+    label: Spatio/Temporal Categorization
+    form_snippet: markdown.html
+    markdown: "### Spatio/Temporal Categorization"
+
+  - field_name: archaeological_periods
+    label: Archaeological Period(s)
+    repeating_subfields:
+      - field_name: archaeological_period
+        label: Archaeological Period
+        form_placeholder: "Archaeological Period"
+    required: false
+
+  - field_name: periods_addition
+    label: Period(s) Addition
+    form_placeholder: "Additional infos for archaeological period(s) of data collection"
+    required: false
+
+  - field_name: geological_timeframe
+    label: Geological Timeframe
+    repeating_subfields:
+      - field_name: geological_timeframe_entry
+        label: Geological Timeframe
+        choices:
+          - value: Holocene
+            label: Holocene
+          - value: Early Holocene
+            label: Early Holocene
+          - value: Mid Holocene
+            label: Mid Holocene
+          - value: Late Holocene
+            label: Late Holocene
+          - value: Pleistocene
+            label: Pleistocene
+          - value: Early Pleistocene
+            label: Early Pleistocene
+          - value: Mid Pleistocene
+            label: Mid Pleistocene
+          - value: Late Pleistocene
+            label: Late Pleistocene
+          - value: Pliocene
+            label: Pliocene
+          - value: Early Pliocene
+            label: Early Pliocene
+          - value: Mid Pliocene
+            label: Mid Pliocene
+          - value: Late Pliocene
+            label: Late Pliocene
+    required: false
+    preset: select
+
+  - field_name: timeframes_addition
+    label: Timeframe(s) Addition
+    form_placeholder: "Additional infos for geological timeframe(s) of data collection"
+    required: false
+
+  - field_name: content_start_date
+    label: Content Start Date
+    form_placeholder: "Described findings or objects from time range starting with this year"
+    required: true
+
+  - field_name: content_end_date
+    label: Content End Date
+    form_placeholder: "Described findings or objects from time range ending with this year"
+    required: true
+
+  - field_name: regions
+    label: Region(s)
+    repeating_subfields:
+      - field_name: region
+        label: Region
+        choices:
+          - value: Australia/New Zealand
+            label: Australia/New Zealand
+          - value: Caribbean
+            label: Caribbean
+          - value: Central America
+            label: Central America
+          - value: Central Asia
+            label: Central Asia
+          - value: Eastern Africa
+            label: Eastern Africa
+          - value: Eastern Asia
+            label: Eastern Asia
+          - value: Eastern Europe
+            label: Eastern Europe
+          - value: Melanesia
+            label: Melanesia
+          - value: Micronesia
+            label: Micronesia
+          - value: Middle Africa
+            label: Middle Africa
+          - value: Northern Africa
+            label: Northern Africa
+          - value: Northern America
+            label: Northern America
+          - value: Northern Europe
+            label: Northern Europe
+          - value: Polynesia
+            label: Polynesia
+          - value: South America
+            label: South America
+          - value: South-eastern Asia
+            label: South-eastern Asia
+          - value: Southern Africa
+            label: Southern Africa
+          - value: Southern Asia
+            label: Southern Asia
+          - value: Southern Europe
+            label: Southern Europe
+          - value: Western Africa
+            label: Western Africa
+          - value: Western Asia
+            label: Western Asia
+          - value: Western Europe
+            label: Western Europe
+    required: true
+    preset: select
+
+  - field_name: regions_addition
+    label: Region(s) Addition
+    form_placeholder: "Any additional infos for region of data collection"
+    required: false
+
+  - field_name: database_information_header
+    label: Database Information
+    form_snippet: markdown.html
+    markdown: "### Database Information"
+
+  - field_name: metadata_owner
+    label: Metadata Owner
+    form_placeholder: "Organisation or person with ownership and responsibility of the metadata"
+    required: true
+
+  - field_name: metadata_owner_username
+    label: Metadata Owner Username
+    form_placeholder: "User identification by the HESCOR Project"
+    required: false
+
+  - field_name: metadata_owner_contact
+    label: Metadata Owner Contact
+    form_placeholder: "Email address of metadata owner"
+    required: false
+
+  - field_name: size_of_data
+    label: Size of Data
+    form_placeholder: "Approximate size of data"
+    required: false
+
+  - field_name: database_administration_header
+    label: Database Administration
+    form_snippet: markdown.html
+    markdown: "### Database Administration"
+
+  - field_name: submitter
+    label: Submitter
+    form_placeholder: "Username of submitter of data record"
+    required: false
+
+  - field_name: submit_date
+    label: Submit Date
+    form_placeholder: "Timestamp of data record creation"
+    required: false
+
+  - field_name: last_modified_by
+    label: Last Modified by
+    form_placeholder: "Username of user who did last modification of data record"
+    required: false
+
+  - field_name: last_modified_date
+    label: Last Modified Date
+    form_placeholder: "Timestamp of last modification of data record"
+    required: false
 
 resource_fields:
+  - field_name: url
+    label: URL
+    preset: resource_url_upload
 
-- field_name: url
-  label: URL
-  preset: resource_url_upload
+  - field_name: name
+    label: Name
+    form_placeholder: eg. January 2011 Gold Prices
 
-- field_name: name
-  label: Name
-  form_placeholder: eg. January 2011 Gold Prices
+  - field_name: description
+    label: Description
+    form_snippet: markdown.html
+    form_placeholder: Some useful notes about the data
 
-- field_name: description
-  label: Description
-  form_snippet: markdown.html
-  form_placeholder: Some useful notes about the data
-
-- field_name: format
-  label: Format
-  preset: resource_format_autocomplete
+  - field_name: format
+    label: Format
+    preset: resource_format_autocomplete
