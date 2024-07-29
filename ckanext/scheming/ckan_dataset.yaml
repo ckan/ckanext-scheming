@@ -11,8 +11,13 @@ dataset_fields:
 
   field_name: title
   label: Title
-  form_placeholder: Title of data collection
-  required: true
+  preset: title
+  form_placeholder: eg. A descriptive title
+
+- field_name: name
+  label: URL
+  preset: dataset_slug
+  form_placeholder: eg. my-dataset
 
 - field_name: authors
   label: Author(s)
