@@ -7,7 +7,7 @@ about_url: http://github.com/ckan/ckanext-scheming
 dataset_fields:
 - field_name: content_information_header
   label: Content Information
-  display_snippet: markdown.html
+  form_snippet: markdown.html
   markdown: "### Content Information"
 
 - field_name: title
@@ -107,7 +107,7 @@ dataset_fields:
 
 - field_name: spatio_temporal_categorization_header
   label: Spatio/Temporal Categorization
-  display_snippet: markdown.html
+  form_snippet: markdown.html
   markdown: "### Spatio/Temporal Categorization"
 
 - field_name: archaeological_periods
@@ -231,7 +231,7 @@ dataset_fields:
 
 - field_name: database_information_header
   label: Database Information
-  display_snippet: markdown.html
+  form_snippet: markdown.html
   markdown: "### Database Information"
 
 - field_name: metadata_owner
