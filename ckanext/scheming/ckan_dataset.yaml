@@ -16,6 +16,7 @@ dataset_fields:
   required: true
 
 - field_name: authors
+  label: Author(s)
   repeating_subfields:
     - field_name: author
       label: Author
