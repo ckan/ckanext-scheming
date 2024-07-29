@@ -27,6 +27,10 @@ dataset_fields:
       form_placeholder: "FirstName LastName"
   required: false
 
+- field_name: owner_org
+  label: Organization
+  preset: dataset_organization
+
 - field_name: description
   label: Description
   form_snippet: markdown.html
