@@ -7,7 +7,7 @@ about_url: http://github.com/ckan/ckanext-scheming
 dataset_fields:
 - field_name: content_information_header
   label: Content Information
-  form_snippet: markdown.html
+  display_snippet: markdown.html
   markdown: "### Content Information"
 
 - field_name: title
