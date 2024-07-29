@@ -266,35 +266,432 @@ dataset_fields:
     form_placeholder: "Username of submitter of data record"
     required: false
 
-  - field_name: submit_date
-    label: Submit Date
-    form_placeholder: "Timestamp of data record creation"
-    required: false
+- start_form_page:
+    title: Archaeological Metadata
 
-  - field_name: last_modified_by
-    label: Last Modified by
-    form_placeholder: "Username of user who did last modification of data record"
-    required: false
+- field_name: latitude
+  label: Latitude
+  form_placeholder: "Latitude of the find location"
+  required: false
+  validators: number_validator
 
-  - field_name: last_modified_date
-    label: Last Modified Date
-    form_placeholder: "Timestamp of last modification of data record"
-    required: false
+- field_name: longitude
+  label: Longitude
+  form_placeholder: "Longitude of the find location"
+  required: false
+  validators: number_validator
 
-resource_fields:
-  - field_name: url
-    label: URL
-    preset: resource_url_upload
+- field_name: feature_type
+  label: Feature Type
+  repeating_subfields:
+    - field_name: feature_type_entry
+      label: Feature Type
+      choices:
+        - value: Architectural Element
+          label: Architectural Element
+        - value: Enclosure
+          label: Enclosure
+        - value: Funerary
+          label: Funerary
+        - value: Hoard
+          label: Hoard
+        - value: Materials
+          label: Materials
+        - value: Ritual
+          label: Ritual
+        - value: Settlement
+          label: Settlement
+  required: false
+  preset: select
 
-  - field_name: name
-    label: Name
-    form_placeholder: eg. January 2011 Gold Prices
+- field_name: find_type
+  label: Find Type
+  repeating_subfields:
+    - field_name: find_type_entry
+      label: Find Type
+      choices:
+        - value: Bone
+          label: Bone
+        - value: Ceramic
+          label: Ceramic
+        - value: Glass
+          label: Glass
+        - value: Metal
+          label: Metal
+        - value: Stone
+          label: Stone
+        - value: Vegetal, Organic Materials
+          label: Vegetal, Organic Materials
+  required: false
+  preset: select
 
-  - field_name: description
-    label: Description
-    form_snippet: markdown.html
-    form_placeholder: Some useful notes about the data
+- field_name: analysis_method
+  label: Analysis/Method
+  repeating_subfields:
+    - field_name: analysis_method_entry
+      label: Analysis/Method
+      choices:
+        - value: Anthropology
+          label: Anthropology
+        - value: Botany
+          label: Botany
+        - value: Dating
+          label: Dating
+        - value: Geochemistry
+          label: Geochemistry
+        - value: Geology
+          label: Geology
+        - value: Physiography
+          label: Physiography
+        - value: Sampling
+          label: Sampling
+        - value: Sediment Profile
+          label: Sediment Profile
+        - value: Survey
+          label: Survey
+        - value: Zoology
+          label: Zoology
+        - value: aDNA
+          label: aDNA
+  required: false
+  preset: select
 
-  - field_name: format
-    label: Format
-    preset: resource_format_autocomplete
+- field_name: age_model_available
+  label: Age Model Available?
+  choices:
+    - value: Yes
+      label: Yes
+    - value: No
+      label: No
+  required: false
+  preset: select
+
+- field_name: age_model_addition
+  label: Age Model Addition
+  form_placeholder: "Details about the age model if available"
+  required: false
+
+- field_name: dating_method
+  label: Dating Method
+  repeating_subfields:
+    - field_name: dating_method_entry
+      label: Dating Method
+      choices:
+        - value: Ar/Ar and K/Ar
+          label: Ar/Ar and K/Ar
+        - value: Cosmogenic nuclides
+          label: Cosmogenic nuclides
+        - value: Dendrochronology
+          label: Dendrochronology
+        - value: Lichenometry
+          label: Lichenometry
+        - value: Luminescence
+          label: Luminescence
+        - value: Radiocarbon
+          label: Radiocarbon
+        - value: Relative Dating
+          label: Relative Dating
+        - value: Uranium Series
+          label: Uranium Series
+  required: false
+  preset: select
+
+- start_form_page:
+    title: Geological Metadata
+
+- field_name: latitude_geological
+  label: Latitude
+  form_placeholder: "Latitude of the geological site"
+  required: false
+  validators: number_validator
+
+- field_name: longitude_geological
+  label: Longitude
+  form_placeholder: "Longitude of the geological site"
+  required: false
+  validators: number_validator
+
+- field_name: environmental_archive
+  label: Environmental Archive
+  choices:
+    - value: Corals
+      label: Corals
+    - value: Geomorphological Features
+      label: Geomorphological Features
+    - value: Historical
+      label: Historical
+    - value: Ice Core
+      label: Ice Core
+    - value: Instruments
+      label: Instruments
+    - value: Lake Core
+      label: Lake Core
+    - value: Loess
+      label: Loess
+    - value: Marine Core
+      label: Marine Core
+    - value: Sediments
+      label: Sediments
+    - value: Speleothems
+      label: Speleothems
+    - value: Tree Rings
+      label: Tree Rings
+  required: false
+  preset: select
+
+- field_name: proxy_type
+  label: Proxy Type
+  repeating_subfields:
+    - field_name: proxy_type_entry
+      label: Proxy Type
+      choices:
+        - value: Biological (Charcoal)
+          label: Biological (Charcoal)
+        - value: Biological (Diatoms)
+          label: Biological (Diatoms)
+        - value: Biological (Foraminifera)
+          label: Biological (Foraminifera)
+        - value: Biological (Ostracods)
+          label: Biological (Ostracods)
+        - value: Biological (Other)
+          label: Biological (Other)
+        - value: Biological (Phytoliths)
+          label: Biological (Phytoliths)
+        - value: Biological (Pollen)
+          label: Biological (Pollen)
+        - value: Biomarkers
+          label: Biomarkers
+        - value: Dates
+          label: Dates
+        - value: Geochemistry (other)
+          label: Geochemistry (other)
+        - value: Geochemistry (XRD)
+          label: Geochemistry (XRD)
+        - value: Geochemistry (XRF)
+          label: Geochemistry (XRF)
+        - value: Geomorphological Features
+          label: Geomorphological Features
+        - value: Grain Size
+          label: Grain Size
+        - value: Isotopes (C)
+          label: Isotopes (C)
+        - value: Isotopes (Clumped)
+          label: Isotopes (Clumped)
+        - value: Isotopes (D)
+          label: Isotopes (D)
+        - value: Isotopes (N)
+          label: Isotopes (N)
+        - value: Isotopes (O)
+          label: Isotopes (O)
+        - value: Isotopes (S)
+          label: Isotopes (S)
+        - value: Isotopes (Sr)
+          label: Isotopes (Sr)
+        - value: Laminations
+          label: Laminations
+        - value: Loss on Ignition
+          label: Loss on Ignition
+        - value: Magnetic Susceptibility
+          label: Magnetic Susceptibility
+        - value: Paleosols
+          label: Paleosols
+        - value: Sediment Color
+          label: Sediment Color
+        - value: Soils
+          label: Soils
+        - value: Water Content
+          label: Water Content
+  required: false
+  preset: select
+
+- field_name: age_model_available_geological
+  label: Age Model Available?
+  choices:
+    - value: Yes
+      label: Yes
+    - value: No
+      label: No
+  required: false
+  preset: select
+
+- field_name: age_model_addition_geological
+  label: Age Model Addition
+  form_placeholder: "Details about the age model if available"
+  required: false
+
+- field_name: dating_method_geological
+  label: Dating Method
+  repeating_subfields:
+    - field_name: dating_method_entry_geological
+      label: Dating Method
+      choices:
+        - value: Ar/Ar and K/Ar
+          label: Ar/Ar and K/Ar
+        - value: Cosmogenic nuclides
+          label: Cosmogenic nuclides
+        - value: Dendrochronology
+          label: Dendrochronology
+        - value: Lichenometry
+          label: Lichenometry
+        - value: Luminescence
+          label: Luminescence
+        - value: Radiocarbon
+          label: Radiocarbon
+        - value: Relative Dating
+          label: Relative Dating
+        - value: Uranium Series
+          label: Uranium Series
+  required: false
+  preset: select
+
+- field_name: temporal_data_resolution
+  label: Temporal Data Resolution
+  form_placeholder: "Temporal data resolution (e.g., in years)"
+  required: false
+  validators: number_validator
+
+- field_name: physical_data_resolution
+  label: Physical Data Resolution
+  form_placeholder: "Physical data resolution (e.g., in cm)"
+  required: false
+  validators: number_validator
+
+- start_form_page:
+    title: Meteorological Metadata
+
+- field_name: model_type
+  label: Model Type
+  choices:
+    - value: WRF
+      label: WRF
+    - value: ICON
+      label: ICON
+    - value: ECMWF
+      label: ECMWF
+    - value: GFS
+      label: GFS
+  required: false
+  preset: select
+
+- field_name: input
+  label: Input
+  repeating_subfields:
+    - field_name: input_entry
+      label: Input
+      choices:
+        - value: Topography
+          label: Topography
+        - value: Lithology
+          label: Lithology
+        - value: Chemistry
+          label: Chemistry
+        - value: Rainfall
+          label: Rainfall
+        - value: Wind
+          label: Wind
+        - value: Migration Patterns
+          label: Migration Patterns
+        - value: Cloud Cover
+          label: Cloud Cover
+  required: false
+  preset: select
+
+- field_name: output
+  label: Output
+  repeating_subfields:
+    - field_name: output_entry
+      label: Output
+      choices:
+        - value: Topography
+          label: Topography
+        - value: Lithology
+          label: Lithology
+        - value: Chemistry
+          label: Chemistry
+        - value: Rainfall
+          label: Rainfall
+        - value: Wind
+          label: Wind
+        - value: Migration Patterns
+          label: Migration Patterns
+        - value: Cloud Cover
+          label: Cloud Cover
+  required: false
+  preset: select
+
+- field_name: grid_size
+  label: Grid Size
+  form_placeholder: "Grid size used in the model (e.g., in km)"
+  required: false
+  validators: number_validator
+
+- field_name: time_slice_resolution
+  label: Time Slice Resolution
+  form_placeholder: "Temporal resolution of time slices (e.g., in hours)"
+  required: false
+  validators: number_validator
+
+- start_form_page:
+    title: Humanities Metadata
+
+- field_name: source_type
+  label: Source Type
+  repeating_subfields:
+    - field_name: source_type_entry
+      label: Source Type
+      choices:
+        - value: Biography
+          label: Biography
+        - value: Ethnography
+          label: Ethnography
+        - value: Illustrations
+          label: Illustrations
+        - value: Images
+          label: Images
+        - value: Interviews
+          label: Interviews
+        - value: Maps
+          label: Maps
+        - value: Texts
+          label: Texts
+        - value: Videos
+          label: Videos
+  required: false
+  preset: select
+
+- field_name: discipline
+  label: Discipline
+  repeating_subfields:
+    - field_name: discipline_entry
+      label: Discipline
+      choices:
+        - value: Archival Sciences
+          label: Archival Sciences
+        - value: Arts
+          label: Arts
+        - value: Economics
+          label: Economics
+        - value: Ethnology
+          label: Ethnology
+        - value: Family/Gender Studies
+          label: Family/Gender Studies
+        - value: History
+          label: History
+        - value: Linguistics
+          label: Linguistics
+        - value: Literary Sciences
+          label: Literary Sciences
+        - value: Peace and Conflict Studies
+          label: Peace and Conflict Studies
+        - value: Philosophy
+          label: Philosophy
+        - value: Political Science
+          label: Political Science
+        - value: Psychology
+          label: Psychology
+        - value: Religious Sciences
+          label: Religious Sciences
+        - value: Sociology
+          label: Sociology
+  required: false
+  preset: select
