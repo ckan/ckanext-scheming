@@ -148,7 +148,6 @@ dataset_fields:
           label: Mid Pliocene
         - value: Late Pliocene
           label: Late Pliocene
-       preset: select
   required: false
  
 
