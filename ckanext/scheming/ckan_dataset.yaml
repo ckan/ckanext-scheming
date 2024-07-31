@@ -19,14 +19,6 @@ dataset_fields:
   preset: dataset_slug
   form_placeholder: eg. my-dataset
 
-- field_name: authors
-  label: Author(s)
-  repeating_subfields:
-    - field_name: author
-      label: Author
-      form_placeholder: "FirstName LastName"
-  required: false
-
 - field_name: owner_org
   label: Organization
   preset: dataset_organization
@@ -68,7 +60,7 @@ dataset_fields:
   required: false
 
 - field_name: language
-  label: Language
+  repeating_label: Language
   repeating_subfields:
     - field_name: language_entry
       label: Language Entry
@@ -76,7 +68,7 @@ dataset_fields:
   required: false
 
 - field_name: citations
-  label: Citation(s)
+  repeating_label: Citation(s)
   repeating_subfields:
     - field_name: citation
       label: Citation
@@ -84,7 +76,7 @@ dataset_fields:
   required: false
 
 - field_name: project_references
-  label: Project Reference(s)
+  repeating_label: Project Reference(s)
   repeating_subfields:
     - field_name: project_reference
       label: Project Reference
@@ -114,7 +106,7 @@ dataset_fields:
 
     
 - field_name: archaeological_periods
-  label: Archaeological Period(s)
+  repeating_label: Archaeological Period(s)
   repeating_subfields:
     - field_name: archaeological_period
       label: Archaeological Period
