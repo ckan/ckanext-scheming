@@ -360,6 +360,26 @@ class TestSubfieldDatasetForm(object):
         assert dataset["citation"] == [{'originator': ['mei', 'ahmed']}]
         assert dataset["contact_address"] == [{'address': 'anyplace'}]
 
+    def test_dataset_form_create_empty_subfields(self, app, sysadmin_env):
+        data = {"save": "", "_ckan_phase": 1}
+
+        data["name"] = "subfield_dataset_1"
+        data["citation-0-originator"] = ['mei', 'ahmed']
+        data["contact_address-0-address"] = 'anyplace'
+
+        data["publisher-0-name"] = ""
+        data["publisher-0-url"] = ""
+
+        url = '/test-subfields/new'
+        try:
+            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
+        except TypeError:
+            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        dataset = call_action("package_show", id="subfield_dataset_1")
+
+        assert "publisher" not in dataset
+
     def test_dataset_form_update(self, app, sysadmin_env):
         dataset = Dataset(
             type="test-subfields",
