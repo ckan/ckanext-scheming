@@ -57,13 +57,6 @@
           <td>{% snippet "snippets/license.html", pkg_dict=pkg, text_only=True %}</td>
         </tr>
         {%- endblock -%}
-        {%- block resource_more_items -%}
-          {% for key, value in h.format_resource_items(res.items()) %}
-            {% if key not in ('created', 'metadata modified', 'last modified', 'format') %}
-              <tr class="toggle-more"><th scope="row">{{ key | capitalize }}</th><td>{{ value }}</td></tr>
-            {% endif %}
-          {% endfor %}
-        {%- endblock -%}
         {%- block resource_fields -%}
           {%- for field in schema.resource_fields -%}
             {%- if field.field_name not in exclude_fields
@@ -80,6 +73,13 @@
               </tr>
             {%- endif -%}
           {%- endfor -%}
+        {%- endblock -%}
+        {%- block resource_more_items -%}
+          {% for key, value in h.format_resource_items(res.items()) %}
+            {% if key not in ('created', 'metadata modified', 'last modified', 'format') %}
+              <tr class="toggle-more"><th scope="row">{{ key | capitalize }}</th><td>{{ value }}</td></tr>
+            {% endif %}
+          {% endfor %}
         {%- endblock -%}
       </tbody>
     </table>
