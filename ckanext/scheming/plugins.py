@@ -280,11 +280,11 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
         if action_type == 'show':
             if composite_convert_fields:
-                for ex in data_dict['extras']:
+                for ex in data_dict.get('extras', []):
                     if ex['key'] in composite_convert_fields:
                         data_dict[ex['key']] = json.loads(ex['value'])
                 data_dict['extras'] = [
-                    ex for ex in data_dict['extras']
+                    ex for ex in data_dict.get('extras', [])
                     if ex['key'] not in composite_convert_fields
                 ]
         else:
