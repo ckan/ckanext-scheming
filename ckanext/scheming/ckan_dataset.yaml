@@ -103,7 +103,8 @@ dataset_fields:
   display_email_name_field: maintainer
 
 - field_name: citations
-  repeating_label: Citation(s)
+  label: Citations
+  repeating_label: Citation
   repeating_subfields:
     - field_name: citation
       label: Citation
@@ -111,7 +112,8 @@ dataset_fields:
   required: false
 
 - field_name: project_references
-  repeating_label: Project Reference(s)
+  label: Project Reference
+  repeating_label: Project Reference
   repeating_subfields:
     - field_name: project_reference
       label: Project Reference
