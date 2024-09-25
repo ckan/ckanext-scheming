@@ -39,6 +39,21 @@ dataset_fields:
       label: Humanities
   preset: select
 
+- field_name: raw_data_source
+  label: Raw Data Source
+  form_placeholder: "Sources used for creating data collection; multiple entries possible, separated by semicolon"
+
+- field_name: data_doi
+  label: Data DOI
+  form_placeholder: "A DOI that provides the location of the data collected."
+
+- field_name: language
+  repeating_label: Language
+  repeating_subfields:
+    - field_name: language_entry
+      label: Language Entry
+      form_placeholder: "Language"
+
 - field_name: license_id
   label: License
   form_snippet: license.html
