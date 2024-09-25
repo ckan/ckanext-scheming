@@ -5,11 +5,8 @@ about_url: http://github.com/ckan/ckanext-scheming
 
 
 dataset_fields:
-- start_form_page:
-    title: Basic Info
-    description: Required and core dataset fields
 
-  field_name: title
+- field_name: title
   label: Title
   preset: title
   form_placeholder: eg. A descriptive title
@@ -19,135 +16,59 @@ dataset_fields:
   preset: dataset_slug
   form_placeholder: eg. my-dataset
 
+- field_name: notes
+  label: Description
+  form_snippet: markdown.html
+  form_placeholder: eg. Some useful notes about the data
+
+- field_name: tag_string
+  label: Tags
+  preset: tag_string_autocomplete
+  form_placeholder: eg. economy, mental health, government
+
+- field_name: license_id
+  label: License
+  form_snippet: license.html
+  help_text: License definitions and additional information can be found at http://opendefinition.org/
+
 - field_name: owner_org
   label: Organization
   preset: dataset_organization
 
-- field_name: description
-  label: Description
-  form_snippet: markdown.html
-  form_placeholder: "Detailed description of the (research) project and the resulting data collection."
-  required: false
+- field_name: url
+  label: Source
+  form_placeholder: http://example.com/dataset.json
+  display_property: foaf:homepage
+  display_snippet: link.html
 
-- field_name: tag_String
-  label: Keywords
-  preset: tag_string_autocomplete
-  form_placeholder: "Useful keywords for data collection; separated by semicolon"
-  required: false
+- field_name: version
+  label: Version
+  validators: ignore_missing unicode_safe package_version_validator
+  form_placeholder: '1.0'
 
-- field_name: data_pillar
-  label: Data Pillar
-  choices:
-    - value: Archaeology
-      label: Archaeology
-    - value: Geology
-      label: Geology
-    - value: Meteorology
-      label: Meteorology
-    - value: Humanities
-      label: Humanities
-  required: false
-  preset: select
+- field_name: author
+  label: Author
+  form_placeholder: Joe Bloggs
+  display_property: dc:creator
 
-- field_name: raw_data_source
-  label: Raw Data Source
-  form_placeholder: "Sources used for creating data collection; multiple entries possible, separated by semicolon"
-  required: false
+- field_name: author_email
+  label: Author Email
+  form_placeholder: philipp@example.com
+  display_property: dc:creator
+  display_snippet: email.html
+  display_email_name_field: author
 
-- field_name: data_doi
-  label: Data DOI
-  form_placeholder: "A DOI that provides the location of the data collected."
-  required: false
+- field_name: maintainer
+  label: Maintainer
+  form_placeholder: Philipp
+  display_property: dc:contributor
 
-- field_name: language
-  repeating_label: Language
-  repeating_subfields:
-    - field_name: language_entry
-      label: Language Entry
-      form_placeholder: "Language"
-  required: false
-
-- field_name: citations
-  repeating_label: Citation(s)
-  repeating_subfields:
-    - field_name: citation
-      label: Citation
-      form_placeholder: "Citation"
-  required: false
-
-- field_name: project_references
-  repeating_label: Project Reference(s)
-  repeating_subfields:
-    - field_name: project_reference
-      label: Project Reference
-      form_placeholder: "Project Reference"
-  required: false
-
-- field_name: other_related_data
-  label: Other Related Data
-  form_placeholder: "Other entries, projects, or data that should likely be explored in conjunction with these data"
-  required: false
-
-- field_name: project_data_collection_start
-  label: Project Data Collection Start
-  form_placeholder: "Year of project data collection start"
-  required: false
-
-- field_name: project_data_collection_end
-  label: Project Data Collection End
-  form_placeholder: "Year of project data collection end"
-  required: false
-
-- field_name: license
-  label: License
-  form_snippet: license.html
-  form_placeholder: "Specification of license for data collection"
-  required: true
-
-    
-- field_name: archaeological_periods
-  repeating_label: Archaeological Period(s)
-  repeating_subfields:
-    - field_name: archaeological_period
-      label: Archaeological Period
-      form_placeholder: "Archaeological Period"
-  required: false
-
-- field_name: periods_addition
-  label: Period(s) Addition
-  form_placeholder: "Additional infos for archaeological period(s) of data collection"
-  required: false
-
-- field_name: geological_timeframe
-  label: Geological Timeframe
-  preset: multiple_checkbox
-  choices:
-  - value: Holocene
-    label: Holocene
-  - value: Early Holocene
-    label: Early Holocene
-  - value: Mid Holocene
-    label: Mid Holocene
-  - value: Late Holocene
-    label: Late Holocene
-  - value: Pleistocene
-    label: Pleistocene
-  - value: Early Pleistocene
-    label: Early Pleistocene
-  - value: Mid Pleistocene
-    label: Mid Pleistocene
-  - value: Late Pleistocene
-    label: Late Pleistocene
-  - value: Pliocene
-    label: Pliocene
-  - value: Early Pliocene
-    label: Early Pliocene
-  - value: Mid Pliocene
-    label: Mid Pliocene
-  - value: Late Pliocene
-    label: Late Pliocene
-  required: false
- 
+- field_name: maintainer_email
+  label: Maintainer Email
+  form_placeholder: joe@example.com
+  display_property: dc:contributor
+  display_snippet: email.html
+  display_email_name_field: maintainer
 
 
 resource_fields:
@@ -168,4 +89,3 @@ resource_fields:
 - field_name: format
   label: Format
   preset: resource_format_autocomplete
-
