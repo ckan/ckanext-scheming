@@ -42,6 +42,7 @@ dataset_fields:
 - field_name: data_doi
   label: Data DOI
   form_placeholder: "A DOI that provides the location of the data collected."
+  preset: resource_url_upload
 
 - field_name: raw_data_sources
   label: Raw Data Sources
