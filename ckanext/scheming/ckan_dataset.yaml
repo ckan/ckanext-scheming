@@ -16,15 +16,15 @@ dataset_fields:
   preset: dataset_slug
   form_placeholder: eg. my-dataset
 
-- field_name: notes
+- field_name: description
   label: Description
   form_snippet: markdown.html
-  form_placeholder: eg. Some useful notes about the data
+  form_placeholder: "Detailed description of the (research) project and the resulting data collection."
 
-- field_name: tag_string
-  label: Tags
+- field_name: tag_String
+  label: Keywords
   preset: tag_string_autocomplete
-  form_placeholder: eg. economy, mental health, government
+  form_placeholder: "Useful keywords for data collection; separated by semicolon"
 
 - field_name: license_id
   label: License
