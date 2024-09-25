@@ -41,8 +41,9 @@ dataset_fields:
 
 - field_name: data_doi
   label: Data DOI
-  form_placeholder: "A DOI that provides the location of the data collected."
-  preset: resource_url_upload
+  form_placeholder: "https://doi.org/10.1525/ah.2024.101"
+  display_property: foaf:homepage
+  display_snippet: link.html
 
 - field_name: raw_data_sources
   label: Raw Data Sources
@@ -100,6 +101,38 @@ dataset_fields:
   display_property: dc:contributor
   display_snippet: email.html
   display_email_name_field: maintainer
+
+- field_name: citations
+  repeating_label: Citation(s)
+  repeating_subfields:
+    - field_name: citation
+      label: Citation
+      form_placeholder: "Citation"
+  required: false
+
+- field_name: project_references
+  repeating_label: Project Reference(s)
+  repeating_subfields:
+    - field_name: project_reference
+      label: Project Reference
+      form_placeholder: "Project Reference"
+  required: false
+
+- field_name: other_related_data
+  label: Other Related Data
+  form_placeholder: "Other entries, projects, or data that should likely be explored in conjunction with these data"
+  required: false
+
+- field_name: project_data_collection_start
+  label: Project Data Collection Start
+  form_placeholder: "Year of project data collection start"
+  required: false
+
+- field_name: project_data_collection_end
+  label: Project Data Collection End
+  form_placeholder: "Year of project data collection end"
+  required: false
+
 
 
 resource_fields:
