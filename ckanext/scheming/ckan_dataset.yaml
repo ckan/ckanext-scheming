@@ -26,6 +26,19 @@ dataset_fields:
   preset: tag_string_autocomplete
   form_placeholder: "Useful keywords for data collection; separated by semicolon"
 
+- field_name: data_pillar
+  label: Data Pillar
+  choices:
+    - value: Archaeology
+      label: Archaeology
+    - value: Geology
+      label: Geology
+    - value: Meteorology
+      label: Meteorology
+    - value: Humanities
+      label: Humanities
+  preset: select
+
 - field_name: license_id
   label: License
   form_snippet: license.html
