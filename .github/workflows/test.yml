@@ -17,13 +17,19 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: ["2.11", "2.10", "2.9"]
+        include:
+          - ckan-version: "2.11"
+            ckan-image: "ckan/ckan-dev:2.11-py3.10"
+          - ckan-version: "2.10"
+            ckan-image: "ckan/ckan-dev:2.10-py3.10"
+          - ckan-version: "2.9"
+            ckan-image: "ckan/ckan-dev:2.9-py3.9"
       fail-fast: false
 
     name: CKAN ${{ matrix.ckan-version }}
     runs-on: ubuntu-latest
     container:
-      image: ckan/ckan-dev:${{ matrix.ckan-version }}
+      image: ${{ matrix.ckan-image }}
     services:
       solr:
         image: ckan/ckan-solr:${{ matrix.ckan-version }}-solr9
@@ -55,6 +61,10 @@ jobs:
       run: |
         pip install -r test-requirements.txt
         ckan -c test.ini db init
+    - name: Install requirements (2.9)
+      run: |
+        pip install -U pytest-rerunfailures
+      if: ${{ matrix.ckan-version == '2.9' }}        
     - name: Run all tests
       run: pytest --ckan-ini=test.ini --cov=ckanext.scheming ckanext/scheming/tests
     - name: Run plugin subclassing tests
