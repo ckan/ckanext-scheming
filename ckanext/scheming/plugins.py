@@ -103,8 +103,6 @@ class _SchemingMixin(object):
 
     @staticmethod
     def _load_presets(config):
-        if _SchemingMixin._presets is not None:
-            return
 
         presets = reversed(
             config.get(
