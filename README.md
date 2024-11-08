@@ -184,6 +184,15 @@ Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset.
 
 
+### `before_validators`, `after_validators`
+
+```yaml
+before_validators: validator_name
+
+after_validators: validator_name
+```
+
+Runs validator functions before and after the `dataset_type` package is created/updated.
 
 
 ## Group / Organization Schema Keys
@@ -229,6 +238,17 @@ fields:
 ...
 ```
 A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties doin dataset schemas.
+
+
+### `before_validators`, `after_validators`
+
+```yaml
+before_validators: validator_name
+
+after_validators: validator_name
+```
+
+Runs validator functions before and after the `organization_type`/`group_type` group is created/updated.
 
 
 ----------------
