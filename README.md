@@ -33,6 +33,8 @@ Table of contents:
      - [`required`](#required)
      - [`choices`](#choices)
      - [`choices_helper`](#choices_helper)
+     - [`default`](#default)
+     - [`default_jinja2`](#default_jinja2)
      - [`preset`](#preset)
      - [`form_snippet`](#form_snippet)
      - [`display_snippet`](#display_snippet)
@@ -415,6 +417,15 @@ You may [register your own helper function](https://docs.ckan.org/en/2.9/theming
     label: N/A
 ```
 
+### `default`
+
+Pre-fill new forms with this `default` value for this field.
+
+### `default_jinja2`
+
+Pre-fill new forms with a jinja2 snippet defined by `default_jinja2`, useful
+if you need to call a template helper function or use jinja2 logic to determine
+the default value for this field.
 
 ### `preset`
 
