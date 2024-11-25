@@ -25,6 +25,8 @@ dataset_fields:
   label: Description
   form_snippet: markdown.html
   form_placeholder: eg. Some useful notes about the data
+  required: true
+  validators: scheming_required unicode_safe
 
 - field_name: owner_org
   label: Organization

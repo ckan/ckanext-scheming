@@ -445,3 +445,21 @@ def scheming_flatten_subfield(subfield, data):
         for k in record:
             flat[prefix + k] = record[k]
     return flat
+
+
+@helper
+def scheming_missing_required_fields(pages, data=None, package_id=None):
+    if package_id:
+        try:
+            data = LocalCKAN().action.package_show(id=package_id)
+        except (NotFound, NotAuthorized):
+            pass
+    if data is None:
+        data = {}
+    missing = []
+    for p in pages:
+        missing.append([
+            f['field_name'] for f in p['fields']
+            if f.get('required') and not data.get(f['field_name'])
+        ])
+    return missing
