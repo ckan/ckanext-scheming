@@ -16,8 +16,10 @@
 {%- if field.get('sorted_choices') -%}
   {%- set options = options|sort(case_sensitive=false, attribute='text') -%}
 {%- endif -%}
-{%- if data[field.field_name] -%}
+{%- if data[field.field_name] is defined -%}
   {%- set option_selected = data[field.field_name]|string -%}
+{%- elif field.default is defined -%}
+  {%- set option_selected = field.default|string -%}
 {%- else -%}
   {%- set option_selected = None -%}
 {%- endif -%}
