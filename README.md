@@ -537,6 +537,11 @@ JSON based input. Only JSON objects are supported. The input JSON will be loaded
 ```
 markdown text area and display
 
+```yaml
+  field_name: extras
+  preset: custom_extras
+```
+space for user defined key, value pairs like standard CKAN input. When used the `field_name` must be extras. 
 
 You may define your own presets by adding additional files to the `scheming.presets`
 [configuration setting](#configuration).
