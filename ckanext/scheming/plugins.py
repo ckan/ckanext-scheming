@@ -394,27 +394,50 @@ def expand_form_composite(data, fieldnames):
     fieldnames -= set(data)
     if not fieldnames:
         return
-    indexes = {}
-    for key in sorted(data):
-        if '-' not in key:
-            continue
-        parts = key.split('-')
-        if parts[0] not in fieldnames:
-            continue
-        if parts[1] not in indexes:
-            indexes[parts[1]] = len(indexes)
-        comp = data.setdefault(parts[0], [])
-        parts[1] = indexes[parts[1]]
-        try:
-            try:
-                comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
-                del data[key]
-            except IndexError:
-                comp.append({})
-                comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
-                del data[key]
-        except (IndexError, ValueError):
-            pass  # best-effort only
+
+    IDX_KEY = '__scheming_idx'
+
+    for fieldname in fieldnames:
+        keys_from_data = [key for key in data.keys() if key.startswith(fieldname)]
+        indexes = {}
+        field_data = []
+        for fieldname_key in sorted(keys_from_data):
+            if '-' not in fieldname_key:
+                continue
+            parts = fieldname_key.split('-')
+            path_to_field_data = parts[1:]
+            comp = field_data
+            parts_grouped = [[]]
+            for part in path_to_field_data:
+                last_part = parts_grouped[len(parts_grouped)-1]
+                if len(last_part) < 2:
+                    last_part.append(part)
+                    continue
+                else:
+                    parts_grouped.append([part])
+            stacked_keys = [fieldname]
+            data_to_set = comp
+
+            for parts_idx, part in enumerate(parts_grouped):
+                marked_index, part_key = part
+                if idx_map := helpers.get_at_depth(indexes, stacked_keys):
+                    marked_idx_map = idx_map.setdefault(marked_index, {IDX_KEY: len(idx_map)})
+                    idx = marked_idx_map[IDX_KEY]
+                else:
+                    idx = 0
+                    helpers.set_at_depth(indexes, stacked_keys, {marked_index: {IDX_KEY: idx}})
+                path_to_field_data[parts_idx*2] = idx
+                stacked_keys.append(marked_index)
+                stacked_keys.append(part_key)
+                if len(data_to_set) > idx:
+                    data_at_idx = data_to_set[idx]
+                else:
+                    data_at_idx = {}
+                    data_to_set.append(data_at_idx)
+                data_to_set = data_at_idx.setdefault(part_key, [])
+            helpers.set_at_depth(field_data, path_to_field_data, data[fieldname_key])
+            del data[fieldname_key]
+        data[fieldname] = field_data
 
 
 

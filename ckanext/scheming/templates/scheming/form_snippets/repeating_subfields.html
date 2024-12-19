@@ -17,9 +17,15 @@
       {% endblock %}
       <div class="panel-body fields-content">
         {% for subfield in field.repeating_subfields %}
+          {%- set new_subfield_data_path = h.deep_copy(subfield_data_path) -%}
+          {%- set _ = new_subfield_data_path.append(index) -%}
+          {%- set _ = new_subfield_data_path.append(subfield.field_name) -%}
+          {%- set is_template = 'REPEATING-INDEX' in index|string() -%}
           {% set sf = dict(
             subfield,
-            field_name=field.field_name ~ '-' ~ index ~ '-' ~ subfield.field_name)
+            field_name=field.field_name ~ '-' ~ index ~ '-' ~ subfield.field_name,
+            subfield_data_path=new_subfield_data_path,
+            is_repeating_template=is_template)
           %}
           {%- snippet 'scheming/snippets/form_field.html',
             field=sf,
@@ -46,6 +52,7 @@
 
 {% set flat = h.scheming_flatten_subfield(field, data) %}
 {% set flaterr = h.scheming_flatten_subfield(field, errors) %}
+{% set subfield_data_path = field.subfield_data_path or [field.field_name] %}
 
 {% call form.input_block(
   'field-' + field.field_name,
@@ -62,9 +69,11 @@
           </section>
         {% endif %}
 
-        {%- set group_data = data[field.field_name] -%}
-        {%- set group_count = group_data|length -%}
-        {%- if not group_count and 'id' not in data -%}
+        {%- if not field.is_repeating_template -%}
+          {%- set group_data = h.get_subfield_group_data(data, subfield_data_path) -%}
+          {%- set group_count = group_data|length -%}
+        {%- endif -%}
+        {%- if not group_count -%}
           {%- set group_count = field.form_blanks|default(1) -%}
         {%- endif -%}
 
