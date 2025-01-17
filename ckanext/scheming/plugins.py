@@ -461,6 +461,8 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     SCHEMA_TYPE_FIELD = 'organization_type'
     UNSPECIFIED_GROUP_TYPE = 'organization'
 
+    is_organization = True
+
     @classmethod
     def _store_instance(cls, self):
         SchemingOrganizationsPlugin.instance = self
