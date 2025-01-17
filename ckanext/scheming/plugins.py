@@ -465,6 +465,8 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     # See: https://github.com/ckan/ckanext-scheming/pull/437
     is_organization = True
 
+    is_organization = True
+
     @classmethod
     def _store_instance(cls, self):
         SchemingOrganizationsPlugin.instance = self
