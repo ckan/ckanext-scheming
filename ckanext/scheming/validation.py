@@ -9,7 +9,7 @@ import six
 
 import ckan.lib.helpers as h
 from ckan.lib.navl.dictization_functions import convert
-from ckantoolkit import (
+from ckan.plugins.toolkit import (
     get_validator,
     UnknownValidator,
     missing,

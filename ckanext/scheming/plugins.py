@@ -22,7 +22,7 @@ try:
 except ImportError:  # CKAN <= 2.5
     core_helper_functions = None
 
-from ckantoolkit import (
+from ckan.plugins.toolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
     DefaultOrganizationForm,

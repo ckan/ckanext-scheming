@@ -1,28 +1,29 @@
 import json
 
 import pytest
-import ckantoolkit
 from bs4 import BeautifulSoup
 
-from ckantoolkit.tests.factories import Dataset
-from ckantoolkit.tests.helpers import call_action
+from ckan.plugins.toolkit import check_ckan_version, h
+
+from ckan.tests.factories import Dataset
+from ckan.tests.helpers import call_action
 
 
 @pytest.fixture
 def sysadmin_env():
     try:
-        from ckantoolkit.tests.factories import SysadminWithToken
+        from ckan.tests.factories import SysadminWithToken
         user = SysadminWithToken()
         return {'Authorization': user['token']}
     except ImportError:
         # ckan <= 2.9
-        from ckantoolkit.tests.factories import Sysadmin
+        from ckan.tests.factories import Sysadmin
         user = Sysadmin()
         return {"REMOTE_USER": user["name"].encode("ascii")}
 
 
 def _get_package_new_page(app, env, type_='test-schema'):
-    if ckantoolkit.check_ckan_version(min_version="2.10.0"):
+    if check_ckan_version(min_version="2.10.0"):
         return app.get(url="/{0}/new".format(type_), headers=env)
     else:
         return app.get(url="/{0}/new".format(type_), extra_environ=env)
@@ -30,7 +31,7 @@ def _get_package_new_page(app, env, type_='test-schema'):
 
 def _get_package_update_page(app, id, env):
 
-    if ckantoolkit.check_ckan_version(min_version="2.10.0"):
+    if check_ckan_version(min_version="2.10.0"):
         return app.get(url="/test-schema/edit/{}".format(id), headers=env)
     else:
         return app.get(url="/test-schema/edit/{}".format(id), extra_environ=env)
@@ -39,7 +40,7 @@ def _get_package_update_page(app, id, env):
 def _get_resource_new_page(app, id, env):
     url = '/dataset/{}/resource/new'.format(id)
 
-    if ckantoolkit.check_ckan_version(min_version="2.10.0"):
+    if check_ckan_version(min_version="2.10.0"):
         return app.get(url, headers=env)
     else:
         return app.get(url, extra_environ=env)
@@ -48,7 +49,7 @@ def _get_resource_new_page(app, id, env):
 def _get_resource_update_page(app, id, resource_id, env):
     url = '/dataset/{}/resource/{}/edit'.format(id, resource_id)
 
-    if ckantoolkit.check_ckan_version(min_version="2.10.0"):
+    if check_ckan_version(min_version="2.10.0"):
         return app.get(url, headers=env)
     else:
         return app.get(url, extra_environ=env)
@@ -56,7 +57,7 @@ def _get_resource_update_page(app, id, resource_id, env):
 
 def _get_organization_new_page(app, env, type_="organization"):
 
-    if ckantoolkit.check_ckan_version(min_version="2.10.0"):
+    if check_ckan_version(min_version="2.10.0"):
         return app.get(url="/{0}/new".format(type_), headers=env)
     else:
         return app.get(url="/{0}/new".format(type_), extra_environ=env)
@@ -64,7 +65,7 @@ def _get_organization_new_page(app, env, type_="organization"):
 
 def _get_group_new_page(app, env, type_="group"):
 
-    if ckantoolkit.check_ckan_version(min_version="2.10.0"):
+    if check_ckan_version(min_version="2.10.0"):
         return app.get(url="/{0}/new".format(type_), headers=env)
     else:
         return app.get(url="/{0}/new".format(type_), extra_environ=env)
@@ -72,7 +73,7 @@ def _get_group_new_page(app, env, type_="group"):
 
 def _get_organization_form(html):
     # FIXME: add an id to this form
-    if ckantoolkit.check_ckan_version(min_version="2.11.0a0"):
+    if check_ckan_version(min_version="2.11.0a0"):
         form = BeautifulSoup(html).select("form")[2]
     else:
         form = BeautifulSoup(html).select("form")[1]
@@ -85,7 +86,7 @@ def _get_group_form(html):
 
 def _post_data(app, url, data, env):
     try:
-        if ckantoolkit.check_ckan_version(min_version="2.11.0a0"):
+        if check_ckan_version(min_version="2.11.0a0"):
             app.post(url, headers=env, data=data, follow_redirects=False)
         else:
             app.post(
@@ -267,7 +268,7 @@ class TestJSONResourceForm(object):
 
         response = _get_resource_new_page(app, dataset["id"], sysadmin_env)
 
-        url = ckantoolkit.h.url_for(
+        url = h.url_for(
             "test-schema_resource.new", id=dataset["id"]
         )
         if not url.startswith('/'):  # ckan < 2.9
@@ -310,7 +311,7 @@ class TestJSONResourceForm(object):
             "textarea[name=a_resource_json_field]"
         ).text == json.dumps(value, indent=2)
 
-        url = ckantoolkit.h.url_for(
+        url = h.url_for(
             "test-schema_resource.edit",
             id=dataset["id"],
             resource_id=dataset["resources"][0]["id"],
@@ -405,7 +406,7 @@ class TestSubfieldResourceForm(object):
 
         response = _get_resource_new_page(app, dataset["id"], sysadmin_env)
 
-        url = ckantoolkit.h.url_for(
+        url = h.url_for(
             "test-subfields_resource.new", id=dataset["id"]
         )
         if not url.startswith('/'):  # ckan < 2.9
@@ -444,7 +445,7 @@ class TestSubfieldResourceForm(object):
         assert 'selected' in opt7d[1].attrs
         assert 'selected' not in opt7d[2].attrs  # blank subfields
 
-        url = ckantoolkit.h.url_for(
+        url = h.url_for(
             "test-schema_resource.edit",
             id=dataset["id"],
             resource_id=dataset["resources"][0]["id"],
