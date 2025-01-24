@@ -1,5 +1,5 @@
 import pytest
-from ckantoolkit.tests.factories import Sysadmin, Organization, Group
+from ckan.tests.factories import Sysadmin, Organization, Group
 
 
 @pytest.mark.usefixtures("clean_db")

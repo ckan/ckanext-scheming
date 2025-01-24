@@ -9,14 +9,13 @@ import six
 
 import ckan.lib.helpers as h
 from ckan.lib.navl.dictization_functions import convert
-from ckantoolkit import (
+from ckan.plugins.toolkit import (
     get_validator,
     UnknownValidator,
     missing,
     Invalid,
     StopOnError,
     _,
-    unicode_safe,
 )
 
 import ckanext.scheming.helpers as sh
@@ -25,6 +24,7 @@ from ckanext.scheming.errors import SchemingException
 OneOf = get_validator('OneOf')
 ignore_missing = get_validator('ignore_missing')
 not_empty = get_validator('not_empty')
+unicode_safe = get_validator('unicode_safe')
 
 all_validators = {}
 
