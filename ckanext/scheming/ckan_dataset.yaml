@@ -8,6 +8,7 @@ dataset_fields:
 
 - field_name: title
   label: Title
+  required: true
   preset: title
   form_placeholder: eg. A descriptive title
 
@@ -19,6 +20,7 @@ dataset_fields:
 - field_name: notes
   label: Description
   form_snippet: markdown.html
+  validators: not_empty
   form_placeholder: eg. Some useful notes about the data
 
 - field_name: tag_string
@@ -43,7 +45,7 @@ dataset_fields:
 
 - field_name: version
   label: Version
-  validators: ignore_missing unicode_safe package_version_validator
+  validators: not_empty 
   form_placeholder: '1.0'
 
 - field_name: author
