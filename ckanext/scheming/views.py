@@ -36,7 +36,10 @@ class SchemingCreateView(CreateView):
         rval = super(SchemingCreateView, self).post(package_type)
         if getattr(rval, 'status_code', None) == 302:
             # successful create, send to page 2 instead of resource new page
-            # TODO: flash message on page saved...
+            pages = h.scheming_get_dataset_form_pages(package_type)
+            h.flash_success(_('Saved {page}').format(
+                page=h.scheming_language_text(
+                    pages[0].get('title', _('page %s' % 1)))))
             return h.redirect_to(
                 '{}.scheming_new_page'.format(package_type),
                 id=request.form['name'],
@@ -91,7 +94,10 @@ class SchemingCreatePageView(CreateView):
         try:
             complete_data = get_action('package_patch')(
                 {'_ckan_phase': page}, data_dict)
-            # TODO: flash message on page saved...
+            pages = h.scheming_get_dataset_form_pages(package_type)
+            h.flash_success(_('Saved {page}').format(
+                page=h.scheming_language_text(
+                    pages[page-1].get('title', _('page %s' % page)))))
         except ObjectNotFound:
             return abort(404, _('Dataset not found'))
         except NotAuthorized:
@@ -186,7 +192,10 @@ class SchemingEditPageView(EditView):
         try:
             complete_data = get_action('package_patch')(
                 {'_ckan_phase': page}, data_dict)
-            # TODO: flash message on page updated...
+            pages = h.scheming_get_dataset_form_pages(package_type)
+            h.flash_success(_('Saved {page}').format(
+                page=h.scheming_language_text(
+                    pages[page-1].get('title', _('page %s' % page)))))
         except ObjectNotFound:
             return abort(404, _('Dataset not found'))
         except NotAuthorized:
