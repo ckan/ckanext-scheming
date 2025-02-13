@@ -84,11 +84,25 @@ def scheming_choices(field, schema):
 @register_validator
 def scheming_required(field, schema):
     """
-    not_empty if field['required'] else ignore_missing
+    not_empty if field['required'] and not on current phase/page else ignore_missing
     """
-    if field.get('required'):
-        return not_empty
-    return ignore_missing
+    def validator(key, data, errors, context):
+        if field.get('required'):
+            # FIXME: can we just store the page number in the field dict
+            #        so we don't have to go loop through for every field here???
+            field_page_number = sh.scheming_get_field_page_number(
+                schema.get('dataset_type'), key[0])
+            current_page_number = sh.scheming_get_current_page_number(context)
+            if field_page_number and current_page_number and \
+                    field_page_number != current_page_number:
+                # ignore_missing if the field is not on the current page
+                ignore_missing(key, data, errors, context)
+                return
+            not_empty(key, data, errors, context)
+            return
+        ignore_missing(key, data, errors, context)
+
+    return validator
 
 
 @scheming_validator

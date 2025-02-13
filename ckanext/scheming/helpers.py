@@ -222,6 +222,25 @@ def scheming_get_dataset_form_pages(dataset_type):
 
 
 @helper
+def scheming_get_field_page_number(dataset_type, field_name):
+    form_pages = scheming_get_dataset_form_pages(dataset_type)
+    if form_pages:
+        for i, page in enumerate(form_pages, 1):
+            for f in page.get('fields'):
+                if f['field_name'] == field_name:
+                    return i
+
+
+@helper
+def scheming_get_current_page_number(context):
+    try:
+        if context.get('_ckan_phase'):
+            return int(context.get('_ckan_phase'))
+    except ValueError:
+        pass
+
+
+@helper
 def scheming_group_schemas(expanded=True):
     """
     Return the dict of group schemas. Or if scheming_groups
