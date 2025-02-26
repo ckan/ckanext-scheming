@@ -103,3 +103,7 @@
 * fix for applying default org/group types
 * sync example dataset schemas, presets and templates with upstream ckan
   changes
+
+## 3.0.1
+
+* Fix `is_organization` for custom `organization_type` [#437](https://github.com/ckan/ckanext-scheming/pull/437)
