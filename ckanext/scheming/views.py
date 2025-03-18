@@ -7,17 +7,17 @@ from ckan.plugins.toolkit import (
     h, request, get_action, abort, _, ObjectNotFound, NotAuthorized,
     ValidationError,
 )
-
+from ckan.plugins import PluginImplementations
 try:
-    from ckan.views.dataset import CreateView, EditView, _tag_string_to_list, _form_save_redirect
-
-    # FIXME these not available from toolkit
-    from ckan.lib.navl.dictization_functions import unflatten, DataError
-    from ckan.logic import clean_dict, tuplize_dict, parse_params
+    from ckan.plugins import IFormRedirect
 except ImportError:
-    # older ckan, just don't fail at import time
-    CreateView = MethodView
-    EditView = MethodView
+    IFormRedirect = None
+
+from ckan.views.dataset import CreateView, EditView
+
+# FIXME these not available from toolkit
+from ckan.lib.navl.dictization_functions import unflatten, DataError
+from ckan.logic import clean_dict, tuplize_dict, parse_params
 
 
 def _clean_page(package_type, page):
@@ -78,10 +78,7 @@ class SchemingCreatePageView(CreateView):
             )
         except DataError:
             return abort(400, _(u'Integrity Error'))
-        if u'tag_string' in data_dict:
-            data_dict[u'tags'] = _tag_string_to_list(
-                data_dict[u'tag_string']
-            )
+        save_action = data_dict.pop('save', None)
         data_dict.pop('pkg_name', None)
         data_dict['state'] = 'draft'
         # END: roughly copied from ckan/views/dataset.py
@@ -110,7 +107,15 @@ class SchemingCreatePageView(CreateView):
             # END: roughly copied from ckan/views/dataset.py
 
         if page == len(h.scheming_get_dataset_form_pages(package_type)):
+            if IFormRedirect:
             # BEGIN: roughly copied from ckan/views/dataset.py
+                for plugin in PluginImplementations(IFormRedirect):
+                    url = plugin.dataset_save_redirect(
+                        package_type, complete_data['name'], 'create',
+                        save_action, data_dict)
+                    if url:
+                        return h.redirect_to(url)
+
             if 'resource_fields' in h.scheming_get_dataset_schema(package_type):
                 return h.redirect_to(
                     '{}_resource.new'.format(package_type),
