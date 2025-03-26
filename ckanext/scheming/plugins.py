@@ -460,9 +460,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     FALLBACK_OPTION = 'scheming.organization_fallback'
     SCHEMA_TYPE_FIELD = 'organization_type'
     UNSPECIFIED_GROUP_TYPE = 'organization'
-    # IGroupForm sets is_organization = False as a default value. 
-    # To properly use it to extend the Organization schema we need to set it to True.
-    # See: https://github.com/ckan/ckanext-scheming/pull/437
+
     is_organization = True
 
     @classmethod
