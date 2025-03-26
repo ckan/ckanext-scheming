@@ -1,6 +1,6 @@
 import pytest
 from ckanapi import LocalCKAN, NotFound
-import ckantoolkit as tk
+import ckan.plugins.toolkit as tk
 
 
 @pytest.mark.usefixtures("with_plugins")
