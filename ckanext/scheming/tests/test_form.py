@@ -470,3 +470,28 @@ class TestSubfieldResourceForm(object):
             {"frequency": '1y', "impact": 'A'},
             {"frequency": '1m', "impact": 'P'},
         ]
+
+    def test_resource_form_create_with_datetime_tz(self, app, sysadmin_env):
+        dataset = Dataset(type="test-schema")
+
+        url = h.url_for("test-schema_resource.new", id=dataset["id"])
+        if not url.startswith("/"):  # ckan < 2.9
+            url = "/dataset/new_resource/" + dataset["id"]
+
+        date = "2001-12-12"
+        time = "12:12"
+        tz = "UTC"
+
+        data = {
+            "id": "",
+            "save": "",
+            "datetime_tz_date": date,
+            "datetime_tz_time": time,
+            "datetime_tz_tz": tz,
+        }
+
+        _post_data(app, url, data, sysadmin_env)
+
+        dataset = call_action("package_show", id=dataset["id"])
+
+        assert dataset["resources"][0]["datetime_tz"] == f"{date}T{time}:00"
