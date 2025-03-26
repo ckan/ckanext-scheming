@@ -241,7 +241,7 @@ fields:
 
 ...
 ```
-A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties doin dataset schemas.
+A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties in dataset schemas.
 
 
 ### `before_validators`, `after_validators`
