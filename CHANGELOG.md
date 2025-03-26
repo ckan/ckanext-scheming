@@ -104,6 +104,18 @@
 * sync example dataset schemas, presets and templates with upstream ckan
   changes
 
-## 3.0.1
+## 3.1.0
 
+* This version drops support for CKAN 2.8, 2.9 and adds support for 2.11
+* Pass dataset name to resource fields snippets [#437](https://github.com/ckan/ckanext-scheming/pull/354)
+* Allow literal parameters in validator string [#372](https://github.com/ckan/ckanext-scheming/pull/372)
+* Fix delete URL for custom organizations [#374](https://github.com/ckan/ckanext-scheming/pull/374)
+* Group Form Required Message Position [#376](https://github.com/ckan/ckanext-scheming/pull/376)
+* Resource Form Errors Super Fallback [#380](https://github.com/ckan/ckanext-scheming/pull/380)
+* Use form_snippets/help_text.html in repeating_subfields.html [#387](https://github.com/ckan/ckanext-scheming/pull/397)
+* Add form-select CSS class to select elements [#399](https://github.com/ckan/ckanext-scheming/pull/399)
+* Fix ckan version comparison [#406](https://github.com/ckan/ckanext-scheming/pull/406)
+* Add number and file_size snippets [#412](https://github.com/ckan/ckanext-scheming/pull/412)
+* Before and After Validators for Groups [#428](https://github.com/ckan/ckanext-scheming/pull/428)
+* Drop ckantoolkit requirement [#432](https://github.com/ckan/ckanext-scheming/pull/432)
 * Fix `is_organization` for custom `organization_type` [#437](https://github.com/ckan/ckanext-scheming/pull/437)
