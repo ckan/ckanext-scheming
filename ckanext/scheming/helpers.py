@@ -5,6 +5,7 @@ import datetime
 import pytz
 import json
 import six
+import copy
 
 from jinja2 import Environment
 from ckan.plugins.toolkit import config, _, h
@@ -441,3 +442,42 @@ def scheming_flatten_subfield(subfield, data):
         for k in record:
             flat[prefix + k] = record[k]
     return flat
+
+def get_at_depth(data, path):
+    if len(path) == 0:
+        return data
+    if isinstance(data, dict):
+        found_data = data.get(path[0])
+    elif isinstance(data, list):
+        if isinstance(path[0], int) and path[0] < len(data):
+            found_data = data[path[0]]
+        else:
+            found_data = None
+    else:
+        found_data = None
+    if found_data is None:
+        return None
+    if len(path) > 1:
+        return get_at_depth(found_data, path[1:])
+    else:
+        return found_data
+
+def set_at_depth(data, path, value):
+    if len(path) == 0:
+        raise ValueError("Cannot set a value at an empty path")
+    data_to_modify = get_at_depth(data, path[0:len(path) - 1])
+    last_path = path[len(path)-1]
+    data_to_modify[last_path] = value
+    return data
+
+@helper
+def get_subfield_group_data(data, subfield_data_path):
+    subfield_data = get_at_depth(data, subfield_data_path)
+    if subfield_data is None:
+        return []
+    else:
+        return subfield_data
+
+@helper
+def deep_copy(data):
+    return copy.deepcopy(data)

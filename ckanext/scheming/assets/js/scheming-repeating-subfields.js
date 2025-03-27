@@ -6,9 +6,15 @@ ckan.module('scheming-repeating-subfields', function($) {
       var $template = this.el.children('div[name="repeating-template"]');
       this.template = $template.html();
       $template.remove();
+      this._findClosestDescendants('a[name="repeating-add"]').on("click", this._onCreateGroup);
+      this._findClosestDescendants('a[name="repeating-remove"]').on('click', this._onRemoveGroup);
+    },
 
-      this.el.find('a[name="repeating-add"]').on("click", this._onCreateGroup);
-      this.el.on('click', 'a[name="repeating-remove"]', this._onRemoveGroup);
+    _findClosestDescendants: function(selector) {
+      const thisEl = this.el;
+      return thisEl.find(selector).filter(function(index) {
+        return this.closest('[data-module="scheming-repeating-subfields"]') === thisEl[0]
+      })
     },
 
     /**
@@ -26,19 +32,21 @@ ckan.module('scheming-repeating-subfields', function($) {
      *  ...
      */
     _onCreateGroup: function(e) {
-        var $last = this.el.find('.scheming-subfield-group').last();
-        var group = ($last.data('groupIndex') + 1) || 0;
-        var $copy = $(
+      var $last = this.el.find('.scheming-subfield-group').last();
+      var group = ($last.data('groupIndex') + 1) || 0;
+      var $copy = $(
 	    this.template.replace(/REPEATING-INDEX0/g, group)
-          .replace(/REPEATING-INDEX1/g, group + 1));
-        this.el.find('.scheming-repeating-subfields-group').append($copy);
+        .replace(/REPEATING-INDEX1/g, group + 1));
 
-	this.initializeModules($copy);
-        $copy.hide().show(100);
-        $copy.find('input').first().focus();
-        // hook for late init when required for rendering polyfills
-        this.el.trigger('scheming.subfield-group-init');
-        e.preventDefault();
+      this._findClosestDescendants('.scheming-repeating-subfields-group').append($copy);
+
+	  this.initializeModules($copy);
+      $copy.hide().show(100);
+      $copy.find('input').first().focus();
+      // hook for late init when required for rendering polyfills
+      this.el.trigger('scheming.subfield-group-init');
+      e.preventDefault();
+      e.stopPropagation();
     },
 
     /**

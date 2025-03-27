@@ -44,6 +44,27 @@ dataset_fields:
   - field_name: country
     label: Country
 
+- field_name: contact_points
+  label: Contact Points
+  repeating_subfields:
+  - field_name: name
+    label: Name
+    required: true
+  - field_name: ways_of_contact
+    label: Ways of contact
+    repeating_subfields:
+    - field_name: email
+      label: Email
+    - field_name: phone
+      label: Phone
+    - field_name: by_letter
+      label: By Letter
+      repeating_subfields:
+      - field_name: name
+        label: name
+      - field_name: address
+        label: Address
+
 
 resource_fields:
 

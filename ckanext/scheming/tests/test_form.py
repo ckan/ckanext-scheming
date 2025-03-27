@@ -391,6 +391,100 @@ class TestSubfieldDatasetForm(object):
         assert dataset["contact_address"] == [{'address': 'home'}]
 
 
+@pytest.mark.usefixtures("clean_db")
+class TestNestedSubfieldDatasetForm(object):
+    def test_dataset_form_includes_nested_subfields(self, app, sysadmin_env):
+        response = _get_package_new_page(app, sysadmin_env, 'test-subfields')
+        form = BeautifulSoup(response.body).select("#dataset-edit")[0]
+        assert form.select("fieldset[name=scheming-repeating-subfields] fieldset[name=scheming-repeating-subfields]")
+
+    def test_dataset_form_create(self, app, sysadmin_env):
+        data = {"save": "", "_ckan_phase": 1}
+
+        contact_points = [
+            {
+                'name': 'representative',
+                'ways_of_contact': [
+                    {
+                        'email': 'email@example.com',
+                        'by_letter': [
+                            {
+                                'name': 'some office',
+                                'address': 'some office address'
+                            },
+                            {
+                                'name': 'other office',
+                                'address': 'other office address'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                'name': 'second representative',
+                'ways_of_contact': [
+                    {
+                        'phone': '01234567'
+                    }
+                ]
+            }
+        ]
+
+        data["name"] = "nested_subfield_dataset_1"
+        data["contact_points-0-name"] = contact_points[0]['name']
+        data["contact_points-0-ways_of_contact-0-email"] = contact_points[0]['ways_of_contact'][0]['email']
+        data["contact_points-0-ways_of_contact-0-by_letter-0-name"] = contact_points[0]['ways_of_contact'][0]['by_letter'][0]['name']
+        data["contact_points-0-ways_of_contact-0-by_letter-0-address"] = contact_points[0]['ways_of_contact'][0]['by_letter'][0]['address']
+        data["contact_points-0-ways_of_contact-0-by_letter-1-name"] = contact_points[0]['ways_of_contact'][0]['by_letter'][1]['name']
+        data["contact_points-0-ways_of_contact-0-by_letter-1-address"] = contact_points[0]['ways_of_contact'][0]['by_letter'][1]['address']
+
+        data["contact_points-1-name"] = contact_points[1]['name']
+        data["contact_points-1-ways_of_contact-0-phone"] = contact_points[1]['ways_of_contact'][0]['phone']
+
+        url = '/test-subfields/new'
+
+        _post_data(app, url, data, sysadmin_env)
+
+        dataset = call_action("package_show", id="nested_subfield_dataset_1")
+        assert dataset["contact_points"] == contact_points
+
+    def test_dataset_form_update(self, app, sysadmin_env):
+        dataset = Dataset(
+            type="test-subfields",
+            contact_points=[
+                {'name': 'representative', 'ways_of_contact': [{'email': 'representative@example.com'}]},
+                {'name': 'second representative', 'ways_of_contact': [{'email': 'second.representative@example.com'}]}
+            ])
+
+        response = _get_package_update_page(
+            app, dataset["id"], sysadmin_env
+        )
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert form.select_one(
+            "input[name=contact_points-1-ways_of_contact-0-email]"
+        ).attrs['value'] == 'second.representative@example.com'
+
+        data = {"save": ""}
+        data["contact_points-0-name"] = 'representative'
+        data["contact_points-0-ways_of_contact-0-email"] = 'modified.representative@example.com'
+        data["contact_points-0-ways_of_contact-1-email"] = 'added.representative@example.com'
+        data["contact_points-1-name"] = 'second representative'
+        data["contact_points-1-ways_of_contact-0-email"] = 'second.representative@example.com'
+        data["name"] = dataset["name"]
+
+        url = '/test-subfields/edit/' + dataset["id"]
+
+        _post_data(app, url, data, sysadmin_env)
+
+        dataset = call_action("package_show", id=dataset["id"])
+
+        assert dataset["contact_points"] == [
+            {'name': 'representative', 'ways_of_contact': [{'email': 'modified.representative@example.com'},
+                                                           {'email': 'added.representative@example.com'}]},
+            {'name': 'second representative', 'ways_of_contact': [{'email': 'second.representative@example.com'}]}
+        ]
+
+
 
 @pytest.mark.usefixtures("clean_db")
 class TestSubfieldResourceForm(object):
