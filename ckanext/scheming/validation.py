@@ -140,6 +140,8 @@ def scheming_multiple_choice(field, schema):
             if element in choice_values:
                 selected.add(element)
                 continue
+            if element == "":
+                continue
             errors[key].append(_('unexpected choice "%s"') % element)
 
         if not errors[key]:
