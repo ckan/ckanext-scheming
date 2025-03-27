@@ -1,14 +1,12 @@
 {
-  "scheming_version": 1,
+  "scheming_version": 2,
   "organization_type": "organization",
   "about_url": "http://github.com/ckan/ckanext-scheming",
   "fields": [
     {
       "field_name": "title",
       "label": "Name",
-      "validators": "ignore_missing unicode_safe",
-      "form_snippet": "large_text.html",
-      "form_attrs": {"data-module": "slug-preview-target"},
+      "preset": "title",
       "form_placeholder": "My Organization"
     },
     {
@@ -19,14 +17,15 @@
       "form_placeholder": "my-organization"
     },
     {
-      "field_name": "notes",
+      "field_name": "description",
       "label": "Description",
-      "form_snippet": "markdown.html",
+      "preset": "markdown",
       "form_placeholder": "A little information about my organization..."
     },
     {
-      "field_name": "url",
-      "label": "Image URL",
+      "field_name": "image_url",
+      "label": "Image",
+      "preset": "organization_url_upload",
       "form_placeholder": "http://example.com/my-image.jpg"
     },
     {
