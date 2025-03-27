@@ -106,6 +106,8 @@
 
 ## 3.1.0
 
+2024-03-27
+
 * This version drops support for CKAN 2.8, 2.9 and adds support for 2.11
 * Pass dataset name to resource fields snippets [#437](https://github.com/ckan/ckanext-scheming/pull/354)
 * Allow literal parameters in validator string [#372](https://github.com/ckan/ckanext-scheming/pull/372)
@@ -118,4 +120,9 @@
 * Add number and file_size snippets [#412](https://github.com/ckan/ckanext-scheming/pull/412)
 * Before and After Validators for Groups [#428](https://github.com/ckan/ckanext-scheming/pull/428)
 * Drop ckantoolkit requirement [#432](https://github.com/ckan/ckanext-scheming/pull/432)
-* Fix `is_organization` for custom `organization_type` [#437](https://github.com/ckan/ckanext-scheming/pull/437)
+* Fix `is_organization` for custom `organization_type` [#437](https://github.com/ckan/ckanext-scheming/pull/437), [#431](https://github.com/ckan/ckanext-scheming/pull/431)
+* fix: Move toggle-more rows to bottom of resource table [#420](https://github.com/ckan/ckanext-scheming/pull/420)
+* fix: Add default text to update/edit buttons in group_form [#421](https://github.com/ckan/ckanext-scheming/pull/421)
+* fix: False is also a value for radio and select snippets [#417](https://github.com/ckan/ckanext-scheming/pull/417)
+* Remove presets parsing cache check [#425](https://github.com/ckan/ckanext-scheming/pull/425)
+* fix: optional multiple_text saved as empty string if missing on create
