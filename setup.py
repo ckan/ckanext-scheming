@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '3.0.0'
+version = '3.1.0'
 
 setup(
     name='ckanext-scheming',
@@ -27,7 +27,6 @@ setup(
     install_requires=[
         'pyyaml',
         'ckanapi',
-        'ckantoolkit>=0.0.7',
         'pytz',
         'six',
     ],

@@ -9,18 +9,22 @@ import six
 
 import ckan.lib.helpers as h
 from ckan.lib.navl.dictization_functions import convert
-from ckantoolkit import (
+from ckan.plugins.toolkit import (
     get_validator,
     UnknownValidator,
     missing,
     Invalid,
     StopOnError,
     _,
-    unicode_safe,
 )
 
 import ckanext.scheming.helpers as sh
 from ckanext.scheming.errors import SchemingException
+
+OneOf = get_validator('OneOf')
+ignore_missing = get_validator('ignore_missing')
+not_empty = get_validator('not_empty')
+unicode_safe = get_validator('unicode_safe')
 
 all_validators = {}
 
@@ -268,14 +272,36 @@ def scheming_isodatetime_tz(field, schema):
                 except (TypeError, ValueError) as e:
                     raise Invalid(_('Date format incorrect'))
         else:
-            extras = data.get(('__extras',))
-            if not extras or (key[0] + '_date' not in extras and
-                              key[0] + '_time' not in extras):
+            if 'resources' in key and len(key) > 1:
+                # when a resource is edited, extras will be under a different key in the data
+                extras = data.get((('resources', key[1], '__extras')))
+                # the key for the current field also looks different for a resource,
+                # for example, a dataset might have the key ('start_timestamp')
+                # for a resource this might look like ('resources', 3, 'start_timestamp')
+                # however, we need to pass on a tuple with just the field name
+                field_name_index_in_key = 2
+
+            else:
+                extras = data.get(('__extras',))
+                field_name_index_in_key = 0
+
+            if not extras or (
+                (
+                    key[field_name_index_in_key] + '_date' not in extras
+                    and key[field_name_index_in_key] + '_time' not in extras
+                )
+            ):
                 if field.get('required'):
                     not_empty(key, data, errors, context)
             else:
                 date = validate_date_inputs(
-                    field, key, data, extras, errors, context)
+                    field=field,
+                    key=(key[field_name_index_in_key],),
+                    data=data,
+                    extras=extras,
+                    errors=errors,
+                    context=context,
+                )
                 if isinstance(date, datetime.datetime):
                     date = sh.scheming_datetime_to_utc(date)
 
@@ -485,9 +511,11 @@ def scheming_multiple_text(field, schema):
 
             data[key] = json.dumps(out)
 
-        if (data[key] is missing or data[key] == '[]') and field.get('required'):
-            errors[key].append(_('Missing value'))
-            raise StopOnError
+        if (data[key] is missing or data[key] == '[]'):
+            if field.get('required'):
+                errors[key].append(_('Missing value'))
+                raise StopOnError
+            data[key] = '[]'
 
     return _scheming_multiple_text
 

@@ -9,8 +9,6 @@ except ImportError:
     # old way
     from jinja2 import Markup
 
-import ckantoolkit
-
 
 def render_form_snippet(name, data=None, extra_args=None, errors=None, **kwargs):
     field = {"field_name": "test", "label": "Test"}

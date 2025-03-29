@@ -21,10 +21,12 @@ Table of contents:
    - [Dataset Schema Keys](#dataset-schema-keys)
      - [`dataset_type`](#dataset_type)
      - [`dataset_fields`, `resource_fields`](#dataset_fields-resource_fields)
+     - [`before_validators`, `after_validators`](#before_validators-after_validators)
    - [Group / Organization Schema Keys](#group--organization-schema-keys)
      - [`group_type`](#group_type)
      - [`organization_type`](#organization_type)
      - [`fields`](#fields)
+     - [`before_validators`, `after_validators`](#before_validators-after_validators-1)
    - [Field Keys](#field-keys)
      - [`field_name`](#field_name)
      - [`label`](#label)
@@ -33,6 +35,8 @@ Table of contents:
      - [`required`](#required)
      - [`choices`](#choices)
      - [`choices_helper`](#choices_helper)
+     - [`default`](#default)
+     - [`default_jinja2`](#default_jinja2)
      - [`preset`](#preset)
      - [`form_snippet`](#form_snippet)
      - [`display_snippet`](#display_snippet)
@@ -184,6 +188,15 @@ Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset.
 
 
+### `before_validators`, `after_validators`
+
+```yaml
+before_validators: validator_name
+
+after_validators: validator_name
+```
+
+Runs validator functions before and after the `dataset_type` package is created/updated.
 
 
 ## Group / Organization Schema Keys
@@ -228,7 +241,18 @@ fields:
 
 ...
 ```
-A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties doin dataset schemas.
+A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties in dataset schemas.
+
+
+### `before_validators`, `after_validators`
+
+```yaml
+before_validators: validator_name
+
+after_validators: validator_name
+```
+
+Runs validator functions before and after the `organization_type`/`group_type` group is created/updated.
 
 
 ----------------
@@ -415,6 +439,15 @@ You may [register your own helper function](https://docs.ckan.org/en/2.9/theming
     label: N/A
 ```
 
+### `default`
+
+Pre-fill new forms with this `default` value for this field.
+
+### `default_jinja2`
+
+Pre-fill new forms with a jinja2 snippet defined by `default_jinja2`, useful
+if you need to call a template helper function or use jinja2 logic to determine
+the default value for this field.
 
 ### `preset`
 

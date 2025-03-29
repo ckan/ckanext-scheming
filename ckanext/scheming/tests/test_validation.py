@@ -15,7 +15,7 @@ from ckanext.scheming.plugins import (
     SchemingDatasetsPlugin,
     SchemingGroupsPlugin,
 )
-from ckantoolkit import get_validator, navl_validate
+from ckan.plugins.toolkit import get_validator, navl_validate
 
 ignore_missing = get_validator("ignore_missing")
 not_empty = get_validator("not_empty")
