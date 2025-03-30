@@ -37,7 +37,7 @@ class SchemingCreateView(CreateView):
         if getattr(rval, 'status_code', None) == 302:
             # successful create, send to page 2 instead of resource new page
             return h.redirect_to(
-                '{}.scheming_new_page'.format(package_type),
+                '{}.scheming_edit_page'.format(package_type),
                 id=request.form['name'],
                 page=2,
             )
@@ -48,24 +48,16 @@ class SchemingCreatePageView(CreateView):
     '''
     Handle dataset form pages using package_patch
     '''
-    def get(self, package_type, id, page):
-        try:
-            page = _clean_page(package_type, page)
-        except ValueError:
-            return abort(404, _('Page not found'))
+    def get(self, package_type, id):
         try:
             data = get_action('package_show')(None, {'id': id})
         except (NotAuthorized, ObjectNotFound):
             return abort(404, _('Dataset not found'))
 
-        data['_form_page'] = page
+        data['_form_page'] = 1
         return super(SchemingCreatePageView, self).get(package_type, data)
 
-    def post(self, package_type, id, page):
-        try:
-            page = _clean_page(package_type, page)
-        except ValueError:
-            return abort(404, _('Page not found'))
+    def post(self, package_type, id):
         try:
             data = get_action('package_show')(None, {'id': id})
         except (NotAuthorized, ObjectNotFound):
@@ -95,7 +87,7 @@ class SchemingCreatePageView(CreateView):
             errors = e.error_dict
             error_summary = e.error_summary
             data_dict[u'state'] = data[u'state']
-            data_dict['_form_page'] = page
+            data_dict['_form_page'] = 1
 
             return EditView().get(
                 package_type,
@@ -106,31 +98,10 @@ class SchemingCreatePageView(CreateView):
             )
             # END: roughly copied from ckan/views/dataset.py
 
-        if page == len(h.scheming_get_dataset_form_pages(package_type)):
-            if IFormRedirect:
-            # BEGIN: roughly copied from ckan/views/dataset.py
-                for plugin in PluginImplementations(IFormRedirect):
-                    url = plugin.dataset_save_redirect(
-                        package_type, complete_data['name'], 'create',
-                        save_action, data_dict)
-                    if url:
-                        return h.redirect_to(url)
-
-            if 'resource_fields' in h.scheming_get_dataset_schema(package_type):
-                return h.redirect_to(
-                    '{}_resource.new'.format(package_type),
-                    id=data['name'],
-                )
-            return h.redirect_to(
-                '{}.read'.format(package_type),
-                id=data['name'],
-            )
-            # END: roughly copied from ckan/views/dataset.py
-
         return h.redirect_to(
-            '{}.scheming_new_page'.format(package_type),
+            '{}.scheming_edit_page'.format(package_type),
             id=complete_data['name'],
-            page=page + 1,
+            page=2,
         )
 
 

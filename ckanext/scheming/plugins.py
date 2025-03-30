@@ -368,7 +368,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 views.SchemingCreateView.as_view('new'),
             )
             bp.add_url_rule(
-                '/new/<id>/<page>',
+                '/new/<id>/1',
                 'scheming_new_page',
                 views.SchemingCreatePageView.as_view('new_page'),
             )

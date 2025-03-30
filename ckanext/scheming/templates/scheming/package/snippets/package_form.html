@@ -13,8 +13,7 @@
           <span class="highlight" style="padding-right:0">{% if loop.index < active_page
               or (form_style == 'edit' and loop.index != active_page)
             %}<a href="{{
-              h.url_for(dataset_type +
-                  ('.scheming_edit_page' if form_style == 'edit' else '.scheming_new_page'),
+              h.url_for(dataset_type + '.scheming_edit_page',
                 package_type=dataset_type,
                 id=data.name or data.id,
                 page=loop.index)

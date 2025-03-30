@@ -9,7 +9,7 @@
           'first ' if loop.first else ''}}"
           style="width:{{ 100 / (loop.length + 1) }}%">
           <span class="highlight" style="padding-right:0"><a href="{{
-              h.url_for(dataset_type + '.scheming_new_page',
+              h.url_for(dataset_type + '.scheming_edit_page',
                 package_type=dataset_type,
                 id=pkg_name,
                 page=loop.index)
