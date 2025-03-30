@@ -177,22 +177,40 @@ class SchemingEditPageView(EditView):
             )
         except DataError:
             return abort(400, _(u'Integrity Error'))
-        if u'tag_string' in data_dict:
-            data_dict[u'tags'] = _tag_string_to_list(
-                data_dict[u'tag_string']
-            )
-        data_dict.pop('pkg_name', None)
-        # END: roughly copied from ckan/views/dataset.py
 
-        data_dict['id'] = id
         try:
-            complete_data = get_action('package_patch')(None, data_dict)
-        except ObjectNotFound:
-            return abort(404, _('Dataset not found'))
+            data_dict.pop('_ckan_phase', None)
+            data_dict.pop('save', None)
+            data_dict['id'] = id
+            # END: roughly copied from ckan/views/dataset.py
+            save_action = 'save'
+            if page == len(h.scheming_get_dataset_form_pages(package_type)):
+                data_dict['state'] = 'active'
+            complete_data = get_action('package_patch')(
+                {'allow_state_change': True}, data_dict)
+
+            if page < len(h.scheming_get_dataset_form_pages(package_type)):
+                url = h.url_for(
+                    f'{package_type}.scheming_edit_page', id=id,
+                    page=page + 1)
+                return h.redirect_to(url)
+
+            # BEGIN: roughly copied from ckan/views/dataset.py
+            for plugin in PluginImplementations(IFormRedirect):
+                url = plugin.dataset_save_redirect(
+                    package_type, complete_data['name'], 'edit', save_action,
+                    complete_data)
+                if url:
+                    return h.redirect_to(url)
+
+            url = h.url_for('{0}.read'.format(package_type), id=id)
+            return h.redirect_to(url)
+
         except NotAuthorized:
             return abort(403, _(u'Unauthorized to update a dataset'))
+        except ObjectNotFound:
+            return abort(404, _('Dataset not found'))
         except ValidationError as e:
-            # BEGIN: roughly copied from ckan/views/dataset.py
             errors = e.error_dict
             error_summary = e.error_summary
             data_dict[u'state'] = data[u'state']
@@ -205,8 +223,4 @@ class SchemingEditPageView(EditView):
                 errors,
                 error_summary
             )
-
-        return _form_save_redirect(
-            complete_data['name'], 'edit', package_type=package_type
-        )
         # END: roughly copied from ckan/views/dataset.py

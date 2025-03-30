@@ -110,6 +110,8 @@
   {%- if pages and form_style == 'edit' -%}
     {%- set active_page = data.get('_form_page', 1) | int -%}
     {{ _('Update {page}').format(page=h.scheming_language_text(pages[active_page-1].title)) }}
+  {%- elif pages and data.get('_form_page', 1) | int == pages | length -%}
+    {{ _('Publish') }}
   {%- elif pages -%}
     {{ _('Next') }}
   {%- else -%}
