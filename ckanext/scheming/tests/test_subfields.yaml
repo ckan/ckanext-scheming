@@ -44,6 +44,13 @@ dataset_fields:
   - field_name: country
     label: Country
 
+- field_name: publisher
+  label: Publisher
+  repeating_subfields:
+  - field_name: name
+    label: Name
+  - field_name: url
+    label: URL
 
 resource_fields:
 
