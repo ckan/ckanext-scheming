@@ -595,10 +595,11 @@ The `validators` value is a space-separated string of validator and converter
 functions to use for this field when creating or updating data. Defaults to
 the validators defined in the CKAN core schemas.
 
-When setting validators use `scheming_required` as the first validator
-or the (`required`)[#required] field setting will be ignored.
-`scheming_required` applies either the `not_empty` or `ignore_missing`
-validator based on the `required` field setting.
+> [!WARNING]
+> Use `scheming_required` as the first validator
+> or the [`required`](#required) field setting will be ignored.
+> `scheming_required` applies either the `not_empty` or `ignore_missing`
+> validator based on the `required` field setting.
 
 When a validator name is followed by parenthesis the function is called
 passing the comma-separated values within and the result is used as the
