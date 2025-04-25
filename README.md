@@ -113,7 +113,7 @@ Dataset schemas:
 * [camel photos schema](ckanext/scheming/camel_photos.yaml)
 * [subfields schema](ckanext/scheming/subfields.yaml)
 * [form pages schema](ckanext/scheming/ckan_formpages.yaml)
-* [form pages schema with `draft_fields_required: false`]()(ckanext/scheming/ckan_formpages_draft.yaml)
+* [form pages schema with `draft_fields_required: false`](ckanext/scheming/ckan_formpages_draft.yaml)
 
 These schemas are included in ckanext-scheming and may be enabled
 with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.yaml`
@@ -377,12 +377,6 @@ Setting to `true` will mark the field as required in the editing form
 and include `not_empty` in the default validators that will be applied
 when `validators` is not specified.
 
-> [!NOTE]
-> To honor this settings with custom validators include `scheming_required`
-> as the first validator. `scheming_required` will check the required
-> setting for this field and apply either the `not_empty` or `ignore_missing`
-> validator.
-
 
 ### `choices`
 
@@ -598,41 +592,49 @@ Set a `property` attribute on dataset fields displayed as "Additional Info", use
 ### `validators`
 
 The `validators` value is a space-separated string of validator and converter
-functions to use for this field when creating or updating data.  When a
-validator name is followed by parenthesis the function is called passing the
-comma-separated values within and the result is used as the
+functions to use for this field when creating or updating data. Defaults to
+the validators defined in the CKAN core schemas.
+
+When setting validators use `scheming_required` as the first validator
+or the (`required`)[#required] field setting will be ignored.
+`scheming_required` applies either the `not_empty` or `ignore_missing`
+validator based on the `required` field setting.
+
+When a validator name is followed by parenthesis the function is called
+passing the comma-separated values within and the result is used as the
 validator/converter.
 
 ```yaml
-  validators: if_empty_same_as(name) unicode_safe
+  validators: scheming_required if_empty_same_as(name) unicode_safe
 ```
 
-is the same as a plugin using the validators:
+is the same as a form plugin using the validators:
 
 ```python
-[get_validator('if_empty_same_as')("name"), unicode_safe]
+[
+    get_validator('scheming_required'),
+    get_validator('if_empty_same_as')("name"),
+    get_validator('unicode_safe')
+]
 ```
 
-If parameters can be parsed as a valid python literals, they are passed with
-original type. If not, all parameters passed as strings. In addition, space
-character is not allowed in argument position. Use its HEX code instead `\\x20`.
+If validator parameters can be parsed as a valid python literals,
+they are passed with the original type. If not, all parameters passed
+as strings. In addition, space character is not allowed in argument
+position. Use its HEX code instead `\\x20`.
 
 ```yaml
-  validators: xxx(hello,world)    # xxx("hello", "world")
-  validators: xxx(hello,1)        # xxx("hello", "1")
-  validators: xxx("hello",1,None) # xxx("hello", 1, None)
+  validators: xxx(hello,world)       # xxx("hello", "world")
+  validators: xxx(hello,1)           # xxx("hello", "1")
+  validators: xxx("hello",1,None)    # xxx("hello", 1, None)
   validators: xxx("hello\\x20world") # xxx("hello world")
 ```
 
-This string does not contain arbitrary python code to be executed,
-you may only use registered validator functions, optionally calling
-them with static string values provided.
-
 > [!NOTE]
-> ckanext-scheming automatically adds calls to `convert_to_extras`
+> ckanext-scheming automatically adds a call to `convert_to_extras`
 > for extra fields when required.
 
-New validators and converters may be added using the
+New validators and converters may be registered using the
 [IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
 
 Validators that need access to other values in this schema (e.g.
