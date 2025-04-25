@@ -199,6 +199,7 @@ after_validators: validator_name
 
 Runs validator functions before and after the `dataset_type` package or `organization_type`/`group_type` group is created/updated.
 
+See [`validators`](#validators) for a description of the values accepted.
 
 ### `draft_fields_required`
 
@@ -374,8 +375,7 @@ Use for fields that must be included. Set to `false` or
 don't include this key for fields that are optional.
 
 Setting to `true` will mark the field as required in the editing form
-and include `not_empty` in the default validators that will be applied
-when `validators` is not specified.
+and affects the behavior of the `scheming_required` field validator.
 
 
 ### `choices`
@@ -592,8 +592,8 @@ Set a `property` attribute on dataset fields displayed as "Additional Info", use
 ### `validators`
 
 The `validators` value is a space-separated string of validator and converter
-functions to use for this field when creating or updating data. Defaults to
-the validators defined in the CKAN core schemas.
+functions to use for this field when creating or updating data. For core fields
+the validators default to the ones defined in the CKAN core schemas.
 
 > [!WARNING]
 > Use `scheming_required` as the first validator
