@@ -24,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ckan/ckan-dev:${{ matrix.ckan-version }}
+      options: --user root
     services:
       solr:
         image: ckan/ckan-solr:${{ matrix.ckan-version }}-solr9

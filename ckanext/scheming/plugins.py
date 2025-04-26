@@ -103,8 +103,6 @@ class _SchemingMixin(object):
 
     @staticmethod
     def _load_presets(config):
-        if _SchemingMixin._presets is not None:
-            return
 
         presets = reversed(
             config.get(
@@ -233,6 +231,12 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     def package_types(self):
         return list(self._schemas)
 
+    def resource_validation_dependencies(self, package_type):
+        # Compatibility with https://github.com/ckan/ckan/pull/8421
+        schema = self._schemas.get(package_type, {})
+        dfr = schema.get('draft_fields_required', True)
+        return [] if dfr else ['state']
+
     def validate(self, context, data_dict, schema, action):
         """
         Validate and convert for package_create, package_update and
@@ -289,7 +293,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 del data[(f,)]
 
         if action_type == 'show':
-            if composite_convert_fields:
+            if composite_convert_fields and data_dict.get("extras"):
                 for ex in data_dict['extras']:
                     if ex['key'] in composite_convert_fields:
                         data_dict[ex['key']] = json.loads(ex['value'])
@@ -460,6 +464,8 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     FALLBACK_OPTION = 'scheming.organization_fallback'
     SCHEMA_TYPE_FIELD = 'organization_type'
     UNSPECIFIED_GROUP_TYPE = 'organization'
+
+    is_organization = True
 
     @classmethod
     def _store_instance(cls, self):
