@@ -39,3 +39,447 @@ a.btn.btn-multiple-remove {
 .radio-group label {
   font-weight: normal;
 }
+
+
+.form-label label::after {
+  content: none !important; 
+}
+
+.control-label-with-suggestion label:after {
+  content: none !important;
+}
+
+label:after {
+  content: none !important;
+}
+
+
+
+.suggestion-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  border: none;
+  background-color: transparent;
+  color: #2a9134; /* darker green */
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  top: -1px;
+}
+
+.suggestion-btn:hover, .suggestion-btn:focus {
+  transform: scale(1.2);
+  outline: none;
+}
+
+.suggestion-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: #2a9134; /* darker green */
+}
+
+.suggestion-field-wrapper {
+  position: relative;
+}
+
+/* Label with suggestion styling */
+.control-label-with-suggestion {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping */
+}
+
+/* FIX for colon issue - hide the default colon */
+.control-label-with-suggestion .form-label::after {
+  content: none !important;
+}
+
+/* Custom popover styles */
+.custom-suggestion-popover {
+  max-width: 350px;
+  position: absolute;
+  background-color: #fff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.08);
+  padding: 16px;
+  z-index: 1000;
+}
+
+.custom-suggestion-popover:before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  transform: rotate(45deg);
+  top: -6px;
+  left: 15px;
+  box-shadow: -2px -2px 5px rgba(0,0,0,0.05);
+}
+
+.suggestion-popover-content {
+  padding: 0;
+}
+
+.suggestion-popover-content strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Warning for invalid dropdown values */
+.suggestion-warning {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 8px;
+  padding: 10px;
+  background-color: #fff7ed;
+  border-radius: 6px;
+  border-left: 3px solid #e67e22;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #8d4004;
+}
+
+.suggestion-warning svg {
+  flex-shrink: 0;
+  margin-right: 8px;
+  stroke: #e67e22;
+  margin-top: 2px;
+}
+
+.suggestion-warning span {
+  display: block;
+}
+
+/* Invalid selection animation */
+@keyframes invalidShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+select.suggestion-invalid {
+  animation: invalidShake 0.5s ease;
+  border-color: #e67e22 !important;
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2) !important;
+}
+
+.suggestion-warning-message {
+  animation: fadeInOut 1.5s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  background-color: #e67e22 !important;
+}
+
+.suggestion-value {
+  margin: 12px 0;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  font-family: monospace;
+  word-break: break-all;
+  border-left: 3px solid #2a9134; /* darker green */
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 13px;
+  color: #333;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Formula toggle button */
+.formula-toggle {
+  margin: 8px 0 0 0;
+}
+
+.formula-toggle-btn {
+  background: none;
+  border: none;
+  color: #2a9134;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.formula-toggle-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.formula-toggle-active {
+  opacity: 1;
+}
+
+.formula-toggle-icon {
+  font-size: 10px;
+  margin-right: 4px;
+  transition: transform 0.2s ease;
+}
+
+/* Formula display */
+.suggestion-formula {
+  margin: 8px 0;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #555;
+  border-left: 2px solid #2a9134;
+}
+
+.formula-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #444;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.copy-formula-btn {
+  background: none;
+  border: none;
+  color: #2a9134;
+  cursor: pointer;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.copy-formula-btn:hover {
+  opacity: 1;
+  background-color: rgba(42, 145, 52, 0.1);
+}
+
+.copy-formula-btn.copy-success {
+  color: #2a9134;
+  opacity: 1;
+  background-color: rgba(42, 145, 52, 0.15);
+}
+
+.suggestion-formula code {
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: monospace;
+  display: block;
+}
+
+.suggestion-apply-btn {
+  margin-top: 12px;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #2a9134; /* darker green */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 5px rgba(42, 145, 52, 0.3);
+}
+
+/* Disabled apply button for invalid suggestions */
+.suggestion-apply-btn-disabled {
+  background-color: #cccccc !important;
+  color: #888888 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  opacity: 0.7;
+}
+
+.suggestion-apply-btn-disabled:hover {
+  transform: none !important;
+  background-color: #cccccc !important;
+  box-shadow: none !important;
+}
+
+.suggestion-apply-btn:hover {
+  background-color: #217a2b; /* even darker on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(42, 145, 52, 0.4);
+}
+
+/* Button pressed effect */
+.suggestion-apply-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(42, 145, 52, 0.4);
+}
+
+/* Custom tooltip styling */
+.suggestion-btn {
+  position: relative;
+}
+
+.suggestion-btn:hover::before {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: rgba(42, 145, 52, 0.9); /* darker green */
+  color: white;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1001;
+  pointer-events: none;
+  font-weight: normal;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.suggestion-btn:hover::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px 5px 0;
+  border-style: solid;
+  border-color: rgba(42, 145, 52, 0.9) transparent transparent; /* darker green */
+  z-index: 1001;
+  pointer-events: none;
+}
+
+/* Animation for suggestion button */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.suggestion-btn {
+  animation: pulse 2s infinite;
+}
+
+.suggestion-btn:hover {
+  animation: none;
+}
+
+/* Improved popover styling */
+.custom-suggestion-popover {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Suggestion button in field designs with icon */
+.control-group.has-suggestion .control-label::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background-color: #2a9134;
+  margin-right: 6px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+/* Fade-in effect for suggestion application */
+@keyframes highlightSuccess {
+  0% { background-color: rgba(42, 145, 52, 0); }
+  50% { background-color: rgba(42, 145, 52, 0.12); }
+  100% { background-color: rgba(42, 145, 52, 0); }
+}
+
+.suggestion-applied {
+  animation: highlightSuccess 1s ease-in-out;
+}
+
+/* Success message animation */
+.suggestion-success-message {
+  animation: fadeInOut 1.5s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(10px); }
+  20% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Add styles for mobile devices */
+@media (max-width: 767px) {
+  .custom-suggestion-popover {
+    width: 90%;
+    max-width: none;
+    left: 5% !important;
+    right: 5% !important;
+  }
+  
+  .suggestion-btn {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .suggestion-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .formula-toggle-btn {
+    padding: 8px 0;
+  }
+}
+
+.preformulated-field {
+  position: relative;
+  background-color: #f9f9f9;
+  border-left: 3px solid #2a9134;
+  padding-left: 10px;
+}
+
+.preformulated-field input,
+.preformulated-field textarea,
+.preformulated-field select {
+  background-color: #f9f9f9 !important;
+  border-color: #e0e0e0 !important;
+  cursor: not-allowed !important;
+  color: #555 !important;
+}
+
+.preformulated-field-notice {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+  background-color: #f3f3f3;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+#dataset-edit > div:nth-child(8) > label > div > span.preformulated-icon > svg {
+vertical-align: text-top;
+}

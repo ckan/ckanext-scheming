@@ -1,0 +1,60 @@
+{% set suggestion = h.scheming_field_suggestion(field) %}
+{% if suggestion %}
+  {% set suggestion_value = h.scheming_get_suggestion_value(field.field_name, data) %}
+  {% set field_id = 'field-' + field.field_name %}
+  {% set popup_id = 'suggestion-popup-' + field.field_name %}
+  
+  {# Check if this is a select field and if the suggestion is valid #}
+  {% set is_select = field.choices is defined or field.choices_helper is defined %}
+  {% set is_valid_suggestion = h.scheming_is_valid_suggestion(field, suggestion_value) %}
+  
+  <button type="button" 
+          class="suggestion-btn"
+          title="Suggestion Available"
+          data-module="scheming-suggestions"
+          data-content="<div class='suggestion-popover-content'>
+                         <strong>{{ suggestion.label }}</strong>
+                         {% if is_select and not is_valid_suggestion %}
+                         <div class='suggestion-warning'>
+                           <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                             <circle cx='12' cy='12' r='10'></circle>
+                             <line x1='12' y1='8' x2='12' y2='12'></line>
+                             <line x1='12' y1='16' x2='12.01' y2='16'></line>
+                           </svg>
+                           <span>This value is not a valid choice for this field</span>
+                         </div>
+                         {% endif %}
+                         <div class='suggestion-value'>{{ suggestion_value }}</div>
+                         <div class='formula-toggle'>
+                           <button class='formula-toggle-btn' type='button'>
+                             <span class='formula-toggle-icon'>&#9660;</span> 
+                             <span class='formula-toggle-text'>Show formula</span>
+                           </button>
+                         </div>
+                         <div class='suggestion-formula' style='display:none;'>
+                           <div class='formula-header'>
+                             <span>Formula:</span>
+                             <button class='copy-formula-btn' type='button' data-formula='{{ suggestion.formula|e }}'>
+                               <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                                 <rect x='9' y='9' width='13' height='13' rx='2' ry='2'></rect>
+                                 <path d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'></path>
+                               </svg>
+                             </button>
+                           </div>
+                           <code>{{ suggestion.formula|e }}</code>
+                         </div>
+                         <button class='suggestion-apply-btn {% if not is_valid_suggestion %}suggestion-apply-btn-disabled{% endif %}' 
+                                 data-target='{{ field_id }}' 
+                                 data-value='{{ suggestion_value|replace('\'', '\\\'')|replace('\n', '\\n')|replace('"', '&quot;') }}'
+                                 data-is-select='{{ is_select }}'
+                                 data-is-valid='{{ is_valid_suggestion }}'>
+                           Apply suggestion
+                         </button>
+                       </div>">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 60 60" xml:space="preserve">
+      <path d="M30,5C16.2148438,5,5,16.2148438,5,30s11.2148438,25,25,25s25-11.2148438,25-25S43.7851563,5,30,5z M30,53  C17.3178711,53,7,42.6821289,7,30S17.3178711,7,30,7s23,10.3178711,23,23S42.6821289,53,30,53z"/>
+      <path d="M32.1679688,17.1147461c0-0.5522461-0.4477539-1-1-1h-1.800293c-3.4248047,0-6.2109375,2.7861328-6.2109375,6.2109375  v6.105957h-2.2211914c-0.5522461,0-1,0.4477539-1,1s0.4477539,1,1,1h2.2211914v12.4536133c0,0.5522461,0.4477539,1,1,1  s1-0.4477539,1-1V30.4316406h2.2211914c0.5522461,0,1-0.4477539,1-1s-0.4477539-1-1-1h-2.2211914v-6.105957  c0-2.3217773,1.8891602-4.2109375,4.2109375-4.2109375h1.800293C31.7202148,18.1147461,32.1679688,17.6669922,32.1679688,17.1147461  z"/>
+      <path d="M39.625,31.3505859c-0.4589844-0.3095703-1.0795898-0.1884766-1.3886719,0.2685547l-2.7883301,4.126709l-2.7883301-4.126709  c-0.3095703-0.4570313-0.9301758-0.578125-1.3886719-0.2685547c-0.4575195,0.309082-0.5776367,0.9306641-0.2685547,1.3886719  l3.2385254,4.7929688l-3.2385254,4.7929688c-0.309082,0.4580078-0.1889648,1.0795898,0.2685547,1.3886719  c0.171875,0.1157227,0.3666992,0.1713867,0.559082,0.1713867c0.3212891,0,0.6362305-0.1542969,0.8295898-0.4399414  l2.7883301-4.126709l2.7883301,4.126709c0.1933594,0.2856445,0.5083008,0.4399414,0.8295898,0.4399414  c0.1923828,0,0.387207-0.0556641,0.559082-0.1713867c0.4575195-0.309082,0.5776367-0.9306641,0.2685547-1.3886719  l-3.2385254-4.7929688l3.2385254-4.7929688C40.2026367,32.28125,40.0825195,31.659668,39.625,31.3505859z"/>
+    </svg>
+  </button>
+{% endif %}

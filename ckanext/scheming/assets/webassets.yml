@@ -20,3 +20,12 @@ multiple_text:
       - base/main
   contents:
     - js/scheming-multiple-text.js
+
+suggestions:
+  filters: rjsmin
+  output: ckanext-scheming/%(version)s_scheming_suggestions.js
+  extra:
+    preload:
+      - base/main
+  contents:
+    - js/scheming-suggestions.js

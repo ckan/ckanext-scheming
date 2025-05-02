@@ -1,9 +1,30 @@
 {% import 'macros/form.html' as form %}
+{% include 'scheming/snippets/suggestions_asset.html' %}
+
+{# Check if this is a preformulated field #}
+{% set is_preformulated = h.is_preformulated_field(field) %}
+
+{% set suggestion = h.scheming_field_suggestion(field) %}
+{% set label_text = h.scheming_language_text(field.label) %}
+{% set label_with_suggestion %}
+    <span class="form-label">{{ label_text }}:</span>
+    {%- if suggestion -%}
+      {%- snippet 'scheming/snippets/suggestion_button.html', field=field, data=data -%}
+    {%- endif -%}
+    {%- if is_preformulated -%}
+      <span class="preformulated-icon" title="This field is automatically populated">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+      </span>
+    {%- endif -%}
+{% endset %}
+
 
 {% call form.markdown(
     field.field_name,
     id='field-' + field.field_name,
-    label=h.scheming_language_text(field.label),
+    label=label_with_suggestion|safe,
     placeholder=h.scheming_language_text(field.form_placeholder),
     value=data[field.field_name],
     error=errors[field.field_name],
@@ -11,5 +32,12 @@
     is_required=h.scheming_field_required(field)
     )
 %}
-    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+    <div class="suggestion-field-wrapper {% if is_preformulated %}preformulated-field{% endif %}">
+      {%- if is_preformulated -%}
+        <div class="preformulated-field-notice">
+          <strong>Automated field:</strong> This field is automatically populated and cannot be edited manually.
+        </div>
+      {%- endif -%}
+      {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+    </div>
 {% endcall %}
