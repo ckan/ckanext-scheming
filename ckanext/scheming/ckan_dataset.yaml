@@ -1,201 +1,327 @@
 scheming_version: 2
 dataset_type: dataset
-about: A reimplementation of the default CKAN dataset schema
-about_url: http://github.com/ckan/ckanext-scheming
+about: based on DataCite 4.6
+about_url: http://github.com/roink/ckanext-scheming
 
 
 dataset_fields:
+  - field_name: identifier
+    label: Identifier
+    preset: text
+    required: true
+  - field_name: identifierType
+    label: Identifier Type
+    preset: select
+    required: true
+    choices:
+      - value: DOI
+        label: DOI
 
-- field_name: title
-  label: Title
-  preset: title
-  form_placeholder: eg. A descriptive title
+  - field_name: creators
+    label: Creators
+    repeating_subfields:
+      - field_name: creatorName
+        label: Creator Name
+        required: true
+      - field_name: givenName
+        label: Given Name
+      - field_name: familyName
+        label: Family Name
+      - field_name: nameIdentifier
+        label: Name Identifier
+        preset: text
+      - field_name: affiliation
+        label: Affiliation
+        preset: text
 
-- field_name: name
-  label: URL
-  preset: dataset_slug
-  form_placeholder: eg. my-dataset
+  - field_name: titles
+    label: Titles
+    repeating_subfields:
+      - field_name: title
+        label: Title
+        required: true
+      - field_name: titleType
+        label: Title Type
+        preset: select
+        choices:
+          - value: AlternativeTitle
+            label: Alternative Title
+          - value: Subtitle
+            label: Subtitle
+          - value: TranslatedTitle
+            label: Translated Title
+          - value: Other
+            label: Other
 
-- field_name: description
-  label: Description
-  form_snippet: markdown.html
-  form_placeholder: "Detailed description of the (research) project and the resulting data collection."
+  - field_name: publisher
+    label: Publisher
+    preset: text
+    required: true
 
-- field_name: tag_String
-  label: Keywords
-  preset: tag_string_autocomplete
-  form_placeholder: "Useful keywords for data collection; separated by semicolon"
+  - field_name: publisherIdentifier
+    label: Publisher Identifier
+    preset: text
+  - field_name: publisherIdentifierScheme
+    label: Publisher Identifier Scheme
+    preset: text
+  - field_name: publisherSchemeURI
+    label: Publisher Scheme URI
+    preset: text
 
-- field_name: data_pillar
-  label: Data Pillar
-  choices:
-    - value: Archaeology
-      label: Archaeology
-    - value: Geology
-      label: Geology
-    - value: Meteorology
-      label: Meteorology
-    - value: Humanities
-      label: Humanities
-  preset: select
+  - field_name: publicationYear
+    label: Publication Year
+    preset: date
+    required: true
 
-- field_name: data_doi
-  label: Data DOI
-  form_placeholder: "https://doi.org/10.1525/ah.2024.101"
-  display_property: foaf:homepage
-  display_snippet: link.html
+  - field_name: resourceType
+    label: Resource Type
+    preset: text
+    required: true
+  - field_name: resourceTypeGeneral
+    label: Resource Type General
+    preset: select
+    required: true
+    choices:
+      - value: Dataset
+        label: Dataset
+      - value: Software
+        label: Software
+      - value: Image
+        label: Image
+      - value: Other
+        label: Other
 
-- field_name: raw_data_sources
-  label: Raw Data Sources
-  repeating_label: Raw Data Source
-  repeating_subfields:
-    - field_name: raw_data_source
-      label: Raw Data Source
-      form_placeholder: "Source"
-      
-- field_name: languages
-  label: Languages
-  preset: tag_string_autocomplete
-  form_placeholder: "Languages"
+# Recommended and optional properties
 
-- field_name: license_id
-  label: License
-  form_snippet: license.html
-  help_text: License definitions and additional information can be found at http://opendefinition.org/
+  - field_name: subjects
+    label: Subjects
+    repeating_subfields:
+      - field_name: subject
+        label: Subject
+      - field_name: subjectScheme
+        label: Subject Scheme
+        preset: text
+      - field_name: subjectSchemeURI
+        label: Subject Scheme URI
+        preset: text
+      - field_name: valueURI
+        label: Value URI
+        preset: text
+      - field_name: classificationCode
+        label: Classification Code
+        preset: text
 
-- field_name: owner_org
-  label: Organization
-  preset: dataset_organization
+  - field_name: contributors
+    label: Contributors
+    repeating_subfields:
+      - field_name: contributorType
+        label: Contributor Type
+        preset: select
+        choices:
+          - value: DataCollector
+            label: DataCollector
+          - value: HostingInstitution
+            label: HostingInstitution
+          - value: Other
+            label: Other
+      - field_name: contributorName
+        label: Contributor Name
+        required: true
+      - field_name: givenName
+        label: Given Name
+      - field_name: familyName
+        label: Family Name
+      - field_name: nameIdentifier
+        label: Name Identifier
+        preset: text
+      - field_name: affiliation
+        label: Affiliation
+        preset: text
 
-- field_name: url
-  label: Source
-  form_placeholder: http://example.com/dataset.json
-  display_property: foaf:homepage
-  display_snippet: link.html
+  - field_name: dates
+    label: Dates
+    repeating_subfields:
+      - field_name: date
+        label: Date
+        preset: date
+      - field_name: dateType
+        label: Date Type
+        preset: select
+        choices:
+          - value: Issued
+            label: Issued
+          - value: Accepted
+            label: Accepted
+          - value: Updated
+            label: Updated
+          - value: Other
+            label: Other
+      - field_name: dateInformation
+        label: Date Information
+        preset: text
 
-- field_name: version
-  label: Version
-  validators: ignore_missing unicode_safe package_version_validator
-  form_placeholder: '1.0'
+  - field_name: language
+    label: Language
+    preset: text
 
-- field_name: author
-  label: Author
-  form_placeholder: Joe Bloggs
-  display_property: dc:creator
+  - field_name: alternateIdentifiers
+    label: Alternate Identifiers
+    repeating_subfields:
+      - field_name: alternateIdentifier
+        label: Alternate Identifier
+      - field_name: alternateIdentifierType
+        label: Alternate Identifier Type
+        preset: text
 
-- field_name: author_email
-  label: Author Email
-  form_placeholder: philipp@example.com
-  display_property: dc:creator
-  display_snippet: email.html
-  display_email_name_field: author
+  - field_name: relatedIdentifiers
+    label: Related Identifiers
+    repeating_subfields:
+      - field_name: relatedIdentifier
+        label: Related Identifier
+      - field_name: relatedIdentifierType
+        label: Related Identifier Type
+        preset: select
+        choices:
+          - value: DOI
+            label: DOI
+          - value: URL
+            label: URL
+          - value: Other
+            label: Other
+      - field_name: relationType
+        label: Relation Type
+        preset: select
+        choices:
+          - value: IsCitedBy
+            label: IsCitedBy
+          - value: References
+            label: References
+          - value: Other
+            label: Other
+      - field_name: relatedResourceTypeGeneral
+        label: Related Resource Type General
+        preset: select
+        choices:
+          - value: Dataset
+            label: Dataset
+          - value: JournalArticle
+            label: JournalArticle
+          - value: Other
+            label: Other
 
-- field_name: maintainer
-  label: Maintainer
-  form_placeholder: Philipp
-  display_property: dc:contributor
+  - field_name: size
+    label: Size
+    preset: text
 
-- field_name: maintainer_email
-  label: Maintainer Email
-  form_placeholder: joe@example.com
-  display_property: dc:contributor
-  display_snippet: email.html
-  display_email_name_field: maintainer
+  - field_name: formats
+    label: Formats
+    repeating: true
+    preset: text
 
-- field_name: citations
-  label: Citations
-  repeating_label: Citation
-  repeating_subfields:
-    - field_name: citation
-      label: Citation
-      form_placeholder: "Citation"
-  required: false
+  - field_name: version
+    label: Version
+    preset: text
 
-- field_name: project_references
-  label: Project Reference
-  repeating_label: Project Reference
-  repeating_subfields:
-    - field_name: project_reference
-      label: Project Reference
-      form_placeholder: "Project Reference"
-  required: false
+  - field_name: rightsList
+    label: Rights
+    repeating_subfields:
+      - field_name: rights
+        label: Rights Statement
+      - field_name: rightsURI
+        label: Rights URI
+        preset: text
+      - field_name: rightsIdentifier
+        label: Rights Identifier
+        preset: text
+      - field_name: rightsIdentifierScheme
+        label: Rights Identifier Scheme
+        preset: text
 
-- field_name: other_related_data
-  label: Other Related Data
-  form_placeholder: "Other entries, projects, or data that should likely be explored in conjunction with these data"
-  required: false
+  - field_name: descriptions
+    label: Descriptions
+    repeating_subfields:
+      - field_name: description
+        label: Description
+        preset: textarea
+      - field_name: descriptionType
+        label: Description Type
+        preset: select
+        choices:
+          - value: Abstract
+            label: Abstract
+          - value: Methods
+            label: Methods
+          - value: Other
+            label: Other
 
-- field_name: project_data_collection_start
-  label: Project Data Collection Start
-  form_placeholder: "Year of project data collection start"
-  required: false
+  - field_name: geoLocations
+    label: Geo Locations
+    repeating_subfields:
+      - field_name: geoLocationPlace
+        label: Location Name
+        preset: text
+      - field_name: pointLongitude
+        label: Longitude
+        preset: text
+      - field_name: pointLatitude
+        label: Latitude
+        preset: text
 
-- field_name: project_data_collection_end
-  label: Project Data Collection End
-  form_placeholder: "Year of project data collection end"
-  required: false
+  - field_name: fundingReferences
+    label: Funding References
+    repeating_subfields:
+      - field_name: funderName
+        label: Funder Name
+        required: true
+      - field_name: funderIdentifier
+        label: Funder Identifier
+        preset: text
+      - field_name: funderIdentifierType
+        label: Funder Identifier Type
+        preset: text
+      - field_name: awardNumber
+        label: Award Number
+        preset: text
+      - field_name: awardURI
+        label: Award URI
+        preset: text
+      - field_name: awardTitle
+        label: Award Title
+        preset: text
 
-- field_name: archaeological_periods
-  label: Archaeological Periods
-  repeating_label: Archaeological Period
-  repeating_subfields:
-    - field_name: archaeological_period
-      label: Archaeological Period
-      form_placeholder: "Archaeological Period"
-  required: false
+  - field_name: relatedItems
+    label: Related Items
+    repeating_subfields:
+      - field_name: relatedItemType
+        label: Related Item Type
+        preset: select
+        choices:
+          - value: Series
+            label: Series
+          - value: Collection
+            label: Collection
+          - value: Other
+            label: Other
+      - field_name: relationType
+        label: Relation Type
+        preset: select
+        choices:
+          - value: IsPartOf
+            label: IsPartOf
+          - value: Other
+            label: Other
+      - field_name: relatedItemTitle
+        label: Related Item Title
+      - field_name: relatedItemIdentifier
+        label: Related Item Identifier
+        preset: text
+      - field_name: relatedItemIdentifierType
+        label: Identifier Type
+        preset: select
+        choices:
+          - value: DOI
+            label: DOI
+          - value: Other
+            label: Other
 
-- field_name: periods_addition
-  label: Period(s) Addition
-  form_placeholder: "Additional infos for archaeological period(s) of data collection"
-  required: false
-
-- field_name: geological_timeframe
-  label: Geological Timeframe
-  preset: multiple_checkbox
-  choices:
-  - value: Holocene
-    label: Holocene
-  - value: Early Holocene
-    label: Early Holocene
-  - value: Mid Holocene
-    label: Mid Holocene
-  - value: Late Holocene
-    label: Late Holocene
-  - value: Pleistocene
-    label: Pleistocene
-  - value: Early Pleistocene
-    label: Early Pleistocene
-  - value: Mid Pleistocene
-    label: Mid Pleistocene
-  - value: Late Pleistocene
-    label: Late Pleistocene
-  - value: Pliocene
-    label: Pliocene
-  - value: Early Pliocene
-    label: Early Pliocene
-  - value: Mid Pliocene
-    label: Mid Pliocene
-  - value: Late Pliocene
-    label: Late Pliocene
-  required: false
-
-
-
-resource_fields:
-
-- field_name: url
-  label: URL
-  preset: resource_url_upload
-
-- field_name: name
-  label: Name
-  form_placeholder: eg. January 2011 Gold Prices
-
-- field_name: description
-  label: Description
-  form_snippet: markdown.html
-  form_placeholder: Some useful notes about the data
-
-- field_name: format
-  label: Format
-  preset: resource_format_autocomplete
+resource_fields: []
