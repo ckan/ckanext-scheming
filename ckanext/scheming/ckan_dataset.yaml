@@ -3,12 +3,12 @@ dataset_type: dataset
 about: based on DataCite 4.6
 about_url: http://github.com/roink/ckanext-scheming
 
-
 dataset_fields:
+
   - field_name: identifier
     label: Identifier
-    preset: text
     required: true
+
   - field_name: identifierType
     label: Identifier Type
     preset: select
@@ -29,10 +29,8 @@ dataset_fields:
         label: Family Name
       - field_name: nameIdentifier
         label: Name Identifier
-        preset: text
       - field_name: affiliation
         label: Affiliation
-        preset: text
 
   - field_name: titles
     label: Titles
@@ -55,18 +53,14 @@ dataset_fields:
 
   - field_name: publisher
     label: Publisher
-    preset: text
     required: true
 
   - field_name: publisherIdentifier
     label: Publisher Identifier
-    preset: text
   - field_name: publisherIdentifierScheme
     label: Publisher Identifier Scheme
-    preset: text
   - field_name: publisherSchemeURI
     label: Publisher Scheme URI
-    preset: text
 
   - field_name: publicationYear
     label: Publication Year
@@ -75,7 +69,6 @@ dataset_fields:
 
   - field_name: resourceType
     label: Resource Type
-    preset: text
     required: true
   - field_name: resourceTypeGeneral
     label: Resource Type General
@@ -91,8 +84,6 @@ dataset_fields:
       - value: Other
         label: Other
 
-# Recommended and optional properties
-
   - field_name: subjects
     label: Subjects
     repeating_subfields:
@@ -100,16 +91,12 @@ dataset_fields:
         label: Subject
       - field_name: subjectScheme
         label: Subject Scheme
-        preset: text
       - field_name: subjectSchemeURI
         label: Subject Scheme URI
-        preset: text
       - field_name: valueURI
         label: Value URI
-        preset: text
       - field_name: classificationCode
         label: Classification Code
-        preset: text
 
   - field_name: contributors
     label: Contributors
@@ -133,10 +120,8 @@ dataset_fields:
         label: Family Name
       - field_name: nameIdentifier
         label: Name Identifier
-        preset: text
       - field_name: affiliation
         label: Affiliation
-        preset: text
 
   - field_name: dates
     label: Dates
@@ -158,11 +143,9 @@ dataset_fields:
             label: Other
       - field_name: dateInformation
         label: Date Information
-        preset: text
 
   - field_name: language
     label: Language
-    preset: text
 
   - field_name: alternateIdentifiers
     label: Alternate Identifiers
@@ -171,7 +154,6 @@ dataset_fields:
         label: Alternate Identifier
       - field_name: alternateIdentifierType
         label: Alternate Identifier Type
-        preset: text
 
   - field_name: relatedIdentifiers
     label: Related Identifiers
@@ -211,16 +193,13 @@ dataset_fields:
 
   - field_name: size
     label: Size
-    preset: text
 
   - field_name: formats
     label: Formats
     repeating: true
-    preset: text
 
   - field_name: version
     label: Version
-    preset: text
 
   - field_name: rightsList
     label: Rights
@@ -229,20 +208,16 @@ dataset_fields:
         label: Rights Statement
       - field_name: rightsURI
         label: Rights URI
-        preset: text
       - field_name: rightsIdentifier
         label: Rights Identifier
-        preset: text
       - field_name: rightsIdentifierScheme
         label: Rights Identifier Scheme
-        preset: text
 
   - field_name: descriptions
     label: Descriptions
     repeating_subfields:
       - field_name: description
         label: Description
-        preset: textarea
       - field_name: descriptionType
         label: Description Type
         preset: select
@@ -259,13 +234,10 @@ dataset_fields:
     repeating_subfields:
       - field_name: geoLocationPlace
         label: Location Name
-        preset: text
       - field_name: pointLongitude
         label: Longitude
-        preset: text
       - field_name: pointLatitude
         label: Latitude
-        preset: text
 
   - field_name: fundingReferences
     label: Funding References
@@ -275,19 +247,14 @@ dataset_fields:
         required: true
       - field_name: funderIdentifier
         label: Funder Identifier
-        preset: text
       - field_name: funderIdentifierType
         label: Funder Identifier Type
-        preset: text
       - field_name: awardNumber
         label: Award Number
-        preset: text
       - field_name: awardURI
         label: Award URI
-        preset: text
       - field_name: awardTitle
         label: Award Title
-        preset: text
 
   - field_name: relatedItems
     label: Related Items
@@ -314,7 +281,6 @@ dataset_fields:
         label: Related Item Title
       - field_name: relatedItemIdentifier
         label: Related Item Identifier
-        preset: text
       - field_name: relatedItemIdentifierType
         label: Identifier Type
         preset: select
