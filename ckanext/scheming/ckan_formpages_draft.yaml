@@ -1,9 +1,11 @@
 scheming_version: 2
 dataset_type: formpages
 about: The default CKAN dataset schema with form split across multiple pages
-about_url: http://github.com/ckan/ckanext-scheming
+  with required fields only enforced when publishing. See
+  https://github.com/ckan/ckanext-scheming?tab=readme-ov-file#draft_fields_required
+about_url: https://github.com/ckan/ckanext-scheming
 
-draft_fields_required: false
+#draft_fields_required: false
 
 dataset_fields:
 

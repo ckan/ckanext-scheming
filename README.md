@@ -636,7 +636,7 @@ position. Use its HEX code instead `\\x20`.
 > for extra fields when required.
 
 New validators and converters may be registered using the
-[IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
+[IValidators plugin interface](https://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
 
 Validators that need access to other values in this schema (e.g.
 to test values against the choices list) may be decorated with
@@ -644,7 +644,7 @@ the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
 function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
-CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html)
+CKAN's [validator functions reference](https://docs.ckan.org/en/latest/extensions/validators.html)
 lists available validators ready to be used.
 
 ### `output_validators`
@@ -741,7 +741,7 @@ Returns:
     scheming_version: 2,
     dataset_type: "dataset",
     about: "A reimplementation of the default CKAN dataset schema",
-    about_url: "http://github.com/ckan/ckanext-scheming",
+    about_url: "https://github.com/ckan/ckanext-scheming",
     dataset_fields: [...],
     resource_fields: [...]
   }

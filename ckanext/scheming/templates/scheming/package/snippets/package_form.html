@@ -23,13 +23,13 @@
             else %}{{ h.scheming_language_text(p.title) }}{% endif %}
             {%- set mreq = draft_missing_required[loop.index0] -%}
             {% if mreq %}
-              <abbr title="{{
+              <a href="#" data-bs-toggle="tooltip" title="{{
                   ungettext("Missing required field", "Missing required fields", mreq | length)
                 }}: {% for m in mreq %}{{
                     h.scheming_language_text(h.scheming_field_by_name(p.fields, m).label)
                   }}{% if not loop.last %}, {% endif %}{% endfor %}">
                 <i class="fa fa-exclamation-circle text-danger fs-3" aria-hidden="true"></i>
-              </abbr>
+              </a>
             {% endif %}
           </span>
         </li>
