@@ -1,0 +1,69 @@
+{# A complex field with simple sub-fields #}
+
+
+{% import 'macros/form.html' as form %}
+{% include 'scheming/snippets/subfields_asset.html' %}
+{% macro repeating_panel(index, index1) %}
+  <div class="scheming-subfield-group" data-field="{{ field.field_name }}" data-group-index="index">
+    <div class="panel panel-default">
+      <div class="panel-body fields-content">
+        {% for subfield in field.simple_subfields %}
+          {% set sf = dict(
+            subfield,
+            field_name=field.field_name ~ h.scheming_composite_separator() ~ subfield.field_name)
+          %}
+          {%- snippet 'scheming/snippets/form_field.html',
+            field=sf,
+            data=flat,
+            errors=flaterr,
+            licenses=licenses,
+            entity_type=entity_type,
+            object_type=object_type
+          -%}
+        {% endfor %}
+      </div>
+      <div class="panel-body fields-removed-notice" style="display:none">
+        {% block removal_text %}
+          {% if 'id' in data %}
+            {{ _('These fields have been removed, click update below to save your changes.') }}
+          {% else %}
+            {{ _('These fields have been removed.') }}
+          {% endif %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% set flat = h.scheming_flatten_simple_subfield(field, data) %}
+{% set flaterr = h.scheming_flatten_simple_subfield(field, errors) %}
+
+{% call form.input_block(
+  'field-' + field.field_name,
+  h.scheming_language_text(field.label) or field.field_name,
+  [],
+  field.classes if 'classes' in field else ['control-medium'],
+  dict({"class": "form-control"}, **(field.get('form_attrs', {}))),
+  is_required=h.scheming_field_required(field)) %}
+  <fieldset name="scheming-simple-subfields" class="scheming-fieldset" data-module="scheming-simple-subfields">
+    {% set alert_warning = h.scheming_language_text(field.form_alert_warning) %}
+    {% if alert_warning %}
+      <section class="alert alert-warning">
+        {{ alert_warning|safe }}
+      </section>
+    {% endif %}
+
+    <div class="scheming-simple-subfields-group">
+        {{ repeating_panel(0, 1) }}
+    </div>
+    <div class="control-medium">
+      {% set help_text = h.scheming_language_text(field.help_text) %}
+      {% if help_text %}
+        <div class="info-block mrgn-tp-md">
+          {{ help_text }}
+        </div>
+      {% endif %}
+    </div>
+
+  </fieldset>
+{% endcall %}

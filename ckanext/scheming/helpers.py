@@ -26,6 +26,9 @@ def lang():
     # is not set up fully when importing this module
     return h.lang()
 
+@helper
+def scheming_composite_separator():
+    return config.get('scheming.composite.separator','-')
 
 @helper
 def scheming_language_text(text, prefer_lang=None):
@@ -428,16 +431,48 @@ def scheming_flatten_subfield(subfield, data):
     If data already contains flattened subfields (e.g. rendering values
     after a validation error) then they are returned as-is.
     """
+    from ckantoolkit import h
     flat = dict(data)
+    sep = h.scheming_composite_separator()
 
     if subfield['field_name'] not in data:
         return flat
 
     for i, record in enumerate(data[subfield['field_name']]):
-        prefix = '{field_name}-{index}-'.format(
+        prefix = '{field_name}{sep}{index}{sep}'.format(
             field_name=subfield['field_name'],
             index=i,
+            sep=sep,
         )
         for k in record:
             flat[prefix + k] = record[k]
+    return flat
+
+@helper
+def scheming_flatten_simple_subfield(subfield, data):
+    """
+    Return flattened_data that converts all nested data for this subfield
+    into {field_name}-{subfield_name} values at the top level,
+    so that it matches the names of form fields submitted.
+
+    If data already contains flattened subfields (e.g. rendering values
+    after a validation error) then they are returned as-is.
+    """
+    from ckantoolkit import h
+    flat = dict(data)
+    sep = h.scheming_composite_separator()
+
+    if subfield['field_name'] not in data:
+        return flat
+
+    subdata = data[subfield['field_name']]
+    if(isinstance(subdata, list) and len(subdata) == 1):
+        subdata = subdata[0]
+
+    for field, value in subdata.items():
+        prefix = '{field_name}{sep}'.format(
+            field_name=subfield['field_name'],
+            sep=sep,
+        )
+        flat[prefix + field] = value
     return flat

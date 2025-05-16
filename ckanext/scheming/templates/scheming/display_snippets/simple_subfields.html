@@ -1,0 +1,26 @@
+{% set fields = data[field.field_name] %}
+{% block subfield_display %}
+  <div class="panel panel-default panel-simple-composite">
+    <div class="panel-body">
+      {% for field_data in fields %}
+      <dl class="scheming-subfield-list">
+        {% for subfield in field.simple_subfields %}
+          {% if subfield.field_name in field_data and field_data[subfield.field_name]|length and subfield.display_snippet is not none %}
+          <dt class="dataset-label">
+            {{ h.scheming_language_text(subfield.label) }}
+          </dt>
+          <dd>
+          {%- snippet 'scheming/snippets/display_field.html',
+            field=subfield,
+            data=field_data,
+            entity_type=entity_type,
+            object_type=object_type
+          -%}
+          </dd>
+          {% endif %}
+        {% endfor %}
+      </dl>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
