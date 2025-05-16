@@ -16,7 +16,6 @@ Table of contents:
    - [Schema Types](#schema-types)
    - [Example Schemas](#example-schemas)
    - [Common Schema Keys](#common-schema-keys)
-     - [`scheming_version`](#scheming_version)
      - [`about_url`](#about_url)
      - [`before_validators`, `after_validators`](#before_validators-after_validators)
    - [Dataset Schema Keys](#dataset-schema-keys)
@@ -134,11 +133,6 @@ Organization schemas:
 
 
 ## Common Schema Keys
-
-### `scheming_version`
-
-Set to `2`. Future versions of ckanext-scheming may use a larger
-number to indicate a change to the schema format.
 
 ### `about_url`
 
@@ -738,7 +732,6 @@ Returns:
   help: "http://localhost:5005/api/3/action/help_show?name=scheming_dataset_schema_show",
   success: true,
   result: {
-    scheming_version: 2,
     dataset_type: "dataset",
     about: "A reimplementation of the default CKAN dataset schema",
     about_url: "https://github.com/ckan/ckanext-scheming",
