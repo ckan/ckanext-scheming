@@ -87,13 +87,13 @@ def _get_group_form(html):
 def _post_data(app, url, data, env):
     try:
         if check_ckan_version(min_version="2.11.0a0"):
-            app.post(url, headers=env, data=data, follow_redirects=False)
+            return app.post(url, headers=env, data=data, follow_redirects=False)
         else:
-            app.post(
+            return app.post(
                 url, environ_overrides=env, data=data, follow_redirects=False
             )
     except TypeError:
-        app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+        return app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
 
 
 @pytest.mark.usefixtures("clean_db")
@@ -495,3 +495,29 @@ class TestSubfieldResourceForm(object):
         dataset = call_action("package_show", id=dataset["id"])
 
         assert dataset["resources"][0]["datetime_tz"] == f"{date}T{time}:00"
+
+
+@pytest.mark.usefixtures("with_plugins", "clean_db")
+class TestDatasetFormPages(object):
+    def test_dataset_form_pages(self, app, sysadmin_env):
+        response = _get_package_new_page(app, sysadmin_env, 'test-formpages')
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert form.select("input[name=test_first]")
+        assert not form.select("input[name=test_second]")
+        assert 'First Page' == form.select_one('ol.stages li.first.active').text.strip()
+
+        response = _post_data(app, 'test-formpages/new', {'name': 'fp'}, sysadmin_env)
+        assert response.location.endswith('/test-formpages/new/fp/2')
+
+        response = app.get('/test-formpages/new/fp/2', headers=sysadmin_env)
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert not form.select("input[name=test_first]")
+        assert form.select("input[name=test_second]")
+        assert 'Second Page' == form.select_one('ol.stages li.active').text.strip()
+
+        response = _post_data(app, 'test-formpages/new/fp/2', {}, sysadmin_env)
+        assert response.location.endswith('/test-formpages/fp/resource/new')
+        response = app.get('/test-formpages/fp/resource/new', headers=sysadmin_env)
+        form = BeautifulSoup(response.body).select_one("#resource-edit")
+        assert 'Add data' == form.select_one('ol.stages li.active').text.strip()
+        assert 'First Page' == form.select_one('ol.stages li.first').text.strip()
