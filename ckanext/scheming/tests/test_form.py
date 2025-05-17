@@ -547,9 +547,12 @@ class TestDatasetFormPages(object):
         form = BeautifulSoup(response.body).select_one("#resource-edit")
         assert 'Name:' in form.select_one('div.error-explanation').text
 
-        response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'name': 'example', 'save':'go-metadata', 'id': ''}, sysadmin_env)
-        form = BeautifulSoup(response.body).select_one("#resource-edit")
-        errors = form.select_one('div.error-explanation').text
-        assert 'Notes: Missing value' in errors
-        assert 'Version: Missing value' in errors
-        assert 'Resources: Package resource(s) invalid' in errors
+        if check_ckan_version(min_version="2.12.0a0"):
+            # requires https://github.com/ckan/ckan/pull/8309
+            # or ckan raises an uncaught ValidationError
+            response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'name': 'example', 'save':'go-metadata', 'id': ''}, sysadmin_env)
+            form = BeautifulSoup(response.body).select_one("#resource-edit")
+            errors = form.select_one('div.error-explanation').text
+            assert 'Notes: Missing value' in errors
+            assert 'Version: Missing value' in errors
+            assert 'Resources: Package resource(s) invalid' in errors
