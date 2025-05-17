@@ -1,4 +1,4 @@
-dataset_type: formpages
+dataset_type: test-formpages
 about: The default CKAN dataset schema with form split across multiple pages
 about_url: https://github.com/ckan/ckanext-scheming
 
@@ -6,7 +6,7 @@ about_url: https://github.com/ckan/ckanext-scheming
 dataset_fields:
 
 - start_form_page:
-    title: Basic Info
+    title: First Page
     description: Required and core dataset fields
 
   field_name: title
@@ -28,12 +28,18 @@ dataset_fields:
   label: Organization
   preset: dataset_organization
 
+- field_name: test_first
+  label: Test First
+
 - start_form_page:
-    title: Detailed Info
+    title: Second Page
     description:
       These fields improve search and give users important links
 
-  field_name: tag_string
+  field_name: test_second
+  label: Test Second
+
+- field_name: tag_string
   label: Tags
   preset: tag_string_autocomplete
   form_placeholder: eg. economy, mental health, government
@@ -53,37 +59,6 @@ dataset_fields:
   label: Version
   validators: ignore_missing unicode_safe package_version_validator
   form_placeholder: '1.0'
-
-- start_form_page:
-    title: Contact Info
-    description: Names and email addresses for this dataset
-
-  field_name: author
-  label: Author
-  form_placeholder: Joe Bloggs
-  display_property: dc:creator
-
-- field_name: author_email
-  label: Author Email
-  form_placeholder: joe@example.com
-  display_property: dc:creator
-  display_snippet: email.html
-  display_email_name_field: author
-  validators: ignore_missing unicode_safe strip_value email_validator
-
-- field_name: maintainer
-  label: Maintainer
-  form_placeholder: Joe Bloggs
-  display_property: dc:contributor
-
-- field_name: maintainer_email
-  label: Maintainer Email
-  form_placeholder: joe@example.com
-  display_property: dc:contributor
-  display_snippet: email.html
-  display_email_name_field: maintainer
-  validators: ignore_missing unicode_safe strip_value email_validator
-
 
 resource_fields:
 

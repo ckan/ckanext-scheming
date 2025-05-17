@@ -1,7 +1,10 @@
 dataset_type: formpages
 about: The default CKAN dataset schema with form split across multiple pages
+  with required fields only enforced when publishing. See
+  https://github.com/ckan/ckanext-scheming?tab=readme-ov-file#draft_fields_required
 about_url: https://github.com/ckan/ckanext-scheming
 
+draft_fields_required: false
 
 dataset_fields:
 
@@ -23,6 +26,8 @@ dataset_fields:
   label: Description
   form_snippet: markdown.html
   form_placeholder: eg. Some useful notes about the data
+  required: true
+  validators: scheming_required unicode_safe
 
 - field_name: owner_org
   label: Organization
@@ -53,6 +58,8 @@ dataset_fields:
   label: Version
   validators: ignore_missing unicode_safe package_version_validator
   form_placeholder: '1.0'
+  required: true
+  validators: scheming_required unicode_safe package_version_validator
 
 - start_form_page:
     title: Contact Info
@@ -62,6 +69,8 @@ dataset_fields:
   label: Author
   form_placeholder: Joe Bloggs
   display_property: dc:creator
+  required: true
+  validators: scheming_required unicode_safe
 
 - field_name: author_email
   label: Author Email
@@ -94,6 +103,8 @@ resource_fields:
 - field_name: name
   label: Name
   form_placeholder: eg. January 2011 Gold Prices
+  required: true
+  validators: scheming_required unicode_safe
 
 - field_name: description
   label: Description

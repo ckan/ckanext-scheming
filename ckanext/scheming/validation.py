@@ -65,6 +65,7 @@ def scheming_choices(field, schema):
     """
     Require that one of the field choices values is passed.
     """
+    OneOf = get_validator('OneOf')
     if 'choices' in field:
         return OneOf([c['value'] for c in field['choices']])
 
@@ -84,11 +85,27 @@ def scheming_choices(field, schema):
 @register_validator
 def scheming_required(field, schema):
     """
-    not_empty if field['required'] else ignore_missing
+    return a validator based on field['required']
+    and schema['draft_fields_required'] setting
     """
-    if field.get('required'):
-        return not_empty
-    return ignore_missing
+    if not field.get('required'):
+        return get_validator('ignore_missing')
+    if not schema.get('draft_fields_required', True):
+        return get_validator('scheming_draft_fields_not_required')
+    return get_validator('not_empty')
+
+
+@register_validator
+def scheming_draft_fields_not_required(key, data, errors, context):
+    """
+    call ignore_missing if state is draft, otherwise not_empty
+    """
+    state = data.get(('state',), missing)
+    if state is missing or state.startswith('draft'):
+        v = get_validator('ignore_missing')
+    else:
+        v = get_validator('not_empty')
+    v(key, data, errors, context)
 
 
 @scheming_validator
