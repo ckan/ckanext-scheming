@@ -543,13 +543,13 @@ class TestDatasetFormPages(object):
         assert 'Missing required field: Description' == form.select_one('ol.stages li.first a[data-bs-toggle=tooltip]')['title']
         assert 'Missing required field: Version' == form.select_one('ol.stages li:nth-of-type(2) a[data-bs-toggle=tooltip]')['title']
 
-        response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'save':'go-metadata', 'id': ''}, sysadmin_env)
-        form = BeautifulSoup(response.body).select_one("#resource-edit")
-        assert 'Name:' in form.select_one('div.error-explanation').text
-
         if check_ckan_version(min_version="2.12.0a0"):
             # requires https://github.com/ckan/ckan/pull/8309
             # or ckan raises an uncaught ValidationError
+            response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'save':'go-metadata', 'id': ''}, sysadmin_env)
+            form = BeautifulSoup(response.body).select_one("#resource-edit")
+            assert 'Name:' in form.select_one('div.error-explanation').text
+
             response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'name': 'example', 'save':'go-metadata', 'id': ''}, sysadmin_env)
             form = BeautifulSoup(response.body).select_one("#resource-edit")
             errors = form.select_one('div.error-explanation').text
