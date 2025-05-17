@@ -4,7 +4,7 @@ about: The default CKAN dataset schema with form split across multiple pages
   https://github.com/ckan/ckanext-scheming?tab=readme-ov-file#draft_fields_required
 about_url: https://github.com/ckan/ckanext-scheming
 
-#draft_fields_required: false
+draft_fields_required: false
 
 dataset_fields:
 

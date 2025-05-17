@@ -100,8 +100,8 @@ def scheming_draft_fields_not_required(key, data, errors, context):
     """
     call ignore_missing if state is draft, otherwise not_empty
     """
-    state = data.get(('state',), '')
-    if state.startswith('draft'):
+    state = data.get(('state',), missing)
+    if state is missing or state.startswith('draft'):
         v = get_validator('ignore_missing')
     else:
         v = get_validator('not_empty')
