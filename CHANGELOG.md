@@ -106,7 +106,7 @@
 
 ## 3.1.0
 
-2024-03-27
+2025-03-27
 
 * This version drops support for CKAN 2.8, 2.9 and adds support for 2.11
 * Pass dataset name to resource fields snippets [#437](https://github.com/ckan/ckanext-scheming/pull/354)

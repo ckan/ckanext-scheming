@@ -52,7 +52,7 @@ Table of contents:
 Requirements
 ============
 
-This plugin is compatible with CKAN 2.9 or later.
+This plugin is compatible with CKAN 2.10 or later.
 
 
 Installation
