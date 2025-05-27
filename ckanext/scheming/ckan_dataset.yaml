@@ -133,10 +133,16 @@ dataset_fields:
         label: Date Type
         preset: select
         choices:
+          - value: Collected
+            label: Collected        
+          - value: Valid
+            label: Valid            
           - value: Issued
             label: Issued
           - value: Accepted
             label: Accepted
+          - value: Submitted
+            label: Submitted
           - value: Updated
             label: Updated
           - value: Other
@@ -174,6 +180,8 @@ dataset_fields:
         label: Relation Type
         preset: select
         choices:
+          - value: IsDerivedFrom
+            label: IsDerivedFrom   # for your raw data sources (MAN)
           - value: IsCitedBy
             label: IsCitedBy
           - value: References
@@ -289,5 +297,38 @@ dataset_fields:
             label: DOI
           - value: Other
             label: Other
+
+  - field_name: dataPillar
+    label: Data Pillar
+    preset: select
+    required: true          # MAN
+    choices:
+      - value: Archaeology
+        label: Archaeology
+      - value: Geology
+        label: Geology
+      - value: Modelling
+        label: Modelling
+      - value: Humanities
+        label: Humanities
+
+  - field_name: projectReferences
+    label: Project Reference(s)
+    repeating_subfields:
+      - field_name: projectName
+        label: Project Name
+        required: true       # REC
+      - field_name: fundingSource
+        label: Funding Source / Number
+      - field_name: projectURL
+        label: Project URL
+      - field_name: subProjects
+        label: Sub-project(s)
+
+  - field_name: rawDataSources
+    label: Raw Data Source URI(s)
+    repeating: true         # MAN
+    # simple free-text URIs; if you’d rather enforce DOI/URL, switch to repeating_subfields
+
 
 resource_fields: []
