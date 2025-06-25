@@ -5,8 +5,86 @@ about_url: http://github.com/roink/ckanext-scheming
 
 dataset_fields:
 
+  - start_form_page:
+      title: Content Information
+      description: Content Information
+
+    field_name: title
+    label: Title
+            
+  - field_name: creators
+    label: Authors
+    repeating_subfields:
+      - field_name: creatorName
+        label: Author
+        required: true
+      - field_name: nameIdentifier
+        label: ORCID
+
+  - field_name: description
+    label: Description
+    form_snippet: markdown.html
+    form_placeholder: "Detailed description of the (research) project and the resulting data collection."
+
+  - field_name: keywords
+    label: Keywords
+    preset: tag_string_autocomplete
+    form_placeholder: "Useful keywords for data collection; separated by semicolon"
+    
+  - field_name: subject
+    label: Data Pillar
+    preset: select
+    required: true      
+    choices:
+      - value: Archaeology
+        label: Archaeology
+      - value: Geology
+        label: Geology
+      - value: Modelling
+        label: Modelling
+      - value: Humanities
+        label: Humanities    
+        
+  - field_name: relatedIdentifiers
+    label: Raw Data Source Universal Resource Identifier(s)
+    repeating_subfields:
+      - field_name: relatedIdentifier
+        label: Related Identifier
+      - field_name: relatedIdentifierType
+        label: Related Identifier Type
+        preset: select
+        choices:
+          - value: DOI
+            label: DOI
+          - value: URL
+            label: URL
+          - value: Other
+            label: Other
+      - field_name: relationType
+        label: Relation Type
+        preset: select
+        choices:
+          - value: IsDerivedFrom
+            label: IsDerivedFrom   
+          - value: IsCitedBy
+            label: IsCitedBy
+          - value: References
+            label: References
+          - value: Other
+            label: Other
+      - field_name: relatedResourceTypeGeneral
+        label: Related Resource Type General
+        preset: select
+        choices:
+          - value: Dataset
+            label: Dataset
+          - value: JournalArticle
+            label: JournalArticle
+          - value: Other
+            label: Other      
+
   - field_name: identifier
-    label: Identifier
+    label: Data DOI
     required: true
 
   - field_name: identifierType
@@ -16,115 +94,59 @@ dataset_fields:
     choices:
       - value: DOI
         label: DOI
-
-  - field_name: creators
-    label: Creators
+        
+  - field_name: language
+    label: Language(s)
+    preset: tag_string_autocomplete
+    
+  - field_name: citationURIs
+    label: Citation Universal Resource Identifier(s)
     repeating_subfields:
-      - field_name: creatorName
-        label: Creator Name
-        required: true
-      - field_name: givenName
-        label: Given Name
-      - field_name: familyName
-        label: Family Name
-      - field_name: nameIdentifier
-        label: Name Identifier
-      - field_name: affiliation
-        label: Affiliation
-
-  - field_name: titles
-    label: Titles
-    repeating_subfields:
-      - field_name: title
-        label: Title
-        required: true
-      - field_name: titleType
-        label: Title Type
+      - field_name: citationURI
+        label: citation URI
+      - field_name: relatedIdentifierType
+        label: Related Identifier Type
         preset: select
         choices:
-          - value: AlternativeTitle
-            label: Alternative Title
-          - value: Subtitle
-            label: Subtitle
-          - value: TranslatedTitle
-            label: Translated Title
+          - value: DOI
+            label: DOI
+          - value: URL
+            label: URL
           - value: Other
             label: Other
-
-  - field_name: publisher
-    label: Publisher
-    required: true
-
-  - field_name: publisherIdentifier
-    label: Publisher Identifier
-  - field_name: publisherIdentifierScheme
-    label: Publisher Identifier Scheme
-  - field_name: publisherSchemeURI
-    label: Publisher Scheme URI
-
-  - field_name: publicationYear
-    label: Publication Year
-    preset: date
-    required: true
-
-  - field_name: resourceType
-    label: Resource Type
-    required: true
-  - field_name: resourceTypeGeneral
-    label: Resource Type General
-    preset: select
-    required: true
-    choices:
-      - value: Dataset
-        label: Dataset
-      - value: Software
-        label: Software
-      - value: Image
-        label: Image
-      - value: Other
-        label: Other
-
-  - field_name: subjects
-    label: Subjects
+            
+  - field_name: projectReferences
+    label: Project Reference(s)
     repeating_subfields:
-      - field_name: subject
-        label: Subject
-      - field_name: subjectScheme
-        label: Subject Scheme
-      - field_name: subjectSchemeURI
-        label: Subject Scheme URI
-      - field_name: valueURI
-        label: Value URI
-      - field_name: classificationCode
-        label: Classification Code
-
-  - field_name: contributors
-    label: Contributors
+      - field_name: projectName
+        label: Project Name
+        required: true       # REC
+      - field_name: fundingSource
+        label: Funding Source / Number
+      - field_name: projectURL
+        label: Project URL
+      - field_name: subProjects
+        label: Sub-project(s)  
+        
+  - field_name: relatedProjects
+    label: Related Project(s)/Data
     repeating_subfields:
-      - field_name: contributorType
-        label: Contributor Type
+      - field_name: relatedProject
+        label: related Project
+      - field_name: relatedIdentifierType
+        label: Related Identifier Type
         preset: select
         choices:
-          - value: DataCollector
-            label: DataCollector
-          - value: HostingInstitution
-            label: HostingInstitution
+          - value: DOI
+            label: DOI
+          - value: URL
+            label: URL
           - value: Other
-            label: Other
-      - field_name: contributorName
-        label: Contributor Name
-        required: true
-      - field_name: givenName
-        label: Given Name
-      - field_name: familyName
-        label: Family Name
-      - field_name: nameIdentifier
-        label: Name Identifier
-      - field_name: affiliation
-        label: Affiliation
-
-  - field_name: dates
-    label: Dates
+            label: Other      
+        
+  - field_name: originalDataProjectTimeframe
+    label: Original Data Project Timeframe
+    help_text: Year range of original project data collection. Use the format YYYY/YYYY based off of the DublinCore Format
     repeating_subfields:
       - field_name: date
         label: Date
@@ -148,187 +170,145 @@ dataset_fields:
           - value: Other
             label: Other
       - field_name: dateInformation
-        label: Date Information
+        label: Date Information        
 
-  - field_name: language
-    label: Language
+  - field_name: publisher
+    label: Publisher
+    required: true
+    form_placeholder: HESCOR Database
 
-  - field_name: alternateIdentifiers
-    label: Alternate Identifiers
+  - field_name: publicationYear
+    label: Publication Year
+    preset: date
+    required: true
+    help_text: The year when the data collection will be made publicly available within this database. Contact the Data Management Team if you are interested in a data embargo
+
+  - field_name: rights
+    label: License
+    form_snippet: license.html
+    help_text: Specification of the license for original data. If the appropriate license is not available on the dropdown menu, please select "other" and type a short, standardized version of the license name in "License (Other)" field
+    
+  - field_name: rightsOther
+    label: License (Other)
+    help_text: A short, standardized version of the license name if "other" was selected
+    
+  - start_form_page:
+      title: Spatio/Temporal Categorization
+      description: Spatio/Temporal Categorization    
+
+    field_name: historicalArchaeologicalCultures
+    label: Historical Archaeological Culture(s)
     repeating_subfields:
-      - field_name: alternateIdentifier
-        label: Alternate Identifier
-      - field_name: alternateIdentifierType
-        label: Alternate Identifier Type
-
-  - field_name: relatedIdentifiers
-    label: Related Identifiers
+      - field_name: historicalArchaeologicalCulture
+        label: Historical Archaeological Culture
+     
+  - field_name: culturesAddition
+    label: Culture(s) Addition        
+   
+  - field_name: cultureReferenceURIs
+    label: Culture Reference Universal Resource Identifier(s)
     repeating_subfields:
-      - field_name: relatedIdentifier
-        label: Related Identifier
-      - field_name: relatedIdentifierType
-        label: Related Identifier Type
+      - field_name: cultureReferenceURI
+        label: Culture Reference Universal Resource Identifier
+        
+  - field_name: geologicalTimeframes
+    label: Geological Timeframe(s)
+    repeating_subfields:
+      - field_name: geologicalTimeframe
+        label: Geological Timeframe 
         preset: select
         choices:
-          - value: DOI
-            label: DOI
-          - value: URL
-            label: URL
-          - value: Other
-            label: Other
-      - field_name: relationType
-        label: Relation Type
+          - value: Holocene
+            label: Holocene
+          - value: Early Holocene
+            label: Early Holocene
+          - value: Mid Holocene
+            label: Mid Holocene
+          - value: Late Holocene
+            label: Late Holocene
+          - value: Pleistocene
+            label: Pleistocene
+          - value: Early Pleistocene
+            label: Early Pleistocene
+          - value: Mid Pleistocene
+            label: Mid Pleistocene
+          - value: Late Pleistocene
+            label: Late Pleistocene
+          - value: Pliocene
+            label: Pliocene
+          - value: Early Pliocene
+            label: Early Pliocene
+          - value: Mid Pliocene
+            label: Mid Pliocene
+          - value: Late Pliocene
+            label: Late Pliocene
+        
+  - field_name: timeframesAddition
+    label: Timeframe(s) Addition
+    repeating_subfields:
+      - field_name: timeframeAddition
+        label: Timeframe Addition      
+        
+  - field_name: contenStartDate
+    label: ContentStartDate
+    help_text: Described findings, objects, or proxies within data collection from time range starting with this year; please use the earliest potential date; can include "older than" or "younger than" for datasets with unclear absolute dates; format years before 1950 (BP). If dates are uncalibrated radiocarbon dates, please indicate this by adding "(uncal) BP"
+    
+  - field_name: contenEndDate
+    label: ContentEndDate
+    
+  - field_name: Regions
+    label: Region(s)
+    help_text: Geographical region(s) based on the UN Geosphere subregions of findings or objects documented in data collection; multiple entries possible, separated by semicolon; please use given terms within the "Metadata Sheet Values" tab. For any other terms use "Region(s) Addition" below
+    repeating_subfields:
+      - field_name: Region
+        label: region
         preset: select
         choices:
-          - value: IsDerivedFrom
-            label: IsDerivedFrom   # for your raw data sources (MAN)
-          - value: IsCitedBy
-            label: IsCitedBy
-          - value: References
-            label: References
-          - value: Other
-            label: Other
-      - field_name: relatedResourceTypeGeneral
-        label: Related Resource Type General
-        preset: select
-        choices:
-          - value: Dataset
-            label: Dataset
-          - value: JournalArticle
-            label: JournalArticle
-          - value: Other
-            label: Other
-
-  - field_name: size
-    label: Size
-
-  - field_name: formats
-    label: Formats
-    repeating: true
-
-  - field_name: version
-    label: Version
-
-  - field_name: rightsList
-    label: Rights
-    repeating_subfields:
-      - field_name: rights
-        label: Rights Statement
-      - field_name: rightsURI
-        label: Rights URI
-      - field_name: rightsIdentifier
-        label: Rights Identifier
-      - field_name: rightsIdentifierScheme
-        label: Rights Identifier Scheme
-
-  - field_name: descriptions
-    label: Descriptions
-    repeating_subfields:
-      - field_name: description
-        label: Description
-      - field_name: descriptionType
-        label: Description Type
-        preset: select
-        choices:
-          - value: Abstract
-            label: Abstract
-          - value: Methods
-            label: Methods
-          - value: Other
-            label: Other
-
-  - field_name: geoLocations
-    label: Geo Locations
-    repeating_subfields:
-      - field_name: geoLocationPlace
-        label: Location Name
-      - field_name: pointLongitude
-        label: Longitude
-      - field_name: pointLatitude
-        label: Latitude
-
-  - field_name: fundingReferences
-    label: Funding References
-    repeating_subfields:
-      - field_name: funderName
-        label: Funder Name
-        required: true
-      - field_name: funderIdentifier
-        label: Funder Identifier
-      - field_name: funderIdentifierType
-        label: Funder Identifier Type
-      - field_name: awardNumber
-        label: Award Number
-      - field_name: awardURI
-        label: Award URI
-      - field_name: awardTitle
-        label: Award Title
-
-  - field_name: relatedItems
-    label: Related Items
-    repeating_subfields:
-      - field_name: relatedItemType
-        label: Related Item Type
-        preset: select
-        choices:
-          - value: Series
-            label: Series
-          - value: Collection
-            label: Collection
-          - value: Other
-            label: Other
-      - field_name: relationType
-        label: Relation Type
-        preset: select
-        choices:
-          - value: IsPartOf
-            label: IsPartOf
-          - value: Other
-            label: Other
-      - field_name: relatedItemTitle
-        label: Related Item Title
-      - field_name: relatedItemIdentifier
-        label: Related Item Identifier
-      - field_name: relatedItemIdentifierType
-        label: Identifier Type
-        preset: select
-        choices:
-          - value: DOI
-            label: DOI
-          - value: Other
-            label: Other
-
-  - field_name: dataPillar
-    label: Data Pillar
-    preset: select
-    required: true          # MAN
-    choices:
-      - value: Archaeology
-        label: Archaeology
-      - value: Geology
-        label: Geology
-      - value: Modelling
-        label: Modelling
-      - value: Humanities
-        label: Humanities
-
-  - field_name: projectReferences
-    label: Project Reference(s)
-    repeating_subfields:
-      - field_name: projectName
-        label: Project Name
-        required: true       # REC
-      - field_name: fundingSource
-        label: Funding Source / Number
-      - field_name: projectURL
-        label: Project URL
-      - field_name: subProjects
-        label: Sub-project(s)
-
-  - field_name: rawDataSources
-    label: Raw Data Source URI(s)
-    repeating: true         # MAN
-    # simple free-text URIs; if you’d rather enforce DOI/URL, switch to repeating_subfields
-
+          - value: Northern Africa
+            label: Northern Africa
+          - value: Eastern Africa
+            label: Eastern Africa
+          - value: Middle Africa
+            label: Middle Africa
+          - value: Southern Africa
+            label: Southern Africa
+          - value: Western Africa
+            label: Western Africa
+          - value: Caribbean
+            label: Caribbean
+          - value: Central America
+            label: Central America
+          - value: South America
+            label: South America
+          - value: Northern America
+            label: Northern America
+          - value: Central Asia
+            label: Central Asia
+          - value: Eastern Asia
+            label: Eastern Asia
+          - value: South-eastern Asia
+            label: South-eastern Asia
+          - value: Southern Asia
+            label: Southern Asia
+          - value: Western Asia
+            label: Western Asia
+          - value: Eastern Europe
+            label: Eastern Europe
+          - value: Northern Europe
+            label: Northern Europe
+          - value: Southern Europe
+            label: Southern Europe
+          - value: Western Europe
+            label: Western Europe
+          - value: Australia/New Zealand
+            label: Australia/New Zealand
+          - value: Melanesia
+            label: Melanesia
+          - value: Micronesia
+            label: Micronesia
+          - value: Polynesia
+            label: Polynesia
+          - value: Global
+            label: Global
 
 resource_fields: []
