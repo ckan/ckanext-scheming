@@ -11,6 +11,11 @@ dataset_fields:
 
     field_name: title
     label: Title
+
+  - field_name: name
+    label: URL
+    preset: dataset_slug
+    form_placeholder: eg. my-dataset
             
   - field_name: creators
     label: Authors
