@@ -180,7 +180,13 @@ dataset_fields:
   - field_name: publisher
     label: Publisher
     required: true
-    form_placeholder: HESCOR Database
+    default: HESCOR Database
+
+  - field_name: owner_org
+    label: Organization
+    preset: dataset_organization
+    required: true
+    default: HESCOR Database   
 
   - field_name: publicationYear
     label: Publication Year
