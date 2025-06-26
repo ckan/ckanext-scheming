@@ -555,3 +555,822 @@ resource_fields:
   - field_name: format
     label: Format
     preset: resource_format_autocomplete            
+scheming_version: 2
+dataset_type: dataset
+about: based on DataCite 4.6
+about_url: http://github.com/roink/ckanext-scheming
+
+dataset_fields:
+
+  - start_form_page:
+      title: Content Information
+      description: Content Information
+
+    field_name: title
+    label: Title
+
+  - field_name: name
+    label: URL
+    preset: dataset_slug
+    form_placeholder: eg. my-dataset
+            
+  - field_name: creators
+    label: Authors
+    repeating_subfields:
+      - field_name: creatorName
+        label: Author
+        required: true
+      - field_name: nameIdentifier
+        label: ORCID
+
+  - field_name: description
+    label: Description
+    form_snippet: markdown.html
+    form_placeholder: "Detailed description of the (research) project and the resulting data collection."
+
+  - field_name: keywords
+    label: Keywords
+    preset: tag_string_autocomplete
+    form_placeholder: "Useful keywords for data collection; separated by semicolon"
+    
+  - field_name: subject
+    label: Data Pillar
+    preset: select
+    required: true      
+    choices:
+      - value: Archaeology
+        label: Archaeology
+      - value: Geology
+        label: Geology
+      - value: Modelling
+        label: Modelling
+      - value: Humanities
+        label: Humanities    
+        
+  - field_name: relatedIdentifiers
+    label: Raw Data Source Universal Resource Identifier(s)
+    repeating_subfields:
+      - field_name: relatedIdentifier
+        label: Related Identifier
+      - field_name: relatedIdentifierType
+        label: Related Identifier Type
+        preset: select
+        choices:
+          - value: DOI
+            label: DOI
+          - value: URL
+            label: URL
+          - value: Other
+            label: Other
+      - field_name: relationType
+        label: Relation Type
+        preset: select
+        choices:
+          - value: IsDerivedFrom
+            label: IsDerivedFrom   
+          - value: IsCitedBy
+            label: IsCitedBy
+          - value: References
+            label: References
+          - value: Other
+            label: Other
+      - field_name: relatedResourceTypeGeneral
+        label: Related Resource Type General
+        preset: select
+        choices:
+          - value: Dataset
+            label: Dataset
+          - value: JournalArticle
+            label: JournalArticle
+          - value: Other
+            label: Other      
+
+  - field_name: identifier
+    label: Data DOI
+
+  - field_name: identifierType
+    label: Identifier Type
+    preset: select
+    required: true
+    choices:
+      - value: DOI
+        label: DOI
+        
+  - field_name: language
+    label: Language(s)
+    preset: tag_string_autocomplete
+    
+  - field_name: citationURIs
+    label: Citation Universal Resource Identifier(s)
+    repeating_subfields:
+      - field_name: citationURI
+        label: citation URI
+      - field_name: relatedIdentifierType
+        label: Related Identifier Type
+        preset: select
+        choices:
+          - value: DOI
+            label: DOI
+          - value: URL
+            label: URL
+          - value: Other
+            label: Other
+            
+  - field_name: projectReferences
+    label: Project Reference(s)
+    repeating_subfields:
+      - field_name: projectName
+        label: Project Name
+      - field_name: fundingSource
+        label: Funding Source / Number
+      - field_name: projectURL
+        label: Project URL
+      - field_name: subProjects
+        label: Sub-project(s)  
+        
+  - field_name: relatedProjects
+    label: Related Project(s)/Data
+    repeating_subfields:
+      - field_name: relatedProject
+        label: related Project
+      - field_name: relatedIdentifierType
+        label: Related Identifier Type
+        preset: select
+        choices:
+          - value: DOI
+            label: DOI
+          - value: URL
+            label: URL
+          - value: Other
+            label: Other      
+        
+  - field_name: originalDataProjectTimeframe
+    label: Original Data Project Timeframe
+    help_text: Year range of original project data collection. Use the format YYYY/YYYY based off of the DublinCore Format
+    repeating_subfields:
+      - field_name: date
+        label: Date
+        preset: date
+      - field_name: dateType
+        label: Date Type
+        preset: select
+        choices:
+          - value: Collected
+            label: Collected        
+          - value: Valid
+            label: Valid            
+          - value: Issued
+            label: Issued
+          - value: Accepted
+            label: Accepted
+          - value: Submitted
+            label: Submitted
+          - value: Updated
+            label: Updated
+          - value: Other
+            label: Other
+      - field_name: dateInformation
+        label: Date Information        
+
+  - field_name: publisher
+    label: Publisher
+    required: true
+    default: HESCOR Database
+
+  - field_name: owner_org
+    label: Organization
+    preset: dataset_organization
+    required: true
+    default: HESCOR Database   
+
+  - field_name: publicationYear
+    label: Publication Year
+    preset: date
+    help_text: The year when the data collection will be made publicly available within this database. Contact the Data Management Team if you are interested in a data embargo
+
+  - field_name: rights
+    label: License
+    form_snippet: license.html
+    help_text: Specification of the license for original data. If the appropriate license is not available on the dropdown menu, please select "other" and type a short, standardized version of the license name in "License (Other)" field
+    
+  - field_name: rightsOther
+    label: License (Other)
+    help_text: A short, standardized version of the license name if "other" was selected
+    
+  - start_form_page:
+      title: Spatio/Temporal Categorization
+      description: Spatio/Temporal Categorization    
+
+    field_name: historicalArchaeologicalCultures
+    label: Historical Archaeological Culture(s)
+    repeating_subfields:
+      - field_name: historicalArchaeologicalCulture
+        label: Historical Archaeological Culture
+     
+  - field_name: culturesAddition
+    label: Culture(s) Addition        
+   
+  - field_name: cultureReferenceURIs
+    label: Culture Reference Universal Resource Identifier(s)
+    repeating_subfields:
+      - field_name: cultureReferenceURI
+        label: Culture Reference Universal Resource Identifier
+        
+  - field_name: geologicalTimeframes
+    label: Geological Timeframe(s)
+    repeating_subfields:
+      - field_name: geologicalTimeframe
+        label: Geological Timeframe 
+        preset: select
+        choices:
+          - value: Holocene
+            label: Holocene
+          - value: Early Holocene
+            label: Early Holocene
+          - value: Mid Holocene
+            label: Mid Holocene
+          - value: Late Holocene
+            label: Late Holocene
+          - value: Pleistocene
+            label: Pleistocene
+          - value: Early Pleistocene
+            label: Early Pleistocene
+          - value: Mid Pleistocene
+            label: Mid Pleistocene
+          - value: Late Pleistocene
+            label: Late Pleistocene
+          - value: Pliocene
+            label: Pliocene
+          - value: Early Pliocene
+            label: Early Pliocene
+          - value: Mid Pliocene
+            label: Mid Pliocene
+          - value: Late Pliocene
+            label: Late Pliocene
+        
+  - field_name: timeframesAddition
+    label: Timeframe(s) Addition
+    repeating_subfields:
+      - field_name: timeframeAddition
+        label: Timeframe Addition      
+        
+  - field_name: contentStartDate
+    label: ContentStartDate
+    help_text: Described findings, objects, or proxies within data collection from time range starting with this year; please use the earliest potential date; can include "older than" or "younger than" for datasets with unclear absolute dates; format years before 1950 (BP). If dates are uncalibrated radiocarbon dates, please indicate this by adding "(uncal) BP"
+    
+  - field_name: contentEndDate
+    label: ContentEndDate
+    
+  - field_name: Regions
+    label: Region(s)
+    help_text: Geographical region(s) based on the UN Geosphere subregions of findings or objects documented in data collection; multiple entries possible, separated by semicolon; please use given terms within the "Metadata Sheet Values" tab. For any other terms use "Region(s) Addition" below
+    repeating_subfields:
+      - field_name: Region
+        label: region
+        preset: select
+        choices:
+          - value: Northern Africa
+            label: Northern Africa
+          - value: Eastern Africa
+            label: Eastern Africa
+          - value: Middle Africa
+            label: Middle Africa
+          - value: Southern Africa
+            label: Southern Africa
+          - value: Western Africa
+            label: Western Africa
+          - value: Caribbean
+            label: Caribbean
+          - value: Central America
+            label: Central America
+          - value: South America
+            label: South America
+          - value: Northern America
+            label: Northern America
+          - value: Central Asia
+            label: Central Asia
+          - value: Eastern Asia
+            label: Eastern Asia
+          - value: South-eastern Asia
+            label: South-eastern Asia
+          - value: Southern Asia
+            label: Southern Asia
+          - value: Western Asia
+            label: Western Asia
+          - value: Eastern Europe
+            label: Eastern Europe
+          - value: Northern Europe
+            label: Northern Europe
+          - value: Southern Europe
+            label: Southern Europe
+          - value: Western Europe
+            label: Western Europe
+          - value: Australia/New Zealand
+            label: Australia/New Zealand
+          - value: Melanesia
+            label: Melanesia
+          - value: Micronesia
+            label: Micronesia
+          - value: Polynesia
+            label: Polynesia
+          - value: Global
+            label: Global
+            
+  - start_form_page:
+      title: Database Information
+      description: Database Information  
+      
+    field_name: metadataOwners
+    label: Metadata Owners
+    repeating_subfields:
+      - field_name: metadataOwner
+        label: Metadata Owner
+      - field_name: metadataOwnerOrcid
+        label: Metadata Owner Orcid    
+        help_text: ORCID for Metadata Owner        
+      - field_name: metadataOwnerUsername
+        label: Metadata Owner Username
+        help_text: User identification by the HESCOR Project
+      - field_name: metadataOwnerContact
+        label: Metadata Owner Contact
+        help_text: Email address of metadata owner to be responsible for delivering & maintaining the metadata contents in repository; contact point of HESCOR for all tasks & questions concerning content of the metadata & data collection
+    
+  - field_name: size
+    label: Size of Data 
+    help_text: Approximate size of data
+    
+  - start_form_page:
+      title: Database Administration
+      description: Database Administration   
+      
+    field_name: submitter
+    label: Submitter
+    help_text: Username of submitter of data record
+    
+  - field_name: submitDate
+    label: Submit Date
+    preset: date
+    help_text: Timestamp of data record creation
+    
+  - field_name: lastModifiedBy
+    label: Last Modified By
+    help_text: Username of user who last modified data collection 
+    
+  - field_name: lastModifiedDate
+    label: Last Modified Date
+    preset: date
+    help_text: Timestamp of last modification of data collection  
+    
+  - start_form_page:
+      title: Archaeology and Geosciences Metadata
+      description: Archaeology Metadata   
+    
+    field_name: geoLocationPointLongitude
+    label: Geo Location Point Longitude
+
+  - field_name: geoLocationPointLatitude
+    label: Geo Location Point Latitude
+    
+  - field_name: geoLocationBoxWestBoundLongitude
+    label: Geo Location Box West Bound Longitude
+    
+  - field_name: geoLocationBoxEastBoundLongitude
+    label: Geo Location Box East Bound Longitude    
+    
+  - field_name: geoLocationBoxSouthBoundLatitude
+    label: Geo Location Box South Bound Latitude
+    
+  - field_name: geoLocationBoxNorthBoundLatitude
+    label: Geo Location Box North Bound Latitude     
+  
+  - field_name: Elevation
+    label: Elevation    
+                     
+  - field_name: FeatureTypes
+    label: Feature Type(s)
+    repeating_subfields:
+      - field_name: FeatureType
+        label: FeatureType
+        preset: select
+        choices:
+          - value: Architectural Element
+            label: Architectural Element
+          - value: Enclosure
+            label: Enclosure
+          - value: Funerary
+            label: Funerary
+          - value: Hoard
+            label: Hoard
+          - value: Materials
+            label: Materials
+          - value: Ritual
+            label: Ritual
+          - value: Settlement
+            label: Settlement   
+            
+  - field_name: FindTypes
+    label: Find Type(s)
+    repeating_subfields:
+      - field_name: FindType
+        label: FindType
+        preset: select
+        choices:
+          - value: Bone
+            label: Bone
+          - value: Ceramic
+            label: Ceramic
+          - value: Glass
+            label: Glass
+          - value: Metal
+            label: Metal
+          - value: Stone
+            label: Stone
+          - value: Vegetal, Organic Materials
+            label: Vegetal, Organic Materials
+            
+  - field_name: AnalysisMethods
+    label: Analysis Method(s)
+    repeating_subfields:
+      - field_name: AnalysisMethod
+        label: Analysis Method
+        preset: select
+        choices:
+          - value: Anthropology
+            label: Anthropology
+          - value: Botany
+            label: Botany
+          - value: Dating
+            label: Dating
+          - value: Geochemistry
+            label: Geochemistry
+          - value: Geology
+            label: Geology
+          - value: Physiography
+            label: Physiography
+          - value: Sampling
+            label: Sampling
+          - value: Sediment Profile
+            label: Sediment Profile
+          - value: Survey
+            label: Survey
+          - value: Zoology
+            label: Zoology
+          - value: aDNA
+            label: aDNA
+            
+  - field_name: EnvironmentalArchives
+    label: Environmental Archive(s)
+    repeating_subfields:
+      - field_name: EnvironmentalArchive
+        label: Environmental Archive
+        preset: select
+        choices:
+          - value: Corals
+            label: Corals
+          - value: Geomorphological Features
+            label: Geomorphological Features
+          - value: Historical
+            label: Historical
+          - value: Ice Core
+            label: Ice Core
+          - value: Instruments
+            label: Instruments
+          - value: Lake Core
+            label: Lake Core
+          - value: Loess
+            label: Loess
+          - value: Marine Core
+            label: Marine Core
+          - value: Sediments
+            label: Sediments
+          - value: Speleothems
+            label: Speleothems
+          - value: Tree Rings
+            label: Tree Rings
+
+  - field_name: ProxyTypes
+    label: Proxy Type(s)
+    repeating_subfields:
+      - field_name: ProxyType
+        label: Proxy Type
+        preset: select
+        choices:
+          - value: Biological (Charcoal)
+            label: Biological (Charcoal)
+          - value: Biological (Diatoms)
+            label: Biological (Diatoms)
+          - value: Biological (Foraminifera)
+            label: Biological (Foraminifera)
+          - value: Biological (Ostracods)
+            label: Biological (Ostracods)
+          - value: Biological (Other)
+            label: Biological (Other)
+          - value: Biological (Phytoliths)
+            label: Biological (Phytoliths)
+          - value: Biological (Pollen)
+            label: Biological (Pollen)
+          - value: Biomarkers
+            label: Biomarkers
+          - value: Dates
+            label: Dates
+          - value: Geochemistry (other)
+            label: Geochemistry (other)
+          - value: Geochemistry (XRD)
+            label: Geochemistry (XRD)
+          - value: Geochemistry (XRF)
+            label: Geochemistry (XRF)
+          - value: Geomorphological Features
+            label: Geomorphological Features
+          - value: Grain Size
+            label: Grain Size
+          - value: Isotopes (C)
+            label: Isotopes (C)
+          - value: Isotopes (Clumped)
+            label: Isotopes (Clumped)
+          - value: Isotopes (D)
+            label: Isotopes (D)
+          - value: Isotopes (N)
+            label: Isotopes (N)
+          - value: Isotopes (O)
+            label: Isotopes (O)
+          - value: Isotopes (S)
+            label: Isotopes (S)
+          - value: Isotopes (Sr)
+            label: Isotopes (Sr)
+          - value: Laminations
+            label: Laminations
+          - value: Loss on Ignition
+            label: Loss on Ignition
+          - value: Magnetic Susceptibility
+            label: Magnetic Susceptibility
+          - value: Paleosols
+            label: Paleosols
+          - value: Sediment Color
+            label: Sediment Color
+          - value: Soils
+            label: Soils
+          - value: Water Content
+            label: Water Content
+      
+  - field_name: AgeModelAvailable
+    label: Age Model Available
+    preset: select
+    choices:
+      - value: Yes
+        label: Yes
+      - value: No
+        label: No          
+         
+  - field_name: AgeModelAddition
+    label: Age Model Addition     
+    
+  - field_name: DatingMethods
+    label: Dating Method(s)
+    repeating_subfields:
+      - field_name: DatingMethod
+        label: Dating Method
+        preset: select
+        choices:
+          - value: Ar/Ar and K/Ar
+            label: Ar/Ar and K/Ar
+          - value: Cosmogenic nuclides
+            label: Cosmogenic nuclides
+          - value: Dendrochronology
+            label: Dendrochronology
+          - value: Lichenometry
+            label: Lichenometry
+          - value: Luminescence
+            label: Luminescence
+          - value: Radiocarbon
+            label: Radiocarbon
+          - value: Relative Dating
+            label: Relative Dating
+          - value: Uranium Series
+            label: Uranium Series      
+    
+  - start_form_page:
+      title: Model Metadata
+      description: Model Metadata       
+    
+    field_name: methods
+    label: Method(s)
+    repeating_subfields:
+      - field_name: method
+        label: Method  
+        
+  - field_name: methodCitations
+    label: Method Citation(s)
+    repeating_subfields:
+      - field_name: methodCitation
+        label: Method Citation          
+        
+  - field_name: inputs
+    label: Inputs
+    repeating_subfields:
+      - field_name: input
+        label: Input      
+        
+  - field_name: outputs
+    label: Outputs
+    repeating_subfields:
+      - field_name: output
+        label: Output    
+        
+  - field_name: gridResolution
+    label: Grid Resolution                
+    
+  - field_name: timeSliceResolution
+    label: Time Slice Resolution   
+    
+  - field_name: repositoryURI
+    label: Repository URI     
+    
+  - field_name: codeDocumentationURI
+    label: Code Documentation URI          
+    
+  - field_name: auxiliaryPostProcessingFilesURI
+    label: Auxiliary Post-Processing Files URI         
+   
+  - start_form_page:
+      title: Human System
+      description: Human System
+      
+    field_name: SourceTypes
+    label: Source Type(s)
+    repeating_subfields:
+      - field_name: SourceType
+        label: Source Types
+        preset: select
+        choices:
+          - value: Architecture / Infrastructure
+            label: Architecture / Infrastructure
+          - value: Biography
+            label: Biography
+          - value: Cartoons
+            label: Cartoons
+          - value: Climate Data
+            label: Climate Data
+          - value: Diaries
+            label: Diaries
+          - value: Drawings
+            label: Drawings
+          - value: Ecological/Ecosystem Data
+            label: Ecological/Ecosystem Data
+          - value: Ethological Observation
+            label: Ethological Observation
+          - value: Faunal Remains
+            label: Faunal Remains
+          - value: Figurative Art
+            label: Figurative Art
+          - value: Film and TV
+            label: Film and TV
+          - value: Illustrations
+            label: Illustrations
+          - value: Indigenous Knowledge
+            label: Indigenous Knowledge
+          - value: Interviews
+            label: Interviews
+          - value: Landscape Physiology/Topography
+            label: Landscape Physiology/Topography
+          - value: Legal Documents
+            label: Legal Documents
+          - value: Letters
+            label: Letters
+          - value: Magazine Articles
+            label: Magazine Articles
+          - value: Maps
+            label: Maps
+          - value: Material Culture
+            label: Material Culture
+          - value: Mobile Art
+            label: Mobile Art
+          - value: Monographs
+            label: Monographs
+          - value: Newspaper
+            label: Newspaper
+          - value: Oral History
+            label: Oral History
+          - value: Parietal Art
+            label: Parietal Art
+          - value: Participant/Direct Observation
+            label: Participant/Direct Observation
+          - value: Photographs
+            label: Photographs
+          - value: Prints
+            label: Prints
+          - value: Research Literature
+            label: Research Literature
+          - value: Stable Isotopes
+            label: Stable Isotopes
+          - value: Technology
+            label: Technology
+          - value: Webpages
+            label: Webpages
+            
+  - field_name: SourceTypesAddition
+    label: Source Types Addition      
+    
+  - field_name: Disciplines
+    label: Discipline(s)
+    repeating_subfields:
+      - field_name: Discipline
+        label: Discipline
+        preset: select
+        choices:
+          - value: Animal Sciences
+            label: Animal Sciences
+          - value: Archaeology
+            label: Archaeology
+          - value: Archival Sciences
+            label: Archival Sciences
+          - value: Arts
+            label: Arts
+          - value: Cognitive Ethology
+            label: Cognitive Ethology
+          - value: Complexity Science
+            label: Complexity Science
+          - value: Cultural Studies
+            label: Cultural Studies
+          - value: Ecological Psychology
+            label: Ecological Psychology
+          - value: Ecology
+            label: Ecology
+          - value: Economics
+            label: Economics
+          - value: Ethnology
+            label: Ethnology
+          - value: Ethology
+            label: Ethology
+          - value: Gender Studies
+            label: Gender Studies
+          - value: History
+            label: History
+          - value: Indigenous Studies
+            label: Indigenous Studies
+          - value: Linguistics
+            label: Linguistics
+          - value: Literary Studies
+            label: Literary Studies
+          - value: Organismal Biology
+            label: Organismal Biology
+          - value: Philosophy
+            label: Philosophy
+          - value: Political Science
+            label: Political Science
+          - value: Psychology
+            label: Psychology
+          - value: Religious Sciences
+            label: Religious Sciences
+          - value: Sociology
+            label: Sociology
+          - value: Zooarchaeology
+            label: Zooarchaeology
+   
+  - field_name: DisciplinesAddition
+    label: Disciplines Addition        
+            
+  - field_name: TheoreticalFrameworks
+    label: Theoretical Framework(s)
+    repeating_subfields:
+      - field_name: TheoreticalFramework
+        label: Theoretical Framework
+        preset: select
+        choices:
+          - value: Critical Theory
+            label: Critical Theory
+          - value: Ecofeminism
+            label: Ecofeminism
+          - value: Multispecies Studies
+            label: Multispecies Studies
+          - value: New Materialism
+            label: New Materialism
+          - value: Phenomenology
+            label: Phenomenology
+          - value: Postcolonial Studies
+            label: Postcolonial Studies
+          - value: Posthumanism
+            label: Posthumanism
+          - value: Systems Theory
+            label: Systems Theory
+            
+  - field_name: TheoreticalFrameworksAddition
+    label: Theoretical Frameworks Addition              
+          
+
+resource_fields:
+  - field_name: url
+    label: URLMore actions
+    preset: resource_url_upload
+  
+  - field_name: name
+    label: Name
+    form_placeholder: eg. January 2011 Gold Prices
+  
+  - field_name: description
+    label: Description
+    form_snippet: markdown.html
+    form_placeholder: Some useful notes about the data
+  
+  - field_name: format
+    label: Format
+    preset: resource_format_autocomplete            
