@@ -322,4 +322,20 @@ dataset_fields:
           - value: Global
             label: Global
 
-resource_fields: []
+resource_fields:
+  - field_name: url
+    label: URLMore actions
+    preset: resource_url_upload
+  
+  - field_name: name
+    label: Name
+    form_placeholder: eg. January 2011 Gold Prices
+  
+  - field_name: description
+    label: Description
+    form_snippet: markdown.html
+    form_placeholder: Some useful notes about the data
+  
+  - field_name: format
+    label: Format
+    preset: resource_format_autocomplete            
