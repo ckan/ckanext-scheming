@@ -323,7 +323,7 @@ dataset_fields:
       title: Database Information
       description: Database Information  
       
-  - field_name: metadataOwners
+    field_name: metadataOwners
     label: Metadata Owners
     repeating_subfields:
       - field_name: metadataOwner
