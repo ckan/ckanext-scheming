@@ -90,7 +90,6 @@ dataset_fields:
 
   - field_name: identifier
     label: Data DOI
-    required: true
 
   - field_name: identifierType
     label: Identifier Type
@@ -125,7 +124,6 @@ dataset_fields:
     repeating_subfields:
       - field_name: projectName
         label: Project Name
-        required: true       # REC
       - field_name: fundingSource
         label: Funding Source / Number
       - field_name: projectURL
@@ -191,7 +189,6 @@ dataset_fields:
   - field_name: publicationYear
     label: Publication Year
     preset: date
-    required: true
     help_text: The year when the data collection will be made publicly available within this database. Contact the Data Management Team if you are interested in a data embargo
 
   - field_name: rights
@@ -321,6 +318,226 @@ dataset_fields:
             label: Polynesia
           - value: Global
             label: Global
+            
+  - start_form_page:
+      title: Database Information
+      description: Database Information  
+      
+  - field_name: metadataOwners
+    label: Metadata Owners
+    repeating_subfields:
+      - field_name: metadataOwner
+        label: Metadata Owner
+      - field_name: metadataOwnerOrcid
+        label: Metadata Owner Orcid    
+        help_text: ORCID for Metadata Owner        
+      - field_name: metadataOwnerUsername
+        label: Metadata Owner Username
+        help_text: User identification by the HESCOR Project
+      - field_name: metadataOwnerContact
+        label: Metadata Owner Contact
+        help_text: Email address of metadata owner to be responsible for
+delivering & maintaining the metadata contents in repository; contact point of HESCOR for all tasks & questions concerning content of the metadata & data collection
+    
+  - field_name: size
+    label: Size of Data 
+    help_text: Approximate size of data
+    
+  - start_form_page:
+      title: Database Administration
+      description: Database Administration   
+      
+    field_name: submitter
+    label: Submitter
+    help_text: Username of submitter of data record
+    
+  - field_name: submitDate
+    label: Submit Date
+    preset: date
+    help_text: Timestamp of data record creation
+    
+  - field_name: lastModifiedBy
+    label: Last Modified By
+    help_text: Username of user who last modified data collection 
+    
+  - field_name: lastModifiedDate
+    label: Last Modified Date
+    preset: date
+    help_text: Timestamp of last modification of data collection  
+    
+  - start_form_page:
+      title: Archaeology Metadata
+      description: Archaeology Metadata   
+    
+    field_name: geoLocationPointLongitude
+    label: Geo Location Point Longitude
+
+  - field_name: geoLocationPointLatitude
+    label: Geo Location Point Latitude
+    
+  - field_name: geoLocationBoxWestBoundLongitude
+    label: Geo Location Box West Bound Longitude
+    
+  - field_name: geoLocationBoxEastBoundLongitude
+    label: Geo Location Box East Bound Longitude    
+    
+  - field_name: geoLocationBoxSouthBoundLatitude
+    label: Geo Location Box South Bound Latitude
+    
+  - field_name: geoLocationBoxNorthBoundLatitude
+    label: Geo Location Box North Bound Latitude       
+                   
+  - field_name: FeatureTypes
+    label: Feature Type(s)
+    repeating_subfields:
+      - field_name: FeatureType
+        label: FeatureType
+        preset: select
+        choices:
+          - value: Architectural Element
+            label: Architectural Element
+          - value: Enclosure
+            label: Enclosure
+          - value: Funerary
+            label: Funerary
+          - value: Hoard
+            label: Hoard
+          - value: Materials
+            label: Materials
+          - value: Ritual
+            label: Ritual
+          - value: Settlement
+            label: Settlement   
+            
+  - field_name: FindTypes
+    label: Find Type(s)
+    repeating_subfields:
+      - field_name: FindType
+        label: FindType
+        preset: select
+        choices:
+          - value: Bone
+            label: Bone
+          - value: Ceramic
+            label: Ceramic
+          - value: Glass
+            label: Glass
+          - value: Metal
+            label: Metal
+          - value: Stone
+            label: Stone
+          - value: Vegetal, Organic Materials
+            label: Vegetal, Organic Materials
+            
+  - field_name: AnalysisMethods
+    label: Analysis Method(s)
+    repeating_subfields:
+      - field_name: AnalysisMethod
+        label: Analysis Method
+        preset: select
+        choices:
+          - value: Anthropology
+            label: Anthropology
+          - value: Botany
+            label: Botany
+          - value: Dating
+            label: Dating
+          - value: Geochemistry
+            label: Geochemistry
+          - value: Geology
+            label: Geology
+          - value: Physiography
+            label: Physiography
+          - value: Sampling
+            label: Sampling
+          - value: Sediment Profile
+            label: Sediment Profile
+          - value: Survey
+            label: Survey
+          - value: Zoology
+            label: Zoology
+          - value: aDNA
+            label: aDNA
+          
+  - field_name: AgeModelAvailable
+    label: Age Model Available
+    preset: select
+    choices:
+      - value: Yes
+        label: Yes
+      - value: No
+        label: No          
+         
+  - field_name: AgeModelAddition
+    label: Age Model Addition     
+    
+  - field_name: DatingMethods
+    label: Dating Method(s)
+    repeating_subfields:
+      - field_name: DatingMethod
+        label: Dating Method
+        preset: select
+        choices:
+          - value: Ar/Ar and K/Ar
+            label: Ar/Ar and K/Ar
+          - value: Cosmogenic nuclides
+            label: Cosmogenic nuclides
+          - value: Dendrochronology
+            label: Dendrochronology
+          - value: Lichenometry
+            label: Lichenometry
+          - value: Luminescence
+            label: Luminescence
+          - value: Radiocarbon
+            label: Radiocarbon
+          - value: Relative Dating
+            label: Relative Dating
+          - value: Uranium Series
+            label: Uranium Series      
+    
+  - start_form_page:
+      title: Model Metadata
+      description: Model Metadata       
+    
+    field_name: methods
+    label: Method(s)
+    repeating_subfields:
+      - field_name: method
+        label: Method  
+        
+  - field_name: methodCitations
+    label: Method Citation(s)
+    repeating_subfields:
+      - field_name: methodCitation
+        label: Method Citation          
+        
+  - field_name: inputs
+    label: Inputs
+    repeating_subfields:
+      - field_name: input
+        label: Input      
+        
+  - field_name: outputs
+    label: Outputs
+    repeating_subfields:
+      - field_name: output
+        label: Output    
+        
+  - field_name: gridResolution
+    label: Grid Resolution                
+    
+  - field_name: timeSliceResolution
+    label: Time Slice Resolution   
+    
+  - field_name: repositoryURI
+    label: Repository URI     
+    
+  - field_name: codeDocumentationURI
+    label: Code Documentation URI          
+    
+  - field_name: auxiliaryPostProcessingFilesURI
+    label: Auxiliary Post-Processing Files URI         
+         
 
 resource_fields:
   - field_name: url
