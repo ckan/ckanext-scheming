@@ -257,11 +257,11 @@ dataset_fields:
       - field_name: timeframeAddition
         label: Timeframe Addition      
         
-  - field_name: contenStartDate
+  - field_name: contentStartDate
     label: ContentStartDate
     help_text: Described findings, objects, or proxies within data collection from time range starting with this year; please use the earliest potential date; can include "older than" or "younger than" for datasets with unclear absolute dates; format years before 1950 (BP). If dates are uncalibrated radiocarbon dates, please indicate this by adding "(uncal) BP"
     
-  - field_name: contenEndDate
+  - field_name: contentEndDate
     label: ContentEndDate
     
   - field_name: Regions
@@ -336,8 +336,7 @@ dataset_fields:
         help_text: User identification by the HESCOR Project
       - field_name: metadataOwnerContact
         label: Metadata Owner Contact
-        help_text: Email address of metadata owner to be responsible for
-delivering & maintaining the metadata contents in repository; contact point of HESCOR for all tasks & questions concerning content of the metadata & data collection
+        help_text: Email address of metadata owner to be responsible for delivering & maintaining the metadata contents in repository; contact point of HESCOR for all tasks & questions concerning content of the metadata & data collection
     
   - field_name: size
     label: Size of Data 
