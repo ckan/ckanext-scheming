@@ -149,31 +149,7 @@ dataset_fields:
         
   - field_name: originalDataProjectTimeframe
     label: Original Data Project Timeframe
-    help_text: Year range of original project data collection. Use the format YYYY/YYYY based off of the DublinCore Format
-    repeating_subfields:
-      - field_name: date
-        label: Date
-        preset: date
-      - field_name: dateType
-        label: Date Type
-        preset: select
-        choices:
-          - value: Collected
-            label: Collected        
-          - value: Valid
-            label: Valid            
-          - value: Issued
-            label: Issued
-          - value: Accepted
-            label: Accepted
-          - value: Submitted
-            label: Submitted
-          - value: Updated
-            label: Updated
-          - value: Other
-            label: Other
-      - field_name: dateInformation
-        label: Date Information        
+    help_text: Year range of original project data collection. Use the format YYYY/YYYY based off of the DublinCore Format      
 
   - field_name: publisher
     label: Publisher
