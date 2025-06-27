@@ -147,9 +147,11 @@ dataset_fields:
           - value: Other
             label: Other      
         
-  - field_name: originalDataProjectTimeframe
-    label: Original Data Project Timeframe
-    help_text: Year range of original project data collection. Use the format YYYY/YYYY based off of the DublinCore Format      
+  - field_name: originalDataProjectTimeStart
+    label: Year of original project data collection start   
+
+  - field_name: originalDataProjectTimeEnd
+    label: Year of original project data collection end      
 
   - field_name: publisher
     label: Publisher
