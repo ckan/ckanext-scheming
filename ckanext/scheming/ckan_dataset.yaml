@@ -26,7 +26,7 @@ dataset_fields:
       - field_name: nameIdentifier
         label: ORCID
 
-  - field_name: description
+  - field_name: notes
     label: Description
     form_snippet: markdown.html
     form_placeholder: "Detailed description of the (research) project and the resulting data collection."
