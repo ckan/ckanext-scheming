@@ -436,14 +436,14 @@ dataset_fields:
           - value: aDNA
             label: aDNA
           
-  - field_name: AgeModelAvailable
-    label: Age Model Available
+  - field_name: AgeModel
+    label: Age Model 
     preset: select
     choices:
-      - value: Yes
-        label: Yes
-      - value: No
-        label: No          
+      - value: Available
+        label: Available
+      - value: Not Available
+        label: Not Available      
          
   - field_name: AgeModelAddition
     label: Age Model Addition     
@@ -682,33 +682,13 @@ dataset_fields:
           - value: Other
             label: Other      
         
-  - field_name: originalDataProjectTimeframe
-    label: Original Data Project Timeframe
-    help_text: Year range of original project data collection. Use the format YYYY/YYYY based off of the DublinCore Format
-    repeating_subfields:
-      - field_name: date
-        label: Date
-        preset: date
-      - field_name: dateType
-        label: Date Type
-        preset: select
-        choices:
-          - value: Collected
-            label: Collected        
-          - value: Valid
-            label: Valid            
-          - value: Issued
-            label: Issued
-          - value: Accepted
-            label: Accepted
-          - value: Submitted
-            label: Submitted
-          - value: Updated
-            label: Updated
-          - value: Other
-            label: Other
-      - field_name: dateInformation
-        label: Date Information        
+  - field_name: originalDataProjectTimeframeStart
+    label: Original Data Project Start
+    help_text: Year of original project data collection start.
+
+  - field_name: originalDataProjectTimeframeEnd
+    label: Original Data Project End
+    help_text: Year of original project data collection end.    
 
   - field_name: publisher
     label: Publisher
