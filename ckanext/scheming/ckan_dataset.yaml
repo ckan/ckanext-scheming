@@ -148,10 +148,12 @@ dataset_fields:
             label: Other      
         
   - field_name: originalDataProjectTimeStart
-    label: Year of original project data collection start   
+    label: Year of original project data collection start
+    validators: ignore_missing int_validator
 
   - field_name: originalDataProjectTimeEnd
-    label: Year of original project data collection end      
+    label: Year of original project data collection end
+    validators: ignore_missing int_validator
 
   - field_name: publisher
     label: Publisher
@@ -348,21 +350,27 @@ dataset_fields:
     
     field_name: geoLocationPointLongitude
     label: Geo Location Point Longitude
+    validators: ignore_missing float_validator
 
   - field_name: geoLocationPointLatitude
     label: Geo Location Point Latitude
-    
+    validators: ignore_missing float_validator
+
   - field_name: geoLocationBoxWestBoundLongitude
     label: Geo Location Box West Bound Longitude
-    
+    validators: ignore_missing float_validator
+
   - field_name: geoLocationBoxEastBoundLongitude
-    label: Geo Location Box East Bound Longitude    
-    
+    label: Geo Location Box East Bound Longitude
+    validators: ignore_missing float_validator
+
   - field_name: geoLocationBoxSouthBoundLatitude
     label: Geo Location Box South Bound Latitude
-    
+    validators: ignore_missing float_validator
+
   - field_name: geoLocationBoxNorthBoundLatitude
-    label: Geo Location Box North Bound Latitude       
+    label: Geo Location Box North Bound Latitude
+    validators: ignore_missing float_validator
                    
   - field_name: FeatureTypes
     label: Feature Type(s)
