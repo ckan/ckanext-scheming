@@ -59,6 +59,19 @@ def strip_value(value):
     return value.strip()
 
 
+@register_validator
+def float_validator(value, context):
+    """Convert value to float if possible."""
+    if value is None or value is missing:
+        return None
+    if hasattr(value, 'strip') and not value.strip():
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        raise Invalid(_('Invalid number'))
+
+
 @scheming_validator
 @register_validator
 def scheming_choices(field, schema):
