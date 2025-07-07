@@ -1,4 +1,4 @@
-from ckantoolkit import get_or_bust, side_effect_free, ObjectNotFound
+from ckan.plugins.toolkit import get_or_bust, side_effect_free, ObjectNotFound
 
 from ckanext.scheming.helpers import (
     scheming_dataset_schemas, scheming_get_dataset_schema,

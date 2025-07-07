@@ -12,6 +12,14 @@
 {%- endif -%}
 
 <form class="dataset-form form-horizontal" method="post" data-module="basic-form" enctype="multipart/form-data">
+    {% block errors %}
+      {%- if errors -%}
+        {%- set schema = h.scheming_get_organization_schema(group_type) -%}
+        {%- snippet 'scheming/snippets/errors.html',
+          errors=errors, fields=schema.fields,
+          entity_type='organization', object_type=group_type -%}
+      {%- endif -%}
+    {% endblock %}
     {{ h.csrf_input() if 'csrf_input' in h }}
     {%- set schema = h.scheming_get_organization_schema(group_type) -%}
     {% snippet 'scheming/snippets/render_fields.html', fields=schema.fields, data=data, errors=errors, entity_type='organization', object_type=group_type %}
@@ -31,13 +39,13 @@
             {% block save_text %}
               {%- if action == "edit" -%}
                 {%- if 'humanize_entity_type' in h -%}
-                  {{ h.humanize_entity_type('organization', group_type, 'update label') }}
+                  {{ h.humanize_entity_type('organization', group_type, 'update label') or _('Update Organization') }}
                 {%- else -%}
                   {{ _('Update Organization') }}
                 {%- endif -%}
               {%- else -%}
                 {%- if 'humanize_entity_type' in h -%}
-                  {{ h.humanize_entity_type('organization', group_type, 'create label') }}
+                  {{ h.humanize_entity_type('organization', group_type, 'create label') or _('Create Organization') }}
                 {%- else -%}
                   {{ _('Create Organization') }}
                 {%- endif -%}

@@ -22,7 +22,7 @@ try:
 except ImportError:  # CKAN <= 2.5
     core_helper_functions = None
 
-from ckantoolkit import (
+from ckan.plugins.toolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
     DefaultOrganizationForm,
@@ -103,8 +103,6 @@ class _SchemingMixin(object):
 
     @staticmethod
     def _load_presets(config):
-        if _SchemingMixin._presets is not None:
-            return
 
         presets = reversed(
             config.get(
@@ -177,6 +175,16 @@ class _GroupOrganizationMixin(object):
         scheming_schema = self._expanded_schemas[t]
         scheming_fields = scheming_schema['fields']
 
+        before = scheming_schema.get('before_validators')
+        after = scheming_schema.get('after_validators')
+
+        if before:
+            schema['__before'] = validation.validators_from_string(
+                before, None, scheming_schema)
+        if after:
+            schema['__after'] = validation.validators_from_string(
+                after, None, scheming_schema)
+
         get_validators = (
             _field_output_validators_group
             if action_type == 'show' else _field_validators
@@ -222,6 +230,12 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
 
     def package_types(self):
         return list(self._schemas)
+
+    def resource_validation_dependencies(self, package_type):
+        # Compatibility with https://github.com/ckan/ckan/pull/8421
+        schema = self._schemas.get(package_type, {})
+        dfr = schema.get('draft_fields_required', True)
+        return [] if dfr else ['state']
 
     def validate(self, context, data_dict, schema, action):
         """
@@ -279,7 +293,7 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 del data[(f,)]
 
         if action_type == 'show':
-            if composite_convert_fields:
+            if composite_convert_fields and data_dict.get("extras"):
                 for ex in data_dict['extras']:
                     if ex['key'] in composite_convert_fields:
                         data_dict[ex['key']] = json.loads(ex['value'])
@@ -450,6 +464,8 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     FALLBACK_OPTION = 'scheming.organization_fallback'
     SCHEMA_TYPE_FIELD = 'organization_type'
     UNSPECIFIED_GROUP_TYPE = 'organization'
+
+    is_organization = True
 
     @classmethod
     def _store_instance(cls, self):

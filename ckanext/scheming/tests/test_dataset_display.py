@@ -1,6 +1,6 @@
 import pytest
 import six
-from ckantoolkit.tests.factories import Sysadmin, Dataset
+from ckan.tests.factories import Sysadmin, Dataset
 
 
 @pytest.mark.usefixtures("clean_db")

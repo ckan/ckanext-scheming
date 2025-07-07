@@ -5,52 +5,57 @@ This CKAN extension provides a way to configure and share metadata schemas using
 YAML or JSON schema description. Custom validation and template snippets for editing
 and display are supported.
 
-[![Tests](https://github.com/ckan/ckanext-scheming/workflows/Tests/badge.svg?branch=master)](https://github.com/ckan/ckanext-scheming/actions)
+[![Tests](https://github.com/ckan/ckanext-scheming/actions/workflows/test.yml/badge.svg)](https://github.com/ckan/ckanext-scheming/actions)
+
 
 Table of contents:
 
-1. [Requirements](#requirements)
-2. [Installation](#installation)
-3. [Configuration](#configuration)
-   - [Schema Types](#schema-types)
-   - [Example Schemas](#example-schemas)
-   - [Storing non-string data](#storing-non-string-data)
-   - [Common Schema Keys](#common-schema-keys)
-     - [`scheming_version`](#scheming_version)
-     - [`about_url`](#about_url)
-   - [Dataset Schema Keys](#dataset-schema-keys)
-     - [`dataset_type`](#dataset_type)
-     - [`dataset_fields`, `resource_fields`](#dataset_fields-resource_fields)
-   - [Group / Organization Schema Keys](#group--organization-schema-keys)
-     - [`group_type`](#group_type)
-     - [`organization_type`](#organization_type)
-     - [`fields`](#fields)
-   - [Arbitrary Schema Keys](#arbitrary-schema-keys)
-   - [Field Keys](#field-keys)
-     - [`field_name`](#field_name)
-     - [`label`](#label)
-     - [`repeating_subfields`](#repeating_subfields)
-     - [`start_form_page`](#start_form_page)
-     - [`required`](#required)
-     - [`choices`](#choices)
-     - [`choices_helper`](#choices_helper)
-     - [`preset`](#preset)
-     - [`form_snippet`](#form_snippet)
-     - [`display_snippet`](#display_snippet)
-     - [`display_property`](#display_property)
-     - [`validators`](#validators)
-     - [`output_validators`](#output_validators)
-     - [`create_validators`](#create_validators)
-     - [`help_text`](#help_text)
-4. [Action API Endpoints](#action-api-endpoints)
-5. [Running the Tests](#running-the-tests)
+- [ckanext-scheming](#ckanext-scheming)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Schema Types](#schema-types)
+  - [Example Schemas](#example-schemas)
+  - [Common Schema Keys](#common-schema-keys)
+    - [`about_url`](#about_url)
+  - [Dataset Schema Keys](#dataset-schema-keys)
+    - [`dataset_type`](#dataset_type)
+    - [`dataset_fields`, `resource_fields`](#dataset_fields-resource_fields)
+    - [`before_validators`, `after_validators`](#before_validators-after_validators)
+    - [`draft_fields_required`](#draft_fields_required)
+  - [Group / Organization Schema Keys](#group--organization-schema-keys)
+    - [`group_type`](#group_type)
+    - [`organization_type`](#organization_type)
+    - [`fields`](#fields)
+  - [Arbitrary Schema Keys](#arbitrary-schema-keys)
+    - [`schema_id`](#schema_id)
+  - [Field Keys](#field-keys)
+    - [`field_name`](#field_name)
+    - [`label`](#label)
+    - [`repeating_subfields`](#repeating_subfields)
+    - [`start_form_page`](#start_form_page)
+    - [`required`](#required)
+    - [`choices`](#choices)
+    - [`choices_helper`](#choices_helper)
+    - [`default`](#default)
+    - [`default_jinja2`](#default_jinja2)
+    - [`preset`](#preset)
+    - [`form_snippet`](#form_snippet)
+    - [`display_snippet`](#display_snippet)
+    - [`display_property`](#display_property)
+    - [`validators`](#validators)
+    - [`output_validators`](#output_validators)
+    - [`create_validators`](#create_validators)
+    - [`help_text`](#help_text)
+- [Action API Endpoints](#action-api-endpoints)
+- [Running the Tests](#running-the-tests)
 
 
 
 Requirements
 ============
 
-This plugin is compatible with CKAN 2.8 or later.
+This plugin is compatible with CKAN 2.10 or later.
 
 
 Installation
@@ -114,6 +119,7 @@ Dataset schemas:
 * [camel photos schema](ckanext/scheming/camel_photos.yaml)
 * [subfields schema](ckanext/scheming/subfields.yaml)
 * [form pages schema](ckanext/scheming/ckan_formpages.yaml)
+* [form pages schema with `draft_fields_required: false`](ckanext/scheming/ckan_formpages_draft.yaml)
 
 These schemas are included in ckanext-scheming and may be enabled
 with e.g: `scheming.dataset_schemas = ckanext.scheming:camel_photos.yaml`
@@ -136,11 +142,6 @@ Arbitrary schemas:
 * [Arbitrary schema example](ckanext/scheming/arbitrary_schema_example.yaml)
 
 ## Common Schema Keys
-
-### `scheming_version`
-
-Set to `2`. Future versions of ckanext-scheming may use a larger
-number to indicate a change to the schema format.
 
 ### `about_url`
 
@@ -191,6 +192,33 @@ Fields you exclude will not be shown to the end user, and will not
 be accepted when editing or updating this type of dataset.
 
 
+### `before_validators`, `after_validators`
+
+```yaml
+before_validators: validator_name
+
+after_validators: validator_name
+```
+
+Runs validator functions before and after the `dataset_type` package or `organization_type`/`group_type` group is created/updated.
+
+See [`validators`](#validators) for a description of the values accepted.
+
+### `draft_fields_required`
+
+Enforce required fields even if a dataset is still in draft state.
+Default: `true`
+
+```yaml
+draft_fields_required: false
+```
+
+> [!NOTE]
+> Setting `draft_fields_required: false` is only supported by **_CKAN 2.12+_** or with https://github.com/ckan/ckan/pull/8309 .
+
+Set to `false` to allow saving dataset and resource metadata even
+if some *required fields* have not been provided as long as the dataset
+is still in *draft* state (has not been published).
 
 
 ## Group / Organization Schema Keys
@@ -235,9 +263,7 @@ fields:
 
 ...
 ```
-A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties doin dataset schemas.
-
-
+A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties in dataset schemas.
 
 
 ## Arbitrary Schema Keys
@@ -298,7 +324,8 @@ When using a plain string translations will be provided with gettext:
 This field is the parent of group of repeating subfields. The value is
 a list of fields entered the same way as normal fields.
 
-> **_NOTE:_** CKAN needs an IPackageController plugin with `before_index` to
+> [!NOTE]
+> CKAN needs an IPackageController plugin with `before_index` to
 > convert repeating subfields to formats that can be indexed by solr. For
 > testing you may use the included `scheming_nerf_index` plugin to encode
 > all repeating fields as JSON strings to prevent solr errors.
@@ -327,9 +354,12 @@ for each group.
 ### `start_form_page`
 
 Dataset fields may be divided into separate form pages for creation
-and editing. **_CKAN 2.9+ only_**. Form pages for `dataset` type
-only supported by **_CKAN 2.10+_** or with https://github.com/ckan/ckan/pull/7032
-. Adding `start_form_page` to a field marks this field as the start of a
+and editing.
+
+> [!NOTE]
+> Form pages for `dataset` type is only supported by **_CKAN 2.10+_** or with https://github.com/ckan/ckan/pull/7032 .
+
+Adding `start_form_page` to a field marks this field as the start of a
 new page of fields.
 
 
@@ -358,13 +388,7 @@ Use for fields that must be included. Set to `false` or
 don't include this key for fields that are optional.
 
 Setting to `true` will mark the field as required in the editing form
-and include `not_empty` in the default validators that will be applied
-when `validators` is not specified.
-
-> **_NOTE:_** To honor this settings with custom validators include `scheming_required`
-> as the first validator. `scheming_required` will check the required
-> setting for this field and apply either the `not_empty` or `ignore_missing`
-> validator.
+and affects the behavior of the `scheming_required` field validator.
 
 
 ### `choices`
@@ -415,7 +439,7 @@ If a choices list is not provided you must provide a `choices_helper`
 function that will return a list of choices in the same format as
 the `choices` list above.
 
-You may [register your own helper function](https://docs.ckan.org/en/2.8/theming/templates.html#adding-your-own-template-helper-functions) or use the
+You may [register your own helper function](https://docs.ckan.org/en/2.9/theming/templates.html#adding-your-own-template-helper-functions) or use the
 `scheming_datastore_choices` helper included in ckanext-scheming:
 
 ```yaml
@@ -433,6 +457,15 @@ You may [register your own helper function](https://docs.ckan.org/en/2.8/theming
     label: N/A
 ```
 
+### `default`
+
+Pre-fill new forms with this `default` value for this field.
+
+### `default_jinja2`
+
+Pre-fill new forms with a jinja2 snippet defined by `default_jinja2`, useful
+if you need to call a template helper function or use jinja2 logic to determine
+the default value for this field.
 
 ### `preset`
 
@@ -572,41 +605,51 @@ Set a `property` attribute on dataset fields displayed as "Additional Info", use
 ### `validators`
 
 The `validators` value is a space-separated string of validator and converter
-functions to use for this field when creating or updating data.  When a
-validator name is followed by parenthesis the function is called passing the
-comma-separated values within and the result is used as the
+functions to use for this field when creating or updating data. For core fields
+the validators default to the ones defined in the CKAN core schemas.
+
+> [!WARNING]
+> Use `scheming_required` as the first validator
+> or the [`required`](#required) field setting will be ignored.
+> `scheming_required` applies either the `not_empty` or `ignore_missing`
+> validator based on the `required` field setting.
+
+When a validator name is followed by parenthesis the function is called
+passing the comma-separated values within and the result is used as the
 validator/converter.
 
 ```yaml
-  validators: if_empty_same_as(name) unicode_safe
+  validators: scheming_required if_empty_same_as(name) unicode_safe
 ```
 
-is the same as a plugin using the validators:
+is the same as a form plugin using the validators:
 
 ```python
-[get_validator('if_empty_same_as')("name"), unicode_safe]
+[
+    get_validator('scheming_required'),
+    get_validator('if_empty_same_as')("name"),
+    get_validator('unicode_safe')
+]
 ```
 
-If parameters can be parsed as a valid python literals, they are passed with
-original type. If not, all parameters passed as strings. In addition, space
-character is not allowed in argument position. Use its HEX code instead `\\x20`.
+If validator parameters can be parsed as a valid python literals,
+they are passed with the original type. If not, all parameters passed
+as strings. In addition, space character is not allowed in argument
+position. Use its HEX code instead `\\x20`.
 
 ```yaml
-  validators: xxx(hello,world)    # xxx("hello", "world")
-  validators: xxx(hello,1)        # xxx("hello", "1")
-  validators: xxx("hello",1,None) # xxx("hello", 1, None)
+  validators: xxx(hello,world)       # xxx("hello", "world")
+  validators: xxx(hello,1)           # xxx("hello", "1")
+  validators: xxx("hello",1,None)    # xxx("hello", 1, None)
   validators: xxx("hello\\x20world") # xxx("hello world")
 ```
 
-This string does not contain arbitrary python code to be executed,
-you may only use registered validator functions, optionally calling
-them with static string values provided.
-
-> **_NOTE:_** ckanext-scheming automatically adds calls to `convert_to_extras`
+> [!NOTE]
+> ckanext-scheming automatically adds a call to `convert_to_extras`
 > for extra fields when required.
 
-New validators and converters may be added using the
-[IValidators plugin interface](http://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
+New validators and converters may be registered using the
+[IValidators plugin interface](https://docs.ckan.org/en/latest/extensions/plugin-interfaces.html?highlight=ivalidator#ckan.plugins.interfaces.IValidators).
 
 Validators that need access to other values in this schema (e.g.
 to test values against the choices list) may be decorated with
@@ -614,7 +657,7 @@ the [scheming.validation.scheming_validator](ckanext/scheming/validation.py)
 function. This decorator will make scheming pass this field dict to the
 validator and use its return value for validation of the field.
 
-CKAN's [validator functions reference](http://docs.ckan.org/en/latest/extensions/validators.html)
+CKAN's [validator functions reference](https://docs.ckan.org/en/latest/extensions/validators.html)
 lists available validators ready to be used.
 
 ### `output_validators`
@@ -642,7 +685,8 @@ retrieving values from the database instead of when saving them.
 These validators may be used to transform the data before it is
 sent to the user.
 
-> **_NOTE:_** ckanext-scheming automatically adds calls to `convert_from_extras`
+> [!NOTE]
+> ckanext-scheming automatically adds calls to `convert_from_extras`
 > for extra fields when required.
 
 ### `create_validators`
@@ -707,10 +751,9 @@ Returns:
   help: "http://localhost:5005/api/3/action/help_show?name=scheming_dataset_schema_show",
   success: true,
   result: {
-    scheming_version: 2,
     dataset_type: "dataset",
     about: "A reimplementation of the default CKAN dataset schema",
-    about_url: "http://github.com/ckan/ckanext-scheming",
+    about_url: "https://github.com/ckan/ckanext-scheming",
     dataset_fields: [...],
     resource_fields: [...]
   }

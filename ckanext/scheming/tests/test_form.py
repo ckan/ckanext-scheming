@@ -1,62 +1,99 @@
 import json
 
 import pytest
-import ckantoolkit
 from bs4 import BeautifulSoup
 
-from ckantoolkit.tests.factories import Dataset
-from ckantoolkit.tests.helpers import call_action
+from ckan.plugins.toolkit import check_ckan_version, h
+
+from ckan.tests.factories import Dataset
+from ckan.tests.helpers import call_action
 
 
 @pytest.fixture
 def sysadmin_env():
     try:
-        from ckantoolkit.tests.factories import SysadminWithToken
+        from ckan.tests.factories import SysadminWithToken
         user = SysadminWithToken()
         return {'Authorization': user['token']}
     except ImportError:
         # ckan <= 2.9
-        from ckantoolkit.tests.factories import Sysadmin
+        from ckan.tests.factories import Sysadmin
         user = Sysadmin()
         return {"REMOTE_USER": user["name"].encode("ascii")}
 
 
 def _get_package_new_page(app, env, type_='test-schema'):
-    return app.get(url="/{0}/new".format(type_), extra_environ=env)
+    if check_ckan_version(min_version="2.10.0"):
+        return app.get(url="/{0}/new".format(type_), headers=env)
+    else:
+        return app.get(url="/{0}/new".format(type_), extra_environ=env)
+
 
 def _get_package_update_page(app, id, env):
-    return app.get(
-        url="/test-schema/edit/{}".format(id), extra_environ=env
-    )
+
+    if check_ckan_version(min_version="2.10.0"):
+        return app.get(url="/test-schema/edit/{}".format(id), headers=env)
+    else:
+        return app.get(url="/test-schema/edit/{}".format(id), extra_environ=env)
 
 
 def _get_resource_new_page(app, id, env):
-    if ckantoolkit.check_ckan_version(min_version="2.9"):
-        url = '/dataset/{}/resource/new'.format(id)
-    else:
-        url = '/dataset/new_resource/{}'.format(id)
+    url = '/dataset/{}/resource/new'.format(id)
 
-    return app.get(
-        url, extra_environ=env
-    )
+    if check_ckan_version(min_version="2.10.0"):
+        return app.get(url, headers=env)
+    else:
+        return app.get(url, extra_environ=env)
 
 
 def _get_resource_update_page(app, id, resource_id, env):
-    if ckantoolkit.check_ckan_version(min_version="2.9"):
-        url = '/dataset/{}/resource/{}/edit'.format(id, resource_id)
+    url = '/dataset/{}/resource/{}/edit'.format(id, resource_id)
+
+    if check_ckan_version(min_version="2.10.0"):
+        return app.get(url, headers=env)
     else:
-        url = '/dataset/{}/resource_edit/{}'.format(id, resource_id)
-    return app.get(
-        url, extra_environ=env,
-    )
+        return app.get(url, extra_environ=env)
 
 
 def _get_organization_new_page(app, env, type_="organization"):
-    return app.get(url="/{0}/new".format(type_), extra_environ=env)
+
+    if check_ckan_version(min_version="2.10.0"):
+        return app.get(url="/{0}/new".format(type_), headers=env)
+    else:
+        return app.get(url="/{0}/new".format(type_), extra_environ=env)
 
 
 def _get_group_new_page(app, env, type_="group"):
-    return app.get(url="/{0}/new".format(type_), extra_environ=env)
+
+    if check_ckan_version(min_version="2.10.0"):
+        return app.get(url="/{0}/new".format(type_), headers=env)
+    else:
+        return app.get(url="/{0}/new".format(type_), extra_environ=env)
+
+
+def _get_organization_form(html):
+    # FIXME: add an id to this form
+    if check_ckan_version(min_version="2.11.0a0"):
+        form = BeautifulSoup(html).select("form")[2]
+    else:
+        form = BeautifulSoup(html).select("form")[1]
+    return form
+
+
+def _get_group_form(html):
+    return _get_organization_form(html)
+
+
+def _post_data(app, url, data, env):
+    try:
+        if check_ckan_version(min_version="2.11.0a0"):
+            return app.post(url, headers=env, data=data, follow_redirects=False)
+        else:
+            return app.post(
+                url, environ_overrides=env, data=data, follow_redirects=False
+            )
+    except TypeError:
+        return app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
 
 
 @pytest.mark.usefixtures("clean_db")
@@ -76,15 +113,8 @@ class TestDatasetFormNew(object):
     def test_resource_form_includes_custom_fields(self, app, sysadmin_env):
         dataset = Dataset(type="test-schema", name="resource-includes-custom")
 
-        if ckantoolkit.check_ckan_version(min_version="2.9"):
-            url = '/dataset/{}/resource/new'.format(dataset["id"])
-        else:
-            url = '/dataset/new_resource/{}'.format(dataset["id"])
+        response = _get_resource_new_page(app, dataset["id"], sysadmin_env)
 
-        response = app.get(
-            url,
-            extra_environ=sysadmin_env,
-        )
         form = BeautifulSoup(response.body).select_one("#resource-edit")
         assert form.select("input[name=camels_in_photo]")
 
@@ -94,18 +124,19 @@ class TestDatasetFormNew(object):
         `DefaultDatasetForm::setup_template_variables` in order to change
         it.
         """
-        response = app.get(url="/dataset/new", extra_environ=sysadmin_env)
+        response = _get_package_new_page(app, sysadmin_env, type_="dataset")
         page = BeautifulSoup(response.body)
         licenses = page.select('#field-license_id option')
         assert licenses
+
 
 @pytest.mark.usefixtures("clean_db")
 class TestOrganizationFormNew(object):
     def test_organization_form_includes_custom_field(self, app, sysadmin_env):
 
         response = _get_organization_new_page(app, sysadmin_env)
-        # FIXME: add an id to this form
-        form = BeautifulSoup(response.body).select("form")[1]
+
+        form = _get_organization_form(response.body)
 
         # FIXME: generate the form for orgs (this is currently missing)
         assert form.select("input[name=department_id]")
@@ -121,15 +152,10 @@ class TestOrganizationFormNew(object):
 
 @pytest.mark.usefixtures("clean_db")
 class TestGroupFormNew(object):
-    @pytest.mark.skipif(
-        not ckantoolkit.check_ckan_version(min_version="2.7.0"),
-        reason="Unspecified"
-    )
     def test_group_form_includes_custom_field(self, app, sysadmin_env):
 
         response = _get_group_new_page(app, sysadmin_env)
-        # FIXME: add an id to this form
-        form = BeautifulSoup(response.body).select("form")[1]
+        form = _get_organization_form(response.body)
 
         assert form.select("input[name=bookface]")
 
@@ -144,13 +170,11 @@ class TestGroupFormNew(object):
 
 @pytest.mark.usefixtures("clean_db")
 class TestCustomGroupFormNew(object):
-    @pytest.mark.skipif(
-        not ckantoolkit.check_ckan_version(min_version="2.8.0"),
-        reason="Unspecified"
-    )
     def test_group_form_includes_custom_field(self, app, sysadmin_env):
         response = _get_group_new_page(app, sysadmin_env, "theme")
-        form = BeautifulSoup(response.body).select("form")[1]
+
+        form = _get_group_form(response.body)
+
         assert form.select("input[name=status]")
 
     def test_group_form_slug_uses_custom_type(self, app, sysadmin_env):
@@ -162,15 +186,12 @@ class TestCustomGroupFormNew(object):
 
 @pytest.mark.usefixtures("clean_db")
 class TestCustomOrgFormNew(object):
-    @pytest.mark.skipif(
-        not ckantoolkit.check_ckan_version(min_version="2.8.0"),
-        reason="Unspecified"
-    )
     def test_org_form_includes_custom_field(self, app, sysadmin_env):
         response = _get_organization_new_page(
             app, sysadmin_env, "publisher"
         )
-        form = BeautifulSoup(response.body).select("form")[1]
+
+        form = _get_organization_form(response.body)
         assert form.select("input[name=address]")
 
     def test_org_form_slug_uses_custom_type(self, app, sysadmin_env):
@@ -185,7 +206,7 @@ class TestCustomOrgFormNew(object):
 class TestJSONDatasetForm(object):
     def test_dataset_form_includes_json_fields(self, app, sysadmin_env):
         response = _get_package_new_page(app, sysadmin_env)
-        form = BeautifulSoup(response.body).select("form")[1]
+        form = BeautifulSoup(response.body).select("#dataset-edit")[0]
         assert form.select("textarea[name=a_json_field]")
 
     def test_dataset_form_create(self, app, sysadmin_env):
@@ -197,10 +218,8 @@ class TestJSONDatasetForm(object):
         data["a_json_field"] = json_value
 
         url = '/test-schema/new'
-        try:
-            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
-        except TypeError:
-            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        _post_data(app, url, data, sysadmin_env)
 
         dataset = call_action("package_show", id="json_dataset_1")
         assert dataset["a_json_field"] == value
@@ -227,10 +246,8 @@ class TestJSONDatasetForm(object):
         }
 
         url = '/dataset/edit/' + dataset["id"]
-        try:
-            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
-        except TypeError:
-            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        _post_data(app, url, data, sysadmin_env)
 
         dataset = call_action("package_show", id=dataset["id"])
 
@@ -251,7 +268,7 @@ class TestJSONResourceForm(object):
 
         response = _get_resource_new_page(app, dataset["id"], sysadmin_env)
 
-        url = ckantoolkit.h.url_for(
+        url = h.url_for(
             "test-schema_resource.new", id=dataset["id"]
         )
         if not url.startswith('/'):  # ckan < 2.9
@@ -267,10 +284,9 @@ class TestJSONResourceForm(object):
             "a_resource_json_field": json_value,
             "name": dataset["name"],
         }
-        try:
-            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
-        except TypeError:
-            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        _post_data(app, url, data, sysadmin_env)
+
         dataset = call_action("package_show", id=dataset["id"])
 
         assert dataset["resources"][0]["a_resource_json_field"] == value
@@ -295,7 +311,7 @@ class TestJSONResourceForm(object):
             "textarea[name=a_resource_json_field]"
         ).text == json.dumps(value, indent=2)
 
-        url = ckantoolkit.h.url_for(
+        url = h.url_for(
             "test-schema_resource.edit",
             id=dataset["id"],
             resource_id=dataset["resources"][0]["id"],
@@ -315,10 +331,8 @@ class TestJSONResourceForm(object):
             "a_resource_json_field": json_value,
             "name": dataset["name"],
         }
-        try:
-            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
-        except TypeError:
-            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        _post_data(app, url, data, sysadmin_env)
 
         dataset = call_action("package_show", id=dataset["id"])
 
@@ -329,7 +343,7 @@ class TestJSONResourceForm(object):
 class TestSubfieldDatasetForm(object):
     def test_dataset_form_includes_subfields(self, app, sysadmin_env):
         response = _get_package_new_page(app, sysadmin_env, 'test-subfields')
-        form = BeautifulSoup(response.body).select("form")[1]
+        form = BeautifulSoup(response.body).select("#dataset-edit")[0]
         assert form.select("fieldset[name=scheming-repeating-subfields]")
 
     def test_dataset_form_create(self, app, sysadmin_env):
@@ -340,10 +354,8 @@ class TestSubfieldDatasetForm(object):
         data["contact_address-0-address"] = 'anyplace'
 
         url = '/test-subfields/new'
-        try:
-            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
-        except TypeError:
-            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        _post_data(app, url, data, sysadmin_env)
 
         dataset = call_action("package_show", id="subfield_dataset_1")
         assert dataset["citation"] == [{'originator': ['mei', 'ahmed']}]
@@ -370,10 +382,8 @@ class TestSubfieldDatasetForm(object):
         data["name"] = dataset["name"]
 
         url = '/test-subfields/edit/' + dataset["id"]
-        try:
-            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
-        except TypeError:
-            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        _post_data(app, url, data, sysadmin_env)
 
         dataset = call_action("package_show", id=dataset["id"])
 
@@ -396,7 +406,7 @@ class TestSubfieldResourceForm(object):
 
         response = _get_resource_new_page(app, dataset["id"], sysadmin_env)
 
-        url = ckantoolkit.h.url_for(
+        url = h.url_for(
             "test-subfields_resource.new", id=dataset["id"]
         )
         if not url.startswith('/'):  # ckan < 2.9
@@ -404,10 +414,9 @@ class TestSubfieldResourceForm(object):
 
         data = {"id": "", "save": ""}
         data["schedule-0-impact"] = "P"
-        try:
-            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
-        except TypeError:
-            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+
+        _post_data(app, url, data, sysadmin_env)
+
         dataset = call_action("package_show", id=dataset["id"])
 
         assert dataset["resources"][0]["schedule"] == [{"impact": "P"}]
@@ -436,7 +445,7 @@ class TestSubfieldResourceForm(object):
         assert 'selected' in opt7d[1].attrs
         assert 'selected' not in opt7d[2].attrs  # blank subfields
 
-        url = ckantoolkit.h.url_for(
+        url = h.url_for(
             "test-schema_resource.edit",
             id=dataset["id"],
             resource_id=dataset["resources"][0]["id"],
@@ -453,10 +462,7 @@ class TestSubfieldResourceForm(object):
         data["schedule-1-frequency"] = '1m'
         data["schedule-1-impact"] = 'P'
 
-        try:
-            app.post(url, environ_overrides=sysadmin_env, data=data, follow_redirects=False)
-        except TypeError:
-            app.post(url.encode('ascii'), params=data, extra_environ=sysadmin_env)
+        _post_data(app, url, data, sysadmin_env)
 
         dataset = call_action("package_show", id=dataset["id"])
 
@@ -464,3 +470,89 @@ class TestSubfieldResourceForm(object):
             {"frequency": '1y', "impact": 'A'},
             {"frequency": '1m', "impact": 'P'},
         ]
+
+    def test_resource_form_create_with_datetime_tz(self, app, sysadmin_env):
+        dataset = Dataset(type="test-schema")
+
+        url = h.url_for("test-schema_resource.new", id=dataset["id"])
+        if not url.startswith("/"):  # ckan < 2.9
+            url = "/dataset/new_resource/" + dataset["id"]
+
+        date = "2001-12-12"
+        time = "12:12"
+        tz = "UTC"
+
+        data = {
+            "id": "",
+            "save": "",
+            "datetime_tz_date": date,
+            "datetime_tz_time": time,
+            "datetime_tz_tz": tz,
+        }
+
+        _post_data(app, url, data, sysadmin_env)
+
+        dataset = call_action("package_show", id=dataset["id"])
+
+        assert dataset["resources"][0]["datetime_tz"] == f"{date}T{time}:00"
+
+
+@pytest.mark.usefixtures("with_plugins", "clean_db")
+class TestDatasetFormPages(object):
+    def test_dataset_form_pages_new(self, app, sysadmin_env):
+        response = _get_package_new_page(app, sysadmin_env, 'test-formpages')
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert form.select("input[name=test_first]")
+        assert not form.select("input[name=test_second]")
+        assert 'First Page' == form.select_one('ol.stages li.first.active').text.strip()
+
+        response = _post_data(app, '/test-formpages/new', {'name': 'fp'}, sysadmin_env)
+        assert response.location.endswith('/test-formpages/new/fp/2')
+
+        response = app.get('/test-formpages/new/fp/2', headers=sysadmin_env)
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert not form.select("input[name=test_first]")
+        assert form.select("input[name=test_second]")
+        assert 'Second Page' == form.select_one('ol.stages li.active').text.strip()
+
+        response = _post_data(app, '/test-formpages/new/fp/2', {}, sysadmin_env)
+        assert response.location.endswith('/test-formpages/fp/resource/new')
+
+        response = app.get('/test-formpages/fp/resource/new', headers=sysadmin_env)
+        form = BeautifulSoup(response.body).select_one("#resource-edit")
+        assert 'Add data' == form.select_one('ol.stages li.active').text.strip()
+        assert 'First Page' == form.select_one('ol.stages li.first').text.strip()
+
+    def test_dataset_form_pages_draft_new(self, app, sysadmin_env):
+        response = _get_package_new_page(app, sysadmin_env, 'test-formpages-draft')
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert 'Missing required field: Description' == form.select_one('ol.stages li.first a[data-bs-toggle=tooltip]')['title']
+        assert 'Missing required field: Version' == form.select_one('ol.stages li:nth-of-type(2) a[data-bs-toggle=tooltip]')['title']
+
+        _post_data(app, '/test-formpages-draft/new', {'name': 'fpd'}, sysadmin_env)
+
+        response = app.get('/test-formpages-draft/new/fpd/2', headers=sysadmin_env)
+        form = BeautifulSoup(response.body).select_one("#dataset-edit")
+        assert 'Missing required field: Description' == form.select_one('ol.stages li.first a[data-bs-toggle=tooltip]')['title']
+        assert 'Missing required field: Version' == form.select_one('ol.stages li:nth-of-type(2) a[data-bs-toggle=tooltip]')['title']
+
+        _post_data(app, '/test-formpages-draft/new/fpd/2', {}, sysadmin_env)
+
+        response = app.get('/test-formpages-draft/fpd/resource/new', headers=sysadmin_env)
+        form = BeautifulSoup(response.body).select_one("#resource-edit")
+        assert 'Missing required field: Description' == form.select_one('ol.stages li.first a[data-bs-toggle=tooltip]')['title']
+        assert 'Missing required field: Version' == form.select_one('ol.stages li:nth-of-type(2) a[data-bs-toggle=tooltip]')['title']
+
+        if check_ckan_version(min_version="2.12.0a0"):
+            # requires https://github.com/ckan/ckan/pull/8309
+            # or ckan raises an uncaught ValidationError
+            response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'save':'go-metadata', 'id': ''}, sysadmin_env)
+            form = BeautifulSoup(response.body).select_one("#resource-edit")
+            assert 'Name:' in form.select_one('div.error-explanation').text
+
+            response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'name': 'example', 'save':'go-metadata', 'id': ''}, sysadmin_env)
+            form = BeautifulSoup(response.body).select_one("#resource-edit")
+            errors = form.select_one('div.error-explanation').text
+            assert 'Notes: Missing value' in errors
+            assert 'Version: Missing value' in errors
+            assert 'Resources: Package resource(s) invalid' in errors

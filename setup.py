@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '3.0.0'
+version = '3.1.0'
 
 setup(
     name='ckanext-scheming',
@@ -14,7 +14,7 @@ setup(
     Originally developed for the Government of Canada's custom metadata schema, part of
     https://github.com/open-data/ckanext-canada
     """,
-    classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[],
     keywords='ckan',
     author='Ian Ward',
     author_email='ian@excess.org',
@@ -27,7 +27,6 @@ setup(
     install_requires=[
         'pyyaml',
         'ckanapi',
-        'ckantoolkit>=0.0.7',
         'pytz',
         'six',
     ],

@@ -15,10 +15,26 @@ from ckanext.scheming.plugins import (
     SchemingDatasetsPlugin,
     SchemingGroupsPlugin,
 )
-from ckantoolkit import get_validator, check_ckan_version, navl_validate
+from ckan.plugins.toolkit import get_validator, navl_validate
 
 ignore_missing = get_validator("ignore_missing")
 not_empty = get_validator("not_empty")
+
+
+pytestmark = [
+    pytest.mark.usefixtures("with_plugins"),
+    pytest.mark.ckan_config(
+        "ckan.plugins",
+        " ".join([
+            "scheming_datasets",
+            "scheming_groups",
+            "scheming_organizations",
+            "scheming_test_plugin",
+            "scheming_nerf_index",
+            "scheming_test_validation",
+        ])
+    )
+]
 
 
 class TestGetValidatorOrConverter(object):
@@ -43,21 +59,15 @@ class TestChoices(object):
                 type="test-schema", name="fred_choices1", category="rocker"
             )
         except ValidationError as e:
-            if check_ckan_version("2.9"):
-                expected = "Value must be one of {}".format(
-                    [
-                        u"bactrian",
-                        u"hybrid",
-                        u"f2hybrid",
-                        u"snowwhite",
-                        u"black",
-                    ]
-                )
-            else:
-                expected = (
-                    "Value must be one of: bactrian; hybrid; f2hybrid; "
-                    "snowwhite; black (not 'rocker')"
-                )
+            expected = "Value must be one of {}".format(
+                [
+                    u"bactrian",
+                    u"hybrid",
+                    u"f2hybrid",
+                    u"snowwhite",
+                    u"black",
+                ]
+            )
             assert e.error_dict["category"] == [expected]
         else:
             raise AssertionError("ValidationError not raised")
@@ -947,8 +957,6 @@ class TestSubfieldResourceInvalid(object):
             raise AssertionError("ValidationError not raised")
 
 
-@pytest.mark.ckan_config("ckan.plugins", "scheming_test_validation")
-@pytest.mark.usefixtures("with_plugins")
 class TestValidatorsFromString:
     def test_empty(self):
         assert validators_from_string("", {}, {}) == []

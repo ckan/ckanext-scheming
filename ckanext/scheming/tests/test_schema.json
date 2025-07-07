@@ -1,5 +1,4 @@
 {
-  "scheming_version": 1,
   "dataset_type": "test-schema",
   "about_url": "http://github.com/ckan/ckanext-scheming",
   "dataset_fields": [
