@@ -10,42 +10,45 @@ and display are supported.
 
 Table of contents:
 
-1. [Requirements](#requirements)
-2. [Installation](#installation)
-3. [Configuration](#configuration)
-   - [Schema Types](#schema-types)
-   - [Example Schemas](#example-schemas)
-   - [Common Schema Keys](#common-schema-keys)
-     - [`about_url`](#about_url)
-     - [`before_validators`, `after_validators`](#before_validators-after_validators)
-   - [Dataset Schema Keys](#dataset-schema-keys)
-     - [`dataset_type`](#dataset_type)
-     - [`dataset_fields`, `resource_fields`](#dataset_fields-resource_fields)
-     - [`draft_fields_required`](#draft_fields_required)
-   - [Group / Organization Schema Keys](#group--organization-schema-keys)
-     - [`group_type`](#group_type)
-     - [`organization_type`](#organization_type)
-     - [`fields`](#fields)
-   - [Field Keys](#field-keys)
-     - [`field_name`](#field_name)
-     - [`label`](#label)
-     - [`repeating_subfields`](#repeating_subfields)
-     - [`start_form_page`](#start_form_page)
-     - [`required`](#required)
-     - [`choices`](#choices)
-     - [`choices_helper`](#choices_helper)
-     - [`default`](#default)
-     - [`default_jinja2`](#default_jinja2)
-     - [`preset`](#preset)
-     - [`form_snippet`](#form_snippet)
-     - [`display_snippet`](#display_snippet)
-     - [`display_property`](#display_property)
-     - [`validators`](#validators)
-     - [`output_validators`](#output_validators)
-     - [`create_validators`](#create_validators)
-     - [`help_text`](#help_text)
-4. [Action API Endpoints](#action-api-endpoints)
-5. [Running the Tests](#running-the-tests)
+- [ckanext-scheming](#ckanext-scheming)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Schema Types](#schema-types)
+  - [Example Schemas](#example-schemas)
+  - [Common Schema Keys](#common-schema-keys)
+    - [`about_url`](#about_url)
+  - [Dataset Schema Keys](#dataset-schema-keys)
+    - [`dataset_type`](#dataset_type)
+    - [`dataset_fields`, `resource_fields`](#dataset_fields-resource_fields)
+    - [`before_validators`, `after_validators`](#before_validators-after_validators)
+    - [`draft_fields_required`](#draft_fields_required)
+  - [Group / Organization Schema Keys](#group--organization-schema-keys)
+    - [`group_type`](#group_type)
+    - [`organization_type`](#organization_type)
+    - [`fields`](#fields)
+  - [Arbitrary Schema Keys](#arbitrary-schema-keys)
+    - [`schema_id`](#schema_id)
+  - [Field Keys](#field-keys)
+    - [`field_name`](#field_name)
+    - [`label`](#label)
+    - [`repeating_subfields`](#repeating_subfields)
+    - [`start_form_page`](#start_form_page)
+    - [`required`](#required)
+    - [`choices`](#choices)
+    - [`choices_helper`](#choices_helper)
+    - [`default`](#default)
+    - [`default_jinja2`](#default_jinja2)
+    - [`preset`](#preset)
+    - [`form_snippet`](#form_snippet)
+    - [`display_snippet`](#display_snippet)
+    - [`display_property`](#display_property)
+    - [`validators`](#validators)
+    - [`output_validators`](#output_validators)
+    - [`create_validators`](#create_validators)
+    - [`help_text`](#help_text)
+- [Action API Endpoints](#action-api-endpoints)
+- [Running the Tests](#running-the-tests)
 
 
 
@@ -75,7 +78,7 @@ Set the schemas you want to use with configuration options:
 ```ini
 
 # Each of the plugins is optional depending on your use
-ckan.plugins = scheming_datasets scheming_groups scheming_organizations
+ckan.plugins = scheming_datasets scheming_groups scheming_organizations scheming_arbitrary
 
 #   module-path:file to schemas being used
 scheming.dataset_schemas = ckanext.spatialx:spatialx_schema.yaml
@@ -88,6 +91,7 @@ scheming.group_schemas = ckanext.scheming:group_with_bookface.json
                          ckanext.myplugin:/etc/ckan/default/group_with_custom_fields.json
 scheming.organization_schemas = ckanext.scheming:org_with_dept_id.json
                                 ckanext.myplugin:org_with_custom_fields.json
+scheming.arbitrary_schemas = ckanext.scheming:arbitrary_schema_example.yaml
 #
 #   URLs may also be used, e.g:
 #
@@ -102,6 +106,9 @@ scheming.dataset_fallback = false
 
 ## Schema Types
 With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly as is indicated throughout the examples.
+
+Moreover, `scheming_arbitrary` enables the definition and rendering of a custom form without being tied to a particular entity type.
+The handling of a form submission must be implemented by the developer separately.
 
 
 ## Example Schemas
@@ -130,7 +137,9 @@ Organization schemas:
 * [Default organization schema with field modifications](ckanext/scheming/org_with_dept_id.json)
 * [Organization with custom type](ckanext/scheming/custom_org_with_address.json)
 
+Arbitrary schemas:
 
+* [Arbitrary schema example](ckanext/scheming/arbitrary_schema_example.yaml)
 
 ## Common Schema Keys
 
@@ -257,6 +266,16 @@ fields:
 A single `fields` list replaces the `dataset_fields` and `resource_fields` schema properties in dataset schemas.
 
 
+## Arbitrary Schema Keys
+
+It closely resembles the group/organization schema, with the exception of a single field - `schema_id`.
+
+### `schema_id`
+
+The `schema_id` field serves as a unique identifier for any arbitrary schema, which is utilized within the codebase for retrieving the schema.
+
+
+----------------
 
 ## Field Keys
 ### `field_name`
