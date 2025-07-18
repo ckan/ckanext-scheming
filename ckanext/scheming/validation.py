@@ -166,10 +166,9 @@ def scheming_multiple_choice(field, schema):
                 if v in selected
             ])
 
-            if not selected and field.get('required') and not (
-                schema.get('draft_fields_required', True) or
-                data.get(('state',), 'draft').startswith('draft')
-            ):
+            really_required = schema.get('draft_fields_required', True
+                ) or not data.get(('state',), 'draft').startswith('draft')
+            if not selected and field.get('required') and really_required:
                 errors[key].append(_('Select at least one'))
 
     return validator
