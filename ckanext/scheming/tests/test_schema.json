@@ -82,6 +82,10 @@
       "label": "Example JSON",
       "field_name": "a_json_field",
       "preset": "json_object"
+    },
+    {
+      "field_name": "title-en",
+      "label": "A field with a dash"
     }
   ],
   "resource_fields": [
