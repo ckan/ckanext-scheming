@@ -376,7 +376,6 @@ class TestSubfieldDatasetForm(object):
         ).attrs['value'] == 'ahmed'
 
         data = {"save": ""}
-        data["citation-0-originator"] = ['ling']
         data["citation-1-originator"] = ['umet']
         data["contact_address-0-address"] = 'home'
         data["name"] = dataset["name"]
@@ -387,7 +386,7 @@ class TestSubfieldDatasetForm(object):
 
         dataset = call_action("package_show", id=dataset["id"])
 
-        assert dataset["citation"] == [{'originator': ['ling']}, {'originator': ['umet']}]
+        assert dataset["citation"] == [{'originator': ['umet']}]
         assert dataset["contact_address"] == [{'address': 'home'}]
 
 
