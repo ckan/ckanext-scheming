@@ -27,6 +27,11 @@ fieldset.checkboxes label input {
   {%- if field.get('sorted_choices') -%}
     {%- set choices = choices|sort(case_sensitive=false, attribute=1) -%}
   {%- endif -%}
+    <input
+        type="hidden"
+        name="{{ field.field_name }}"
+        value=""
+    />
     <fieldset class="checkboxes">
         {%- for val, label in choices -%}
             <label for="field-{{ field.field_name }}-{{ val }}">
