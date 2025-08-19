@@ -31,7 +31,7 @@
           -%}
         {% endfor %}
       </div>
-      <div class="panel-body fields-removed-notice" style="display:none">
+      <div class="panel-body fields-removed-notice d-none-soft">
         {% block removal_text %}
           {% if 'id' in data %}
             {{ _('These fields have been removed, click update below to save your changes.') }}
@@ -80,7 +80,7 @@
           {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
         </div>
 
-        <div name="repeating-template" style="display:none">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</div>
+        <div name="repeating-template" class="d-none-soft">{{ repeating_panel('REPEATING-INDEX0', 'REPEATING-INDEX1') }}</div>
       </fieldset>
     </div>
 {% endcall %}
