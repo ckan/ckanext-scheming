@@ -44,6 +44,13 @@ class SchemingCreateView(CreateView):
                     id=loc[1],
                     page=2,
                 )
+            # fall back to passed name field if can't parse redirect
+            if 'name' in request.form:
+                return h.redirect_to(
+                    '{}.scheming_new_page'.format(package_type),
+                    id=request.form['name'],
+                    page=2,
+                )
         return rval
 
 
