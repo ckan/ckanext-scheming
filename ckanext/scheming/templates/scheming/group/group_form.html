@@ -10,6 +10,14 @@
 {%- endif -%}
 
 <form class="dataset-form form-horizontal" method="post" data-module="basic-form" enctype="multipart/form-data">
+    {% block errors %}
+      {%- if errors -%}
+        {%- set schema = h.scheming_get_group_schema(group_type) -%}
+        {%- snippet 'scheming/snippets/errors.html',
+          errors=errors, fields=schema.fields,
+          entity_type='group', object_type=group_type -%}
+      {%- endif -%}
+    {% endblock %}
     {{ h.csrf_input() if 'csrf_input' in h }}
     {%- set schema = h.scheming_get_group_schema(group_type) -%}
     {%- for field in schema['fields'] -%}
@@ -29,6 +37,22 @@
           {% endif %}
         {% endif %}
         {% endblock %}
-        <button class="btn btn-primary" name="save" type="submit">{% block save_text %}{{ _('Save Group') }}{% endblock %}</button>
+        <button class="btn btn-primary" name="save" type="submit">
+          {% block save_text %}
+              {%- if action == "edit" -%}
+                {%- if 'humanize_entity_type' in h -%}
+                  {{ h.humanize_entity_type('group', group_type, 'update label') or _('Update Group') }}
+                {%- else -%}
+                  {{ _('Update Group') }}
+                {%- endif -%}
+              {%- else -%}
+                {%- if 'humanize_entity_type' in h -%}
+                  {{ h.humanize_entity_type('group', group_type, 'create label') or _('Create Group') }}
+                {%- else -%}
+                  {{ _('Create Group') }}
+                {%- endif -%}
+              {%- endif -%}
+            {% endblock %}
+        </button>
     </div>
 </form>

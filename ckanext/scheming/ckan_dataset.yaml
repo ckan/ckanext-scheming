@@ -1,4 +1,3 @@
-scheming_version: 2
 dataset_type: dataset
 about: based on DataCite 4.6
 about_url: http://github.com/roink/ckanext-scheming

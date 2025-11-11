@@ -4,6 +4,7 @@
   {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
   {%- if pages -%}
     {%- set active_page = data.get('_form_page', 1) | int -%}
+    {%- set draft_missing_required = h.scheming_missing_required_fields(pages, data) -%}
     <ol class="stages stage-1">
       {%- for p in pages -%}
         <li class="{{
@@ -20,6 +21,16 @@
                 page=loop.index)
             }}">{{ h.scheming_language_text(p.title) }}</a>{%
             else %}{{ h.scheming_language_text(p.title) }}{% endif %}
+            {%- set mreq = draft_missing_required[loop.index0] -%}
+            {% if mreq %}
+              <a href="#" data-bs-toggle="tooltip" title="{{
+                  ungettext("Missing required field", "Missing required fields", mreq | length)
+                }}: {% for m in mreq %}{{
+                    h.scheming_language_text(h.scheming_field_by_name(p.fields, m).label)
+                  }}{% if not loop.last %}, {% endif %}{% endfor %}">
+                <i class="fa fa-exclamation-circle text-danger fs-3" aria-hidden="true"></i>
+              </a>
+            {% endif %}
           </span>
         </li>
       {%- endfor -%}
