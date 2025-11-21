@@ -36,11 +36,21 @@ class SchemingCreateView(CreateView):
         rval = super(SchemingCreateView, self).post(package_type)
         if getattr(rval, 'status_code', None) == 302:
             # successful create, send to page 2 instead of resource new page
-            return h.redirect_to(
-                '{}.scheming_new_page'.format(package_type),
-                id=request.form['name'],
-                page=2,
-            )
+            # extract id/name from redirect
+            loc = rval.location.rsplit('/', 3)
+            if loc[2:] == ['resource', 'new']:
+                return h.redirect_to(
+                    '{}.scheming_new_page'.format(package_type),
+                    id=loc[1],
+                    page=2,
+                )
+            # fall back to passed name field if can't parse redirect
+            if 'name' in request.form:
+                return h.redirect_to(
+                    '{}.scheming_new_page'.format(package_type),
+                    id=request.form['name'],
+                    page=2,
+                )
         return rval
 
 
