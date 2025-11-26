@@ -699,8 +699,28 @@ sent to the user.
 
 ### `create_validators`
 
-The `create_validators` value if present overrides `validators` during
-create only.
+The `create_validators` value, if present, overrides `validators` **during creation only**.
+When updating an existing record, the standard `validators` list is used instead.
+
+This is useful for:
+- Fields that are mandatory when creating a dataset but read-only or optional during updates.
+- Setting initial default values or identifiers that shouldn't be validated the same way afterwards.
+
+```yaml
+- field_name: source_id
+  label: Source dataset identifier
+  form_placeholder: 'INT-12345'
+  # Creation: must be present and valid
+  create_validators: scheming_required not_empty unicode_safe
+  # Update: optional, but if provided it must still be valid
+  validators: ignore_missing unicode_safe
+```
+
+In this example, `source_id` is required when the dataset is created.
+On updates the field is optional: if it is omitted the update passes; if it is
+provided it still must be a valid string according to the `unicode_safe`
+validator. This is useful when introducing a new required field without
+breaking updates to existing legacy datasets that do not yet have this value.
 
 ### `help_text`
 
