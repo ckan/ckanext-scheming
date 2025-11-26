@@ -100,6 +100,8 @@ scheming.presets = ckanext.scheming:presets.json
 scheming.dataset_fallback = false
 ```
 
+Note that these options _cannot_ be set via [`ckanext-envvars`](https://github.com/ckan/ckanext-envvars) as they would take effect too late in the initialization process.
+
 ## Schema Types
 With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly as is indicated throughout the examples.
 
