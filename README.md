@@ -264,10 +264,9 @@ A single `fields` list replaces the `dataset_fields` and `resource_fields` schem
 ## Field Keys
 ### `field_name`
 
-The `field_name` value is the name of an existing CKAN dataset or resource
-field or a new extra field. Existing dataset
-field names include:
+The `field_name` value is the name of an existing CKAN dataset or resource field (columns in the `package` or `resource` database tables) or a new extra field.
 
+Existing dataset field names include (but are not limited to):
 * `name` - the URI for the dataset
 * `title`
 * `notes` - the dataset description
@@ -276,9 +275,10 @@ field names include:
 * `maintainer`
 * `maintainer_email`
 
-New field names should follow the current lowercase_with_underscores
- naming convention. Don't name your field `mySpecialField`, use
- `my_special_field` instead.
+New field names should follow the current lowercase_with_underscores naming convention. Don't name your field `mySpecialField`, use `my_special_field` instead.
+
+>[!NOTE]
+> The `ckan_dataset.yaml` file provided in this extension is just an example schema that mirrors standard CKAN behavior. It defines many of these standard fields, but you are free to include or exclude them in your custom schemas.
 
 
 ### `label`
