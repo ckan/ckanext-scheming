@@ -334,6 +334,30 @@ for each group.
     label: Phone Number
 ```
 
+* `label`: This is the human-readable label for the **entire group** of repeating fields (e.g., "Contacts"). It typically appears as the header for the section.
+* `repeating_label`: This is the label used for the **singular item**, often used in the "Add [Label]" button (e.g., "Add Contact").
+
+Both `label` and `repeating_label` support internationalization dictionaries:
+
+```yaml
+- field_name: contacts
+  label:
+      en: Contacts
+      es: Contactos
+  repeating_label:
+      en: Contact
+      es: Contacto
+  repeating_subfields:
+
+  - field_name: address
+    label:
+        en: Address of the contact point
+        es: Dirección del punto de contacto
+    required: true
+
+  ...
+```
+
 
 ### `start_form_page`
 
