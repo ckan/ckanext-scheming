@@ -478,7 +478,10 @@ the default value for this field.
 ### `preset`
 
 A `preset` specifies a set of default values for other field keys. They
-allow reuse of definitions for validation and snippets for common field types.
+allow reuse of definitions for validation and snippets for common field types. 
+
+>[!TIP]
+> Presets can be used for all schemas: **datasets, groups, and organizations.**
 
 This extension includes the following presets in [presets.json](ckanext/scheming/presets.json):
 
