@@ -908,6 +908,20 @@ class TestSubfieldDatasetInvalid(object):
         else:
             raise AssertionError("ValidationError not raised")
 
+    def test_nested_subfields(self):
+        lc = LocalCKAN()
+
+        try:
+            lc.action.package_create(
+                type="test-subfields",
+                name="b_sf_1",
+                contact_point=[{"name": "name", "address": [{"other-field": True}]}]
+            )
+        except ValidationError as e:
+            assert e.error_dict["contact_point"][0]["address"][0]["country"] == ["Missing value"]
+        else:
+            raise AssertionError("ValidationError not raised")
+
 
 @pytest.mark.usefixtures("clean_db")
 class TestSubfieldResourceValid(object):
