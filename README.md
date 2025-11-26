@@ -100,7 +100,7 @@ scheming.presets = ckanext.scheming:presets.json
 scheming.dataset_fallback = false
 ```
 
-[!NOTE]
+>[!NOTE]
 > Schemas for datasets, groups, and organizations can be defined using either **JSON** or **YAML** files. The extension [automatically detects the format based on the file extension](./ckanext/scheming/loader.py) (`.json`, `.yaml`, or `.yml`). While examples often show YAML for datasets and JSON for organizations, you are free to use whichever format you prefer for any entity type.
 
 ## Schema Types
@@ -677,7 +677,7 @@ Internally all extra fields are stored as strings. If you are attempting to save
 
 For example if you use a simple "yes/no" question, you will need to let ckanext-scheming know that this data needs to be stored *and retrieved* as a boolean. This is acheieved using [`validators`](#validators) and [`output_validators`](#output_validators) keys.
 
-```
+```yaml
   - field_name: is_camel_friendly
     label: Is this camel friendly?
     required: true
