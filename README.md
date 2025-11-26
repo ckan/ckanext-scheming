@@ -100,6 +100,9 @@ scheming.presets = ckanext.scheming:presets.json
 scheming.dataset_fallback = false
 ```
 
+>[!NOTE]
+> Schemas for datasets, groups, and organizations can be defined using either **JSON** or **YAML** files. The extension [automatically detects the format based on the file extension](./ckanext/scheming/loader.py) (`.json`, `.yaml`, or `.yml`). While examples often show YAML for datasets and JSON for organizations, you are free to use whichever format you prefer for any entity type.
+
 ## Schema Types
 With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly as is indicated throughout the examples.
 
@@ -261,10 +264,9 @@ A single `fields` list replaces the `dataset_fields` and `resource_fields` schem
 ## Field Keys
 ### `field_name`
 
-The `field_name` value is the name of an existing CKAN dataset or resource
-field or a new extra field. Existing dataset
-field names include:
+The `field_name` value is the name of an existing CKAN dataset or resource field (columns in the `package` or `resource` database tables) or a new extra field.
 
+Existing dataset field names include (but are not limited to):
 * `name` - the URI for the dataset
 * `title`
 * `notes` - the dataset description
@@ -273,9 +275,10 @@ field names include:
 * `maintainer`
 * `maintainer_email`
 
-New field names should follow the current lowercase_with_underscores
- naming convention. Don't name your field `mySpecialField`, use
- `my_special_field` instead.
+New field names should follow the current lowercase_with_underscores naming convention. Don't name your field `mySpecialField`, use `my_special_field` instead.
+
+>[!NOTE]
+> The `ckan_dataset.yaml` file provided in this extension is just an example schema that mirrors standard CKAN behavior. It defines many of these standard fields, but you are free to include or exclude them in your custom schemas.
 
 
 ### `label`
@@ -329,6 +332,30 @@ for each group.
 
   - field_name: phone
     label: Phone Number
+```
+
+* `label`: This is the human-readable label for the **entire group** of repeating fields (e.g., "Contacts"). It typically appears as the header for the section.
+* `repeating_label`: This is the label used for the **singular item**, often used in the "Add [Label]" button (e.g., "Add Contact").
+
+Both `label` and `repeating_label` support internationalization dictionaries:
+
+```yaml
+- field_name: contacts
+  label:
+      en: Contacts
+      es: Contactos
+  repeating_label:
+      en: Contact
+      es: Contacto
+  repeating_subfields:
+
+  - field_name: address
+    label:
+        en: Address of the contact point
+        es: Dirección del punto de contacto
+    required: true
+
+  ...
 ```
 
 
@@ -451,7 +478,10 @@ the default value for this field.
 ### `preset`
 
 A `preset` specifies a set of default values for other field keys. They
-allow reuse of definitions for validation and snippets for common field types.
+allow reuse of definitions for validation and snippets for common field types. 
+
+>[!TIP]
+> Presets can be used for all schemas: **datasets, groups, and organizations.**
 
 This extension includes the following presets in [presets.json](ckanext/scheming/presets.json):
 
@@ -647,7 +677,7 @@ Internally all extra fields are stored as strings. If you are attempting to save
 
 For example if you use a simple "yes/no" question, you will need to let ckanext-scheming know that this data needs to be stored *and retrieved* as a boolean. This is acheieved using [`validators`](#validators) and [`output_validators`](#output_validators) keys.
 
-```
+```yaml
   - field_name: is_camel_friendly
     label: Is this camel friendly?
     required: true
@@ -672,8 +702,28 @@ sent to the user.
 
 ### `create_validators`
 
-The `create_validators` value if present overrides `validators` during
-create only.
+The `create_validators` value, if present, overrides `validators` **during creation only**.
+When updating an existing record, the standard `validators` list is used instead.
+
+This is useful for:
+- Fields that are mandatory when creating a dataset but read-only or optional during updates.
+- Setting initial default values or identifiers that shouldn't be validated the same way afterwards.
+
+```yaml
+- field_name: source_id
+  label: Source dataset identifier
+  form_placeholder: 'INT-12345'
+  # Creation: must be present and valid
+  create_validators: scheming_required not_empty unicode_safe
+  # Update: optional, but if provided it must still be valid
+  validators: ignore_missing unicode_safe
+```
+
+In this example, `source_id` is required when the dataset is created.
+On updates the field is optional: if it is omitted the update passes; if it is
+provided it still must be a valid string according to the `unicode_safe`
+validator. This is useful when introducing a new required field without
+breaking updates to existing legacy datasets that do not yet have this value.
 
 ### `help_text`
 
