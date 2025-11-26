@@ -100,6 +100,9 @@ scheming.presets = ckanext.scheming:presets.json
 scheming.dataset_fallback = false
 ```
 
+[!NOTE]
+> Schemas for datasets, groups, and organizations can be defined using either **JSON** or **YAML** files. The extension [automatically detects the format based on the file extension](./ckanext/scheming/loader.py) (`.json`, `.yaml`, or `.yml`). While examples often show YAML for datasets and JSON for organizations, you are free to use whichever format you prefer for any entity type.
+
 ## Schema Types
 With this plugin, you can customize the group, organization, and dataset entities in CKAN. Adding and enabling a schema will modify the forms used to update and create each entity, indicated by the respective `type` property at the root level. Such as `group_type`, `organization_type`, and `dataset_type`. Non-default types are supported properly as is indicated throughout the examples.
 
