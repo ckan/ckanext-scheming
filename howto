@@ -1,0 +1,139 @@
+
+# howto use ckanext-scheming to create custom fields on datasets
+
+It is sometimes useful to add extra fields to organizations, groups and users.
+For an organization extra fields can be website, address fields and so on.
+
+
+
+## Installation
+This installation assumes you have installed CKAN from a package http://docs.ckan.org/en/latest/maintaining/installing/install-from-package.html
+
+1.Become superuser
+sudo su
+
+2. Activate virtualenv
+. /usr/lib/ckan/default/bin/activate
+
+3. Go to target install directory
+cd /usr/lib/ckan/default/src
+
+4. Install from git
+pip install -e "git+https://github.com/ckan/ckanext-scheming.git#egg=ckanext-scheming"
+
+5. Go to the ckanext-scheming dir
+cd ./ckanext-scheming
+
+6. Install the requirements 
+pip install -r /usr/lib/ckan/default/src/ckanext-scheming/requirements.txt
+
+
+7. Continue as superuser and edit the ckan config file
+vi /etc/ckan/default/production.ini
+
+8. In the config file. Add to the end of ckan.plugins
+ckan.plugins = …….. scheming_datasets
+
+
+We are now just going to test if the extension works. 
+There are sample schemas are located in /usr/lib/ckan/default/src/ckanext-scheming/ckanext/scheming and we are going to use the one named ckan_dataset.json
+
+9. To use this shema we need to set the following in the CKAN config file (production.ini)
+
+scheming.dataset_schemas = ckanext.scheming:ckan_dataset.json
+scheming.presets = ckanext.scheming:presets.json
+scheming.dataset_fallback = false
+
+
+
+
+10. Save the config file and restart webserver so that the new config file is read.
+sudo service apache2 restart
+
+
+11. Log in and open the page http://localhost/dataset/new
+You should now see the dataset fields. Next we will try to edit them.
+
+
+## Testing how to change a field
+
+1. Open the schema file that defines the fields
+sudo vi /usr/lib/ckan/default/src/ckanext-scheming/ckanext/scheming/ckan_dataset.json
+
+
+2. Change the form_placeholder so you have something like this:
+  "dataset_fields": [
+    {
+      "field_name": "title",
+      "label": "Title",
+      "preset": "title",
+      "form_placeholder": "I EDITED THIS eg. A descriptive title"
+    },
+
+3. Save, restart the webserver and open http://localhost/dataset/new again.
+You should now see the “I EDITED THIS…” in the Title placeholder.
+
+OK. So now it works. Edit the ckan_dataset.json and put it back to the way it was.
+
+
+## How ckanext-scheming works
+Now that we have a working installation we need to know how it works in order to tailor it to our needs.
+
+First we need to know how the configurations works. 
+
+in the production.ini file we added a line
+scheming.dataset_schemas = ckanext.scheming:ckan_dataset.json
+
+Explanation of the different parts: 
+
+scheming. -> config parameter belonging to ckanext-scheming
+dataset_schemas = -> the schema is for datasets and mot groups or organisations (correct?)
+ckanext.scheming: => (no idea, ??)
+ckan_dataset.json => the schema file that will be used for datasets
+
+The ckan_dataset.json located in /usr/lib/ckan/default/src/ckanext-scheming/ckanext/scheming/
+And  looks like this:
+{
+  "scheming_version": 1,
+  "dataset_type": "dataset",
+
+The dataset_type is set to “dataset” this means that the schema will be used on all /dataset url’s eg https://data.gov.uk/dataset/national-statistics-postcode-lookup-uk/resource/3206f3b9-854a-46ec-8fd2-a6823e836b65
+## Changing fields in organization 
+
+This is not documented. But reading the code : /usr/lib/ckan/default/src/ckanext-scheming/ckanext/scheming/plugins.py I see that there is a  variable that looks like the config we put in production.ini: 
+SCHEMA_OPTION = 'scheming.dataset_schemas'
+SCHEMA_OPTION = 'scheming.group_schemas'
+SCHEMA_OPTION = 'scheming.organization_schemas'
+
+So I guess that the config for a organization has the same parts as the one for scheming.dataset_schemas.
+
+
+To support this there is also a sample file “org_with_dept_id.json” that is equivalent to the ckan_dataset.json file.
+
+{
+  "scheming_version": 1,
+  "organization_type": "organization",
+
+To verify that the org_with_dept_id.json is used i edit the title field like this:
+"form_placeholder": "I EDITED THIS My Organization"
+
+
+The cofig for the organization should therefore look like this in production.ini:
+
+scheming.organization_schemas = ckanext.scheming:org_with_dept_id.json
+scheming.presets = ckanext.scheming:presets.json
+scheming.organization_fallback = false
+
+
+
+
+Restarting webserver and opening http://localhost/organization/new But I cant see my “I EDITED THIS..” text. 
+
+There is no error messages in tail -f /var/log/apache2/ckan_default.error.log
+I can even change to a non existing json file, and there is still no error messages.
+scheming.organization_schemas = ckanext.scheming:XYZorg_with_dept_id.json
+
+
+
+I obviously do not understand how the config works. 
+
