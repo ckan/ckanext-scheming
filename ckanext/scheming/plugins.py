@@ -162,7 +162,7 @@ class _GroupOrganizationMixin(object):
                 group_type = c.group_dict['type']
             else:
                 group_type = self.UNSPECIFIED_GROUP_TYPE
-        c.scheming_schema = self._schemas[group_type]
+        c.scheming_schema = self._expanded_schemas[group_type]
         c.group_type = group_type
         c.scheming_fields = c.scheming_schema['fields']
 
