@@ -411,15 +411,16 @@ def expand_form_composite(data, fieldnames):
         parts[1] = indexes[parts[1]]
         try:
             try:
-                comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
-                del data[key]
+                if data[key]:
+                    comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
             except IndexError:
                 comp.append({})
-                comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
+                if data[key]:
+                    comp[int(parts[1])]['-'.join(parts[2:])] = data[key]
+            finally:
                 del data[key]
         except (IndexError, ValueError):
             pass  # best-effort only
-
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
