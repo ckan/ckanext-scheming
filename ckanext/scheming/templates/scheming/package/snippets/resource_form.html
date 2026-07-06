@@ -40,8 +40,18 @@
 {% block errors %}
   {%- if errors -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+    {%- if data -%}
+      {%- set fields = schema.resource_fields %}
+    {%- else -%}
+      {# combined dataset and resource errors #}
+      {%- set fields = schema.dataset_fields + [{
+        'field_name': 'resources', 'label': _('Resources'),
+        'repeating_label': _('Resource'),
+        'repeating_subfields': schema.resource_fields,
+        }] -%}
+    {%- endif -%}
     {%- snippet 'scheming/snippets/errors.html',
-      errors=errors, fields=schema.resource_fields,
+      errors=errors, fields=fields,
       entity_type='dataset', object_type=dataset_type -%}
   {%- else -%}
     {# Resource CreateView You must add at least one data resource #}

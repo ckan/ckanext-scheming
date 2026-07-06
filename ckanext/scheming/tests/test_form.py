@@ -1,4 +1,5 @@
 import json
+import re
 
 import pytest
 from bs4 import BeautifulSoup
@@ -577,6 +578,7 @@ class TestDatasetFormPages(object):
             response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'name': 'example', 'save':'go-metadata', 'id': ''}, sysadmin_env)
             form = BeautifulSoup(response.body).select_one("#resource-edit")
             errors = form.select_one('div.error-explanation').text
-            assert 'Notes: Missing value' in errors
+            errors = re.sub(r'\s+', ' ', errors)
+            assert 'Description: Missing value' in errors
             assert 'Version: Missing value' in errors
-            assert 'Resources: Package resource(s) invalid' in errors
+            assert 'Resource 1: Name: Missing value' in errors
