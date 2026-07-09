@@ -24,6 +24,7 @@
       "preset_name": "tag_string_autocomplete",
       "values": {
         "validators": "ignore_missing tag_string_convert",
+        "form_snippet": "tags.html",
         "classes": ["control-full"],
         "form_attrs": {
           "data-module": "autocomplete",
