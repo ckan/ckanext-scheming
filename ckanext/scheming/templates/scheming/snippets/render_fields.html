@@ -1,0 +1,30 @@
+{#
+fields - a list of scheming field dictionaries
+data - form data fields
+errors - A dict of errors for the fields
+entity_type - entity type
+object_type - object type
+set_fields_defaults - flag to set the default field values
+{#}
+
+{% for field in fields if field.form_snippet is not none %}
+  {% if field.field_name not in data and set_fields_defaults %}
+    {# Set the field default value before rendering but only if
+    it doesn't already exist in data which would mean the form
+    has been submitted. #}
+    {% if field.default_jinja2 %}
+      {% do data.__setitem__(field.field_name, h.scheming_render_from_string(field.default_jinja2)) %}
+    {% elif field.default %}
+      {% do data.__setitem__(field.field_name, field.default) %}
+    {% endif %}
+  {% endif %}
+
+  {% snippet 'scheming/snippets/form_field.html',
+    field=field,
+    data=data,
+    errors=errors,
+    licenses=licenses,
+    entity_type=entity_type,
+    object_type=object_type
+  %}
+{% endfor %}

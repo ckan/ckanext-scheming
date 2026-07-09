@@ -1,0 +1,27 @@
+scheming_version: 2
+schema_id: ckanext_notifier
+about: An example of a config schema for a fictional extension
+
+fields:
+  - field_name: ckanext.ckanext_notifier.enable_notifications
+    label: Enable notifications
+    validators: default(true) boolean_validator
+    preset: select
+    required: true
+    choices:
+      - value: true
+        label: Enable
+      - value: false
+        label: Disable
+
+  - field_name: ckanext.ckanext_notifier.notify_to_email
+    label: Notification email
+    validators: unicode_safe email_validator
+    required: true
+    help_text: Specify the email address to which the notification will be sent
+
+  - field_name: ckanext.ckanext_notifier.frequency
+    label: Notification frequency in seconds
+    validators: default(3600) int_validator
+    required: true
+    input_type: number
