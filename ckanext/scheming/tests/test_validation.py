@@ -323,6 +323,20 @@ class TestDateTimes(object):
             ],
         )
 
+    def test_datetime_with_tz_field_in_resource(self):
+        lc = LocalCKAN()
+        lc.action.package_create(
+            type="test-schema",
+            name="derf_datetime_2",
+            resources=[
+                {
+                    "url": "http://example.com/camel.txt",
+                    "camels_in_photo": 2,
+                    "datetime": "2015-01-01T12:35:00Z",
+                }
+            ],
+        )
+
 
 class TestDateTimesTZ(object):
     def test_datetime_field_rejects_non_dates(self):
