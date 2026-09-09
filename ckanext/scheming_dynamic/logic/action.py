@@ -37,6 +37,7 @@ from ckanext.scheming_dynamic.schema_migration.model import (
     MigrationRunItem,
     SchemaMigration,
 )
+from ckanext.scheming_dynamic.utils import lock_schema
 
 
 @validate(schema.scheming_schema_create)
@@ -55,6 +56,9 @@ def scheming_schema_create(context: Any, data_dict: dict[str, Any]) -> dict[str,
     definition = data_dict["definition"]
 
     schema_type = definition[TYPE_FIELDS[entity_type]]
+
+    # serialise against concurrent schema writes / pin creation for this type
+    lock_schema(entity_type, schema_type)
 
     if SchemingSchemaVersion.head_version(entity_type, schema_type):
         raise tk.ValidationError(
@@ -99,6 +103,9 @@ def scheming_schema_update(context: Any, data_dict: dict[str, Any]) -> dict[str,
 
     schema_type = definition[TYPE_FIELDS[entity_type]]
 
+    # serialise against concurrent schema writes / pin creation for this type
+    lock_schema(entity_type, schema_type)
+
     head = SchemingSchemaVersion.head(entity_type, schema_type)
 
     if not head:
@@ -136,6 +143,12 @@ def _lock_or_sync_version(
     Otherwise nothing depends on the head version yet, so it's safe to
     overwrite its definition directly.
 
+    The "is the head pinned?" check and the in-place overwrite that follows
+    are only race-free because every caller holds the exclusive
+    ``lock_schema`` for this ``(entity_type, schema_type)`` and pin creation
+    (``ensure_pinned``) holds the conflicting shared lock -- otherwise a pin
+    could land on the head version between the two.
+
     Returns the version row that now holds ``definition``.
     """
     if head.definition == definition:
@@ -162,6 +175,9 @@ def scheming_schema_delete(context: Any, data_dict: dict[str, Any]) -> bool:
 
     entity_type = data_dict["entity_type"]
     schema_type = data_dict["schema_type"]
+
+    # serialise against concurrent schema writes / pin creation for this type
+    lock_schema(entity_type, schema_type)
 
     head = SchemingSchemaVersion.head(entity_type, schema_type)
     if not head:

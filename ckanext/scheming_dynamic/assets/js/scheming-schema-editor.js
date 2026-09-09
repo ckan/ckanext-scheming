@@ -7,6 +7,7 @@
  */
 ckan.module('scheming-schema-editor', function ($) {
   return {
+    // see the list of supported languages https://germanbisurgi.github.io/jedison-docs/language-and-translations
     supportedLanguages: ['en', 'de', 'it', 'es'],
     options: {
       previewUrl: null,
