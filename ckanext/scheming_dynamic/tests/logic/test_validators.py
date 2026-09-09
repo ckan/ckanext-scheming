@@ -7,9 +7,9 @@ from ckan.tests import factories, helpers
 
 from ckanext.scheming_dynamic.logic.validators import (
     scheming_definition_valid,
-    scheming_preset_definition_valid,
     scheming_preset_exists,
     scheming_preset_not_in_use,
+    scheming_preset_values_valid,
     scheming_schema_exists,
     scheming_schema_not_in_use,
 )
@@ -198,46 +198,32 @@ class TestSchemingPresetNotInUse:
 
 @pytest.mark.ckan_config("ckan.plugins", "scheming_dynamic")
 @pytest.mark.usefixtures("with_plugins", "clean_db")
-class TestSchemingPresetDefinitionValid:
-    def call_definition_validator(self, definition: dict) -> None:
-        data = {("definition",): definition}
-        return scheming_preset_definition_valid(("definition",), data, {}, {})
+class TestSchemingPresetValuesValid:
+    def call_values_validator(self, preset_name: str, values: dict) -> None:
+        data = {("preset_name",): preset_name, ("values",): values}
+        return scheming_preset_values_valid(("values",), data, {}, {})
 
-    def test_valid_definition_passes(self, preset_definition):
-        assert self.call_definition_validator(preset_definition) is None
+    def test_valid_values_pass(self, preset_definition):
+        assert (
+            self.call_values_validator("test-preset", preset_definition["values"])
+            is None
+        )
 
-    def test_missing_preset_name_raises_invalid(self):
-        with pytest.raises(tk.Invalid, match="preset_name"):
-            self.call_definition_validator({"values": {}})
-
-    def test_missing_values_raises_invalid(self):
-        with pytest.raises(tk.Invalid, match="values"):
-            self.call_definition_validator({"preset_name": "test-preset"})
-
-    def test_malformed_values_raises_invalid(self, preset_definition):
-        definition = {
-            **preset_definition,
-            "values": {"repeating_subfields": "notalist"},
-        }
-
+    def test_malformed_values_raise_invalid(self):
         with pytest.raises(tk.Invalid, match="is not of type"):
-            self.call_definition_validator(definition)
+            self.call_values_validator(
+                "test-preset", {"repeating_subfields": "notalist"}
+            )
 
-    def test_self_reference_on_a_not_yet_created_preset_is_rejected(
-        self, preset_definition
-    ):
+    def test_self_reference_on_a_not_yet_created_preset_is_rejected(self):
         # "test-preset" isn't registered yet, so it can't be its own base
         # either way: caught by the preset enum, not the cycle resolver
-        definition = {**preset_definition, "values": {"preset": "test-preset"}}
-
         with pytest.raises(tk.Invalid, match="is not one of"):
-            self.call_definition_validator(definition)
+            self.call_values_validator("test-preset", {"preset": "test-preset"})
 
-    def test_unknown_base_raises_invalid(self, preset_definition):
-        definition = {**preset_definition, "values": {"preset": "not-a-real-preset"}}
-
+    def test_unknown_base_raises_invalid(self):
         with pytest.raises(tk.Invalid, match="not-a-real-preset"):
-            self.call_definition_validator(definition)
+            self.call_values_validator("test-preset", {"preset": "not-a-real-preset"})
 
     def test_editing_a_preset_into_a_cycle_is_rejected(self, preset_definition):
         # "test-preset" already exists (no base yet) and "a" already bases on
@@ -250,12 +236,8 @@ class TestSchemingPresetDefinitionValid:
         )
         scheming_factories.Preset(preset_name="a", values={"preset": "test-preset"})
 
-        definition = {**preset_definition, "values": {"preset": "a"}}
-
         with pytest.raises(tk.Invalid, match="cycle"):
-            self.call_definition_validator(definition)
+            self.call_values_validator("test-preset", {"preset": "a"})
 
-    def test_base_on_builtin_preset_passes(self, preset_definition):
-        definition = {**preset_definition, "values": {"preset": "title"}}
-
-        assert self.call_definition_validator(definition) is None
+    def test_base_on_builtin_preset_passes(self):
+        assert self.call_values_validator("test-preset", {"preset": "title"}) is None

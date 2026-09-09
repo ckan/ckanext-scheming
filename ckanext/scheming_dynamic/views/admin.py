@@ -48,6 +48,43 @@ def _preset_meta_schema(exclude_preset_name: str | None = None) -> dict[str, Any
     return PresetSchema(exclude_preset_name=exclude_preset_name).build()
 
 
+def _preset_action_args(raw: str, preset_name: str | None = None) -> dict[str, Any]:
+    """Turn the form's JSON ``definition`` textarea into flat
+    ``scheming_preset_{create,update}`` action params.
+
+    The admin form edits a ``{"preset_name": ..., "values": {...}}`` document
+    (schema-editor driven); the actions take ``preset_name`` and ``values``
+    apart. On edit ``preset_name`` is fixed by the URL, so the document's own
+    is ignored.
+    """
+    try:
+        doc = json.loads(raw) if raw.strip() else {}
+    except ValueError as e:
+        raise tk.ValidationError(
+            {"definition": [tk._("Could not parse as valid JSON")]}
+        ) from e
+    if not isinstance(doc, dict):
+        raise tk.ValidationError(
+            {"definition": [tk._("Definition must be a JSON object")]}
+        )
+
+    args: dict[str, Any] = {"values": doc.get("values")}
+    if preset_name is not None:
+        args["preset_name"] = preset_name
+    elif "preset_name" in doc:
+        args["preset_name"] = doc["preset_name"]
+    return args
+
+
+def _flatten_errors(error_dict: dict[str, Any]) -> dict[str, list[str]]:
+    """Collapse a preset action's per-field errors under ``definition`` so the
+    single JSON textarea can surface them inline."""
+    messages: list[str] = []
+    for value in error_dict.values():
+        messages.extend(value if isinstance(value, list) else [value])
+    return {"definition": messages}
+
+
 def index() -> str:
     """List the head version of every schema, across all entity types."""
     schemas = [
@@ -444,14 +481,15 @@ class PresetCreateView(MethodView):
         )
 
     def post(self) -> str | Any:
-        data = {
-            "definition": tk.request.form.get("definition", ""),
-        }
+        raw = tk.request.form.get("definition", "")
 
         try:
-            row = tk.get_action("scheming_preset_create")({}, dict(data))
+            args = _preset_action_args(raw)
+            row = tk.get_action("scheming_preset_create")({}, args)
         except tk.ValidationError as e:
-            return self.get(data, e.error_dict, e.error_summary)
+            return self.get(
+                {"definition": raw}, _flatten_errors(e.error_dict), e.error_summary
+            )
 
         tk.h.flash_success(tk._("Preset '{}' created.").format(row["preset_name"]))
         return tk.redirect_to(f"{ADMIN_BP}.presets_index")
@@ -497,17 +535,20 @@ class PresetEditView(MethodView):
         )
 
     def post(self, preset_name: str) -> str | Any:
-        data = {
-            "preset_name": preset_name,
-            "definition": tk.request.form.get("definition", ""),
-        }
+        raw = tk.request.form.get("definition", "")
 
         try:
-            tk.get_action("scheming_preset_update")({}, dict(data))
+            args = _preset_action_args(raw, preset_name)
+            tk.get_action("scheming_preset_update")({}, args)
         except tk.ObjectNotFound:
             return tk.abort(404, tk._("Preset not found"))
         except tk.ValidationError as e:
-            return self.get(preset_name, data, e.error_dict, e.error_summary)
+            return self.get(
+                preset_name,
+                {"preset_name": preset_name, "definition": raw},
+                _flatten_errors(e.error_dict),
+                e.error_summary,
+            )
 
         tk.h.flash_success(tk._("Preset '{}' updated.").format(preset_name))
         return tk.redirect_to(f"{ADMIN_BP}.presets_index")

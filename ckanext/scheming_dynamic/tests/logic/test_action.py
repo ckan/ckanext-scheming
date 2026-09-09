@@ -405,7 +405,8 @@ class TestSchemingPresetCreate:
     def test_create_returns_preset_dict(self, preset_definition):
         result = helpers.call_action(
             "scheming_preset_create",
-            definition=preset_definition,
+            preset_name=preset_definition["preset_name"],
+            values=preset_definition["values"],
         )
 
         assert result["preset_name"] == "test-preset"
@@ -415,7 +416,8 @@ class TestSchemingPresetCreate:
     def test_created_preset_is_persisted(self, preset_definition):
         helpers.call_action(
             "scheming_preset_create",
-            definition=preset_definition,
+            preset_name=preset_definition["preset_name"],
+            values=preset_definition["values"],
         )
 
         row = SchemingPreset.get("test-preset")
@@ -425,88 +427,102 @@ class TestSchemingPresetCreate:
     def test_duplicate_preset_is_rejected(self, preset_definition):
         helpers.call_action(
             "scheming_preset_create",
-            definition=preset_definition,
+            preset_name="test-preset",
+            values=preset_definition["values"],
         )
 
         with pytest.raises(tk.ValidationError) as err:
             helpers.call_action(
                 "scheming_preset_create",
-                definition=preset_definition,
+                preset_name="test-preset",
+                values=preset_definition["values"],
             )
 
         assert "already exists" in str(err.value.error_dict["preset_name"])
 
-    def test_missing_definition_is_rejected(self):
+    def test_missing_args_is_rejected(self):
         with pytest.raises(tk.ValidationError):
             helpers.call_action("scheming_preset_create")
 
-    def test_definition_missing_preset_name_is_rejected(self):
+    def test_missing_preset_name_is_rejected(self, preset_definition):
         with pytest.raises(tk.ValidationError) as err:
-            helpers.call_action("scheming_preset_create", definition={"values": {}})
+            helpers.call_action(
+                "scheming_preset_create", values=preset_definition["values"]
+            )
 
-        assert "preset_name" in str(err.value.error_dict["definition"])
+        assert "preset_name" in err.value.error_dict
 
-    def test_definition_with_invalid_values_is_rejected(self, preset_definition):
-        definition = {
-            **preset_definition,
-            "values": {"repeating_subfields": "notalist"},
-        }
-
+    def test_missing_values_is_rejected(self):
         with pytest.raises(tk.ValidationError) as err:
-            helpers.call_action("scheming_preset_create", definition=definition)
+            helpers.call_action("scheming_preset_create", preset_name="test-preset")
 
-        assert "values" in str(err.value.error_dict["definition"])
+        assert "values" in err.value.error_dict
 
-    def test_self_reference_on_a_not_yet_created_preset_is_rejected(
-        self, preset_definition
-    ):
+    def test_invalid_values_is_rejected(self):
+        with pytest.raises(tk.ValidationError) as err:
+            helpers.call_action(
+                "scheming_preset_create",
+                preset_name="test-preset",
+                values={"repeating_subfields": "notalist"},
+            )
+
+        assert "values" in str(err.value.error_dict["values"])
+
+    def test_self_reference_on_a_not_yet_created_preset_is_rejected(self):
         # "test-preset" isn't registered yet, so it can't be its own base
         # either way: caught by the preset enum, not the cycle resolver
-        definition = {**preset_definition, "values": {"preset": "test-preset"}}
-
         with pytest.raises(tk.ValidationError) as err:
-            helpers.call_action("scheming_preset_create", definition=definition)
+            helpers.call_action(
+                "scheming_preset_create",
+                preset_name="test-preset",
+                values={"preset": "test-preset"},
+            )
 
-        assert "is not one of" in str(err.value.error_dict["definition"])
+        assert "is not one of" in str(err.value.error_dict["values"])
 
-    def test_unknown_base_preset_is_rejected(self, preset_definition):
-        definition = {**preset_definition, "values": {"preset": "not-a-real-preset"}}
-
+    def test_unknown_base_preset_is_rejected(self):
         with pytest.raises(tk.ValidationError) as err:
-            helpers.call_action("scheming_preset_create", definition=definition)
+            helpers.call_action(
+                "scheming_preset_create",
+                preset_name="test-preset",
+                values={"preset": "not-a-real-preset"},
+            )
 
-        assert "not-a-real-preset" in str(err.value.error_dict["definition"])
+        assert "not-a-real-preset" in str(err.value.error_dict["values"])
 
-    def test_base_on_builtin_preset_is_accepted(self, preset_definition):
-        definition = {**preset_definition, "values": {"preset": "title"}}
-
-        result = helpers.call_action("scheming_preset_create", definition=definition)
+    def test_base_on_builtin_preset_is_accepted(self):
+        result = helpers.call_action(
+            "scheming_preset_create",
+            preset_name="test-preset",
+            values={"preset": "title"},
+        )
 
         assert result["values"] == {"preset": "title"}
 
-    def test_preset_that_fails_to_render_is_rejected(self, preset_definition):
+    def test_preset_that_fails_to_render_is_rejected(self):
         # select.html needs choices/choices_helper to iterate over; without
         # one it blows up mid-render instead of failing validation
-        definition = {**preset_definition, "values": {"form_snippet": "select.html"}}
-
         with pytest.raises(tk.ValidationError) as err:
-            helpers.call_action("scheming_preset_create", definition=definition)
+            helpers.call_action(
+                "scheming_preset_create",
+                preset_name="test-preset",
+                values={"form_snippet": "select.html"},
+            )
 
-        assert "failed to render" in str(err.value.error_dict["definition"]).lower()
+        assert "failed to render" in str(err.value.error_dict["values"]).lower()
         assert SchemingPreset.get("test-preset") is None
 
     def test_name_shadowing_a_builtin_preset_is_accepted(self):
         # deliberate override, same as a DB schema overriding a file schema
         # of the same type: no uniqueness check against static presets
-        definition = {
-            "preset_name": "title",
-            "values": {"validators": "not_empty unicode_safe"},
-        }
-
-        result = helpers.call_action("scheming_preset_create", definition=definition)
+        result = helpers.call_action(
+            "scheming_preset_create",
+            preset_name="title",
+            values={"validators": "not_empty unicode_safe"},
+        )
 
         assert result["preset_name"] == "title"
-        assert result["values"] == definition["values"]
+        assert result["values"] == {"validators": "not_empty unicode_safe"}
 
 
 @pytest.mark.ckan_config("ckan.plugins", "scheming_datasets scheming_dynamic")
@@ -517,11 +533,10 @@ class TestSchemingPresetUpdate:
             preset_name="test-preset", values=preset_definition["values"]
         )
 
-        updated = {**preset_definition, "values": {"form_snippet": "text.html"}}
         result = helpers.call_action(
             "scheming_preset_update",
             preset_name="test-preset",
-            definition=updated,
+            values={"form_snippet": "text.html"},
         )
 
         assert result["values"] == {"form_snippet": "text.html"}
@@ -535,38 +550,24 @@ class TestSchemingPresetUpdate:
             helpers.call_action(
                 "scheming_preset_update",
                 preset_name="test-preset",
-                definition=preset_definition,
+                values=preset_definition["values"],
             )
-
-    def test_update_preset_name_mismatch_is_rejected(self, preset_definition):
-        scheming_factories.Preset(
-            preset_name="test-preset", values=preset_definition["values"]
-        )
-
-        other = {**preset_definition, "preset_name": "other-preset"}
-        with pytest.raises(tk.ValidationError) as err:
-            helpers.call_action(
-                "scheming_preset_update",
-                preset_name="test-preset",
-                definition=other,
-            )
-
-        assert "must match preset_name" in str(err.value.error_dict["definition"])
 
     def test_update_with_invalid_values_is_rejected(self, preset_definition):
         scheming_factories.Preset(
             preset_name="test-preset", values=preset_definition["values"]
         )
 
-        invalid = {**preset_definition, "values": {"repeating_subfields": "notalist"}}
         with pytest.raises(tk.ValidationError) as err:
             helpers.call_action(
-                "scheming_preset_update", preset_name="test-preset", definition=invalid
+                "scheming_preset_update",
+                preset_name="test-preset",
+                values={"repeating_subfields": "notalist"},
             )
 
-        assert "values" in str(err.value.error_dict["definition"])
+        assert "values" in str(err.value.error_dict["values"])
 
-    def test_update_missing_definition_is_rejected(self, preset_definition):
+    def test_update_missing_values_is_rejected(self, preset_definition):
         scheming_factories.Preset(
             preset_name="test-preset", values=preset_definition["values"]
         )
@@ -583,15 +584,14 @@ class TestSchemingPresetUpdate:
         )
         scheming_factories.Preset(preset_name="a", values={"preset": "test-preset"})
 
-        definition = {**preset_definition, "values": {"preset": "a"}}
         with pytest.raises(tk.ValidationError) as err:
             helpers.call_action(
                 "scheming_preset_update",
                 preset_name="test-preset",
-                definition=definition,
+                values={"preset": "a"},
             )
 
-        assert "cycle" in str(err.value.error_dict["definition"]).lower()
+        assert "cycle" in str(err.value.error_dict["values"]).lower()
         row = SchemingPreset.get("test-preset")
         assert row
         assert row.values == preset_definition["values"]

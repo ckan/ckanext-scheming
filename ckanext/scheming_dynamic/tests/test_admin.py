@@ -960,7 +960,7 @@ class TestPresetCreate:
         )
 
         assert resp.status_code == STATUS_OK
-        assert "is a required property" in resp.body
+        assert "Missing value" in resp.body
 
     def test_malformed_json_is_reported(self, app):
         resp = app.post(

@@ -483,7 +483,7 @@ class PresetSchema(BaseSchema):
 
         Excluding the preset being edited from the `preset` enum only
         blocks the obvious one-hop self-reference in the form; the
-        `scheming_preset_definition_valid` validator is what actually
+        `scheming_preset_values_valid` validator is what actually
         catches longer cycles.
         """
         built = super().defs()

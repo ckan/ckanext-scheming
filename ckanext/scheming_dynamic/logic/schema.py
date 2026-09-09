@@ -86,14 +86,16 @@ def scheming_schema_activity_list(
 @validator_args
 def scheming_preset_create(
     not_missing: types.Validator,
+    unicode_safe: types.Validator,
     convert_to_json_if_string: types.Validator,
-    scheming_preset_definition_valid: types.DataValidator,
+    scheming_preset_values_valid: types.DataValidator,
 ) -> types.Schema:
     return {
-        "definition": [
+        "preset_name": [not_missing, unicode_safe],
+        "values": [
             not_missing,
             convert_to_json_if_string,
-            scheming_preset_definition_valid,
+            scheming_preset_values_valid,
         ],
     }
 

@@ -119,27 +119,29 @@ def scheming_schema_not_in_use(
         )
 
 
-def scheming_preset_definition_valid(
+def scheming_preset_values_valid(
     key: types.FlattenKey,
     data: types.FlattenDataDict,
     errors: types.FlattenErrorDict,
     context: types.Context,
 ) -> Any:
-    if errors.get(key):
+    if errors.get(key) or errors.get(("preset_name",)):
         return
 
-    definition = data[key]
+    values = data[key]
+    preset_name = data.get(("preset_name",))
 
-    preset_name = definition.get("preset_name")
-
-    errs = list(iter_errors(definition, PresetSchema(exclude_preset_name=preset_name)))
+    candidate = {"preset_name": preset_name, "values": values}
+    errs = list(
+        iter_errors(candidate, PresetSchema(exclude_preset_name=preset_name))
+    )
     if errs:
         raise tk.Invalid("; ".join(f"{error_location(e)}: {e.message}" for e in errs))
 
     # overlay the candidate on top of the other stored presets: covers both
     # create (a brand new name) and update (replacing the stored values)
     raw = {row.preset_name: row.values for row in SchemingPreset.get_all()}
-    raw[preset_name] = definition["values"]
+    raw[preset_name] = values
 
     try:
         resolve_preset_values(preset_name, raw, sync.get_static_presets())
@@ -301,7 +303,7 @@ def get_validators():
         "scheming_definition_valid": scheming_definition_valid,
         "scheming_schema_exists": scheming_schema_exists,
         "scheming_schema_not_in_use": scheming_schema_not_in_use,
-        "scheming_preset_definition_valid": scheming_preset_definition_valid,
+        "scheming_preset_values_valid": scheming_preset_values_valid,
         "scheming_preset_exists": scheming_preset_exists,
         "scheming_preset_not_in_use": scheming_preset_not_in_use,
         "scheming_migration_versions_valid": scheming_migration_versions_valid,

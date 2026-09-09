@@ -83,9 +83,9 @@ accepts `"group"` or `"organization"`).
   while any entity still uses that type
 
 **Presets**
-- `scheming_preset_create(definition)` — `definition` is
-  `{"preset_name": ..., "values": {...}}`
-- `scheming_preset_update(preset_name, definition)`
+- `scheming_preset_create(preset_name, values)` — `values` is the attribute
+  bag a field using the preset inherits (the same keys a schema field takes)
+- `scheming_preset_update(preset_name, values)` — replaces the stored `values`
 - `scheming_preset_delete(preset_name)` — refuses while any schema field
   still uses it
 

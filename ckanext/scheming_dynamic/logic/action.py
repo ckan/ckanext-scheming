@@ -368,7 +368,7 @@ def _check_preset_renders(preset_name: str, values: dict[str, Any]) -> None:
     except PresetCycleError as e:
         raise tk.ValidationError(
             {
-                "definition": [
+                "values": [
                     tk._("Preset cycle detected: {}").format(
                         " -> ".join([*e.chain, e.chain[0]])
                     )
@@ -378,7 +378,7 @@ def _check_preset_renders(preset_name: str, values: dict[str, Any]) -> None:
     except PresetBaseNotFoundError as e:
         raise tk.ValidationError(
             {
-                "definition": [
+                "values": [
                     tk._(
                         f"Base preset '{e.base}' is not a registered or existing preset"
                     )
@@ -387,7 +387,7 @@ def _check_preset_renders(preset_name: str, values: dict[str, Any]) -> None:
         ) from e
     except Exception as e:  # noqa: BLE001
         raise tk.ValidationError(
-            {"definition": [tk._("Form snippet failed to render: {}").format(e)]}
+            {"values": [tk._("Form snippet failed to render: {}").format(e)]}
         ) from e
 
 
@@ -395,23 +395,25 @@ def _check_preset_renders(preset_name: str, values: dict[str, Any]) -> None:
 def scheming_preset_create(context: Any, data_dict: dict[str, Any]) -> dict[str, Any]:
     """Create a field preset.
 
-    :param definition: ``{"preset_name": ..., "values": {...}}``; the same
-        attribute bag a dataset/resource field can take
-    :type definition: dict
+    :param preset_name: the name of the preset to create
+    :type preset_name: string
+    :param values: the attribute bag a field using this preset inherits --
+        the same keys a dataset/resource field can take
+    :type values: dict
     """
     tk.check_access("scheming_preset_create", context, data_dict)
 
-    definition = data_dict["definition"]
-    preset_name = definition["preset_name"]
+    preset_name = data_dict["preset_name"]
+    values = data_dict["values"]
 
     if SchemingPreset.get(preset_name):
         raise tk.ValidationError(
             {"preset_name": [tk._(f"Preset '{preset_name}' already exists")]}
         )
 
-    _check_preset_renders(preset_name, definition["values"])
+    _check_preset_renders(preset_name, values)
 
-    row = SchemingPreset.create(preset_name, definition["values"])
+    row = SchemingPreset.create(preset_name, values)
 
     return row.as_dict()
 
@@ -422,30 +424,21 @@ def scheming_preset_update(context: Any, data_dict: dict[str, Any]) -> dict[str,
 
     :param preset_name: the preset to update
     :type preset_name: string
-    :param definition: ``{"preset_name": ..., "values": {...}}``
-    :type definition: dict
+    :param values: the new attribute bag, replacing the stored one
+    :type values: dict
     """
     tk.check_access("scheming_preset_update", context, data_dict)
 
     preset_name = data_dict["preset_name"]
-    definition = data_dict["definition"]
+    values = data_dict["values"]
 
     preset = SchemingPreset.get(preset_name)
     if not preset:
         raise tk.ObjectNotFound(tk._(f"Preset '{preset_name}' not found"))
 
-    if definition["preset_name"] != preset_name:
-        raise tk.ValidationError(
-            {
-                "definition": [
-                    tk._(f"'preset_name' must match preset_name '{preset_name}'")
-                ]
-            }
-        )
+    _check_preset_renders(preset_name, values)
 
-    _check_preset_renders(preset_name, definition["values"])
-
-    preset.update_values(definition["values"])
+    preset.update_values(values)
 
     return preset.as_dict()
 
