@@ -598,14 +598,19 @@ used by the core presets that wrap CKAN's built-in fields, for example
 `organization_url_upload` (organization `image_url`).
 
 ```yaml
-  requires_one_of: [choices, choices_helper]
+  requires:
+    - [choices, choices_helper]
+    - label
 ```
 
-The field using this preset must set at least one of the listed keys.
-Applied to a field that sets none of them raises an error. The core
+The field using this preset must satisfy every entry in `requires`. An
+entry that is a list is satisfied when the field sets **at least one** of
+those keys; an entry that is a plain string must be set on the field.
+Applied to a field that fails any entry raises an error. The core
 choice-based presets (`select`, `radio`, `multiple_checkbox`,
-`multiple_select`) use this to require that a field supplies
-[`choices`](#choices) or a [`choices_helper`](#choices_helper).
+`multiple_select`) use `requires: [[choices, choices_helper]]` to require
+that a field supplies [`choices`](#choices) or a
+[`choices_helper`](#choices_helper).
 
 Both keys are optional; a preset without them can be used anywhere, as
 before.

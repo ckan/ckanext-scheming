@@ -819,7 +819,13 @@ def _check_preset_restrictions(preset, preset_values, field, entity_type):
     """
     Some core presets only make sense on a specific field, or require
     other keys (like choices) to be set on the field. Enforce the
-    restrictions declared on the preset in presets.json.
+    restrictions declared on the preset in presets.json:
+
+    - ``restrict_to_field``: ``{entity_type, field_name}`` (``entity_type``
+      may be a list) -- the preset may only be applied to that field.
+    - ``requires``: a list of requirements the field must satisfy. Each
+      requirement is a key name, or a list of key names meaning "at least
+      one of these". All requirements must hold.
 
     raises SchemingException if field violates a restriction.
     """
@@ -844,13 +850,20 @@ def _check_preset_restrictions(preset, preset_values, field, entity_type):
                 )
             )
 
-    requires_one_of = preset_values.get("requires_one_of")
-    if requires_one_of and not any(key in field for key in requires_one_of):
-        raise SchemingException(
-            "preset '{}' requires one of {} to be set on field '{}'".format(
-                preset, requires_one_of, field.get("field_name")
+    for requirement in preset_values.get("requires") or []:
+        # a bare string requires that one key; a list requires any one of them
+        options = [requirement] if isinstance(requirement, str) else list(requirement)
+        if not any(key in field for key in options):
+            need = (
+                "'{}'".format(options[0])
+                if len(options) == 1
+                else "one of {}".format(options)
             )
-        )
+            raise SchemingException(
+                "preset '{}' requires {} to be set on field '{}'".format(
+                    preset, need, field.get("field_name")
+                )
+            )
 
 
 def _expand(schema, field, entity_type):

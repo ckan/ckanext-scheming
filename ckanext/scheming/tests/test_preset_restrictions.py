@@ -164,7 +164,20 @@ def _expand_group_field(field):
     )
 
 
-class TestRequiresOneOf:
+@contextlib.contextmanager
+def _requires_preset(*requires):
+    """Register a preset with the given ``requires`` entries."""
+    saved = _SchemingMixin._presets
+    _SchemingMixin._presets = dict(
+        saved or {}, needy={"requires": list(requires)}
+    )
+    try:
+        yield
+    finally:
+        _SchemingMixin._presets = saved
+
+
+class TestRequires:
     @pytest.mark.parametrize(
         "preset", ["select", "multiple_checkbox", "multiple_select", "radio"]
     )
@@ -195,3 +208,37 @@ class TestRequiresOneOf:
                 "choices_helper": "some_helper",
             }
         )
+
+    def test_plain_string_entry_is_required(self):
+        with _requires_preset("label"):
+            with pytest.raises(SchemingException):
+                _expand_dataset_field({"field_name": "x", "preset": "needy"})
+
+    def test_plain_string_entry_satisfied(self):
+        with _requires_preset("label"):
+            _expand_dataset_field(
+                {"field_name": "x", "preset": "needy", "label": "X"}
+            )
+
+    def test_every_entry_must_hold(self):
+        # one-of group satisfied, but the plain "label" entry is not
+        with _requires_preset(["choices", "choices_helper"], "label"):
+            with pytest.raises(SchemingException):
+                _expand_dataset_field(
+                    {
+                        "field_name": "x",
+                        "preset": "needy",
+                        "choices_helper": "h",
+                    }
+                )
+
+    def test_all_entries_satisfied(self):
+        with _requires_preset(["choices", "choices_helper"], "label"):
+            _expand_dataset_field(
+                {
+                    "field_name": "x",
+                    "preset": "needy",
+                    "choices_helper": "h",
+                    "label": "X",
+                }
+            )

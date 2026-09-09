@@ -83,7 +83,7 @@
         "form_snippet": "select.html",
         "display_snippet": "select.html",
         "validators": "scheming_required scheming_choices",
-        "requires_one_of": ["choices", "choices_helper"]
+        "requires": [["choices", "choices_helper"]]
       }
     },
     {
@@ -93,7 +93,7 @@
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
         "output_validators": "scheming_multiple_choice_output",
-        "requires_one_of": ["choices", "choices_helper"]
+        "requires": [["choices", "choices_helper"]]
       }
     },
     {
@@ -103,7 +103,7 @@
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
         "output_validators": "scheming_multiple_choice_output",
-        "requires_one_of": ["choices", "choices_helper"]
+        "requires": [["choices", "choices_helper"]]
       }
     },
     {
@@ -161,7 +161,7 @@
         "form_snippet": "radio.html",
         "display_snippet": "select.html",
         "validators": "scheming_required scheming_choices",
-        "requires_one_of": ["choices", "choices_helper"]
+        "requires": [["choices", "choices_helper"]]
       }
     }
   ]
