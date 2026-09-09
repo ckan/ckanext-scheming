@@ -483,7 +483,6 @@ class TestPinCommand:
         helpers.call_action(
             "scheming_schema_update",
             context={"user": site_user["name"], "ignore_auth": True},
-            schema_type=STATIC_DATASET_SCHEMA_TYPE,
             definition=updated,
         )
         assert (
@@ -534,7 +533,6 @@ class TestPinCommand:
         helpers.call_action(
             "scheming_schema_update",
             context={"user": site_user["name"], "ignore_auth": True},
-            schema_type=STATIC_DATASET_SCHEMA_TYPE,
             definition=updated,
         )
 
@@ -580,7 +578,6 @@ class TestPinCommand:
         helpers.call_action(
             "scheming_schema_update",
             context={"user": site_user["name"], "ignore_auth": True},
-            schema_type=STATIC_DATASET_SCHEMA_TYPE,
             definition=updated,
         )
 

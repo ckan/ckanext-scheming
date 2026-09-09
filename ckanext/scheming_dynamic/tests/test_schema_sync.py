@@ -102,7 +102,6 @@ class TestDynamicSchemaSync:
         updated = {**schema_definition, "dataset_fields": [{"field_name": "renamed"}]}
         helpers.call_action(
             "scheming_schema_update",
-            schema_type="test-type",
             definition=updated,
         )
 

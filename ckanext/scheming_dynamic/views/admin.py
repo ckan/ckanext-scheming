@@ -186,19 +186,21 @@ class EditView(MethodView):
         self, schema_type: str, entity_type: str = DEFAULT_ENTITY_TYPE
     ) -> str | Any:
         _check_entity_type(entity_type)
-        data = {
-            "entity_type": entity_type,
-            "schema_type": schema_type,
-            "definition": tk.request.form.get("definition", ""),
-        }
+        raw = tk.request.form.get("definition", "")
 
         try:
-            row = tk.get_action("scheming_schema_update")({}, dict(data))
+            row = tk.get_action("scheming_schema_update")(
+                {}, {"entity_type": entity_type, "definition": raw}
+            )
         except tk.ObjectNotFound:
             return tk.abort(404, tk._("Schema not found"))
         except tk.ValidationError as e:
             return self.get(
-                schema_type, entity_type, data, e.error_dict, e.error_summary
+                schema_type,
+                entity_type,
+                {"schema_type": schema_type, "definition": raw},
+                e.error_dict,
+                e.error_summary,
             )
 
         tk.h.flash_success(
@@ -409,22 +411,15 @@ def restore(
         return tk.abort(404, tk._("Activity entry not found"))
 
     if SchemingSchemaVersion.head(entity_type, schema_type):
-        action, data = (
-            "scheming_schema_update",
-            {
-                "entity_type": entity_type,
-                "schema_type": schema_type,
-                "definition": entry.definition,
-            },
-        )
+        action = "scheming_schema_update"
     else:
-        action, data = (
-            "scheming_schema_create",
-            {"entity_type": entity_type, "definition": entry.definition},
-        )
+        action = "scheming_schema_create"
+    data = {"entity_type": entity_type, "definition": entry.definition}
 
     try:
         tk.get_action(action)({}, data)
+    except tk.ObjectNotFound:
+        return tk.abort(404, tk._("Schema not found"))
     except tk.ValidationError as e:
         tk.h.flash_error("; ".join(e.error_summary.values()))
     else:

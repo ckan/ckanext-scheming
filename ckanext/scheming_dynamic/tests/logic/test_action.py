@@ -264,7 +264,6 @@ class TestSchemingSchemaUpdate:
         }
         result = helpers.call_action(
             "scheming_schema_update",
-            schema_type="test-type",
             definition=updated,
         )
 
@@ -279,7 +278,6 @@ class TestSchemingSchemaUpdate:
 
         result = helpers.call_action(
             "scheming_schema_update",
-            schema_type="test-type",
             definition=schema_definition,
         )
 
@@ -294,7 +292,6 @@ class TestSchemingSchemaUpdate:
 
         helpers.call_action(
             "scheming_schema_update",
-            schema_type="test-type",
             definition=schema_definition,
         )
 
@@ -309,7 +306,6 @@ class TestSchemingSchemaUpdate:
 
         result = helpers.call_action(
             "scheming_schema_update",
-            schema_type="test-type",
             definition=schema_definition,
         )
 
@@ -317,10 +313,9 @@ class TestSchemingSchemaUpdate:
         assert SchemingSchemaVersion.head_version("dataset", "test-type") == 1
 
     def test_update_missing_schema_is_rejected(self, schema_definition):
-        with pytest.raises(tk.ValidationError):
+        with pytest.raises(tk.ObjectNotFound):
             helpers.call_action(
                 "scheming_schema_update",
-                schema_type="test-type",
                 definition=schema_definition,
             )
 
@@ -328,16 +323,14 @@ class TestSchemingSchemaUpdate:
         SchemingSchemaVersion.create("dataset", "test-type", schema_definition)
 
         with pytest.raises(tk.ValidationError) as err:
-            helpers.call_action(
-                "scheming_schema_update", schema_type="test-type", definition={}
-            )
+            helpers.call_action("scheming_schema_update", definition={})
         assert "<root>" in str(err.value.error_dict["definition"])
 
     def test_update_missing_definition_is_rejected(self, schema_definition):
         SchemingSchemaVersion.create("dataset", "test-type", schema_definition)
 
         with pytest.raises(tk.ValidationError):
-            helpers.call_action("scheming_schema_update", schema_type="test-type")
+            helpers.call_action("scheming_schema_update")
 
 
 @pytest.mark.ckan_config("ckan.plugins", "scheming_dynamic")

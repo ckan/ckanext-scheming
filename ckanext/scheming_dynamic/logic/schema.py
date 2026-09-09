@@ -29,17 +29,8 @@ def scheming_schema_create(
     }
 
 
-@validator_args
-def scheming_schema_update(
-    not_missing: types.Validator,
-    unicode_safe: types.Validator,
-    scheming_schema_exists: types.DataValidator,
-) -> types.Schema:
-    schema = scheming_schema_create()
-
-    schema["schema_type"] = [not_missing, unicode_safe, scheming_schema_exists]
-
-    return schema
+def scheming_schema_update() -> types.Schema:
+    return scheming_schema_create()
 
 
 @validator_args

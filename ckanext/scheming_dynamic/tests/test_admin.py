@@ -418,7 +418,6 @@ class TestSchemaHistory:
         helpers.call_action(
             "scheming_schema_update",
             context={"user": sysadmin},
-            schema_type="test-type",
             definition=updated,
         )
 
@@ -487,7 +486,6 @@ class TestSchemaHistory:
         helpers.call_action(
             "scheming_schema_update",
             context={"user": sysadmin},
-            schema_type="test-type",
             definition=updated,
         )
 
@@ -514,7 +512,6 @@ class TestSchemaHistory:
         helpers.call_action(
             "scheming_schema_update",
             context={"user": sysadmin},
-            schema_type="test-type",
             definition=schema_definition,
         )
 
@@ -751,7 +748,6 @@ class TestSchemaRestore:
         helpers.call_action(
             "scheming_schema_update",
             context={"user": factories.Sysadmin()["name"]},
-            schema_type="test-type",
             definition=updated,
         )
         assert SchemingSchemaVersion.head_version("dataset", "test-type") == 1
@@ -788,7 +784,6 @@ class TestSchemaRestore:
         helpers.call_action(
             "scheming_schema_update",
             context={"user": factories.Sysadmin()["name"]},
-            schema_type="test-type",
             definition=updated,
         )
         assert SchemingSchemaVersion.head_version("dataset", "test-type") == 2

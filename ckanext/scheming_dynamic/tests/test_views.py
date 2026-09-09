@@ -60,7 +60,6 @@ class TestDynamicTypeRoutes:
         with test_request_context():
             helpers.call_action(
                 "scheming_schema_update",
-                schema_type="test-type",
                 definition=updated,
             )
 

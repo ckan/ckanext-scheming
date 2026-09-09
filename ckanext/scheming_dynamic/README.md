@@ -78,7 +78,9 @@ accepts `"group"` or `"organization"`).
 - `scheming_schema_create(definition, entity_type="dataset")` — the schema's
   type name comes from the definition itself (`dataset_type`/`group_type`/
   `organization_type`)
-- `scheming_schema_update(schema_type, definition, entity_type="dataset")`
+- `scheming_schema_update(definition, entity_type="dataset")` — like create,
+  the schema type comes from the definition's type field; a definition for a
+  type that doesn't exist yet is rejected
 - `scheming_schema_delete(schema_type, entity_type="dataset")` — refuses
   while any entity still uses that type
 

@@ -69,7 +69,7 @@ class TestLockSnapshotsExpansion:
 
         updated = definition({"field_name": "renamed", "preset": "snap-preset"})
         row_dict = helpers.call_action(
-            "scheming_schema_update", schema_type=SCHEMA_TYPE, definition=updated
+            "scheming_schema_update", definition=updated
         )
 
         head = SchemingSchemaVersion.get("dataset", SCHEMA_TYPE, row_dict["version"])
@@ -149,7 +149,6 @@ class TestOutgoingHeadFrozenWithLiveState:
         # behind head
         helpers.call_action(
             "scheming_schema_update",
-            schema_type=SCHEMA_TYPE,
             definition=definition(
                 {"field_name": "notes", "preset": "drift-preset"},
                 {"field_name": "extra"},
@@ -182,7 +181,6 @@ class TestPinnedExpandedSchemaImmuneToPresetEdits:
         # move the schema to v2 so the dataset's pin (still v1) differs from head
         helpers.call_action(
             "scheming_schema_update",
-            schema_type=SCHEMA_TYPE,
             definition=definition(
                 {"field_name": "notes", "preset": "drift-preset"},
                 {"field_name": "extra"},
@@ -226,7 +224,6 @@ class TestPinnedExpandedSchemaImmuneToPresetEdits:
         dataset = factories.Dataset(type=SCHEMA_TYPE)
         helpers.call_action(
             "scheming_schema_update",
-            schema_type=SCHEMA_TYPE,
             definition=definition(
                 {"field_name": "notes", "preset": "drift-preset"},
                 {"field_name": "extra"},
@@ -274,7 +271,6 @@ class TestPinnedExpandedSchemaImmuneToPresetEdits:
         dataset = factories.Dataset(type=SCHEMA_TYPE)
         helpers.call_action(
             "scheming_schema_update",
-            schema_type=SCHEMA_TYPE,
             definition=definition(
                 {"field_name": "notes", "preset": "drift-preset"},
                 {"field_name": "extra"},

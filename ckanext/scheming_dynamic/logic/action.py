@@ -86,33 +86,23 @@ def scheming_schema_create(context: Any, data_dict: dict[str, Any]) -> dict[str,
 def scheming_schema_update(context: Any, data_dict: dict[str, Any]) -> dict[str, Any]:
     """Update a dynamic schema.
 
-    :param schema_type: the schema type whose schema should be updated
-    :type schema_type: string
     :param entity_type: the entity this schema applies to (default: ``dataset``)
     :type entity_type: string
-    :param definition: the schema definition
+    :param definition: the schema definition; the schema type is taken from
+        its type field (e.g. ``dataset_type``)
     :type definition: dict
     """
     tk.check_access("scheming_schema_update", context, data_dict)
 
     entity_type = data_dict["entity_type"]
-    schema_type = data_dict["schema_type"]
     definition = data_dict["definition"]
+
+    schema_type = definition[TYPE_FIELDS[entity_type]]
 
     head = SchemingSchemaVersion.head(entity_type, schema_type)
 
     if not head:
         raise tk.ObjectNotFound(tk._(f"Schema for '{schema_type}' not found"))
-
-    type_field = TYPE_FIELDS[entity_type]
-    if definition[type_field] != schema_type:
-        raise tk.ValidationError(
-            {
-                "definition": [
-                    tk._(f"'{type_field}' must match schema_type '{schema_type}'")
-                ]
-            }
-        )
 
     _check_schema_renders(entity_type, schema_type, definition)
 

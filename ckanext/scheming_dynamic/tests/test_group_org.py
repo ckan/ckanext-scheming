@@ -277,7 +277,6 @@ class TestGroupOrgMigration:
             helpers.call_action(
                 "scheming_schema_update",
                 entity_type="group",
-                schema_type="mytheme",
                 definition=group_schema(
                     "mytheme",
                     [

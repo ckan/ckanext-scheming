@@ -64,7 +64,6 @@ class TestDynamicSchemingGetEntitySchema:
         }
         helpers.call_action(
             "scheming_schema_update",
-            schema_type=dataset_schema.schema_type,
             definition=updated,
         )
 
@@ -88,7 +87,6 @@ class TestDynamicSchemingGetEntitySchema:
         }
         helpers.call_action(
             "scheming_schema_update",
-            schema_type=dataset_schema.schema_type,
             definition=updated,
         )
         new_dataset = factories.Dataset(type=dataset_schema.schema_type)
@@ -129,7 +127,6 @@ class TestDynamicSchemingGetEntityPinVersion:
         }
         helpers.call_action(
             "scheming_schema_update",
-            schema_type=dataset_schema.schema_type,
             definition=updated,
         )
         new_dataset = factories.Dataset(type=dataset_schema.schema_type)

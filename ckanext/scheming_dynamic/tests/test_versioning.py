@@ -32,7 +32,7 @@ class TestSchemaActivityLog:
 
         updated = {**schema_definition, "dataset_fields": [{"field_name": "notes"}]}
         helpers.call_action(
-            "scheming_schema_update", schema_type="test-type", definition=updated
+            "scheming_schema_update", definition=updated
         )
 
         history = SchemingSchemaActivity.get_history("dataset", "test-type")
@@ -71,7 +71,7 @@ class TestSchemaVersioning:
 
         updated = {**schema_definition, "dataset_fields": [{"field_name": "notes"}]}
         helpers.call_action(
-            "scheming_schema_update", schema_type="test-type", definition=updated
+            "scheming_schema_update", definition=updated
         )
 
         assert SchemingSchemaVersion.head_version("dataset", "test-type") == 1
@@ -85,7 +85,7 @@ class TestSchemaVersioning:
 
         updated = {**schema_definition, "dataset_fields": [{"field_name": "notes"}]}
         helpers.call_action(
-            "scheming_schema_update", schema_type="test-type", definition=updated
+            "scheming_schema_update", definition=updated
         )
 
         assert SchemingSchemaVersion.head_version("dataset", "test-type") == 2
@@ -102,7 +102,7 @@ class TestSchemaVersioning:
 
         updated = {**schema_definition, "dataset_fields": [{"field_name": "notes"}]}
         helpers.call_action(
-            "scheming_schema_update", schema_type="test-type", definition=updated
+            "scheming_schema_update", definition=updated
         )
         new_dataset = factories.Dataset(type="test-type")
 
@@ -121,11 +121,11 @@ class TestSchemaVersioning:
 
         first_edit = {**schema_definition, "dataset_fields": [{"field_name": "a"}]}
         helpers.call_action(
-            "scheming_schema_update", schema_type="test-type", definition=first_edit
+            "scheming_schema_update", definition=first_edit
         )
         second_edit = {**schema_definition, "dataset_fields": [{"field_name": "b"}]}
         helpers.call_action(
-            "scheming_schema_update", schema_type="test-type", definition=second_edit
+            "scheming_schema_update", definition=second_edit
         )
 
         assert SchemingSchemaVersion.head_version("dataset", "test-type") == 2
@@ -144,7 +144,7 @@ class TestSchemaVersioning:
             "dataset_fields": [{"field_name": "brand_new_field"}],
         }
         helpers.call_action(
-            "scheming_schema_update", schema_type="test-type", definition=updated
+            "scheming_schema_update", definition=updated
         )
 
         shown = helpers.call_action("package_show", id=old_dataset["id"])
@@ -182,7 +182,7 @@ class TestSchemingSchemaActivityList:
         helpers.call_action("scheming_schema_create", definition=schema_definition)
         updated = {**schema_definition, "dataset_fields": [{"field_name": "notes"}]}
         helpers.call_action(
-            "scheming_schema_update", schema_type="test-type", definition=updated
+            "scheming_schema_update", definition=updated
         )
 
         result = helpers.call_action(

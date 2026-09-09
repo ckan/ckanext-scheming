@@ -139,11 +139,7 @@ def sync(ctx: click.Context, entity_type: str, schema_type: str):
 
         tk.get_action("scheming_schema_update")(
             context,
-            {
-                "entity_type": entity_type,
-                "schema_type": schema_type,
-                "definition": definition,
-            },
+            {"entity_type": entity_type, "definition": definition},
         )
         head_version = SchemingSchemaVersion.head_version(entity_type, schema_type)
         click.secho(
