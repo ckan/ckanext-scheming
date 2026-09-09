@@ -28,8 +28,8 @@ def expand_definition(schema_type: str, definition: dict[str, Any]) -> dict[str,
 
     Lazy imports to avoid circular imports.
     """
-    from ckanext.scheming.plugins import _expand_schemas # noqa: PLC0415
-    from ckanext.scheming_dynamic import sync # noqa: PLC0415
+    from ckanext.scheming.plugins import _expand_schemas  # noqa: PLC0415
+    from ckanext.scheming_dynamic import sync  # noqa: PLC0415
 
     sync.ensure_presets_synced()
     return _expand_schemas({schema_type: definition})[schema_type]
@@ -238,8 +238,24 @@ class SchemingSchemaVersion(tk.BaseModel):
         edited later can't silently change what this version validates
         against or renders as -- see ``sync.pinned_expanded_schema`` and
         ``schema_migration.apply.expanded_definition``, which read it back.
+
+        First, if a head version already exists, refreshes *its* ``expanded``
+        one last time before this new version takes over. A head version's
+        snapshot only gets refreshed when the schema itself is edited -- a
+        preset it uses can be edited any number of times while it's still
+        head with nothing to react to that (live reads never consult the
+        snapshot for a head version, so nothing looks stale). Without this,
+        the outgoing head would freeze on whatever its snapshot last
+        happened to say, which could predate any of those preset edits --
+        so every entity pinned to it would jump backward in time the
+        instant it stops being head, even though nothing about ITS pin
+        just changed.
         """
-        version = cls.head_version(entity_type, schema_type) + 1
+        outgoing_head = cls.head(entity_type, schema_type)
+        if outgoing_head is not None:
+            outgoing_head.refresh_expanded()
+
+        version = (outgoing_head.version if outgoing_head else 0) + 1
         row = cls(
             entity_type=entity_type,
             schema_type=schema_type,

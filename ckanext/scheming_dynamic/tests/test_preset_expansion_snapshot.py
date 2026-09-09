@@ -78,6 +78,93 @@ class TestLockSnapshotsExpansion:
         assert field["validators"] == "not_empty"
 
 
+class TestOutgoingHeadFrozenWithLiveState:
+    """``lock()`` must freeze the OUTGOING head's snapshot with whatever was
+    actually live for it -- not whatever its snapshot happened to say the
+    last time IT was locked/refreshed. A preset can be edited any number of
+    times while a version is still head with nothing reacting to that (live
+    reads for a head version never consult the snapshot); the one moment
+    that has to get it right is the instant before a new version supersedes
+    it, which is exactly where this lives.
+    """
+
+    def test_locking_a_new_version_freezes_the_outgoing_heads_latest_expansion(self):
+        preset = dynamic_factories.Preset(
+            preset_name="drift-preset", values={"validators": "not_empty"}
+        )
+        v1 = SchemingSchemaVersion.create(
+            "dataset",
+            SCHEMA_TYPE,
+            definition({"field_name": "notes", "preset": "drift-preset"}),
+        )
+        assert v1.expanded["dataset_fields"][0]["validators"] == "not_empty"
+
+        # edited while v1 is still head: nothing needs to react to this yet
+        preset.update_values({"validators": "ignore_missing"})
+        # ensure_presets_synced() no-ops once per request; without this, the
+        # in-request registry (already read above) would still be stale.
+        sync.forget_request_check()
+
+        # v1 stops being head right here
+        SchemingSchemaVersion.lock(
+            "dataset",
+            SCHEMA_TYPE,
+            definition(
+                {"field_name": "notes", "preset": "drift-preset"},
+                {"field_name": "extra"},
+            ),
+        )
+
+        v1 = SchemingSchemaVersion.get("dataset", SCHEMA_TYPE, v1.version)
+        [notes_field] = [
+            f for f in v1.expanded["dataset_fields"] if f["field_name"] == "notes"
+        ]
+        assert notes_field["validators"] == "ignore_missing"
+
+    def test_a_pinned_package_does_not_jump_backward_when_a_newer_version_is_locked(
+        self,
+    ):
+        """End-to-end: a package pinned to v1 (== head) sees a preset edit
+        live. Once v2 supersedes v1, it must keep seeing that same edit --
+        not revert to what v1 looked like the day it was first locked."""
+        preset = dynamic_factories.Preset(
+            preset_name="drift-preset", values={"validators": "not_empty"}
+        )
+        helpers.call_action(
+            "scheming_schema_create",
+            definition=definition({"field_name": "notes", "preset": "drift-preset"}),
+        )
+        _publish()
+
+        dataset = factories.Dataset(type=SCHEMA_TYPE)
+        v1 = SchemingSchemaVersion.head_version("dataset", SCHEMA_TYPE)
+        assert SchemingSchemaPin.get("dataset", dataset["id"]).version == v1
+
+        # live edit while v1 is still head -- the dataset sees it immediately
+        preset.update_values({"validators": "ignore_missing"})
+        sync.forget_request_check()
+        sync.ensure_presets_synced()
+
+        # v2 locked for some unrelated reason -- v1 (and this pin) is now
+        # behind head
+        helpers.call_action(
+            "scheming_schema_update",
+            schema_type=SCHEMA_TYPE,
+            definition=definition(
+                {"field_name": "notes", "preset": "drift-preset"},
+                {"field_name": "extra"},
+            ),
+        )
+        _publish()
+        assert SchemingSchemaPin.get("dataset", dataset["id"]).version == v1
+
+        pinned = sync.pinned_expanded_schema("dataset", SCHEMA_TYPE, dataset["id"])
+        [notes_field] = [
+            f for f in pinned["dataset_fields"] if f["field_name"] == "notes"
+        ]
+        assert notes_field["validators"] == "ignore_missing"
+
+
 class TestPinnedExpandedSchemaImmuneToPresetEdits:
     def test_pinned_version_keeps_its_validators_after_preset_edit(self):
         preset = dynamic_factories.Preset(
@@ -164,9 +251,16 @@ class TestPinnedExpandedSchemaImmuneToPresetEdits:
         assert notes_field["validators"] == "not_empty"
 
     def test_row_predating_the_snapshot_still_falls_back_to_live_expansion(self):
-        """Rows locked before ``expanded`` existed have it as NULL; the read
-        paths must keep working (live re-expansion) for those, unchanged
-        from the old behaviour."""
+        """A version already superseded before the ``expanded`` column
+        existed, and never backfilled since, has it as NULL; the read paths
+        must keep working (live re-expansion) for that -- unchanged from
+        the old behaviour.
+
+        NULLing ``expanded`` has to happen *after* v1 is superseded, not
+        before: ``lock()`` now refreshes the outgoing head's snapshot the
+        moment it stops being head, so nulling it earlier would just get
+        silently healed by that refresh instead of testing the fallback.
+        """
         preset = dynamic_factories.Preset(
             preset_name="drift-preset", values={"validators": "not_empty"}
         )
@@ -175,8 +269,6 @@ class TestPinnedExpandedSchemaImmuneToPresetEdits:
             SCHEMA_TYPE,
             definition({"field_name": "notes", "preset": "drift-preset"}),
         )
-        row.expanded = None  # simulate a pre-migration row
-        model.Session.commit()
         _publish()
 
         dataset = factories.Dataset(type=SCHEMA_TYPE)
@@ -189,6 +281,11 @@ class TestPinnedExpandedSchemaImmuneToPresetEdits:
             ),
         )
         _publish()
+
+        # only now, after v1 is already superseded, simulate a row that
+        # predates the ``expanded`` column and was never backfilled
+        row.expanded = None
+        model.Session.commit()
 
         preset.update_values({"validators": "ignore_missing"})
         # ensure_presets_synced() no-ops once per request; without this, the

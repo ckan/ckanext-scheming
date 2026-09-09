@@ -240,7 +240,8 @@ def _field_uses_any_preset(field: dict[str, Any], names: set[str]) -> bool:
         return True
     return any(
         _field_uses_any_preset(sub, names)
-        for sub in field.get("repeating_subfields", [])
+        for grouping in ("repeating_subfields", "simple_subfields")
+        for sub in field.get(grouping, [])
     )
 
 
