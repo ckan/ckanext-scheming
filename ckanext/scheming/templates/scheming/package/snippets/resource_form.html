@@ -1,5 +1,11 @@
 {% extends 'package/snippets/resource_form.html' %}
 
+{%- set schema = (
+    h.dynamic_scheming_get_entity_schema(dataset_type, 'dataset', pkg_id)
+    if h.plugin_loaded('scheming_dynamic')
+    else h.scheming_get_dataset_schema(dataset_type))
+-%}
+
 {% block stages %}
   {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
   {%- set draft_missing_required = h.scheming_missing_required_fields(pages, package_id=pkg_name) -%}
@@ -39,7 +45,6 @@
 
 {% block errors %}
   {%- if errors -%}
-    {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
     {%- if data -%}
       {%- set fields = schema.resource_fields %}
     {%- else -%}
@@ -66,8 +71,6 @@
     might not be compatible with ckanext-scheming
     </p>
   {%- endif -%}
-
-  {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
   {%- for field in schema.resource_fields -%}
     {%- if field.form_snippet is not none -%}
       {%- if field.field_name not in data %}

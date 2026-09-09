@@ -1,0 +1,13 @@
+{% ckan_extends %}
+
+{% block form %}
+  {% snippet 'package/snippets/resource_edit_form.html',
+    data=data,
+    errors=errors,
+    error_summary=error_summary,
+    pkg_name=pkg_dict.name,
+    pkg_id=pkg_dict.id,
+    form_action=form_action,
+    resource_form_snippet=resource_form_snippet,
+    dataset_type=dataset_type %}
+{% endblock %}

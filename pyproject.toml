@@ -1,0 +1,61 @@
+[tool.ruff.lint.isort]
+section-order = [
+    "future",
+    "standard-library",
+    "first-party",
+    "third-party",
+    "ckan",
+    "ckanext",
+    "self",
+    "local-folder",
+]
+
+[tool.ruff.lint.isort.sections]
+ckan = ["ckan"]
+ckanext = ["ckanext"]
+self = ["ckanext.scheming", "ckanext.scheming_dynamic"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "B",   # likely bugs and design problems
+    "BLE", # do not catch blind exception
+    "C40", # better list/set/dict comprehensions
+    "C90", # check McCabe complexity
+    "COM", # trailing commas
+    "E",   # pycodestyle error
+    "W",   # pycodestyle warning
+    "F",   # pyflakes
+    "G",   # format strings for logging statements
+    "N",   # naming conventions
+    "PL",  # pylint
+    "PT",  # pytest style
+    "PIE", # misc lints
+    "Q",   # preferred quoting style
+    "RET", # improvements for return statements
+    "RSE", # improvements for rise statements
+    # "S",  # security testing
+    "SIM", # simplify code
+    "T10", # debugging statements
+    "T20", # print statements
+    "TID", # tidier imports
+    "TRY", # better exceptions
+    "UP",  # upgrade syntax for newer versions of the language
+]
+ignore = [
+    "E712",    # comparison to bool: violated by SQLAlchemy filters
+    "PLC1901", # simplify comparison to empty string: violated by SQLAlchemy filters
+    "TRY003",  # allow providing an error message to exception instance
+    "COM812", # conflicts with `ruff format`
+]
+
+[tool.ruff.lint.per-file-ignores]
+"ckanext/scheming_dynamic/logic/schema.py" = ["PLR0913", "PLR0917"]
+"ckanext/scheming_dynamic/cli/**.py" = ["PLR0913", "PLR0917"]
+"ckanext/scheming_dynamic/tests/**" = ["PLR2004"]
+
+[tool.ruff.format]
+quote-style = "double"

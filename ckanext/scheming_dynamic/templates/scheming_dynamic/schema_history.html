@@ -1,0 +1,99 @@
+{% extends "admin/base.html" %}
+
+{% block subtitle %}{{ _('Schema history') }}{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="fa fa-info-circle"></i>
+      {{ _('Schema history') }}
+    </h2>
+    <div class="module-content">
+      <p>
+        {% trans %}
+        Audit trail of every create, update and delete recorded for this schema type,
+        newest first. Each entry shows the change against the definition that came
+        before it.
+        {% endtrans %}
+      </p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block primary_content_inner %}
+  {% set entity_type = entity_type or 'dataset' %}
+  {% set route_args = {} if entity_type == 'dataset' else {'entity_type': entity_type} %}
+  {% snippet 'scheming_dynamic/snippets/tabs.html', active_tab=active_tab %}
+
+  <h1 class="page-heading">{{ _('History for {type} schema').format(type=schema_type) }}</h1>
+
+  {% if page.items %}
+    <div class="accordion" id="schema-history-accordion">
+      {% for entry in page.items %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="schema-history-heading-{{ loop.index }}">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#schema-history-collapse-{{ loop.index }}"
+                    aria-expanded="false"
+                    aria-controls="schema-history-collapse-{{ loop.index }}">
+              <strong class="me-1">{{ entry.action }}</strong>
+              {{ _('by {actor} on {created}').format(
+                    actor=entry.actor,
+                    created=h.render_datetime(entry.created, with_hours=True)) }}
+              {% if entry.version %}
+                <span class="ms-2 badge bg-info">{{ _('version {v}').format(v=entry.version) }}</span>
+              {% endif %}
+            </button>
+          </h2>
+          <div id="schema-history-collapse-{{ loop.index }}" class="accordion-collapse collapse"
+               aria-labelledby="schema-history-heading-{{ loop.index }}"
+               data-bs-parent="#schema-history-accordion">
+            <div class="accordion-body">
+              {% if entry.action == 'delete' %}
+                <p class="text-muted mb-0">{{ _('Schema deleted.') }}</p>
+              {% elif not entry.has_previous %}
+                <p>{{ _('Initial definition:') }}</p>
+                <pre class="scheming-history-diff mb-0">{{ entry.definition_text }}</pre>
+              {% elif entry.diff %}
+                <p>{{ _('Diff from previous version:') }}</p>
+                <pre class="scheming-history-diff mb-0">{{ entry.diff }}</pre>
+              {% else %}
+                <p class="text-muted">{{ _('No change to the definition.') }}</p>
+              {% endif %}
+
+              {% if not (page.page == 1 and loop.first) or entry.action == 'delete' %}
+                <form method="post" action="{{ h.url_for('scheming_dynamic_admin.restore', schema_type=schema_type, activity_id=entry.id, **route_args) }}">
+                  {{ h.csrf_input() }}
+                  <a type="submit" class="btn btn-secondary btn-sm mt-2"
+                      data-module="confirm-action"
+                      data-module-with-data="true"
+                      data-module-content="{{ _('Restore the schema to this definition? This creates a new entry in the history, it does not delete anything.') }}"
+                      aria-label="{{ _('Restore this version') }}"
+                      data-bs-title="{{ _('Restore this version') }}"
+                      data-bs-toggle="tooltip">
+                    <i class="fa fa-undo"></i> {{ _('Restore this version') }}
+                  </a>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {{ page.pager(schema_type=schema_type, **route_args) }}
+  {% else %}
+    <p class="empty">{{ _('No history recorded for this schema type.') }}</p>
+  {% endif %}
+
+  <div class="form-actions">
+    <a class="btn btn-secondary mt-3" href="{{ h.url_for('scheming_dynamic_admin.history_index') }}">
+        {{ _('Back to history') }}
+    </a>
+  </div>
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'scheming-dynamic/schema-editor-css' %}
+{% endblock %}

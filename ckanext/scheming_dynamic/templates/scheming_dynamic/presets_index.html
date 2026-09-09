@@ -1,0 +1,85 @@
+{% extends "admin/base.html" %}
+
+{% block subtitle %}{{ _('Scheming') }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% snippet 'scheming_dynamic/snippets/tabs.html', active_tab=active_tab %}
+
+  {% if presets %}
+    <table class="table table-header table-hover table-striped">
+      <thead>
+        <tr>
+          <th>{{ _('Preset name') }}</th>
+          <th>{{ _('Based on') }}</th>
+          <th>{{ _('Last updated') }}</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for preset in presets %}
+          <tr>
+            <td>{{ preset.preset_name }}</td>
+            <td>{{ preset.values.preset or '' }}</td>
+            <td>{{ h.render_datetime(preset.updated, with_hours=True) }}</td>
+            <td>
+              <form method="post" action="{% url_for 'scheming_dynamic_admin.preset_delete', preset_name=preset.preset_name %}">
+                <div class="btn-group float-end">
+                  <a class="btn btn-secondary btn-sm"
+                      href="{% url_for 'scheming_dynamic_admin.preset_edit', preset_name=preset.preset_name %}"
+                      aria-label="{{ _('Edit preset') }}"
+                      data-bs-title="{{ _('Edit preset') }}"
+                      data-bs-toggle="tooltip">
+                    <i class="fa fa-pencil"></i>
+                  </a>
+                    {{ h.csrf_input() }}
+                    <a type="submit" class="btn btn-danger btn-sm"
+                            data-module="confirm-action"
+                            data-module-with-data="true"
+                            data-module-content="{{ _('Are you sure you want to delete the preset {name}?').format(name=preset.preset_name) }}"
+                            aria-label="{{ _('Delete preset') }}"
+                            data-bs-title="{{ _('Delete preset') }}"
+                            data-bs-toggle="tooltip"
+                            >
+                      <i class="fa fa-times"></i>
+                    </a>
+                </div>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="empty">{{ _('No presets have been created yet.') }}</p>
+  {% endif %}
+
+  <div class="form-actions">
+    <a class="btn btn-primary float-end" href="{% url_for 'scheming_dynamic_admin.preset_new' %}">
+        <i class="fa fa-plus-square"></i> {{ _('Add preset') }}
+    </a>
+  </div>
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <div class="module-group">
+      <h2 class="module-heading">
+        <i class="fa fa-info-circle"></i>
+        {{ _('Field presets') }}
+      </h2>
+      <div class="module-content">
+        {%- trans -%}
+          <p>Presets bundle field attributes (validators, form/display
+          snippets, choices, etc.) so schemas don't have to wire them up by
+          hand. They're stored in the database and become available to
+          schemas immediately.</p>
+          <p>A preset can base itself on another registered preset (built-in
+          or database) via its own <code>preset</code> value, inheriting that
+          preset's attributes.</p>
+          <p>Presets configured through <code>scheming.presets</code> files
+          are not listed here and cannot be edited from this page.</p>
+        {%- endtrans -%}
+      </div>
+    </div>
+  </div>
+{% endblock %}

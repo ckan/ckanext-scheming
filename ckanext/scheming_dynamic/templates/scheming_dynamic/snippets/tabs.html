@@ -1,0 +1,26 @@
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if active_tab == 'schemas' }}"
+       href="{% url_for 'scheming_dynamic_admin.index' %}">
+      {{ _('Schemas') }}
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if active_tab == 'presets' }}"
+       href="{% url_for 'scheming_dynamic_admin.presets_index' %}">
+      {{ _('Presets') }}
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if active_tab == 'migrations' }}"
+       href="{% url_for 'scheming_dynamic_migration.index' %}">
+      {{ _('Migrations') }}
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if active_tab == 'history' }}"
+       href="{% url_for 'scheming_dynamic_admin.history_index' %}">
+      {{ _('History') }}
+    </a>
+  </li>
+</ul>

@@ -1,0 +1,94 @@
+{% macro pending(group, change, sources, entry) %}
+  {% set prefix = 'field.' ~ group ~ '.' ~ change.field_name %}
+  {% set chosen = entry.action if entry else change.action %}
+  <tr>
+    <td class="w-25">
+      <strong>{{ change.field_name }}</strong>
+      <div class="text-muted small">{{ change.reason }}</div>
+    </td>
+    <td>
+      <div class="row g-2">
+        <div class="col-auto">
+          <select class="form-select form-select-sm" name="{{ prefix }}.action">
+            <option value="copy" {{ 'selected' if chosen == 'copy' }}>{{ _('Copy') }}</option>
+            <option value="constant" {{ 'selected' if chosen == 'constant' }}>{{ _('Constant') }}</option>
+            <option value="default" {{ 'selected' if chosen == 'default' }}>{{ _('Default') }}</option>
+            <option value="drop" {{ 'selected' if chosen == 'drop' }}>{{ _('Drop') }}</option>
+            <option value="manual" {{ 'selected' if chosen == 'manual' }}>{{ _('Per dataset') }}</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <select class="form-select form-select-sm" name="{{ prefix }}.source">
+            <option value="">{{ _('-- source field --') }}</option>
+            {% for name in sources %}
+              <option value="{{ name }}" {{ 'selected' if (entry.source if entry else change.source) == name }}>
+                {{ name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col">
+          <input class="form-control form-control-sm" name="{{ prefix }}.value"
+                  value="{{ entry.value if entry and entry.value is defined else '' }}"
+                  placeholder="{{ _('constant value') }}">
+        </div>
+      </div>
+
+      {% if change.lost_choices %}
+        <div class="mt-2 ps-2 border-start">
+          <div class="text-muted small">{{ _('Stored values no longer accepted:') }}</div>
+          {% for value in change.lost_choices %}
+            <div class="row g-2 align-items-center mt-1">
+              <div class="col-auto"><code>{{ value }}</code> &rarr;</div>
+              <div class="col-auto">
+                <input class="form-control form-control-sm"
+                        name="{{ prefix }}.value_map.{{ value }}"
+                        value="{{ (entry.value_map or {}).get(value, '') if entry else '' }}"
+                        placeholder="{{ _('replacement') }}">
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </td>
+  </tr>
+{% endmacro %}
+
+
+{% macro dropped(group, name, acknowledged) %}
+  <tr>
+    <td class="w-25">
+      <strong>{{ name }}</strong>
+      <div class="text-muted small">{{ _('removed in the target version') }}</div>
+    </td>
+    <td>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="dropped-{{ group }}-{{ name }}"
+                name="dropped.{{ group }}" value="{{ name }}"
+                {{ 'checked' if name in acknowledged }}>
+        <label class="form-check-label" for="dropped-{{ group }}-{{ name }}">
+          {{ _('I understand this field\'s data will be lost') }}
+        </label>
+      </div>
+    </td>
+  </tr>
+{% endmacro %}
+
+
+{% macro automatic(change) %}
+  <tr>
+    <td class="w-25">{{ change.field_name }}</td>
+    <td>
+      <span class="text-muted">
+        {% if change.action == 'copy' %}
+          {{ _('copied from') }} <code>{{ change.source }}</code>
+        {% elif change.action == 'default' %}
+          {{ _('set to the field default') }}
+        {% else %}
+          {{ _('left unset') }}
+        {% endif %}
+        <span class="badge bg-light text-dark ms-1">{{ change.change }}</span>
+      </span>
+    </td>
+  </tr>
+{% endmacro %}

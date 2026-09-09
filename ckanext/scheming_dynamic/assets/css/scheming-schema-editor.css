@@ -1,0 +1,186 @@
+#scheming-schema-form .card,
+#scheming-preset-form .card {
+  --bs-card-bg: transparent;
+}
+#scheming-schema-form .scheming-schema-editor-toolbar,
+#scheming-preset-form .scheming-schema-editor-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#scheming-schema-form #collapse-root > .card-body,
+#scheming-preset-form #collapse-root > .card-body {
+  padding: 0;
+}
+#scheming-schema-form div[data-level="0"] > .card,
+#scheming-preset-form div[data-level="0"] > .card {
+  background: none;
+  border: unset;
+}
+#scheming-schema-form div[data-level="0"] > .card > .card-header,
+#scheming-preset-form div[data-level="0"] > .card > .card-header {
+  background: unset;
+  border-bottom: unset;
+  padding: 0;
+}
+#scheming-schema-form .jedi-label:after,
+#scheming-schema-form .jedi-legend:after,
+#scheming-preset-form .jedi-label:after,
+#scheming-preset-form .jedi-legend:after {
+  display: none;
+}
+#scheming-schema-form .jedi-label span,
+#scheming-schema-form .jedi-legend span,
+#scheming-preset-form .jedi-label span,
+#scheming-preset-form .jedi-legend span {
+  margin: 0;
+}
+#scheming-schema-form .jedi-array-item,
+#scheming-preset-form .jedi-array-item {
+  position: relative;
+}
+#scheming-schema-form .jedi-array-item > .jedi-actions-slot,
+#scheming-preset-form .jedi-array-item > .jedi-actions-slot {
+  margin-bottom: 1rem;
+  position: absolute;
+  top: 9px;
+  right: 120px;
+  z-index: 100;
+  border-right: 1px solid var(--bs-border-color);
+  padding-right: 0.5rem;
+}
+#scheming-schema-form .modal-dialog .modal-header,
+#scheming-preset-form .modal-dialog .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+#scheming-schema-form .modal-dialog .modal-header .modal-title p,
+#scheming-preset-form .modal-dialog .modal-header .modal-title p {
+  margin: 0;
+  font-weight: 600;
+}
+#scheming-schema-form .modal-dialog .modal-body,
+#scheming-preset-form .modal-dialog .modal-body {
+  font-weight: normal;
+}
+#scheming-schema-form .jedi-modal-dialog,
+#scheming-preset-form .jedi-modal-dialog {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  color: #212529;
+  border: 1px solid var(--bs-border-color) !important;
+}
+#scheming-schema-form .jedi-modal-dialog .jedi-modal-title,
+#scheming-preset-form .jedi-modal-dialog .jedi-modal-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+#scheming-schema-form .jedi-modal-dialog .jedi-modal-content,
+#scheming-preset-form .jedi-modal-dialog .jedi-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+}
+#scheming-schema-form .jedi-modal-dialog .jedi-modal-close,
+#scheming-preset-form .jedi-modal-dialog .jedi-modal-close {
+  margin-left: auto;
+}
+#scheming-schema-form .jedi-switcher-modal-trigger,
+#scheming-preset-form .jedi-switcher-modal-trigger {
+  cursor: pointer;
+}
+#scheming-schema-form .form-check .form-check-label:after,
+#scheming-preset-form .form-check .form-check-label:after {
+  display: none;
+}
+#scheming-schema-form .form-check .form-check-input,
+#scheming-preset-form .form-check .form-check-input {
+  height: 1em !important;
+  width: 1em !important;
+}
+#scheming-schema-form .jedi-btn:disabled,
+#scheming-preset-form .jedi-btn:disabled {
+  border: unset;
+}
+#scheming-schema-form .scheming-preset-hints,
+#scheming-preset-form .scheming-preset-hints {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--bs-border-color);
+  font-size: 0.875rem;
+}
+#scheming-schema-form .scheming-preset-hints .scheming-preset-hints-header,
+#scheming-preset-form .scheming-preset-hints .scheming-preset-hints-header {
+  color: var(--bs-secondary-color);
+  position: relative;
+}
+#scheming-schema-form .scheming-preset-hints .scheming-preset-hints-header .btn,
+#scheming-preset-form .scheming-preset-hints .scheming-preset-hints-header .btn {
+  color: var(--bs-secondary-color);
+}
+#scheming-schema-form .scheming-preset-hints .scheming-preset-hints-header::after,
+#scheming-preset-form .scheming-preset-hints .scheming-preset-hints-header::after {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+  position: absolute;
+  right: 10px;
+  top: 12px;
+}
+#scheming-schema-form .scheming-preset-hints .scheming-preset-hints-header.open::after,
+#scheming-preset-form .scheming-preset-hints .scheming-preset-hints-header.open::after {
+  transform: rotate(-135deg);
+}
+#scheming-schema-form .scheming-preset-hints .scheming-preset-hint,
+#scheming-preset-form .scheming-preset-hints .scheming-preset-hint {
+  color: var(--bs-secondary-color);
+}
+#scheming-schema-form .scheming-preset-hints .scheming-preset-hint .scheming-preset-hint-key,
+#scheming-preset-form .scheming-preset-hints .scheming-preset-hint .scheming-preset-hint-key {
+  font-weight: 600;
+}
+#scheming-schema-form .scheming-preset-hints .scheming-preset-hint .scheming-preset-hint-value,
+#scheming-preset-form .scheming-preset-hints .scheming-preset-hint .scheming-preset-hint-value {
+  color: var(--bs-secondary-color);
+}
+#scheming-schema-form .scheming-preset-hint-is-overridden .scheming-preset-hint-current,
+#scheming-preset-form .scheming-preset-hint-is-overridden .scheming-preset-hint-current {
+  color: var(--bs-body-color);
+  font-weight: 600;
+}
+
+.scheming-history-diff .diff-add {
+  color: black;
+  background: #ddf4ff;
+}
+
+.scheming-history-diff .diff-del {
+  color: black;
+  background: #fff1e5;
+}
+
+.scheming-history-diff .diff-hunk {
+  color: #6f42c1;
+}
+
+.scheming-history-diff .diff-meta {
+  color: #57606a;
+  font-weight: bold;
+}
+
+.scheming-history-diff .diff-ctx {
+  color: inherit;
+}

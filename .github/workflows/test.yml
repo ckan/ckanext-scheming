@@ -48,7 +48,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install requirements
       run: |
-        pip install -e .
+        pip install -e '.[dynamic]'
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test_subclass.ini
@@ -58,5 +58,7 @@ jobs:
         ckan -c test.ini db init
     - name: Run all tests
       run: pytest --ckan-ini=test.ini --cov=ckanext.scheming ckanext/scheming/tests
+    - name: Run scheming_dynamic tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.scheming_dynamic ckanext/scheming_dynamic/tests
     - name: Run plugin subclassing tests
       run: pytest --ckan-ini=test_subclass.ini ckanext/scheming/tests/test_dataset_display.py ckanext/scheming/tests/test_form.py::TestDatasetFormNew ckanext/scheming/tests/test_dataset_logic.py

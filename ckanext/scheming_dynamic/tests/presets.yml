@@ -1,0 +1,8 @@
+scheming_presets_version: 1
+about: extra presets registered for scheming_dynamic tests only
+presets:
+  - preset_name: preset_with_field_name
+    values:
+      field_name: test_slug_preset
+      validators: not_empty unicode_safe
+      form_snippet: slug.html

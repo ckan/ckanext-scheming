@@ -1,0 +1,113 @@
+{% extends "admin/base.html" %}
+
+{% set is_active = run.status in ('pending', 'running') %}
+{% set done = run.ok_count + run.failed_count + run.skipped_count %}
+
+{% block subtitle %}{{ _('Scheming') }}{% endblock %}
+
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+    <div class="primary col-12 px-0" role="main">
+    {% block primary_content %} {{ super() }} {% endblock primary_content %}
+    </div>
+{% endblock primary %}
+
+{% block primary_content_inner %}
+  {% set entity_type = run.entity_type or 'dataset' %}
+  {% set route_args = {} if entity_type == 'dataset' else {'entity_type': entity_type} %}
+  {% snippet 'scheming_dynamic/snippets/tabs.html', active_tab=active_tab %}
+
+  <h2>
+    {{ run.schema_type }}
+    {% snippet 'scheming_dynamic/migration/snippets/run_status.html', run=run %}
+    <small>v{{ run.from_version }} &rarr; v{{ run.to_version }}</small>
+  </h2>
+
+  <p class="text-muted">
+    {{ _('Started {when} by {who}').format(
+        when=h.render_datetime(run.started, with_hours=True), who=run.actor) }}
+  </p>
+
+  {% if run.error %}
+    <div class="alert alert-danger">{{ run.error }}</div>
+  {% endif %}
+
+  {% if is_active %}
+    <div class="progress mb-3" role="progressbar">
+      <div class="progress-bar progress-bar-striped progress-bar-animated"
+           style="width: {{ (100 * done / run.total)|round|int if run.total else 0 }}%">
+        {{ done }} / {{ run.total }}
+      </div>
+    </div>
+
+    <form method="post"
+          action="{% url_for 'scheming_dynamic_migration.cancel', run_id=run.id %}">
+      {{ h.csrf_input() }}
+      <button class="btn btn-warning btn-sm" type="submit">{{ _('Cancel run') }}</button>
+    </form>
+  {% endif %}
+
+  {% if run['items'] %}
+    <table class="table table-header table-striped mt-3">
+      <thead>
+        <tr>
+          <th>{{ _('Dataset') }}</th>
+          <th>{{ _('Status') }}</th>
+          <th>{{ _('Detail') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in run['items'] %}
+          <tr>
+            <td>{{ item.entity_id }}</td>
+            <td>
+              <span class="badge bg-{{ {'ok': 'success', 'failed': 'danger'}.get(item.status, 'secondary') }}">
+                {{ item.status }}
+              </span>
+            </td>
+            <td>
+              {% if item.errors %}
+                <ul class="mb-0 small text-danger">
+                  {% for field, messages in item.errors.items() %}
+                    <li>{{ field }}: {{ messages|join('; ') }}</li>
+                  {% endfor %}
+                </ul>
+                <a class="btn btn-secondary btn-sm mt-1"
+                    href="{{ h.url_for('scheming_dynamic_migration.dataset', schema_type=run.schema_type, from_version=run.from_version, to_version=run.to_version, pkg_id=item.entity_id, **route_args) }}">
+                  {{ _('Fix by hand') }}
+                </a>
+              {% elif item.changes %}
+                <details>
+                  <summary class="small text-muted">{{ _('What changed') }}</summary>
+                  <ul class="mb-0 small">
+                    {% for field, change in item.changes.dataset.items() %}
+                      <li>{{ field }}: <code>{{ change.before }}</code> &rarr; <code>{{ change.after }}</code></li>
+                    {% endfor %}
+                  </ul>
+                </details>
+              {% else %}
+                <span>
+                  {{ _('values recorded were pruned') if run.finished else _('no changes') }}
+                </span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <div class="form-actions">
+    <a class="btn btn-secondary" href="{{ h.url_for('scheming_dynamic_migration.runs') }}">
+      {{ _('All runs') }}
+    </a>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% if is_active %}
+    <script>window.setTimeout(function () { window.location.reload(); }, 5000);</script>
+  {% endif %}
+{% endblock %}

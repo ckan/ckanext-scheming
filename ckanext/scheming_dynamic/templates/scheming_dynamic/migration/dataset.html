@@ -1,0 +1,78 @@
+{% extends "admin/base.html" %}
+
+{% block subtitle %}{{ _('Scheming') }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% set entity_type = plan.entity_type or 'dataset' %}
+  {% set route_args = {} if entity_type == 'dataset' else {'entity_type': entity_type} %}
+  {% snippet 'scheming_dynamic/snippets/tabs.html', active_tab=active_tab %}
+
+  <h2>
+    {{ dataset.title or dataset.name }}
+    <small class="text-muted">v{{ plan.from_version }} &rarr; v{{ plan.to_version }}</small>
+  </h2>
+
+  {% if errors %}
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        {% for field, messages in errors.items() %}
+          <li>{{ field }}: {{ messages|join('; ') }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if questions %}
+    <p class="text-muted">
+      {{ _('These fields could not be filled from the old version. Answer them for this dataset.') }}
+    </p>
+
+    <form method="post">
+      {{ h.csrf_input() }}
+
+      {% for field in questions %}
+        {% snippet 'scheming/snippets/form_field.html',
+            field=field, data={}, errors={},
+            licenses=licenses, entity_type=entity_type,
+            object_type=plan.schema_type %}
+      {% endfor %}
+
+      <div class="form-actions">
+        <a class="btn btn-secondary"
+            href="{{ h.url_for('scheming_dynamic_migration.mapping', schema_type=plan.schema_type, from_version=plan.from_version, to_version=plan.to_version, **route_args) }}">
+          {{ _('Back') }}
+        </a>
+        <button class="btn btn-primary float-end" type="submit">
+          {{ _('Migrate this dataset') }}
+        </button>
+      </div>
+    </form>
+  {% else %}
+    <p class="empty">
+      {{ _('Nothing to answer -- this version pair migrates without per-dataset input.') }}
+    </p>
+  {% endif %}
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <div class="module-group">
+      <h2 class="module-heading">
+        <i class="fa fa-clock-rotate-left"></i>
+        {{ _('Current values') }}
+      </h2>
+      <div class="module-content">
+        {% set current_schema = h.scheming_get_schema(entity_type, plan.schema_type) %}
+        {% set current_fields = current_schema.dataset_fields if entity_type == 'dataset' else current_schema.fields %}
+        <dl>
+          {% for field in current_fields %}
+            {% if dataset.get(field.field_name) %}
+              <dt>{{ h.scheming_language_text(field.label) or field.field_name }}</dt>
+              <dd>{{ dataset[field.field_name] }}</dd>
+            {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+  </div>
+{% endblock %}

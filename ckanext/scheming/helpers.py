@@ -180,7 +180,7 @@ def scheming_get_presets():
     """
     from ckanext.scheming.plugins import SchemingDatasetsPlugin as p
     if p.instance:
-        return p._presets
+        return p.get_presets(config)
 
 
 @helper

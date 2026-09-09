@@ -1,0 +1,98 @@
+{% extends "admin/base.html" %}
+
+{% block subtitle %}{{ _('Scheming') }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% snippet 'scheming_dynamic/snippets/tabs.html', active_tab=active_tab %}
+
+  {% if rows %}
+    <table class="table table-header table-hover table-striped">
+      <thead>
+        <tr>
+          <th>{{ _('Entity type') }}</th>
+          <th>{{ _('Schema type') }}</th>
+          <th>{{ _('Live version') }}</th>
+          <th>{{ _('Behind') }}</th>
+          <th>{{ _('Distribution') }}</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          {% set route_args = {} if row.entity_type == 'dataset' else {'entity_type': row.entity_type} %}
+          <tr>
+            <td>{{ row.entity_type }}</td>
+            <td>{{ row.schema_type }}</td>
+            <td>{{ row.live_version }}</td>
+            <td>
+              {% if row.behind %}
+                <span class="badge bg-warning text-dark">{{ row.behind }}</span>
+              {% else %}
+                <span class="badge bg-success">0</span>
+              {% endif %}
+            </td>
+            <td>
+              {% for version, count in row.distribution.items()|sort %}
+                <span class="me-2">
+                  v{{ version }}: {{ count }}
+                  {%- if version == row.live_version %} <i class="fa fa-check text-success"></i>{% endif %}
+                </span>
+              {% else %}
+                <span class="text-muted">{{ _('No pinned datasets') }}</span>
+              {% endfor %}
+              {% if row.unpinned %}
+                <span class="text-muted">
+                  {{ _('unpinned: {count}').format(count=row.unpinned) }}
+                  <i class="fa fa-info-circle"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="{{ _('Adopt these into a version with `ckan scheming-dynamic pin` before they can be migrated') }}"></i>
+                </span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="btn-group float-end">
+                {% for version, count in row.distribution.items()|sort %}
+                  {% if version != row.live_version %}
+                    <a class="btn btn-secondary btn-sm"
+                        href="{{ h.url_for('scheming_dynamic_migration.mapping', schema_type=row.schema_type, from_version=version, to_version=row.live_version, **route_args) }}">
+                      v{{ version }} &rarr; v{{ row.live_version }}
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="empty">{{ _('No dynamic schemas have been created yet.') }}</p>
+  {% endif %}
+
+  <div class="form-actions">
+    <a class="btn btn-secondary float-end" href="{{ h.url_for('scheming_dynamic_migration.runs') }}">
+      <i class="fa fa-list"></i> {{ _('Migration runs') }}
+    </a>
+  </div>
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <div class="module-group">
+      <h2 class="module-heading">
+        <i class="fa fa-info-circle"></i>
+        {{ _('Schema migrations') }}
+      </h2>
+      <div class="module-content">
+        {%- trans -%}
+          <p>Datasets stay pinned to the schema version they were created
+          under. <strong>Behind</strong> counts those not yet on the live
+          version.</p>
+          <p>A migration moves datasets between two versions of the same
+          schema. Fields that map across unchanged are carried over
+          automatically; the rest need a decision.</p>
+        {%- endtrans -%}
+      </div>
+    </div>
+  </div>
+{% endblock %}

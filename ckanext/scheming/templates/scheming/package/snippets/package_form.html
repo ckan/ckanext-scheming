@@ -1,5 +1,7 @@
 {% extends 'package/new_package_form.html' %}
 
+{%- set schema = h.dynamic_scheming_get_entity_schema(dataset_type, 'dataset', data.id) if h.plugin_loaded('scheming_dynamic') else h.scheming_get_dataset_schema(dataset_type) -%}
+
 {% block stages %}
   {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
   {%- if pages -%}
@@ -7,11 +9,14 @@
     {%- set draft_missing_required = h.scheming_missing_required_fields(pages, data) -%}
     <ol class="stages stage-1">
       {%- for p in pages -%}
+        {%- set page_description = h.scheming_language_text(p.description) -%}
         <li class="{{
           'first ' if loop.first else ''}}{{
           'active ' if loop.index == active_page else '' }} scheming-pages-dynamic-width"
           data-width="{{- 100 / (loop.length + (0 if form_style == 'edit' else 1)) -}}">
-          <span class="highlight pr-0">{% if loop.index < active_page
+          <span class="highlight pr-0"
+            {% if page_description %} data-bs-toggle="tooltip" title="{{ page_description }}" aria-label="{{ page_description }}"{% endif %}>
+            {% if loop.index < active_page
               or (form_style == 'edit' and loop.index != active_page)
             %}<a href="{{
               h.url_for(dataset_type +
@@ -56,7 +61,6 @@
 
 {% block errors %}
   {%- if errors -%}
-    {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
     {%- snippet 'scheming/snippets/errors.html',
       errors=errors, fields=schema.dataset_fields,
       entity_type='dataset', object_type=dataset_type -%}
@@ -71,7 +75,6 @@
     </p>
   {%- endif -%}
 
-  {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
   {%- set pages = h.scheming_get_dataset_form_pages(dataset_type) -%}
   {%- if pages -%}
     {%- set active_page = data.get('_form_page', 1) | int -%}

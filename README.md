@@ -478,7 +478,7 @@ the default value for this field.
 ### `preset`
 
 A `preset` specifies a set of default values for other field keys. They
-allow reuse of definitions for validation and snippets for common field types. 
+allow reuse of definitions for validation and snippets for common field types.
 
 >[!TIP]
 > Presets can be used for all schemas: **datasets, groups, and organizations.**
@@ -569,6 +569,64 @@ markdown text area and display
 
 You may define your own presets by adding additional files to the `scheming.presets`
 [configuration setting](#configuration).
+
+#### Restricting where a preset may be used
+
+Some presets only make sense on one particular field, or depend on other
+keys being present on the field. A preset may declare these constraints
+with the `restrict_to_field` and `requires` keys. They are checked when
+schemas are expanded at startup, and a violation raises a
+`SchemingException` (so the schema fails fast rather than rendering a
+broken form).
+
+```yaml
+  preset_name: title
+  restrict_to_field: {entity_type: dataset, field_name: title}
+  values:
+    validators: if_empty_same_as(name) unicode_safe
+    form_snippet: large_text.html
+```
+
+`restrict_to_field`:
+
+```yaml
+  restrict_to_field: {entity_type: dataset, field_name: title}
+```
+
+The preset may only be applied to the field named `field_name` on a schema
+for the given `entity_type` (`dataset`, `resource`, `group` or
+`organization`). `entity_type` may also be a list, to allow the preset on
+that field for any of several entity types:
+
+```yaml
+  restrict_to_field: {entity_type: [group, organization], field_name: image_url}
+```
+
+Applying it to any other field raises an error. This is
+used by the core presets that wrap CKAN's built-in fields, for example
+`dataset_slug` (dataset `name`), `dataset_organization` (dataset
+`owner_org`), `resource_url_upload` (resource `url`) and
+`organization_url_upload` (organization `image_url`).
+
+`requires`:
+
+```yaml
+  requires:
+    - [choices, choices_helper]
+    - label
+```
+
+The field using this preset must satisfy every entry in `requires`. An
+entry that is a list is satisfied when the field sets **at least one** of
+those keys; an entry that is a plain string must be set on the field.
+Applied to a field that fails any entry raises an error. The core
+choice-based presets (`select`, `radio`, `multiple_checkbox`,
+`multiple_select`) use `requires: [[choices, choices_helper]]` to require
+that a field supplies [`choices`](#choices) or a
+[`choices_helper`](#choices_helper).
+
+Both keys are optional; a preset without them can be used anywhere, as
+before.
 
 
 ### `form_snippet`

@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '3.1.0'
+version = '3.2.0'
 
 setup(
     name='ckanext-scheming',
@@ -30,6 +30,9 @@ setup(
         'pytz',
         'six',
     ],
+    extras_require={
+        'dynamic': ['jsonschema'],
+    },
     entry_points=\
     """
     [ckan.plugins]
@@ -37,6 +40,7 @@ setup(
     scheming_groups=ckanext.scheming.plugins:SchemingGroupsPlugin
     scheming_organizations=ckanext.scheming.plugins:SchemingOrganizationsPlugin
     scheming_nerf_index=ckanext.scheming.plugins:SchemingNerfIndexPlugin
+    scheming_dynamic=ckanext.scheming_dynamic.plugin:SchemingDynamicPlugin
     scheming_test_subclass=ckanext.scheming.tests.plugins:SchemingTestSubclass
     scheming_test_plugin=ckanext.scheming.tests.plugins:SchemingTestSchemaPlugin
     scheming_test_validation=ckanext.scheming.tests.plugins:SchemingTestValidationPlugin
