@@ -478,7 +478,7 @@ the default value for this field.
 ### `preset`
 
 A `preset` specifies a set of default values for other field keys. They
-allow reuse of definitions for validation and snippets for common field types. 
+allow reuse of definitions for validation and snippets for common field types.
 
 >[!TIP]
 > Presets can be used for all schemas: **datasets, groups, and organizations.**
@@ -573,10 +573,21 @@ You may define your own presets by adding additional files to the `scheming.pres
 #### Restricting where a preset may be used
 
 Some presets only make sense on one particular field, or depend on other
-keys being present on the field. A preset may declare these constraints in
-its `values`. They are checked when schemas are expanded at startup, and a
-violation raises a `SchemingException` (so the schema fails fast rather than
-rendering a broken form).
+keys being present on the field. A preset may declare these constraints
+with the `restrict_to_field` and `requires` keys. They are checked when
+schemas are expanded at startup, and a violation raises a
+`SchemingException` (so the schema fails fast rather than rendering a
+broken form).
+
+```yaml
+  preset_name: title
+  restrict_to_field: {entity_type: dataset, field_name: title}
+  values:
+    validators: if_empty_same_as(name) unicode_safe
+    form_snippet: large_text.html
+```
+
+`restrict_to_field`:
 
 ```yaml
   restrict_to_field: {entity_type: dataset, field_name: title}
@@ -596,6 +607,8 @@ used by the core presets that wrap CKAN's built-in fields, for example
 `dataset_slug` (dataset `name`), `dataset_organization` (dataset
 `owner_org`), `resource_url_upload` (resource `url`) and
 `organization_url_upload` (organization `image_url`).
+
+`requires`:
 
 ```yaml
   requires:

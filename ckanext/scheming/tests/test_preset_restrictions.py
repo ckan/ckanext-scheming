@@ -7,19 +7,34 @@ from ckanext.scheming.plugins import _SchemingMixin, _expand_schemas
 
 
 @contextlib.contextmanager
-def _multi_entity_preset():
-    """Register a preset restricted to ``image_url`` on group or organization."""
-    saved = _SchemingMixin._presets
-    _SchemingMixin._presets = dict(saved or {}, multi_entity={
-        "restrict_to_field": {
-            "entity_type": ["group", "organization"],
-            "field_name": "image_url",
-        },
-    })
+def _preset(name, restrictions, values=None):
+    """Register a throwaway preset with the given restrictions.
+
+    ``restrict_to_field`` / ``requires`` live next to ``values`` in
+    presets.json and are kept in ``_SchemingMixin._preset_restrictions``,
+    separate from the ``values`` merged into fields.
+    """
+    saved_values = _SchemingMixin._presets
+    saved_restrictions = _SchemingMixin._preset_restrictions
+    _SchemingMixin._presets = dict(saved_values or {}, **{name: values or {}})
+    _SchemingMixin._preset_restrictions = dict(
+        saved_restrictions, **{name: restrictions}
+    )
     try:
         yield
     finally:
-        _SchemingMixin._presets = saved
+        _SchemingMixin._presets = saved_values
+        _SchemingMixin._preset_restrictions = saved_restrictions
+
+
+def _multi_entity_preset():
+    return _preset(
+        "multi_entity",
+        {"restrict_to_field": {
+            "entity_type": ["group", "organization"],
+            "field_name": "image_url",
+        }},
+    )
 
 
 class TestExpandReloadsPresets:
@@ -164,17 +179,9 @@ def _expand_group_field(field):
     )
 
 
-@contextlib.contextmanager
 def _requires_preset(*requires):
     """Register a preset with the given ``requires`` entries."""
-    saved = _SchemingMixin._presets
-    _SchemingMixin._presets = dict(
-        saved or {}, needy={"requires": list(requires)}
-    )
-    try:
-        yield
-    finally:
-        _SchemingMixin._presets = saved
+    return _preset("needy", {"requires": list(requires)})
 
 
 class TestRequires:

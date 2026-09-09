@@ -67,6 +67,7 @@ class _SchemingMixin(object):
     """
     instance = None
     _presets = None
+    _preset_restrictions: dict[str, dict[str, Any]] = {}
     _is_fallback = False
     _schema_urls = tuple()
     _schemas = tuple()
@@ -106,10 +107,21 @@ class _SchemingMixin(object):
             ).split()
         )
 
-        _SchemingMixin._presets = {
-            field['preset_name']: field['values']
+        entries = [
+            entry
             for preset_path in presets
-            for field in _load_schema(preset_path)['presets']
+            for entry in _load_schema(preset_path)["presets"]
+        ]
+        _SchemingMixin._presets = {
+            entry["preset_name"]: entry["values"] for entry in entries
+        }
+        _SchemingMixin._preset_restrictions = {
+            entry["preset_name"]: {
+                key: entry[key]
+                for key in ("restrict_to_field", "requires")
+                if key in entry
+            }
+            for entry in entries
         }
 
     @classmethod
@@ -815,11 +827,11 @@ def _field_create_validators(f, schema, convert_extras):
     return validators
 
 
-def _check_preset_restrictions(preset, preset_values, field, entity_type):
+def _check_preset_restrictions(preset, restrictions, field, entity_type):
     """
     Some core presets only make sense on a specific field, or require
     other keys (like choices) to be set on the field. Enforce the
-    restrictions declared on the preset in presets.json:
+    constraints declared on the preset in presets.json:
 
     - ``restrict_to_field``: ``{entity_type, field_name}`` (``entity_type``
       may be a list) -- the preset may only be applied to that field.
@@ -829,7 +841,7 @@ def _check_preset_restrictions(preset, preset_values, field, entity_type):
 
     raises SchemingException if field violates a restriction.
     """
-    restrict_to_field = preset_values.get("restrict_to_field")
+    restrict_to_field = restrictions.get("restrict_to_field")
     if restrict_to_field:
         allowed_entity_types = restrict_to_field.get("entity_type") or []
         if isinstance(allowed_entity_types, str):
@@ -850,7 +862,7 @@ def _check_preset_restrictions(preset, preset_values, field, entity_type):
                 )
             )
 
-    for requirement in preset_values.get("requires") or []:
+    for requirement in restrictions.get("requires") or []:
         # a bare string requires that one key; a list requires any one of them
         options = [requirement] if isinstance(requirement, str) else list(requirement)
         if not any(key in field for key in options):
@@ -882,9 +894,13 @@ def _expand(schema, field, entity_type):
         presets = _SchemingMixin.get_presets(p.toolkit.config)
         if preset not in presets:
             raise SchemingException('preset \'{}\' not defined'.format(preset))
-        preset_values = presets[preset]
-        field = dict(preset_values, **field)
-        _check_preset_restrictions(preset, preset_values, field, entity_type)
+        field = dict(presets[preset], **field)
+        _check_preset_restrictions(
+            preset,
+            _SchemingMixin._preset_restrictions.get(preset, {}),
+            field,
+            entity_type,
+        )
 
     if 'repeating_subfields' in field:
         field['repeating_subfields'] = [
