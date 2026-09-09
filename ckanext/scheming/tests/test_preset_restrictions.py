@@ -1,7 +1,25 @@
+import contextlib
+
 import pytest
 
 from ckanext.scheming.errors import SchemingException
 from ckanext.scheming.plugins import _SchemingMixin, _expand_schemas
+
+
+@contextlib.contextmanager
+def _multi_entity_preset():
+    """Register a preset restricted to ``image_url`` on group or organization."""
+    saved = _SchemingMixin._presets
+    _SchemingMixin._presets = dict(saved or {}, multi_entity={
+        "restrict_to_field": {
+            "entity_type": ["group", "organization"],
+            "field_name": "image_url",
+        },
+    })
+    try:
+        yield
+    finally:
+        _SchemingMixin._presets = saved
 
 
 class TestExpandReloadsPresets:
@@ -90,6 +108,32 @@ class TestRestrictToField:
         field = {"field_name": "logo", "preset": "organization_url_upload"}
         with pytest.raises(SchemingException):
             _expand_organization_field(field)
+
+    def test_entity_type_list_allows_group(self):
+        with _multi_entity_preset():
+            _expand_group_field(
+                {"field_name": "image_url", "preset": "multi_entity"}
+            )
+
+    def test_entity_type_list_allows_organization(self):
+        with _multi_entity_preset():
+            _expand_organization_field(
+                {"field_name": "image_url", "preset": "multi_entity"}
+            )
+
+    def test_entity_type_list_rejects_an_unlisted_type(self):
+        with _multi_entity_preset():
+            with pytest.raises(SchemingException):
+                _expand_dataset_field(
+                    {"field_name": "image_url", "preset": "multi_entity"}
+                )
+
+    def test_entity_type_list_still_enforces_field_name(self):
+        with _multi_entity_preset():
+            with pytest.raises(SchemingException):
+                _expand_group_field(
+                    {"field_name": "logo", "preset": "multi_entity"}
+                )
 
 
 def _expand_dataset_field(field, resource_fields=None):

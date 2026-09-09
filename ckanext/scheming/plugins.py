@@ -823,27 +823,32 @@ def _check_preset_restrictions(preset, preset_values, field, entity_type):
 
     raises SchemingException if field violates a restriction.
     """
-    restrict_to_field = preset_values.get('restrict_to_field')
-    if restrict_to_field and (
-        entity_type != restrict_to_field.get('entity_type')
-        or field.get('field_name') != restrict_to_field.get('field_name')
-    ):
-        raise SchemingException(
-            "preset '{}' may only be used for the {} field '{}', not "
-            "the {} field '{}'".format(
-                preset,
-                restrict_to_field.get('entity_type'),
-                restrict_to_field.get('field_name'),
-                entity_type,
-                field.get('field_name'),
-            )
-        )
+    restrict_to_field = preset_values.get("restrict_to_field")
+    if restrict_to_field:
+        allowed_entity_types = restrict_to_field.get("entity_type") or []
+        if isinstance(allowed_entity_types, str):
+            allowed_entity_types = [allowed_entity_types]
 
-    requires_one_of = preset_values.get('requires_one_of')
+        if (
+            entity_type not in allowed_entity_types
+            or field.get("field_name") != restrict_to_field.get("field_name")
+        ):
+            raise SchemingException(
+                "preset '{}' may only be used for the {} field '{}', not "
+                "the {} field '{}'".format(
+                    preset,
+                    "/".join(allowed_entity_types),
+                    restrict_to_field.get("field_name"),
+                    entity_type,
+                    field.get("field_name"),
+                )
+            )
+
+    requires_one_of = preset_values.get("requires_one_of")
     if requires_one_of and not any(key in field for key in requires_one_of):
         raise SchemingException(
             "preset '{}' requires one of {} to be set on field '{}'".format(
-                preset, requires_one_of, field.get('field_name')
+                preset, requires_one_of, field.get("field_name")
             )
         )
 

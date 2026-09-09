@@ -584,7 +584,14 @@ rendering a broken form).
 
 The preset may only be applied to the field named `field_name` on a schema
 for the given `entity_type` (`dataset`, `resource`, `group` or
-`organization`). Applying it to any other field raises an error. This is
+`organization`). `entity_type` may also be a list, to allow the preset on
+that field for any of several entity types:
+
+```yaml
+  restrict_to_field: {entity_type: [group, organization], field_name: image_url}
+```
+
+Applying it to any other field raises an error. This is
 used by the core presets that wrap CKAN's built-in fields, for example
 `dataset_slug` (dataset `name`), `dataset_organization` (dataset
 `owner_org`), `resource_url_upload` (resource `url`) and
