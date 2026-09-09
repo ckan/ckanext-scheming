@@ -28,6 +28,7 @@
                             'data-module-preview-kind': 'preset'}) }}
 
     <div id="scheming-meta-schema" data-schema="{{ h.dump_json(meta_schema) }}" hidden></div>
+    <div id="scheming-presets" data-presets="{{ h.dump_json(presets) }}" hidden></div>
 
     <div class="form-actions">
       <a class="btn btn-secondary" href="{% url_for 'scheming_dynamic_admin.presets_index' %}">{{ _('Cancel') }}</a>

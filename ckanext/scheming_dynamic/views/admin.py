@@ -438,6 +438,7 @@ class PresetCreateView(MethodView):
                 "errors": errors or {},
                 "error_summary": error_summary or {},
                 "meta_schema": _preset_meta_schema(),
+                "presets": tk.h.scheming_get_presets() or {},
                 "is_new": True,
             },
         )
@@ -485,6 +486,11 @@ class PresetEditView(MethodView):
                 "errors": errors or {},
                 "error_summary": error_summary or {},
                 "meta_schema": _preset_meta_schema(exclude_preset_name=preset_name),
+                "presets": {
+                    name: values
+                    for name, values in (tk.h.scheming_get_presets() or {}).items()
+                    if name != preset_name
+                },
                 "is_new": False,
                 "preset_name": preset_name,
             },
