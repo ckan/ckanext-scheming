@@ -39,12 +39,22 @@ class ItemResult:
 def expanded_definition(
     entity_type: str, schema_type: str, version: int
 ) -> dict[str, Any]:
+    """The preset-expanded form of one locked schema version.
+
+    Reads the ``expanded`` snapshot taken when the version was locked, so a
+    migration's source/target schemas reflect what each version actually
+    validated against at the time. Falls back to expanding
+    ``definition`` live only for rows locked before that snapshot existed.
+    """
     row = SchemingSchemaVersion.get(entity_type, schema_type, version)
 
     if row is None:
         raise tk.ObjectNotFound(
             tk._("Version {} of '{}' not found").format(version, schema_type)
         )
+
+    if row.expanded is not None:
+        return row.expanded
 
     return _expand_schemas({schema_type: row.definition})[schema_type]
 
@@ -73,11 +83,6 @@ def entities_at_version(entity_type: str, schema_type: str, version: int) -> lis
         )
         .all()
     ]
-
-
-def datasets_at_version(schema_type: str, version: int) -> list[str]:
-    """Backwards-compatible wrapper for ``entities_at_version(DEFAULT_ENTITY_TYPE, ...)``."""
-    return entities_at_version(DEFAULT_ENTITY_TYPE, schema_type, version)
 
 
 class Migrator:

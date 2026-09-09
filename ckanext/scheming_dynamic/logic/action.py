@@ -155,6 +155,7 @@ def _lock_or_sync_version(
         return SchemingSchemaVersion.lock(entity_type, schema_type, definition)
 
     head.definition = definition
+    head.refresh_expanded()
     return head
 
 

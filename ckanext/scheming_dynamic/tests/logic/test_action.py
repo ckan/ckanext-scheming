@@ -196,9 +196,7 @@ class TestSchemingSchemaCreate:
         # registers a per-type one for them
         definition = {**schema_definition, "dataset_type": "dataset"}
 
-        result = helpers.call_action(
-            "scheming_schema_create", definition=definition
-        )
+        result = helpers.call_action("scheming_schema_create", definition=definition)
 
         assert result["schema_type"] == "dataset"
 

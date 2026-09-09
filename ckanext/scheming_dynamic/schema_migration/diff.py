@@ -6,7 +6,6 @@ import dataclasses
 from difflib import SequenceMatcher
 from typing import Any
 
-from ckanext.scheming_dynamic.const import DEFAULT_ENTITY_TYPE
 
 IDENTICAL = "identical"
 WIDENED = "widened"
@@ -25,14 +24,6 @@ RESOURCE_GROUP = "resource_fields"
 FIELDS_GROUP = "fields"
 FIELD_GROUPS = (DATASET_GROUP, RESOURCE_GROUP)
 GROUP_ORG_FIELD_GROUPS = (FIELDS_GROUP,)
-
-
-def groups_for(entity_type: str) -> tuple[str, ...]:
-    """The schema's field groups: dataset+resource for datasets, a flat
-    ``fields`` list for groups and organizations."""
-    if entity_type == DEFAULT_ENTITY_TYPE:
-        return FIELD_GROUPS
-    return GROUP_ORG_FIELD_GROUPS
 
 
 def groups_in(*schemas: dict[str, Any]) -> tuple[str, ...]:

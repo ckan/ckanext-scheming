@@ -17,6 +17,24 @@ def _current_datetime() -> datetime:
     return datetime.now(tz=timezone.utc)  # noqa: UP017
 
 
+def expand_definition(schema_type: str, definition: dict[str, Any]) -> dict[str, Any]:
+    """Resolve every ``preset:`` reference in ``definition`` against the
+    *current* preset registry.
+
+    Syncs the database presets into ``_SchemingMixin._presets`` first --
+    mirrors ``render.render_schema_form``, since a preset that only exists
+    in the database (not yet merged) would otherwise fail to resolve here,
+    same as it would there.
+
+    Lazy imports to avoid circular imports.
+    """
+    from ckanext.scheming.plugins import _expand_schemas # noqa: PLC0415
+    from ckanext.scheming_dynamic import sync # noqa: PLC0415
+
+    sync.ensure_presets_synced()
+    return _expand_schemas({schema_type: definition})[schema_type]
+
+
 class SchemingState(tk.BaseModel):
     """Change counter, one row per named counter channel.
 
@@ -142,6 +160,7 @@ class SchemingSchemaVersion(tk.BaseModel):
         sa.Column("schema_type", sa.Text, primary_key=True),
         sa.Column("version", sa.Integer, primary_key=True),
         sa.Column("definition", JSONB, nullable=False),
+        sa.Column("expanded", JSONB, nullable=True),
         sa.Column(
             "created",
             sa.TIMESTAMP(timezone=True),
@@ -154,6 +173,7 @@ class SchemingSchemaVersion(tk.BaseModel):
     schema_type: Mapped[str]
     version: Mapped[int]
     definition: Mapped[dict[str, Any]]
+    expanded: Mapped[dict[str, Any] | None]
     created: Mapped[datetime]
 
     @classmethod
@@ -163,7 +183,9 @@ class SchemingSchemaVersion(tk.BaseModel):
         return model.Session.get(cls, (entity_type, schema_type, version))
 
     @classmethod
-    def head_version(cls, entity_type: str, schema_type: str, session: SASession | None = None) -> int:
+    def head_version(
+        cls, entity_type: str, schema_type: str, session: SASession | None = None
+    ) -> int:
         """Highest version number, or 0 if the schema doesn't exist yet."""
         db_session = session or model.Session
 
@@ -210,17 +232,33 @@ class SchemingSchemaVersion(tk.BaseModel):
     def lock(
         cls, entity_type: str, schema_type: str, definition: dict[str, Any]
     ) -> SchemingSchemaVersion:
-        """Snapshot ``definition`` as the next version for this schema_type."""
+        """Snapshot ``definition`` as the next version for this schema_type.
+
+        Also snapshots its preset-expanded form as ``expanded``, so a preset
+        edited later can't silently change what this version validates
+        against or renders as -- see ``sync.pinned_expanded_schema`` and
+        ``schema_migration.apply.expanded_definition``, which read it back.
+        """
         version = cls.head_version(entity_type, schema_type) + 1
         row = cls(
             entity_type=entity_type,
             schema_type=schema_type,
             version=version,
             definition=definition,
+            expanded=expand_definition(schema_type, definition),
         )
         model.Session.add(row)
         model.Session.flush()
         return row
+
+    def refresh_expanded(self) -> None:
+        """Recompute ``expanded`` from the current ``definition``.
+
+        Callers that overwrite an unpinned head's ``definition`` in place
+        (rather than locking a new version) must call this too, or
+        ``expanded`` would keep describing the old definition.
+        """
+        self.expanded = expand_definition(self.schema_type, self.definition)
 
     @classmethod
     def create(

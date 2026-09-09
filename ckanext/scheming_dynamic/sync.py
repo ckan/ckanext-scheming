@@ -72,9 +72,16 @@ def schemas_if_changed(
     if fingerprint == state["fingerprint"]:
         return None
 
+    try:
+        heads = SchemingSchemaVersion.get_heads_of_type(entity_type=entity_type)
+    except (DBAPIError, UnboundExecutionError):
+        model.Session.rollback()
+        log.debug("cannot read the scheming_schema_version table")
+        return None
+
     merged = dict(static_schemas)
 
-    for row in SchemingSchemaVersion.get_heads_of_type(entity_type=entity_type):
+    for row in heads:
         merged[row.schema_type] = row.definition
 
     state["pending_fingerprint"] = fingerprint
@@ -155,9 +162,15 @@ def pinned_expanded_schema(
     was never locked) or the pin already points at the current HEAD, so the
     caller can fall back to its normal (live) expanded schema.
 
+    ``version_row.expanded`` is a snapshot taken when the version was
+    locked, so it can't drift when a preset is edited afterwards -- read it
+    straight instead of re-expanding ``definition`` against the *current*
+    preset registry. Rows locked before ``expanded`` existed have it as
+    ``None``; those still re-expand live, same as before.
+
     Results are cached by (entity_type, schema_type, version) for the life
-    of the process: locked versions are immutable, so there's nothing to
-    invalidate.
+    of the process: locked versions -- and now their expansion snapshot --
+    are immutable, so there's nothing to invalidate.
     """
     if not entity_id:
         return None
@@ -174,9 +187,12 @@ def pinned_expanded_schema(
         version_row = SchemingSchemaVersion.get(entity_type, schema_type, pin.version)
         if version_row is None:
             return None
-        _expanded_version_cache[cache_key] = _expand_schemas(
-            {schema_type: version_row.definition}
-        )[schema_type]
+        if version_row.expanded is not None:
+            _expanded_version_cache[cache_key] = version_row.expanded
+        else:
+            _expanded_version_cache[cache_key] = _expand_schemas(
+                {schema_type: version_row.definition}
+            )[schema_type]
 
     return _expanded_version_cache[cache_key]
 
