@@ -251,6 +251,8 @@ class Migrator:
         Without ``for_edit`` an uploaded resource's ``url`` comes back fully
         qualified, and writing that back would replace the stored filename
         with an absolute URL.
+
+        TODO: revisit once CKAN core settles ``for_edit``.
         """
         context = self._context()
         context["for_edit"] = True
