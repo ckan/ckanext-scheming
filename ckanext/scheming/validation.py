@@ -166,8 +166,9 @@ def scheming_multiple_choice(field, schema):
                 if v in selected
             ])
 
+            state = data.get(('state',), missing)
             really_required = schema.get('draft_fields_required', True
-                ) or not data.get(('state',), 'draft').startswith('draft')
+                ) or not (state is missing or state.startswith('draft'))
             if not selected and field.get('required') and really_required:
                 errors[key].append(_('Select at least one'))
 

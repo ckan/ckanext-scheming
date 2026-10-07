@@ -1,4 +1,5 @@
 import json
+import re
 
 import pytest
 from bs4 import BeautifulSoup
@@ -201,6 +202,20 @@ class TestCustomOrgFormNew(object):
 
         assert "/publisher/" in response.body
 
+@pytest.mark.usefixtures("clean_db")
+def test_dashed_field_name_create(app, sysadmin_env):
+    data = {"save": "", "_ckan_phase": 1}
+
+    data["name"] = "dashed_field_name_1"
+    data["title-en"] = "Title"
+
+    url = '/test-schema/new'
+
+    _post_data(app, url, data, sysadmin_env)
+
+    dataset = call_action("package_show", id="dashed_field_name_1")
+    assert dataset["title-en"] == "Title"
+    
 
 @pytest.mark.usefixtures("clean_db")
 class TestJSONDatasetForm(object):
@@ -353,6 +368,12 @@ class TestSubfieldDatasetForm(object):
         data["citation-0-originator"] = ['mei', 'ahmed']
         data["contact_address-0-address"] = 'anyplace'
 
+        data["contact_point-0-name"] = 'first'
+        data["contact_point-0-address-0-country"] = 'no'
+        data["contact_point-0-address-1-country"] = 'such'
+        data["contact_point-1-name"] = 'second'
+        data["contact_point-1-address-0-country"] = 'country'
+
         url = '/test-subfields/new'
 
         _post_data(app, url, data, sysadmin_env)
@@ -360,12 +381,14 @@ class TestSubfieldDatasetForm(object):
         dataset = call_action("package_show", id="subfield_dataset_1")
         assert dataset["citation"] == [{'originator': ['mei', 'ahmed']}]
         assert dataset["contact_address"] == [{'address': 'anyplace'}]
+        assert dataset["contact_point"] == [{'name': 'first', 'address': [{'country': 'no'}, {'country': 'such'}]}, {'name': 'second', 'address': [{'country': 'country'}]}]
 
     def test_dataset_form_update(self, app, sysadmin_env):
         dataset = Dataset(
             type="test-subfields",
             citation=[{'originator': ['mei']}, {'originator': ['ahmed']}],
-            contact_address=[{'address': 'anyplace'}])
+            contact_address=[{'address': 'anyplace'}],
+            contact_point=[{'name': 'first', 'address': [{'country': 'no'}]}, {'name': 'second', 'address': [{'country': 'such'}, {'country': 'country'}]}])
 
         response = _get_package_update_page(
             app, dataset["id"], sysadmin_env
@@ -376,9 +399,10 @@ class TestSubfieldDatasetForm(object):
         ).attrs['value'] == 'ahmed'
 
         data = {"save": ""}
-        data["citation-0-originator"] = ['ling']
         data["citation-1-originator"] = ['umet']
         data["contact_address-0-address"] = 'home'
+        data["contact_point-1-name"] = 'second'
+        data["contact_point-1-address-0-country"] = 'country'
         data["name"] = dataset["name"]
 
         url = '/test-subfields/edit/' + dataset["id"]
@@ -387,8 +411,9 @@ class TestSubfieldDatasetForm(object):
 
         dataset = call_action("package_show", id=dataset["id"])
 
-        assert dataset["citation"] == [{'originator': ['ling']}, {'originator': ['umet']}]
+        assert dataset["citation"] == [{'originator': ['umet']}]
         assert dataset["contact_address"] == [{'address': 'home'}]
+        assert dataset["contact_point"] == [{'name': 'second', 'address': [{'country': 'country'}]}]
 
 
 
@@ -553,6 +578,7 @@ class TestDatasetFormPages(object):
             response = _post_data(app, '/test-formpages-draft/fpd/resource/new', {'url':'http://example.com', 'name': 'example', 'save':'go-metadata', 'id': ''}, sysadmin_env)
             form = BeautifulSoup(response.body).select_one("#resource-edit")
             errors = form.select_one('div.error-explanation').text
-            assert 'Notes: Missing value' in errors
+            errors = re.sub(r'\s+', ' ', errors)
+            assert 'Description: Missing value' in errors
             assert 'Version: Missing value' in errors
-            assert 'Resources: Package resource(s) invalid' in errors
+            assert 'Resource 1: Name: Missing value' in errors

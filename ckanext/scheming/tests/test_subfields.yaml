@@ -43,6 +43,13 @@ dataset_fields:
   - field_name: country
     label: Country
 
+- field_name: contact_point
+  repeating_subfields:
+  - field_name: name
+  - field_name: address
+    repeating_subfields:
+    - field_name: country
+      required: true
 
 resource_fields:
 

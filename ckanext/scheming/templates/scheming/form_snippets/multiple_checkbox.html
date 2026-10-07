@@ -1,19 +1,5 @@
 {% import 'macros/form.html' as form %}
 
-<style>
-fieldset.checkboxes label {
-    font-weight: normal;
-    display: block;
-}
-fieldset.checkboxes label:after {
-    content: none;
-}
-fieldset.checkboxes label input {
-    width: auto;
-    top: 0;
-}
-</style>
-
 {%- call form.input_block(
     label=h.scheming_language_text(field.label),
     classes=field.classes if 'classes' in field else ['control-medium'],

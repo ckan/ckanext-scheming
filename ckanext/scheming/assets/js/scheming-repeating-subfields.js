@@ -7,8 +7,8 @@ ckan.module('scheming-repeating-subfields', function($) {
       this.template = $template.html();
       $template.remove();
 
-      this.el.find('a[name="repeating-add"]').on("click", this._onCreateGroup);
-      this.el.on('click', 'a[name="repeating-remove"]', this._onRemoveGroup);
+      this.el.find('a[name="' + this.options.field_name + '-repeating-add"]').on("click", this._onCreateGroup);
+      this.el.on('click', 'a[name="' + this.options.field_name + '-repeating-remove"]', this._onRemoveGroup);
     },
 
     /**
@@ -29,11 +29,11 @@ ckan.module('scheming-repeating-subfields', function($) {
         var $last = this.el.find('.scheming-subfield-group').last();
         var group = ($last.data('groupIndex') + 1) || 0;
         var $copy = $(
-	    this.template.replace(/REPEATING-INDEX0/g, group)
-          .replace(/REPEATING-INDEX1/g, group + 1));
-        this.el.find('.scheming-repeating-subfields-group').append($copy);
+  	    this.template.replace(new RegExp(this.options.field_name + '-REPEATING-INDEX0', 'g'), group)
+          .replace(new RegExp(this.options.field_name + '-REPEATING-INDEX1', 'g'), group + 1));
+        this.el.find('[name="' + this.options.field_name + '-subfields-group"]').append($copy);
 
-	this.initializeModules($copy);
+      	this.initializeModules($copy);
         $copy.hide().show(100);
         $copy.find('input').first().focus();
         // hook for late init when required for rendering polyfills
@@ -46,9 +46,9 @@ ckan.module('scheming-repeating-subfields', function($) {
      */
     _onRemoveGroup: function(e) {
         var $curr = $(e.target).closest('.scheming-subfield-group');
-        var $body = $curr.find('.panel-body.fields-content');
-        var $button = $curr.find('.btn-repeating-remove');
-        var $removed = $curr.find('.panel-body.fields-removed-notice');
+        var $body = $curr.find('.panel-body.fields-content[data-field-name="' + this.options.field_name + '"]');
+        var $button = $curr.find('a[name="' + this.options.field_name + '-repeating-remove"]');
+        var $removed = $curr.find('.panel-body.fields-removed-notice[data-field-name="' + this.options.field_name + '"]');
         $button.hide();
         $removed.show(100);
         $body.hide(100, function() {

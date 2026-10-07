@@ -7,9 +7,9 @@
     <ol class="stages stage-1">
       {%- for p in pages -%}
         <li class="{{
-          'first ' if loop.first else ''}}"
-          style="width:{{ 100 / (loop.length + 1) }}%">
-          <span class="highlight" style="padding-right:0"><a href="{{
+          'first ' if loop.first else ''}} scheming-pages-dynamic-width"
+          data-width="{{- 100 / (loop.length + 1) -}}">
+          <span class="highlight pr-0"><a href="{{
               h.url_for(dataset_type + '.scheming_new_page',
                 package_type=dataset_type,
                 id=pkg_name,
@@ -28,7 +28,7 @@
           </span>
         </li>
       {%- endfor -%}
-      <li class="last active" style="width:{{ 100 / (pages | length + 1) }}%">
+      <li class="last active scheming-pages-dynamic-width" data-width="{{- 100 / (pages | length + 1) -}}">
         <span class="highlight">{{ _('Add data') }}</span>
       </li>
     </ol>
@@ -40,8 +40,18 @@
 {% block errors %}
   {%- if errors -%}
     {%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+    {%- if data -%}
+      {%- set fields = schema.resource_fields %}
+    {%- else -%}
+      {# combined dataset and resource errors #}
+      {%- set fields = schema.dataset_fields + [{
+        'field_name': 'resources', 'label': _('Resources'),
+        'repeating_label': _('Resource'),
+        'repeating_subfields': schema.resource_fields,
+        }] -%}
+    {%- endif -%}
     {%- snippet 'scheming/snippets/errors.html',
-      errors=errors, fields=schema.resource_fields,
+      errors=errors, fields=fields,
       entity_type='dataset', object_type=dataset_type -%}
   {%- else -%}
     {# Resource CreateView You must add at least one data resource #}
