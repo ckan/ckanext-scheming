@@ -314,10 +314,22 @@ a list of fields entered the same way as normal fields.
 `repeating_label` may be used to provide a singular version of the label
 for each group.
 
+Optional form presentation keys:
+
+* `repeating_collapse: true` - wrap the repeating field group in a
+  Bootstrap accordion (collapsed by default)
+* `repeating_grid: true` - render each repeating panel in a Bootstrap
+  grid row (default column class `col-md-6`)
+* `col_class` - Bootstrap column class used when `repeating_grid` is
+  enabled (e.g. `col-md-4`)
+
 ```yaml
 - field_name: contacts
   label: Contacts
   repeating_label: Contact
+  repeating_collapse: true
+  repeating_grid: true
+  col_class: col-md-4
   repeating_subfields:
 
   - field_name: address
