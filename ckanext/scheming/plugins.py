@@ -563,7 +563,7 @@ def _load_schema_module_path(url):
 def _load_schema_url(url):
     from six.moves import urllib
     try:
-        res = urllib.request.urlopen(url)
+        res = urllib.request.urlopen(url, timeout=30)
         tables = res.read()
     except urllib.error.URLError:
         raise SchemingException("Could not load %s" % url)
