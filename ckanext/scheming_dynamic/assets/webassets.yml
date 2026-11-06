@@ -1,0 +1,16 @@
+schema-editor:
+  filters: rjsmin
+  output: ckanext-scheming-dynamic/%(version)s_schema_editor.js
+  extra:
+    preload:
+      - base/main
+  contents:
+    - js/scheming-schema-editor.js
+    - js/vendor/jedison.umd.js
+    - js/vendor/js-yaml.min.js
+    - js/vendor/marked.min.js
+
+schema-editor-css:
+  output: ckanext-scheming-dynamic/%(version)s_schema_editor.css
+  contents:
+    - css/scheming-schema-editor.css

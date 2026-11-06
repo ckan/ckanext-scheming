@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+
+{% block subtitle %}{{ _('Schema history') }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% snippet 'scheming_dynamic/snippets/tabs.html', active_tab=active_tab %}
+
+  {% if page.items %}
+    <table class="table table-header table-hover table-striped">
+      <thead>
+        <tr>
+          <th>{{ _('Entity type') }}</th>
+          <th>{{ _('Schema type') }}</th>
+          <th>{{ _('Status') }}</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in page.items %}
+          {% set row_args = {} if row.entity_type == 'dataset' else {'entity_type': row.entity_type} %}
+          <tr>
+            <td>{{ row.entity_type }}</td>
+            <td>{{ row.schema_type }}</td>
+            <td>
+              {% if row.is_live %}
+                <span class="badge bg-success">{{ _('Live') }}</span>
+              {% else %}
+                <span class="badge bg-secondary">{{ _('Deleted') }}</span>
+              {% endif %}
+            </td>
+            <td>
+              <a class="btn btn-secondary btn-sm float-end"
+                  href="{{ h.url_for('scheming_dynamic_admin.history', schema_type=row.schema_type, **row_args) }}"
+                  aria-label="{{ _('View schema history') }}"
+                  data-bs-title="{{ _('View schema history') }}"
+                  data-bs-toggle="tooltip">
+                <i class="fa fa-history"></i> {{ _('View history') }}
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {{ page.pager() }}
+  {% else %}
+    <p class="empty">{{ _('No schema activity has been recorded yet.') }}</p>
+  {% endif %}
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <div class="module-group">
+      <h2 class="module-heading">
+        <i class="fa fa-info-circle"></i>
+        {{ _('Schema history') }}
+      </h2>
+      <div class="module-content">
+        {%- trans -%}
+          <p>Every dataset schema type that has ever had a create, update or
+          delete recorded, including types that have since been deleted --
+          their history isn't removed along with them.</p>
+        {%- endtrans -%}
+      </div>
+    </div>
+  </div>
+{% endblock %}

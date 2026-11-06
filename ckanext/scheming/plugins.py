@@ -1,42 +1,28 @@
-#!/usr/bin/env python
-# encoding: utf-8
-import os
 import inspect
 import logging
+import os
 from functools import wraps
+from typing import Any
 
-import six
-import yaml
 import ckan.plugins as p
-
-try:
-    from paste.reloader import watch_file
-except ImportError:
-    watch_file = None
-
-import ckan.model as model
+from ckan import model
 from ckan.common import c, json
-from ckan.lib.navl.dictization_functions import unflatten, flatten_schema
-try:
-    from ckan.lib.helpers import helper_functions as core_helper_functions
-except ImportError:  # CKAN <= 2.5
-    core_helper_functions = None
-
+from ckan.lib import plugins as lib_plugins
+from ckan.lib.navl.dictization_functions import unflatten
 from ckan.plugins.toolkit import (
     DefaultDatasetForm,
     DefaultGroupForm,
     DefaultOrganizationForm,
-    get_validator,
-    get_converter,
-    navl_validate,
-    add_template_directory,
     add_resource,
-    add_public_directory,
-    missing,
+    add_template_directory,
     check_ckan_version,
+    get_converter,
+    get_validator,
+    missing,
+    navl_validate,
 )
 
-from ckanext.scheming import helpers, validation, logic, loader, views
+from ckanext.scheming import helpers, loader, logic, validation, views
 from ckanext.scheming.errors import SchemingException
 
 ignore_missing = get_validator('ignore_missing')
@@ -81,10 +67,20 @@ class _SchemingMixin(object):
     """
     instance = None
     _presets = None
+    _preset_restrictions: dict[str, dict[str, Any]] = {}
     _is_fallback = False
     _schema_urls = tuple()
     _schemas = tuple()
     _expanded_schemas = tuple()
+
+    dynamic_scheming: dict[str, Any] = {
+        "schema": {
+            "dataset": {"fingerprint": None, "pending_fingerprint": None},
+            "group": {"fingerprint": None, "pending_fingerprint": None},
+            "organization": {"fingerprint": None, "pending_fingerprint": None},
+        },
+        "preset": {"fingerprint": None, "static": None},
+    }
 
     @run_once_for_caller('_scheming_get_helpers', dict)
     def get_helpers(self):
@@ -111,11 +107,29 @@ class _SchemingMixin(object):
             ).split()
         )
 
-        _SchemingMixin._presets = {
-            field['preset_name']: field['values']
+        entries = [
+            entry
             for preset_path in presets
-            for field in _load_schema(preset_path)['presets']
+            for entry in _load_schema(preset_path)["presets"]
+        ]
+        _SchemingMixin._presets = {
+            entry["preset_name"]: entry["values"] for entry in entries
         }
+        _SchemingMixin._preset_restrictions = {
+            entry["preset_name"]: {
+                key: entry[key]
+                for key in ("restrict_to_field", "requires")
+                if key in entry
+            }
+            for entry in entries
+        }
+
+    @classmethod
+    def get_presets(cls, config):
+        """Return the presets registered at startup, loading them if needed."""
+        if cls._presets is None:
+            cls._load_presets(config)
+        return cls._presets
 
     def update_config(self, config):
         if self.instance:
@@ -147,13 +161,113 @@ class _SchemingMixin(object):
         return self._is_fallback
 
 
+class _DynamicSchemaSyncMixin:
+    """
+    Overlay database-stored (ckanext-scheming-dynamic) schemas onto the
+    file-defined ones at runtime, without a server restart.
+
+    Shared by the dataset, group and organization plugins. Subclasses set
+    ``SCHEMA_ENTITY_TYPE`` and may override ``_after_dynamic_sync`` to run
+    entity-type-specific bookkeeping (form pages, blueprint/plugin
+    registration) whenever the merged schemas change.
+    """
+    SCHEMA_ENTITY_TYPE = "dataset"
+
+    _static_schemas = {}
+    _schemas_value = {}
+    _expanded_value = {}
+
+    @property
+    def _schemas(self):
+        self._sync_dynamic_schemas()
+        return self._schemas_value
+
+    @_schemas.setter
+    def _schemas(self, value):
+        # keep the file-defined schemas around: they are the base the
+        # dynamic database schemas get merged over
+        self._static_schemas = value
+        self._schemas_value = value
+
+    @property
+    def _expanded_schemas(self):
+        self._sync_dynamic_schemas()
+        return self._expanded_value
+
+    @_expanded_schemas.setter
+    def _expanded_schemas(self, value):
+        self._expanded_value = value
+
+    def _sync_dynamic_schemas(self):
+        """Reload schemas when the scheming_dynamic database changed.
+
+        A no-op unless the ``scheming_dynamic`` plugin is loaded.
+        """
+        if not p.plugin_loaded("scheming_dynamic"):
+            return
+
+        from ckanext.scheming_dynamic import sync  # noqa
+
+        merged = sync.schemas_if_changed(
+            self.SCHEMA_ENTITY_TYPE, self._static_schemas)
+        if merged is None:
+            return
+
+        try:
+            expanded = _expand_schemas(merged)
+        except Exception:
+            log.exception(
+                "unable to expand dynamic %s schemas, keeping the previous ones",
+                self.SCHEMA_ENTITY_TYPE)
+            return
+
+        sync.confirm_applied(self.SCHEMA_ENTITY_TYPE)
+        self._schemas_value = merged
+        self._expanded_value = expanded
+        self._after_dynamic_sync(merged, expanded)
+
+    def _after_dynamic_sync(self, merged, expanded):
+        """Hook: run whenever the merged schemas change. Overridden below."""
+
+
 class _GroupOrganizationMixin(object):
     """
     Common methods for SchemingGroupsPlugin and SchemingOrganizationsPlugin
     """
 
+    is_organization = False
+
     def group_types(self):
         return list(self._schemas)
+
+    def _after_dynamic_sync(self, merged, expanded):
+        self._register_dynamic_group_types(merged)
+
+    def _register_dynamic_group_types(self, schemas):
+        """Keep runtime-created group/organization types resolvable.
+
+        ``ckan.lib.plugins.lookup_group_plugin`` reads a dict populated once
+        at startup from every ``IGroupForm.group_types()``. A type added to
+        the database afterwards is missing from it, so lookups for it fall
+        back to the default group/organization form instead of us. Fill in
+        the missing entries here and drop the ones for types later deleted
+        from the database (mirrors ``_register_dynamic_package_types``).
+        """
+        controller = "organization" if self.is_organization else "group"
+        current_types = set(schemas)
+
+        for group_type in current_types:
+            lib_plugins._group_plugins.setdefault(group_type, self)  # type: ignore
+            lib_plugins._group_controllers.setdefault(group_type, controller)  # type: ignore
+
+        stale = [
+            group_type
+            for group_type, plugin in lib_plugins._group_plugins.items()
+            if plugin is self and group_type not in current_types
+        ]
+        for group_type in stale:
+            del lib_plugins._group_plugins[group_type]
+            lib_plugins._group_controllers.pop(group_type, None)
 
     def setup_template_variables(self, context, data_dict):
         group_type = data_dict.get('type')
@@ -173,6 +287,17 @@ class _GroupOrganizationMixin(object):
             return data_dict, {'type': "Unsupported {thing} type: {t}".format(
                 thing=thing, t=t)}
         scheming_schema = self._expanded_schemas[t]
+
+        if action_type in ('update', 'show') and p.plugin_loaded(
+                'scheming_dynamic'):
+            from ckanext.scheming_dynamic import sync  # noqa
+            entity_type = (
+                'organization' if self.is_organization else 'group')
+            pinned = sync.pinned_expanded_schema(
+                entity_type, t, data_dict.get('id'))
+            if pinned:
+                scheming_schema = pinned
+
         scheming_fields = scheming_schema['fields']
 
         before = scheming_schema.get('before_validators')
@@ -200,7 +325,7 @@ class _GroupOrganizationMixin(object):
 
 
 class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
-                             _SchemingMixin):
+                             _DynamicSchemaSyncMixin, _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
     p.implements(p.ITemplateHelpers)
@@ -211,10 +336,51 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
     SCHEMA_OPTION = 'scheming.dataset_schemas'
     FALLBACK_OPTION = 'scheming.dataset_fallback'
     SCHEMA_TYPE_FIELD = 'dataset_type'
+    SCHEMA_ENTITY_TYPE = 'dataset'
 
     @classmethod
     def _store_instance(cls, self):
         SchemingDatasetsPlugin.instance = self
+
+    def _after_dynamic_sync(self, merged, expanded):
+        self._dataset_form_pages = _build_dataset_form_pages(expanded)
+        self._register_dynamic_package_types(merged)
+
+    def _register_dynamic_package_types(self, schemas: dict[str, Any]) -> None:
+        """Register dynamic dataset types.
+
+        Keep newly-created/removed dynamic dataset types in sync with
+        ``ckan.lib.plugins.lookup_package_plugin``.
+
+        That function (used throughout ``ckan.views.dataset`` for templates
+        and validation) resolves a package type from a dict populated once,
+        at app startup, from every ``IDatasetForm.package_types()``.
+
+        A dataset type added to the database afterwards is missing from
+        that dict, so lookups for it silently fall back to the default
+        IDatasetForm instead of us. Fill in only the missing entries here;
+        never overwrite a type some other plugin already claimed at startup.
+
+        Conversely, if a dynamic type we previously claimed here is later
+        deleted from the database, drop it again: otherwise lookups for it
+        would keep resolving to us even though ``self._schemas`` no longer
+        has a definition for it, and our templates unconditionally call
+        ``h.scheming_get_dataset_schema(dataset_type)`` expecting one to
+        exist.
+        """
+        current_types = set(schemas)
+
+        for package_type in current_types:
+            lib_plugins._package_plugins.setdefault(package_type, self)  # type: ignore
+
+        stale = [
+            package_type
+            for package_type, plugin in lib_plugins._package_plugins.items()
+            if plugin is self and package_type not in current_types
+        ]
+
+        for package_type in stale:
+            del lib_plugins._package_plugins[package_type]
 
     def read_template(self):
         return 'scheming/package/read.html'
@@ -249,6 +415,10 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
                 "Unsupported dataset type: {t}".format(t=t)]}
 
         scheming_schema = self._expanded_schemas[t]
+        if action_type in ('update', 'show') and p.plugin_loaded('scheming_dynamic'):
+            from ckanext.scheming_dynamic import sync  # noqa
+            if pinned := sync.pinned_expanded_schema('dataset', t, data_dict.get('id')):
+                scheming_schema = pinned
 
         before = scheming_schema.get('before_validators')
         after = scheming_schema.get('after_validators')
@@ -333,49 +503,43 @@ class SchemingDatasetsPlugin(p.SingletonPlugin, DefaultDatasetForm,
             c.licenses = [('', '')] + model.Package.get_license_options()
 
     def configure(self, config):
-        self._dataset_form_pages = {}
+        # A runtime `plugins_update()` reset the cached schemas; force
+        # `scheming_dynamic` to re-merge the DB schemas instead of trusting its
+        # stale change-detection fingerprint and dropping them until restart.
+        if p.plugin_loaded("scheming_dynamic"):
+            from ckanext.scheming_dynamic import sync # noqa
+            sync.reset()
 
-        for t, schema in self._expanded_schemas.items():
-            pages = []
-            self._dataset_form_pages[t] = pages
-
-            for f in schema['dataset_fields']:
-                if not pages or 'start_form_page' in f:
-                    fp = f.get('start_form_page', {})
-                    pages.append({
-                        'title': fp.get('title', ''),
-                        'description': fp.get('description', ''),
-                        'fields': [],
-                    })
-                pages[-1]['fields'].append(f)
-
-            if len(pages) == 1 and not pages[0]['title']:
-                # no pages defined
-                pages[:] = []
+        self._dataset_form_pages = _build_dataset_form_pages(
+            self._expanded_schemas)
 
     def prepare_dataset_blueprint(self, package_type, bp):
-        if self._dataset_form_pages[package_type]:
-            bp.add_url_rule(
-                '/new',
-                'scheming_new',
-                views.SchemingCreateView.as_view('new'),
-            )
-            bp.add_url_rule(
-                '/new/<id>/<page>',
-                'scheming_new_page',
-                views.SchemingCreatePageView.as_view('new_page'),
-            )
-            bp.add_url_rule(
-                '/edit/<id>',
-                'scheming_edit',
-                views.edit,
-            )
-            bp.add_url_rule(
-                '/edit/<id>/<page>',
-                'scheming_edit_page',
-                views.SchemingEditPageView.as_view('edit_page'),
-            )
+        views.add_paged_form_rules(bp)
         return bp
+
+
+def _build_dataset_form_pages(expanded_schemas):
+    form_pages = {}
+
+    for t, schema in expanded_schemas.items():
+        pages = []
+        form_pages[t] = pages
+
+        for f in schema['dataset_fields']:
+            if not pages or 'start_form_page' in f:
+                fp = f.get('start_form_page', {})
+                pages.append({
+                    'title': fp.get('title', ''),
+                    'description': fp.get('description', ''),
+                    'fields': [],
+                })
+            pages[-1]['fields'].append(f)
+
+        if len(pages) == 1 and not pages[0]['title']:
+            # no pages defined
+            pages[:] = []
+
+    return form_pages
 
 
 def expand_form_composite(data, schema):
@@ -432,7 +596,8 @@ def expand_form_composite(data, schema):
 
 
 class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
-                           DefaultGroupForm, _SchemingMixin):
+                           DefaultGroupForm, _DynamicSchemaSyncMixin,
+                           _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
@@ -442,6 +607,7 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     SCHEMA_OPTION = 'scheming.group_schemas'
     FALLBACK_OPTION = 'scheming.group_fallback'
     SCHEMA_TYPE_FIELD = 'group_type'
+    SCHEMA_ENTITY_TYPE = 'group'
     UNSPECIFIED_GROUP_TYPE = 'group'
 
     @classmethod
@@ -462,7 +628,8 @@ class SchemingGroupsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
 
 
 class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
-                                  DefaultOrganizationForm, _SchemingMixin):
+                                  DefaultOrganizationForm,
+                                  _DynamicSchemaSyncMixin, _SchemingMixin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IGroupForm, inherit=True)
@@ -472,6 +639,7 @@ class SchemingOrganizationsPlugin(p.SingletonPlugin, _GroupOrganizationMixin,
     SCHEMA_OPTION = 'scheming.organization_schemas'
     FALLBACK_OPTION = 'scheming.organization_fallback'
     SCHEMA_TYPE_FIELD = 'organization_type'
+    SCHEMA_ENTITY_TYPE = 'organization'
     UNSPECIFIED_GROUP_TYPE = 'organization'
 
     is_organization = True
@@ -539,7 +707,7 @@ def _load_schema(url):
     return schema
 
 
-def _load_schema_module_path(url):
+def _load_schema_module_path(url: str):
     """
     Given a path like "ckanext.spatialx:spatialx_schema.json"
     find the second part relative to the import path of the first
@@ -554,8 +722,6 @@ def _load_schema_module_path(url):
 
     p = os.path.join(os.path.dirname(inspect.getfile(m)), file_name)
     if os.path.exists(p):
-        if watch_file:
-            watch_file(p)
         with open(p) as schema_file:
             return loader.load(schema_file)
 
@@ -661,23 +827,84 @@ def _field_create_validators(f, schema, convert_extras):
     return validators
 
 
-def _expand(schema, field):
+def _check_preset_restrictions(preset, restrictions, field, entity_type):
+    """
+    Some core presets only make sense on a specific field, or require
+    other keys (like choices) to be set on the field. Enforce the
+    constraints declared on the preset in presets.json:
+
+    - ``restrict_to_field``: ``{entity_type, field_name}`` (``entity_type``
+      may be a list) -- the preset may only be applied to that field.
+    - ``requires``: a list of requirements the field must satisfy. Each
+      requirement is a key name, or a list of key names meaning "at least
+      one of these". All requirements must hold.
+
+    raises SchemingException if field violates a restriction.
+    """
+    restrict_to_field = restrictions.get("restrict_to_field")
+    if restrict_to_field:
+        allowed_entity_types = restrict_to_field.get("entity_type") or []
+        if isinstance(allowed_entity_types, str):
+            allowed_entity_types = [allowed_entity_types]
+
+        if (
+            entity_type not in allowed_entity_types
+            or field.get("field_name") != restrict_to_field.get("field_name")
+        ):
+            raise SchemingException(
+                "preset '{}' may only be used for the {} field '{}', not "
+                "the {} field '{}'".format(
+                    preset,
+                    "/".join(allowed_entity_types),
+                    restrict_to_field.get("field_name"),
+                    entity_type,
+                    field.get("field_name"),
+                )
+            )
+
+    for requirement in restrictions.get("requires") or []:
+        # a bare string requires that one key; a list requires any one of them
+        options = [requirement] if isinstance(requirement, str) else list(requirement)
+        if not any(key in field for key in options):
+            need = (
+                "'{}'".format(options[0])
+                if len(options) == 1
+                else "one of {}".format(options)
+            )
+            raise SchemingException(
+                "preset '{}' requires {} to be set on field '{}'".format(
+                    preset, need, field.get("field_name")
+                )
+            )
+
+
+def _expand(schema, field, entity_type):
     """
     If scheming field f includes a preset value return a new field
     based on the preset with values from f overriding any values in the
     preset.
 
-    raises SchemingException if the preset given is not found.
+    raises SchemingException if the preset given is not found, or if the
+    field violates a restriction declared on the preset.
     """
     preset = field.get('preset')
     if preset:
-        if preset not in _SchemingMixin._presets:
+        # Use the accessor: `_SchemingMixin._presets` is transiently None after
+        # a `plugins_update()` / `sync.reset()` and only reloads on the next read.
+        presets = _SchemingMixin.get_presets(p.toolkit.config)
+        if preset not in presets:
             raise SchemingException('preset \'{}\' not defined'.format(preset))
-        field = dict(_SchemingMixin._presets[preset], **field)
+        field = dict(presets[preset], **field)
+        _check_preset_restrictions(
+            preset,
+            _SchemingMixin._preset_restrictions.get(preset, {}),
+            field,
+            entity_type,
+        )
 
     if 'repeating_subfields' in field:
         field['repeating_subfields'] = [
-            _expand(schema, subfield)
+            _expand(schema, subfield, entity_type)
             for subfield in field['repeating_subfields']
         ]
     return field
@@ -694,22 +921,40 @@ def _expand_schemas(schemas):
             if grouping not in schema:
                 continue
 
+            entity_type = _entity_type_for_grouping(schema, grouping)
+
             schema[grouping] = [
-                _expand(schema, field)
+                _expand(schema, field, entity_type)
                 for field in schema[grouping]
             ]
 
             for field in schema[grouping]:
                 if 'repeating_subfields' in field:
                     field['repeating_subfields'] = [
-                        _expand(schema, subfield)
+                        _expand(schema, subfield, entity_type)
                         for subfield in field['repeating_subfields']
                     ]
                 elif 'simple_subfields' in field:
                     field['simple_subfields'] = [
-                        _expand(schema, subfield)
+                        _expand(schema, subfield, entity_type)
                         for subfield in field['simple_subfields']
                     ]
 
         out[name] = schema
     return out
+
+def _entity_type_for_grouping(schema, grouping):
+    """
+    The kind of thing (dataset, resource, group, organization) that fields
+    in this grouping of this schema describe, used to check preset
+    restrictions.
+    """
+    if grouping == 'dataset_fields':
+        return 'dataset'
+    if grouping == 'resource_fields':
+        return 'resource'
+    if 'organization_type' in schema:
+        return 'organization'
+    if 'group_type' in schema:
+        return 'group'
+    return None

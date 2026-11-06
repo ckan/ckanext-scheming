@@ -1,0 +1,66 @@
+{#
+  HTML fragment returned by the schema preview endpoint: the entity form
+  fields rendered with the same snippets the real create/edit form uses,
+  or the list of validation errors when the definition cannot be rendered.
+
+  schema         - expanded (presets merged) scheming schema definition
+  entity_type    - 'dataset', 'group' or 'organization'
+  licenses       - license options for the license form snippet
+  preview_errors - validation error messages, set instead of schema
+#}
+{% if preview_errors %}
+  <div class="alert alert-danger">
+    <p>{{ _('The definition cannot be previewed:') }}</p>
+    <ul>
+      {% for error in preview_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% elif entity_type == 'dataset' %}
+  <h3>{{ _('Dataset form') }}</h3>
+  {% for field in schema.dataset_fields %}
+    {% if field.form_snippet is not none %}
+      {%- snippet 'scheming/snippets/form_field.html',
+        field=field,
+        data={},
+        errors={},
+        licenses=licenses,
+        entity_type='dataset',
+        object_type=schema.dataset_type
+      -%}
+    {% endif %}
+  {% endfor %}
+
+  <hr />
+
+  <h3>{{ _('Resource form') }}</h3>
+  {% for field in schema.resource_fields %}
+    {% if field.form_snippet is not none %}
+      {%- snippet 'scheming/snippets/form_field.html',
+        field=field,
+        data={},
+        errors={},
+        licenses=licenses,
+        entity_type='dataset',
+        object_type=schema.dataset_type,
+        package_id=''
+      -%}
+    {% endif %}
+  {% endfor %}
+{% else %}
+  {% set object_type = schema.organization_type if entity_type == 'organization' else schema.group_type %}
+  <h3>{{ _('Organization form') if entity_type == 'organization' else _('Group form') }}</h3>
+  {% for field in schema.fields %}
+    {% if field.form_snippet is not none %}
+      {%- snippet 'scheming/snippets/form_field.html',
+        field=field,
+        data={},
+        errors={},
+        licenses=licenses,
+        entity_type=entity_type,
+        object_type=object_type
+      -%}
+    {% endif %}
+  {% endfor %}
+{% endif %}

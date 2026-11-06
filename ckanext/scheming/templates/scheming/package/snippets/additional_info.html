@@ -30,4 +30,13 @@
       <td class="dataset-details">{{ _(pkg_dict.state) }}</td>
     </tr>
   {% endif %}
+  {%- if h.plugin_loaded('scheming_dynamic') -%}
+    {%- set schema_version = h.dynamic_scheming_get_entity_pin_version('dataset', pkg_dict.id) -%}
+    {%- if schema_version -%}
+      <tr>
+        <th scope="row" class="dataset-label">{{ _("Schema version") }}</th>
+        <td class="dataset-details">{{ schema_version }}</td>
+      </tr>
+    {%- endif -%}
+  {%- endif -%}
 {% endblock %}

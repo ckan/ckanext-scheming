@@ -4,7 +4,7 @@ from flask.views import MethodView
 from werkzeug.datastructures import MultiDict
 
 from ckan.plugins.toolkit import (
-    h, request, get_action, abort, _, ObjectNotFound, NotAuthorized,
+    g, h, request, get_action, abort, _, ObjectNotFound, NotAuthorized,
     ValidationError,
 )
 
@@ -34,6 +34,10 @@ class SchemingCreateView(CreateView):
     '''
     def post(self, package_type):
         rval = super(SchemingCreateView, self).post(package_type)
+        if not h.scheming_get_dataset_form_pages(package_type):
+            # no pages configured for this type: behave like a plain CKAN
+            # create view instead of redirecting into a nonexistent page 2
+            return rval
         if getattr(rval, 'status_code', None) == 302:
             # successful create, send to page 2 instead of resource new page
             # extract id/name from redirect
@@ -110,12 +114,12 @@ class SchemingCreatePageView(CreateView):
             data_dict[u'state'] = data[u'state']
             data_dict['_form_page'] = page
 
-            return EditView().get(
+            g.form_action = h.url_for(f'{package_type}.scheming_new_page', id=id, page=page)
+            return CreateView().get( # type: ignore
                 package_type,
-                id,
-                data_dict,
-                errors,
-                error_summary
+                data=data_dict,
+                errors=errors,
+                error_summary=error_summary,
             )
             # END: roughly copied from ckan/views/dataset.py
 
@@ -215,3 +219,31 @@ class SchemingEditPageView(EditView):
             complete_data['name'], 'edit', package_type=package_type
         )
         # END: roughly copied from ckan/views/dataset.py
+
+
+def add_paged_form_rules(bp: Blueprint) -> None:
+    '''Add scheming's paged create/edit routes to a dataset blueprint.
+
+    Must run before the plain CKAN dataset routes are registered on the
+    same blueprint: werkzeug keeps the first-registered rule when two
+    rules match the same path, so this is what lets '/new' and
+    '/edit/<id>' resolve here instead of to the vanilla CKAN views.
+
+    The views themselves fall back to plain CKAN behaviour for package
+    types with no 'start_form_page' fields, so it's safe to register them
+    unconditionally, even for a blueprint shared across many types (e.g.
+    ckanext-scheming-dynamic's catch-all blueprint) where only some types
+    have pages configured.
+    '''
+    bp.add_url_rule("/new", "scheming_new", SchemingCreateView.as_view("new"))
+    bp.add_url_rule(
+        "/new/<id>/<page>",
+        "scheming_new_page",
+        SchemingCreatePageView.as_view("new_page"),
+    )
+    bp.add_url_rule("/edit/<id>", "scheming_edit", edit)
+    bp.add_url_rule(
+        "/edit/<id>/<page>",
+        "scheming_edit_page",
+        SchemingEditPageView.as_view("edit_page"),
+    )

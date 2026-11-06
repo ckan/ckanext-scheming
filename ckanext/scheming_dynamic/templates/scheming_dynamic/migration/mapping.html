@@ -1,0 +1,130 @@
+{% extends "admin/base.html" %}
+
+{% import 'scheming_dynamic/migration/snippets/mapping_row.html' as rows %}
+
+{% set diff = plan.diff %}
+{% set groups = {
+    "dataset": [('dataset_fields', _('Dataset fields')), ('resource_fields', _('Resource fields'))],
+    "group": [('fields', _('Fields'))],
+    "organization": [('fields', _('Fields'))]
+} %}
+
+{% block subtitle %}{{ _('Scheming') }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% set entity_type = plan.entity_type or 'dataset' %}
+  {% set route_args = {} if entity_type == 'dataset' else {'entity_type': entity_type} %}
+  {% snippet 'scheming_dynamic/snippets/tabs.html', active_tab=active_tab %}
+
+  <h2>
+    {{ plan.schema_type }}
+    <small class="text-muted">v{{ plan.from_version }} &rarr; v{{ plan.to_version }}</small>
+  </h2>
+
+  {% if errors %}
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        {% for error in errors %}<li>{{ error }}</li>{% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <form method="post">
+    {{ h.csrf_input() }}
+
+    {% for group, group_label in groups[entity_type] %}
+      {% set pending = diff[group].fields|selectattr('needs_input')|list %}
+      {% set automatic = diff[group].fields|rejectattr('needs_input')|list %}
+
+      {% if pending or automatic or diff[group].dropped %}
+        <h3 class="mt-4">{{ group_label }}</h3>
+
+        {% if pending or diff[group].dropped %}
+          <div class="card mb-3 border-warning">
+            <div class="card-header bg-warning-subtle">
+              {{ _('Needs your attention ({count})').format(count=pending|length + diff[group].dropped|length) }}
+            </div>
+            <table class="table table-sm mb-0">
+              <tbody>
+                {% for change in pending %}
+                  {{ rows.pending(group, change, sources[group], plan.mapping.get(group, {}).get(change.field_name)) }}
+                {% endfor %}
+                {% for name in diff[group].dropped %}
+                  {{ rows.dropped(group, name, plan.mapping.get('dropped', {}).get(group, [])) }}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+
+        {% if automatic %}
+          <details class="mb-3">
+            <summary class="text-muted">
+              {{ _('Mapped automatically ({count})').format(count=automatic|length) }}
+            </summary>
+            <table class="table table-sm mt-2">
+              <tbody>
+                {% for change in automatic %}
+                  {{ rows.automatic(change) }}
+                {% endfor %}
+              </tbody>
+            </table>
+          </details>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    <div class="form-actions">
+      <a class="btn btn-secondary" href="{{ h.url_for('scheming_dynamic_migration.index') }}">
+        {{ _('Back') }}
+      </a>
+      <button class="btn btn-primary float-end" type="submit">
+        {{ _('Save mapping') }}
+      </button>
+    </div>
+  </form>
+
+  <form method="post"
+        action="{{ h.url_for('scheming_dynamic_migration.apply_all', schema_type=plan.schema_type, from_version=plan.from_version, to_version=plan.to_version, **route_args) }}">
+    {{ h.csrf_input() }}
+    <div class="form-actions mt-3">
+      {% if plan.unresolved %}
+        <p class="text-muted mb-0">
+          {{ _('Resolve the {count} item(s) above and save before migrating.').format(count=plan.unresolved|length) }}
+        </p>
+      {% else %}
+        <button class="btn btn-secondary" type="submit" name="dry_run" value="1">
+          <i class="fa fa-flask"></i> {{ _('Dry run') }}
+        </button>
+        <button class="btn btn-danger float-end" type="submit" name="dry_run" value="0"
+                data-module="confirm-action"
+                data-module-with-data="true"
+                data-module-content="{{ _('Migrate every dataset on v{v} to v{to}? Dropped fields lose their data.').format(v=plan.from_version, to=plan.to_version) }}">
+          {{ _('Migrate all') }}
+        </button>
+      {% endif %}
+    </div>
+  </form>
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <div class="module-group">
+      <h2 class="module-heading">
+        <i class="fa fa-info-circle"></i>
+        {{ _('Actions') }}
+      </h2>
+      <div class="module-content">
+        {%- trans -%}
+          <dl>
+            <dt>Copy</dt><dd>take the value from a field of the old version</dd>
+            <dt>Constant</dt><dd>write the same value into every dataset</dd>
+            <dt>Default</dt><dd>use the field's own default</dd>
+            <dt>Drop</dt><dd>leave it unset</dd>
+            <dt>Per dataset</dt><dd>decide separately for each dataset</dd>
+          </dl>
+        {%- endtrans -%}
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -6,7 +6,11 @@
   'url',
   'format',
   ] -%}
-{%- set schema = h.scheming_get_dataset_schema(dataset_type) -%}
+{%- set schema = (
+    h.dynamic_scheming_get_entity_schema(dataset_type, 'dataset', pkg.id)
+    if h.plugin_loaded('scheming_dynamic')
+    else h.scheming_get_dataset_schema(dataset_type))
+-%}
 
 {% block resource_additional_information_inner %}
   {% if res.datastore_active %}
@@ -80,6 +84,17 @@
               <tr class="toggle-more"><th scope="row">{{ key | capitalize }}</th><td>{{ value }}</td></tr>
             {% endif %}
           {% endfor %}
+        {%- endblock -%}
+        {%- block resource_schema_version -%}
+          {%- if h.plugin_loaded('scheming_dynamic') -%}
+            {%- set schema_version = h.dynamic_scheming_get_entity_pin_version('dataset', pkg.id) -%}
+            {%- if schema_version -%}
+              <tr>
+                <th scope="row">{{ _('Schema version') }}</th>
+                <td>{{ schema_version }}</td>
+              </tr>
+            {%- endif -%}
+          {%- endif -%}
         {%- endblock -%}
       </tbody>
     </table>

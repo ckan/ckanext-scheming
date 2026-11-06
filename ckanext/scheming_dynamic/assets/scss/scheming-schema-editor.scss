@@ -1,0 +1,176 @@
+#scheming-schema-form,
+#scheming-preset-form {
+    .card {
+        --bs-card-bg: transparent;
+    }
+
+    .scheming-schema-editor-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    // remove card style for root level
+    #collapse-root>.card-body {
+        padding: 0;
+    }
+
+    div[data-level="0"]>.card {
+        background: none;
+        border: unset;
+
+        &>.card-header {
+            background: unset;
+            border-bottom: unset;
+            padding: 0;
+        }
+    }
+
+    .jedi-label,
+    .jedi-legend {
+        &:after {
+            display: none;
+        }
+
+        span {
+            margin: 0;
+        }
+    }
+
+    .jedi-array-item {
+        position: relative;
+
+        &>.jedi-actions-slot {
+            margin-bottom: 1rem;
+            position: absolute;
+            top: 9px;
+            right: 120px;
+            z-index: 100;
+            border-right: 1px solid var(--bs-border-color);
+            padding-right: 0.5rem;
+        }
+    }
+
+    .modal-dialog {
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-content: center;
+
+            .modal-title p {
+                margin: 0;
+                font-weight: 600;
+            }
+        }
+
+        .modal-body {
+            font-weight: normal;
+        }
+    }
+
+    .jedi-modal-dialog {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .15);
+        color: #212529;
+        border: 1px solid var(--bs-border-color) !important;
+
+        .jedi-modal-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .jedi-modal-content {
+            display: flex;
+            flex-direction: column;
+            gap: .25rem;
+            padding: 1rem;
+        }
+
+        .jedi-modal-close {
+            margin-left: auto;
+        }
+
+    }
+
+    .jedi-switcher-modal-trigger {
+        cursor: pointer;
+    }
+
+    .form-check {
+        .form-check-label:after {
+            display: none;
+        }
+
+        .form-check-input {
+            height: 1em !important;
+            width: 1em !important;
+        }
+    }
+
+    .jedi-btn:disabled {
+        border: unset;
+    }
+
+    .scheming-preset-hints {
+        margin-top: .5rem;
+        padding: .5rem .75rem;
+        border-left: 3px solid var(--bs-border-color);
+        font-size: .875rem;
+
+        .scheming-preset-hints-header {
+            color: var(--bs-secondary-color);
+            position: relative;
+
+            .btn {
+                color: var(--bs-secondary-color);
+            }
+
+            &::after {
+                content: '';
+                display: inline-block;
+                width: 0.5rem;
+                height: 0.5rem;
+                margin-left: 0.5rem;
+                border-right: 2px solid currentColor;
+                border-bottom: 2px solid currentColor;
+                transform: rotate(45deg);
+                transition: transform 0.2s ease;
+                position: absolute;
+                right: 10px;
+                top: 12px;
+            }
+
+            &.open::after {
+                transform: rotate(-135deg);
+            }
+        }
+
+        .scheming-preset-hint {
+            color: var(--bs-secondary-color);
+
+            .scheming-preset-hint-key {
+                font-weight: 600;
+            }
+
+            .scheming-preset-hint-value {
+                color: var(--bs-secondary-color);
+            }
+        }
+    }
+
+    .scheming-preset-hint-is-overridden .scheming-preset-hint-current {
+        color: var(--bs-body-color);
+        font-weight: 600;
+    }
+}
+
+.scheming-history-diff .diff-add { color: black; background: #ddf4ff; }
+.scheming-history-diff .diff-del { color: black; background: #fff1e5; }
+.scheming-history-diff .diff-hunk { color: #6f42c1; }
+.scheming-history-diff .diff-meta { color: #57606a; font-weight: bold; }
+.scheming-history-diff .diff-ctx { color: inherit; }

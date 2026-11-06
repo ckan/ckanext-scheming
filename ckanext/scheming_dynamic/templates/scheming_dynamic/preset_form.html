@@ -1,0 +1,76 @@
+{% extends "admin/base.html" %}
+{% import 'macros/form.html' as form %}
+
+{% block subtitle %}{{ _('New preset') if is_new else _('Edit preset') }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% if is_new %}
+    <h2>{{ _('New preset') }}</h2>
+  {% else %}
+    <h2>{{ _('Edit preset: {name}').format(name=preset_name) }}</h2>
+  {% endif %}
+
+  <form method="post" id="scheming-preset-form">
+    {{ h.csrf_input() }}
+    {{ form.errors(error_summary) }}
+
+    {{ form.textarea('definition',
+                     id='field-definition',
+                     label=_('Preset definition (JSON)'),
+                     value=data.definition,
+                     error=errors.definition,
+                     rows=24,
+                     is_required=true,
+                     attrs={'class': 'form-control',
+                            'data-module': 'scheming-schema-editor',
+                            'data-module-lang': h.lang(),
+                            'data-module-preview-url': h.url_for('scheming_dynamic_admin.preset_preview'),
+                            'data-module-preview-kind': 'preset'}) }}
+
+    <div id="scheming-meta-schema" data-schema="{{ h.dump_json(meta_schema) }}" hidden></div>
+    <div id="scheming-presets" data-presets="{{ h.dump_json(presets) }}" hidden></div>
+
+    <div class="form-actions">
+      <a class="btn btn-secondary" href="{% url_for 'scheming_dynamic_admin.presets_index' %}">{{ _('Cancel') }}</a>
+      <button class="btn btn-primary" type="submit">
+        {{ _('Create preset') if is_new else _('Update preset') }}
+      </button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block secondary_content %}
+    <div class="module module-narrow module-shallow">
+        <div class="module-group">
+            <h2 class="module-heading">
+                <i class="fa fa-info-circle"></i>
+                {{ _('Preset definition') }}
+            </h2>
+            <div class="module-content">
+                {% trans %}
+                <p>A preset takes the same attributes a dataset/resource
+                    field can (<code>validators</code>,
+                    <code>form_snippet</code>, <code>display_snippet</code>,
+                    <code>choices</code>, etc.) under <code>values</code>.
+                </p>
+                <p>Set <code>values.preset</code> to base this preset on
+                    another registered preset; its attributes are inherited
+                    and overridden by this preset's own values.</p>
+                <p>The definition is validated on save, including for
+                    preset-base cycles; you can also paste an existing
+                    preset as raw JSON.</p>
+                {% endtrans %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'scheming-dynamic/schema-editor' %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'scheming-dynamic/schema-editor-css' %}
+{% endblock %}

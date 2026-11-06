@@ -1,0 +1,36 @@
+{#
+  HTML fragment returned by the preset preview endpoint: the preset
+  rendered as a single field with the same form snippet a real dataset or
+  resource field using it would get.
+
+  field          - the preset's values merged with any base preset chain,
+                   as a synthetic field (field_name defaults to
+                   "preview_field" if the preset doesn't supply its own)
+  licenses       - license options for the license form snippet
+  preview_errors - validation error messages, set instead of field
+#}
+{% if preview_errors %}
+  <div class="alert alert-danger">
+    <p>{{ _('The definition cannot be previewed:') }}</p>
+    <ul>
+      {% for error in preview_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% else %}
+  <h3>{{ _('Form field') }}</h3>
+  {% if field.form_snippet is not none %}
+    {%- snippet 'scheming/snippets/form_field.html',
+      field=field,
+      data={},
+      errors={},
+      licenses=licenses,
+      entity_type='dataset',
+      object_type='',
+      package_id=''
+    -%}
+  {% else %}
+    <p class="text-muted">{{ _('This preset hides the field from forms (form_snippet: null).') }}</p>
+  {% endif %}
+{% endif %}

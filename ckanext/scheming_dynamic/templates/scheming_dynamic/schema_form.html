@@ -1,0 +1,83 @@
+{% extends "admin/base.html" %}
+{% import 'macros/form.html' as form %}
+
+{% set entity_type = entity_type or 'dataset' %}
+{% set route_args = {} if entity_type == 'dataset' else {'entity_type': entity_type} %}
+{% set entity_label = {'dataset': _('dataset'), 'group': _('group'), 'organization': _('organization')}[entity_type] %}
+
+{% block subtitle %}{{ _('New schema') if is_new else _('Edit schema') }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% if is_new %}
+    <h2>{{ _('New {entity} schema').format(entity=entity_label) }}</h2>
+  {% else %}
+    <h2>{{ _('Edit {entity} schema: {type}').format(entity=entity_label, type=schema_type) }}</h2>
+  {% endif %}
+
+  <form method="post" id="scheming-schema-form">
+    {{ h.csrf_input() }}
+    {{ form.errors(error_summary) }}
+
+    {{ form.textarea('definition',
+                     id='field-definition',
+                     label=_('Schema definition (JSON)'),
+                     value=data.definition,
+                     error=errors.definition,
+                     rows=24,
+                     is_required=true,
+                     attrs={'class': 'form-control',
+                            'data-module': 'scheming-schema-editor',
+                            'data-module-lang': h.lang(),
+                            'data-module-preview-url': h.url_for('scheming_dynamic_admin.preview', **route_args)}) }}
+
+    <div id="scheming-meta-schema" data-schema="{{ h.dump_json(meta_schema) }}" hidden></div>
+    <div id="scheming-presets" data-presets="{{ h.dump_json(presets) }}" hidden></div>
+
+    <div class="form-actions">
+      <a class="btn btn-secondary" href="{{ h.url_for('scheming_dynamic_admin.index') }}">{{ _('Cancel') }}</a>
+      <button class="btn btn-primary" type="submit">
+        {{ _('Create schema') if is_new else _('Update schema') }}
+      </button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block secondary_content %}
+    <div class="module module-narrow module-shallow">
+        <div class="module-group">
+            <h2 class="module-heading">
+                <i class="fa fa-info-circle"></i>
+                {{ _('Schema definition') }}
+            </h2>
+            <div class="module-content">
+                {% if entity_type == 'dataset' %}
+                  {% trans %}
+                  <p>The definition uses the standard ckanext-scheming format:
+                      <code>dataset_type</code>, <code>dataset_fields</code> and
+                      <code>resource_fields</code>.
+                  </p>
+                  {% endtrans %}
+                {% else %}
+                  <p>{{ _('The definition uses the standard ckanext-scheming format: {type_field} and a flat {fields} list.').format(type_field='<code>' + entity_type + '_type</code>', fields='<code>fields</code>') | safe }}</p>
+                {% endif %}
+                {% trans %}
+                <p>Field presets are the ones registered at startup (built-in
+                    presets plus any files from the <code>scheming.presets</code>
+                    config option) and any created in the database.</p>
+                <p>The definition is validated on save; you can also paste an
+                    existing schema as raw JSON.</p>
+                {% endtrans %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'scheming-dynamic/schema-editor' %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'scheming-dynamic/schema-editor-css' %}
+{% endblock %}

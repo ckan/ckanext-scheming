@@ -1,0 +1,65 @@
+{% extends "admin/base.html" %}
+
+{% block subtitle %}{{ _('Scheming') }}{% endblock %}
+
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+    <div class="primary col-12 px-0" role="main">
+    {% block primary_content %} {{ super() }} {% endblock primary_content %}
+    </div>
+{% endblock primary %}
+
+{% block primary_content_inner %}
+  {% snippet 'scheming_dynamic/snippets/tabs.html', active_tab=active_tab %}
+
+  <h2>{{ _('Migration runs') }}</h2>
+
+  {% if runs %}
+    <table class="table table-header table-hover table-striped">
+      <thead>
+        <tr>
+          <th>{{ _('Started') }}</th>
+          <th>{{ _('Schema') }}</th>
+          <th>{{ _('Entity type') }}</th>
+          <th>{{ _('Versions') }}</th>
+          <th>{{ _('Status') }}</th>
+          <th>{{ _('Result') }}</th>
+          <th>{{ _('By') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for run in runs %}
+          <tr>
+            <td>
+              <a href="{% url_for 'scheming_dynamic_migration.run', run_id=run.id %}">
+                {{ h.render_datetime(run.started, with_hours=True) }}
+              </a>
+            </td>
+            <td>{{ run.schema_type }}</td>
+            <td>{{ run.entity_type }}</td>
+            <td>v{{ run.from_version }} &rarr; v{{ run.to_version }}</td>
+            <td>
+              {% snippet 'scheming_dynamic/migration/snippets/run_status.html', run=run %}
+            </td>
+            <td>
+              {{ run.ok_count }} {{ _('ok') }},
+              {{ run.failed_count }} {{ _('failed') }},
+              {{ run.skipped_count }} {{ _('skipped') }}
+              {{ _('of') }} {{ run.total }}
+            </td>
+            <td>{{ run.actor }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="empty">{{ _('No migrations have been run yet.') }}</p>
+  {% endif %}
+
+  <div class="form-actions">
+    <a class="btn btn-secondary" href="{{ h.url_for('scheming_dynamic_migration.index') }}">
+      {{ _('Back') }}
+    </a>
+  </div>
+{% endblock %}

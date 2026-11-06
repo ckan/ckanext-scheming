@@ -1,0 +1,12 @@
+{% set colours = {
+  'pending': 'secondary',
+  'running': 'info',
+  'finished': 'success',
+  'failed': 'danger',
+  'cancelled': 'warning'
+} %}
+
+<span class="badge bg-{{ colours.get(run.status, 'secondary') }}">{{ run.status }}</span>
+{% if run.dry_run %}
+  <span class="badge bg-light text-dark">{{ _('dry run') }}</span>
+{% endif %}
