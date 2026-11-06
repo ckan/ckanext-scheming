@@ -30,4 +30,9 @@
       <td class="dataset-details">{{ _(pkg_dict.state) }}</td>
     </tr>
   {% endif %}
+
+  {% block extras scoped %}
+    {{ super() }}
+  {% endblock %}
+
 {% endblock %}
